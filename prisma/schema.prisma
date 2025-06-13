@@ -19,6 +19,10 @@ model User {
   phone         String?
   role          UserRole       @default(CUSTOMER)
   emailVerified DateTime?
+  
+  // Stripe fields
+  stripeCustomerId String?      @unique
+  
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   
@@ -47,6 +51,12 @@ model Business {
   isActive         Boolean        @default(true)
   images           String[]
   openingHours     Json
+  
+  // Stripe Connect fields
+  stripeAccountId  String?        @unique
+  stripeOnboarded  Boolean        @default(false)
+  commissionRate   Decimal        @default(15.0) @db.Decimal(5, 2) // Platform commission percentage
+  
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
   
@@ -57,6 +67,7 @@ model Business {
   reviews          Review[]
   availabilities   Availability[]
   timeOffs         TimeOff[]
+  payouts          Payout[]
 }
 
 model Service {
@@ -87,6 +98,14 @@ model Booking {
   status      BookingStatus @default(PENDING)
   notes       String?
   totalPrice  Decimal       @db.Decimal(10, 2)
+  
+  // Payment fields
+  paymentStatus    PaymentStatus  @default(PENDING)
+  stripePaymentIntentId String?   @unique
+  stripeFee        Decimal?       @db.Decimal(10, 2) // Stripe processing fee
+  platformFee      Decimal?       @db.Decimal(10, 2) // Platform commission
+  businessPayout   Decimal?       @db.Decimal(10, 2) // Amount business receives
+  
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   
@@ -145,6 +164,22 @@ model TimeOff {
   @@index([businessId, date])
 }
 
+model Payout {
+  id              String   @id @default(cuid())
+  businessId      String
+  amount          Decimal  @db.Decimal(10, 2)
+  status          String   // pending, paid, failed
+  stripePayoutId  String?  @unique
+  paidAt          DateTime?
+  failureReason   String?
+  createdAt       DateTime @default(now())
+  
+  // Relations
+  business        Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  
+  @@index([businessId, status])
+}
+
 // Enums
 enum UserRole {
   CUSTOMER
@@ -170,4 +205,13 @@ enum BookingStatus {
   CANCELLED
   COMPLETED
   NO_SHOW
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+  CANCELLED
 }
