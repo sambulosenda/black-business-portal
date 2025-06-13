@@ -1,0 +1,471 @@
+import { PrismaClient } from '@prisma/client'
+import bcrypt from 'bcryptjs'
+
+const prisma = new PrismaClient()
+
+async function main() {
+  console.log('🌱 Starting seed...')
+
+  // Clean existing data
+  await prisma.review.deleteMany()
+  await prisma.booking.deleteMany()
+  await prisma.service.deleteMany()
+  await prisma.availability.deleteMany()
+  await prisma.business.deleteMany()
+  await prisma.user.deleteMany()
+
+  // Create customers
+  const customer1 = await prisma.user.create({
+    data: {
+      email: 'customer1@example.com',
+      password: await bcrypt.hash('password123', 10),
+      name: 'Sarah Johnson',
+      phone: '+1234567890',
+      role: 'CUSTOMER',
+    },
+  })
+
+  const customer2 = await prisma.user.create({
+    data: {
+      email: 'customer2@example.com',
+      password: await bcrypt.hash('password123', 10),
+      name: 'Michael Brown',
+      phone: '+1234567891',
+      role: 'CUSTOMER',
+    },
+  })
+
+  const customer3 = await prisma.user.create({
+    data: {
+      email: 'customer3@example.com',
+      password: await bcrypt.hash('password123', 10),
+      name: 'Aisha Williams',
+      phone: '+1234567892',
+      role: 'CUSTOMER',
+    },
+  })
+
+  // Create business owners and their businesses
+  const businessOwner1 = await prisma.user.create({
+    data: {
+      email: 'business1@example.com',
+      password: await bcrypt.hash('password123', 10),
+      name: 'Tasha Green',
+      role: 'BUSINESS_OWNER',
+    },
+  })
+
+  const business1 = await prisma.business.create({
+    data: {
+      userId: businessOwner1.id,
+      businessName: 'Curls & Coils Beauty Bar',
+      slug: 'curls-coils-beauty-bar',
+      description: 'Specializing in natural hair care and styling for all curl patterns. We use organic products and provide personalized consultations.',
+      category: 'HAIR_SALON',
+      address: '123 Main Street',
+      city: 'Atlanta',
+      state: 'GA',
+      zipCode: '30301',
+      phone: '+1404555001',
+      email: 'info@curlsandcoils.com',
+      website: 'https://curlsandcoils.com',
+      instagram: '@curlsandcoils',
+      isVerified: true,
+      isActive: true,
+      images: [],
+      openingHours: {},
+    },
+  })
+
+  // Services for business1
+  await prisma.service.createMany({
+    data: [
+      {
+        businessId: business1.id,
+        name: 'Wash & Go',
+        description: 'Deep cleanse, condition, and style for natural curls',
+        price: 65,
+        duration: 90,
+        category: 'Hair Styling',
+        isActive: true,
+      },
+      {
+        businessId: business1.id,
+        name: 'Protective Style Installation',
+        description: 'Box braids, twists, or locs installation',
+        price: 150,
+        duration: 240,
+        category: 'Hair Styling',
+        isActive: true,
+      },
+      {
+        businessId: business1.id,
+        name: 'Deep Conditioning Treatment',
+        description: 'Intensive moisture treatment for dry or damaged hair',
+        price: 45,
+        duration: 60,
+        category: 'Hair Treatment',
+        isActive: true,
+      },
+    ],
+  })
+
+  const businessOwner2 = await prisma.user.create({
+    data: {
+      email: 'business2@example.com',
+      password: await bcrypt.hash('password123', 10),
+      name: 'Marcus King',
+      role: 'BUSINESS_OWNER',
+    },
+  })
+
+  const business2 = await prisma.business.create({
+    data: {
+      userId: businessOwner2.id,
+      businessName: 'King Cuts Barbershop',
+      slug: 'king-cuts-barbershop',
+      description: 'Premium barbershop experience with skilled barbers specializing in fades, designs, and beard grooming.',
+      category: 'BARBER_SHOP',
+      address: '456 Peachtree Ave',
+      city: 'Atlanta',
+      state: 'GA',
+      zipCode: '30308',
+      phone: '+1404555002',
+      instagram: '@kingcutsatl',
+      isVerified: true,
+      isActive: true,
+      images: [],
+      openingHours: {},
+    },
+  })
+
+  // Services for business2
+  await prisma.service.createMany({
+    data: [
+      {
+        businessId: business2.id,
+        name: 'Classic Haircut',
+        description: 'Traditional cut with line up',
+        price: 35,
+        duration: 45,
+        category: 'Haircut',
+        isActive: true,
+      },
+      {
+        businessId: business2.id,
+        name: 'Fade & Design',
+        description: 'Custom fade with artistic design',
+        price: 50,
+        duration: 60,
+        category: 'Haircut',
+        isActive: true,
+      },
+      {
+        businessId: business2.id,
+        name: 'Beard Trim & Shape',
+        description: 'Professional beard grooming and shaping',
+        price: 25,
+        duration: 30,
+        category: 'Grooming',
+        isActive: true,
+      },
+    ],
+  })
+
+  const businessOwner3 = await prisma.user.create({
+    data: {
+      email: 'business3@example.com',
+      password: await bcrypt.hash('password123', 10),
+      name: 'Jasmine Davis',
+      role: 'BUSINESS_OWNER',
+    },
+  })
+
+  const business3 = await prisma.business.create({
+    data: {
+      userId: businessOwner3.id,
+      businessName: 'Glow Up Nail Studio',
+      slug: 'glow-up-nail-studio',
+      description: 'Luxury nail care with a focus on nail health. We offer gel, acrylic, and natural nail services.',
+      category: 'NAIL_SALON',
+      address: '789 MLK Blvd',
+      city: 'Houston',
+      state: 'TX',
+      zipCode: '77004',
+      phone: '+1713555001',
+      email: 'hello@glowupnails.com',
+      isVerified: false,
+      isActive: true,
+      images: [],
+      openingHours: {},
+    },
+  })
+
+  // Services for business3
+  await prisma.service.createMany({
+    data: [
+      {
+        businessId: business3.id,
+        name: 'Gel Manicure',
+        description: 'Long-lasting gel polish manicure',
+        price: 45,
+        duration: 60,
+        category: 'Manicure',
+        isActive: true,
+      },
+      {
+        businessId: business3.id,
+        name: 'Acrylic Full Set',
+        description: 'Full set of acrylic nails with design',
+        price: 65,
+        duration: 90,
+        category: 'Nail Extensions',
+        isActive: true,
+      },
+      {
+        businessId: business3.id,
+        name: 'Luxury Pedicure',
+        description: 'Spa pedicure with massage and paraffin treatment',
+        price: 55,
+        duration: 75,
+        category: 'Pedicure',
+        isActive: true,
+      },
+    ],
+  })
+
+  const businessOwner4 = await prisma.user.create({
+    data: {
+      email: 'business4@example.com',
+      password: await bcrypt.hash('password123', 10),
+      name: 'Amara Thompson',
+      role: 'BUSINESS_OWNER',
+    },
+  })
+
+  const business4 = await prisma.business.create({
+    data: {
+      userId: businessOwner4.id,
+      businessName: 'Serenity Spa & Wellness',
+      slug: 'serenity-spa-wellness',
+      description: 'Full-service spa offering massages, facials, and body treatments in a tranquil environment.',
+      category: 'SPA',
+      address: '321 Wellness Way',
+      city: 'Chicago',
+      state: 'IL',
+      zipCode: '60611',
+      phone: '+1312555001',
+      website: 'https://serenityspa.com',
+      isVerified: true,
+      isActive: true,
+      images: [],
+      openingHours: {},
+    },
+  })
+
+  // Services for business4
+  await prisma.service.createMany({
+    data: [
+      {
+        businessId: business4.id,
+        name: 'Swedish Massage',
+        description: 'Relaxing full-body massage',
+        price: 120,
+        duration: 60,
+        category: 'Massage',
+        isActive: true,
+      },
+      {
+        businessId: business4.id,
+        name: 'Deep Tissue Massage',
+        description: 'Therapeutic massage for muscle tension',
+        price: 140,
+        duration: 75,
+        category: 'Massage',
+        isActive: true,
+      },
+      {
+        businessId: business4.id,
+        name: 'Hydrating Facial',
+        description: 'Moisturizing facial treatment with mask',
+        price: 95,
+        duration: 60,
+        category: 'Facial',
+        isActive: true,
+      },
+    ],
+  })
+
+  // Add availability for businesses
+  const daysOfWeek = [1, 2, 3, 4, 5, 6] // Monday to Saturday
+  for (const dayOfWeek of daysOfWeek) {
+    await prisma.availability.create({
+      data: {
+        businessId: business1.id,
+        dayOfWeek,
+        startTime: '09:00',
+        endTime: '19:00',
+        isActive: true,
+      },
+    })
+    await prisma.availability.create({
+      data: {
+        businessId: business2.id,
+        dayOfWeek,
+        startTime: '10:00',
+        endTime: '20:00',
+        isActive: true,
+      },
+    })
+    await prisma.availability.create({
+      data: {
+        businessId: business3.id,
+        dayOfWeek,
+        startTime: '10:00',
+        endTime: '18:00',
+        isActive: true,
+      },
+    })
+    await prisma.availability.create({
+      data: {
+        businessId: business4.id,
+        dayOfWeek,
+        startTime: '09:00',
+        endTime: '21:00',
+        isActive: true,
+      },
+    })
+  }
+
+  // Create some bookings
+  const services = await prisma.service.findMany()
+  
+  const booking1 = await prisma.booking.create({
+    data: {
+      userId: customer1.id,
+      businessId: business1.id,
+      serviceId: services.find(s => s.businessId === business1.id)!.id,
+      date: new Date('2025-01-20'),
+      startTime: new Date('2025-01-20T14:00:00'),
+      endTime: new Date('2025-01-20T15:30:00'),
+      status: 'COMPLETED',
+      totalPrice: 65,
+    },
+  })
+
+  const booking2 = await prisma.booking.create({
+    data: {
+      userId: customer2.id,
+      businessId: business2.id,
+      serviceId: services.find(s => s.businessId === business2.id)!.id,
+      date: new Date('2025-01-22'),
+      startTime: new Date('2025-01-22T15:00:00'),
+      endTime: new Date('2025-01-22T15:45:00'),
+      status: 'CONFIRMED',
+      totalPrice: 35,
+    },
+  })
+
+  const booking3 = await prisma.booking.create({
+    data: {
+      userId: customer3.id,
+      businessId: business4.id,
+      serviceId: services.find(s => s.businessId === business4.id)!.id,
+      date: new Date('2025-01-18'),
+      startTime: new Date('2025-01-18T11:00:00'),
+      endTime: new Date('2025-01-18T12:00:00'),
+      status: 'COMPLETED',
+      totalPrice: 120,
+    },
+  })
+
+  // Create reviews for completed bookings
+  await prisma.review.create({
+    data: {
+      userId: customer1.id,
+      businessId: business1.id,
+      bookingId: booking1.id,
+      rating: 5,
+      comment: 'Amazing service! Tasha really knows how to work with natural hair. My curls have never looked better!',
+    },
+  })
+
+  await prisma.review.create({
+    data: {
+      userId: customer3.id,
+      businessId: business4.id,
+      bookingId: booking3.id,
+      rating: 5,
+      comment: 'So relaxing and professional. The spa is beautiful and the massage was exactly what I needed.',
+    },
+  })
+
+  // Create additional completed bookings for more reviews
+  const booking4 = await prisma.booking.create({
+    data: {
+      userId: customer2.id,
+      businessId: business1.id,
+      serviceId: services.find(s => s.businessId === business1.id)!.id,
+      date: new Date('2025-01-15'),
+      startTime: new Date('2025-01-15T10:00:00'),
+      endTime: new Date('2025-01-15T11:30:00'),
+      status: 'COMPLETED',
+      totalPrice: 65,
+    },
+  })
+
+  const booking5 = await prisma.booking.create({
+    data: {
+      userId: customer1.id,
+      businessId: business2.id,
+      serviceId: services.find(s => s.businessId === business2.id)!.id,
+      date: new Date('2025-01-10'),
+      startTime: new Date('2025-01-10T16:00:00'),
+      endTime: new Date('2025-01-10T16:45:00'),
+      status: 'COMPLETED',
+      totalPrice: 35,
+    },
+  })
+
+  // Add more reviews for the new bookings
+  await prisma.review.create({
+    data: {
+      userId: customer2.id,
+      businessId: business1.id,
+      bookingId: booking4.id,
+      rating: 4,
+      comment: 'Great experience overall. The stylist was knowledgeable and friendly.',
+    },
+  })
+
+  await prisma.review.create({
+    data: {
+      userId: customer1.id,
+      businessId: business2.id,
+      bookingId: booking5.id,
+      rating: 5,
+      comment: 'Best barber in Atlanta! Always get compliments on my fade.',
+    },
+  })
+
+  console.log('✅ Seed completed successfully!')
+  console.log('\n📧 Test accounts created:')
+  console.log('Customers:')
+  console.log('  - customer1@example.com / password123')
+  console.log('  - customer2@example.com / password123')
+  console.log('  - customer3@example.com / password123')
+  console.log('\nBusiness Owners:')
+  console.log('  - business1@example.com / password123 (Curls & Coils Beauty Bar)')
+  console.log('  - business2@example.com / password123 (King Cuts Barbershop)')
+  console.log('  - business3@example.com / password123 (Glow Up Nail Studio)')
+  console.log('  - business4@example.com / password123 (Serenity Spa & Wellness)')
+}
+
+main()
+  .catch((e) => {
+    console.error('❌ Seed failed:', e)
+    process.exit(1)
+  })
+  .finally(async () => {
+    await prisma.$disconnect()
+  })
