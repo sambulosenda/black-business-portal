@@ -4,17 +4,18 @@ import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/session'
 
 interface BusinessPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export default async function BusinessProfilePage({ params }: BusinessPageProps) {
   const session = await getSession()
+  const { slug } = await params
   
   const business = await prisma.business.findUnique({
     where: {
-      slug: params.slug,
+      slug: slug,
       isActive: true,
     },
     include: {
