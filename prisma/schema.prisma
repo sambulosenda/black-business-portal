@@ -1,0 +1,154 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model for both customers and business owners
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  password      String
+  name          String
+  phone         String?
+  role          UserRole       @default(CUSTOMER)
+  emailVerified DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  
+  // Relations
+  business      Business?
+  bookings      Booking[]
+  reviews       Review[]
+}
+
+model Business {
+  id               String         @id @default(cuid())
+  userId           String         @unique
+  businessName     String
+  slug             String         @unique
+  description      String?
+  category         BusinessCategory
+  address          String
+  city             String
+  state            String
+  zipCode          String
+  phone            String
+  email            String?
+  website          String?
+  instagram        String?
+  isVerified       Boolean        @default(false)
+  isActive         Boolean        @default(true)
+  images           String[]
+  openingHours     Json
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  
+  // Relations
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  services         Service[]
+  bookings         Booking[]
+  reviews          Review[]
+  availabilities   Availability[]
+}
+
+model Service {
+  id          String    @id @default(cuid())
+  businessId  String
+  name        String
+  description String?
+  price       Decimal   @db.Decimal(10, 2)
+  duration    Int       // Duration in minutes
+  category    String
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  business    Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  bookings    Booking[]
+}
+
+model Booking {
+  id          String        @id @default(cuid())
+  userId      String
+  businessId  String
+  serviceId   String
+  date        DateTime
+  startTime   DateTime
+  endTime     DateTime
+  status      BookingStatus @default(PENDING)
+  notes       String?
+  totalPrice  Decimal       @db.Decimal(10, 2)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  // Relations
+  user        User          @relation(fields: [userId], references: [id])
+  business    Business      @relation(fields: [businessId], references: [id])
+  service     Service       @relation(fields: [serviceId], references: [id])
+  review      Review?
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  userId     String
+  businessId String
+  bookingId  String   @unique
+  rating     Int
+  comment    String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  // Relations
+  user       User     @relation(fields: [userId], references: [id])
+  business   Business @relation(fields: [businessId], references: [id])
+  booking    Booking  @relation(fields: [bookingId], references: [id])
+}
+
+model Availability {
+  id         String   @id @default(cuid())
+  businessId String
+  dayOfWeek  Int      // 0-6 (Sunday-Saturday)
+  startTime  String   // HH:MM format
+  endTime    String   // HH:MM format
+  isActive   Boolean  @default(true)
+  
+  // Relations
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  
+  @@unique([businessId, dayOfWeek])
+}
+
+// Enums
+enum UserRole {
+  CUSTOMER
+  BUSINESS_OWNER
+  ADMIN
+}
+
+enum BusinessCategory {
+  HAIR_SALON
+  BARBER_SHOP
+  NAIL_SALON
+  SPA
+  MASSAGE
+  MAKEUP
+  SKINCARE
+  WELLNESS
+  OTHER
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  NO_SHOW
+}
