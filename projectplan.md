@@ -129,8 +129,27 @@ Building a Treatwell-like appointment booking platform specifically designed for
    - Included services preview and pricing
    - Added CTA section for businesses
 
+### Completed Tasks (Business Features)
+6. **Business Profile Pages** ✓
+   - Created dynamic profile pages showing all business details
+   - Display services with pricing and booking buttons
+   - Show reviews and ratings
+   - Added contact information and hours sidebar
+
+7. **Search & Filtering** ✓
+   - Built search page with multiple filters
+   - Text search across business names and services
+   - Filter by category, city, and minimum rating
+   - API endpoint for search functionality
+
+8. **Service Management** ✓
+   - Business owners can add/edit/delete services
+   - Set pricing and duration for each service
+   - Toggle services active/inactive
+   - Categorize services for better organization
+
 ### Next Steps
-- Create individual business profile pages
-- Implement search functionality with filters
-- Add service management for businesses
-- Build booking system
+- Build booking system with calendar
+- Add availability management
+- Create booking confirmation flow
+- Implement review system after bookings
