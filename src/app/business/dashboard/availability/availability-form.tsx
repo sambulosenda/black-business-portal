@@ -184,68 +184,74 @@ export default function AvailabilityForm({
               Set your regular business hours. Customers will only be able to book appointments during these times.
             </p>
             
-            {DAYS_OF_WEEK.map(day => (
-              <div key={day.value} className="flex items-center space-x-4">
-                <div className="w-32">
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={businessHours[day.value].isActive}
-                      onChange={(e) => setBusinessHours(prev => ({
-                        ...prev,
-                        [day.value]: { ...prev[day.value], isActive: e.target.checked }
-                      }))}
-                      className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                    />
-                    <span className="ml-2 text-sm font-medium text-gray-700">
-                      {day.label}
-                    </span>
-                  </label>
+            <div className="space-y-4">
+              {DAYS_OF_WEEK.map(day => (
+                <div key={day.value} className="grid grid-cols-1 sm:grid-cols-4 gap-4 items-center py-3 border-b border-gray-100 last:border-0">
+                  <div className="sm:col-span-1">
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={businessHours[day.value].isActive}
+                        onChange={(e) => setBusinessHours(prev => ({
+                          ...prev,
+                          [day.value]: { ...prev[day.value], isActive: e.target.checked }
+                        }))}
+                        className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4"
+                      />
+                      <span className="ml-3 text-sm font-medium text-gray-900">
+                        {day.label}
+                      </span>
+                    </label>
+                  </div>
+                  
+                  {businessHours[day.value].isActive ? (
+                    <div className="sm:col-span-3 flex items-center space-x-3">
+                      <select
+                        value={businessHours[day.value].startTime}
+                        onChange={(e) => setBusinessHours(prev => ({
+                          ...prev,
+                          [day.value]: { ...prev[day.value], startTime: e.target.value }
+                        }))}
+                        className="block w-full sm:w-auto rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      >
+                        {TIME_SLOTS.map(slot => (
+                          <option key={slot.value} value={slot.value}>
+                            {slot.label}
+                          </option>
+                        ))}
+                      </select>
+                      
+                      <span className="text-gray-500 px-2">to</span>
+                      
+                      <select
+                        value={businessHours[day.value].endTime}
+                        onChange={(e) => setBusinessHours(prev => ({
+                          ...prev,
+                          [day.value]: { ...prev[day.value], endTime: e.target.value }
+                        }))}
+                        className="block w-full sm:w-auto rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      >
+                        {TIME_SLOTS.map(slot => (
+                          <option key={slot.value} value={slot.value}>
+                            {slot.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  ) : (
+                    <div className="sm:col-span-3">
+                      <span className="text-sm text-gray-500">Closed</span>
+                    </div>
+                  )}
                 </div>
-                
-                {businessHours[day.value].isActive && (
-                  <>
-                    <select
-                      value={businessHours[day.value].startTime}
-                      onChange={(e) => setBusinessHours(prev => ({
-                        ...prev,
-                        [day.value]: { ...prev[day.value], startTime: e.target.value }
-                      }))}
-                      className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    >
-                      {TIME_SLOTS.map(slot => (
-                        <option key={slot.value} value={slot.value}>
-                          {slot.label}
-                        </option>
-                      ))}
-                    </select>
-                    
-                    <span className="text-gray-500">to</span>
-                    
-                    <select
-                      value={businessHours[day.value].endTime}
-                      onChange={(e) => setBusinessHours(prev => ({
-                        ...prev,
-                        [day.value]: { ...prev[day.value], endTime: e.target.value }
-                      }))}
-                      className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    >
-                      {TIME_SLOTS.map(slot => (
-                        <option key={slot.value} value={slot.value}>
-                          {slot.label}
-                        </option>
-                      ))}
-                    </select>
-                  </>
-                )}
-              </div>
-            ))}
+              ))}
+            </div>
             
-            <div className="pt-4">
+            <div className="pt-6 border-t border-gray-200">
               <button
                 onClick={handleSaveHours}
                 disabled={loading}
-                className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 disabled:opacity-50"
+                className="w-full sm:w-auto bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 disabled:opacity-50 font-medium transition-colors"
               >
                 {loading ? 'Saving...' : 'Save Business Hours'}
               </button>
@@ -254,8 +260,8 @@ export default function AvailabilityForm({
         ) : (
           <div className="space-y-6">
             {/* Add Time Off Form */}
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="text-sm font-medium text-gray-900 mb-4">Add Time Off</h3>
+            <div className="bg-gray-50 p-6 rounded-lg">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Add Time Off</h3>
               
               <div className="space-y-4">
                 <div>
@@ -334,32 +340,34 @@ export default function AvailabilityForm({
                   />
                 </div>
                 
-                <button
-                  onClick={handleAddTimeOff}
-                  disabled={loading}
-                  className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 disabled:opacity-50"
-                >
-                  {loading ? 'Adding...' : 'Add Time Off'}
-                </button>
+                <div className="pt-2">
+                  <button
+                    onClick={handleAddTimeOff}
+                    disabled={loading}
+                    className="w-full sm:w-auto bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 disabled:opacity-50 font-medium transition-colors"
+                  >
+                    {loading ? 'Adding...' : 'Add Time Off'}
+                  </button>
+                </div>
               </div>
             </div>
             
             {/* Time Off List */}
             <div>
-              <h3 className="text-sm font-medium text-gray-900 mb-4">Scheduled Time Off</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Scheduled Time Off</h3>
               
               {timeOffs.length > 0 ? (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {timeOffs.map((timeOff) => (
                     <div
                       key={timeOff.id}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:shadow-sm transition-shadow"
                     >
                       <div>
-                        <p className="text-sm font-medium text-gray-900">
+                        <p className="font-medium text-gray-900">
                           {format(new Date(timeOff.date), 'EEEE, MMMM d, yyyy')}
                         </p>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-gray-600 mt-1">
                           {timeOff.startTime && timeOff.endTime
                             ? `${timeOff.startTime} - ${timeOff.endTime}`
                             : 'All day'}
@@ -369,7 +377,7 @@ export default function AvailabilityForm({
                       <button
                         onClick={() => handleDeleteTimeOff(timeOff.id)}
                         disabled={loading}
-                        className="text-red-600 hover:text-red-900 text-sm font-medium"
+                        className="text-red-600 hover:text-red-800 text-sm font-medium transition-colors"
                       >
                         Delete
                       </button>
@@ -377,7 +385,10 @@ export default function AvailabilityForm({
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-gray-500">No time off scheduled</p>
+                <div className="text-center py-8 bg-gray-50 rounded-lg">
+                  <p className="text-gray-500">No time off scheduled</p>
+                  <p className="text-sm text-gray-400 mt-1">Add time off above to block booking availability</p>
+                </div>
               )}
             </div>
           </div>
