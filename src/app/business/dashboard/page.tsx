@@ -272,7 +272,7 @@ export default async function BusinessDashboardPage() {
                 Recent Reviews
               </h2>
               <Link
-                href="/business/reviews"
+                href="/business/dashboard/reviews"
                 className="text-sm text-indigo-600 hover:text-indigo-500"
               >
                 View all →
