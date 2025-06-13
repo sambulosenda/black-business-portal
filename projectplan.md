@@ -115,8 +115,22 @@ Building a Treatwell-like appointment booking platform specifically designed for
    - Created API routes for both signup types
    - Added middleware for route protection and role-based access
 
+### Completed Tasks (Dashboards & Homepage)
+4. **Dashboard Pages** ✓
+   - Created customer dashboard with bookings and reviews
+   - Built business owner dashboard with stats and management links
+   - Added navigation layouts for authenticated users
+   - Implemented role-based redirects
+
+5. **Homepage** ✓
+   - Built landing page with hero section
+   - Added category browsing with emoji icons
+   - Created business listings grid with ratings
+   - Included services preview and pricing
+   - Added CTA section for businesses
+
 ### Next Steps
-- Create dashboard pages for customers and businesses
-- Build homepage with business listings
-- Implement business profile pages
-- Add search and filtering functionality
+- Create individual business profile pages
+- Implement search functionality with filters
+- Add service management for businesses
+- Build booking system
