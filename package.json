@@ -10,13 +10,16 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.9.1",
+    "@hookform/resolvers": "^5.1.1",
     "@prisma/client": "^6.9.0",
     "bcryptjs": "^3.0.2",
     "next": "15.3.3",
     "next-auth": "^4.24.11",
     "prisma": "^6.9.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.57.0",
+    "zod": "^3.25.64"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
