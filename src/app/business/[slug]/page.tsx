@@ -41,7 +41,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
   }
 
   // Calculate average rating
-  const avgRating =
+  const averageRating =
     business.reviews.length > 0
       ? business.reviews.reduce((acc, review) => acc + review.rating, 0) /
         business.reviews.length
@@ -131,7 +131,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
                     <svg
                       key={i}
                       className={`h-5 w-5 ${
-                        i < Math.floor(avgRating)
+                        i < Math.floor(averageRating)
                           ? 'text-yellow-400'
                           : 'text-gray-300'
                       }`}
@@ -142,7 +142,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
                     </svg>
                   ))}
                   <span className="ml-2 text-sm text-gray-600">
-                    {avgRating.toFixed(1)} ({business.reviews.length} reviews)
+                    {averageRating.toFixed(1)} ({business.reviews.length} reviews)
                   </span>
                 </div>
               </div>
