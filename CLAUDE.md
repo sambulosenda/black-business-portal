@@ -28,6 +28,12 @@ bun start
 
 # Run linting
 bun lint
+
+# Generate Prisma Client (run after schema changes)
+bunx prisma generate
+
+# Run database migrations
+bunx prisma migrate dev
 ```
 
 ## Architecture
