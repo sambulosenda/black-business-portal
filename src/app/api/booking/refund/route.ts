@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/prisma';
 import { stripe } from '@/lib/stripe';
 import { PaymentStatus } from '@prisma/client';
+import { sendEmail, emailTemplates } from '@/lib/email';
 
 export async function POST(req: NextRequest) {
   try {
@@ -24,6 +25,7 @@ export async function POST(req: NextRequest) {
       include: {
         business: true,
         service: true,
+        user: true,
       },
     });
 
@@ -75,6 +77,21 @@ export async function POST(req: NextRequest) {
         updatedAt: new Date(),
       },
     });
+
+    // Send refund notification email
+    if (booking.user.email) {
+      const emailData = emailTemplates.refundProcessed({
+        customerName: booking.user.name || 'Customer',
+        businessName: booking.business.businessName,
+        amount: refund.amount / 100, // Convert from cents
+        refundId: refund.id,
+      });
+
+      await sendEmail({
+        to: booking.user.email,
+        ...emailData,
+      });
+    }
 
     return NextResponse.json({
       success: true,

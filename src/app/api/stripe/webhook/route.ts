@@ -3,6 +3,8 @@ import { headers } from 'next/headers'
 import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
 import type Stripe from 'stripe'
+import { sendEmail, emailTemplates } from '@/lib/email'
+import { format } from 'date-fns'
 
 export async function POST(request: NextRequest) {
   const body = await request.text()
@@ -31,8 +33,8 @@ export async function POST(request: NextRequest) {
       case 'payment_intent.succeeded': {
         const paymentIntent = event.data.object as Stripe.PaymentIntent
         
-        // Update booking status
-        await prisma.booking.update({
+        // Update booking status and get booking details
+        const booking = await prisma.booking.update({
           where: {
             stripePaymentIntentId: paymentIntent.id,
           },
@@ -40,9 +42,46 @@ export async function POST(request: NextRequest) {
             status: 'CONFIRMED',
             paymentStatus: 'SUCCEEDED',
           },
+          include: {
+            user: true,
+            business: true,
+            service: true,
+          },
         })
         
-        // TODO: Send confirmation email
+        // Send confirmation email
+        if (booking && booking.user.email) {
+          const emailData = emailTemplates.bookingConfirmation({
+            customerName: booking.user.name || 'Customer',
+            businessName: booking.business.businessName,
+            serviceName: booking.service.name,
+            date: format(new Date(booking.date), 'EEEE, MMMM d, yyyy'),
+            time: format(new Date(booking.startTime), 'h:mm a'),
+            totalPrice: booking.totalPrice.toNumber(),
+            bookingId: booking.id,
+          })
+          
+          await sendEmail({
+            to: booking.user.email,
+            ...emailData,
+          })
+          
+          // Also send payment receipt
+          const receiptData = emailTemplates.paymentReceipt({
+            customerName: booking.user.name || 'Customer',
+            businessName: booking.business.businessName,
+            serviceName: booking.service.name,
+            amount: booking.totalPrice.toNumber(),
+            paymentId: paymentIntent.id,
+            date: format(new Date(), 'MMMM d, yyyy'),
+          })
+          
+          await sendEmail({
+            to: booking.user.email,
+            ...receiptData,
+          })
+        }
+        
         console.log('Payment succeeded for booking:', paymentIntent.metadata)
         break
       }

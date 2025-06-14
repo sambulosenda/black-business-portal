@@ -3,6 +3,8 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/prisma';
 import { BookingStatus } from '@prisma/client';
+import { sendEmail, emailTemplates } from '@/lib/email';
+import { format } from 'date-fns';
 
 export async function POST(req: NextRequest) {
   try {
@@ -23,6 +25,7 @@ export async function POST(req: NextRequest) {
       include: {
         business: true,
         service: true,
+        user: true,
       },
     });
 
@@ -72,6 +75,23 @@ export async function POST(req: NextRequest) {
         updatedAt: new Date(),
       },
     });
+
+    // Send cancellation email
+    if (booking.user.email) {
+      const emailData = emailTemplates.bookingCancellation({
+        customerName: booking.user.name || 'Customer',
+        businessName: booking.business.businessName,
+        serviceName: booking.service.name,
+        date: format(new Date(booking.date), 'EEEE, MMMM d, yyyy'),
+        time: format(new Date(booking.startTime), 'h:mm a'),
+        bookingId: booking.id,
+      });
+
+      await sendEmail({
+        to: booking.user.email,
+        ...emailData,
+      });
+    }
 
     // If payment was successful and customer is cancelling, they should request a refund separately
     // This allows for more flexible refund policies
