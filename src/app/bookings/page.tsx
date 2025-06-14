@@ -2,6 +2,7 @@ import { requireAuth } from "@/lib/session"
 import { prisma } from "@/lib/prisma"
 import Link from "next/link"
 import { format } from "date-fns"
+import RefundButton from "./refund-button"
 
 export default async function BookingsPage() {
   const session = await requireAuth()
@@ -92,6 +93,24 @@ export default async function BookingsPage() {
                         >
                           {booking.status}
                         </span>
+                        {booking.paymentStatus && (
+                          <span
+                            className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              booking.paymentStatus === 'SUCCEEDED'
+                                ? 'bg-green-100 text-green-800'
+                                : booking.paymentStatus === 'REFUNDED'
+                                ? 'bg-gray-100 text-gray-800'
+                                : booking.paymentStatus === 'FAILED'
+                                ? 'bg-red-100 text-red-800'
+                                : 'bg-yellow-100 text-yellow-800'
+                            }`}
+                          >
+                            {booking.paymentStatus === 'SUCCEEDED' ? 'Paid' : 
+                             booking.paymentStatus === 'REFUNDED' ? 'Refunded' :
+                             booking.paymentStatus === 'FAILED' ? 'Payment Failed' :
+                             'Payment Pending'}
+                          </span>
+                        )}
                       </div>
                       <p className="text-gray-600">{booking.service.name}</p>
                       <div className="mt-2 text-sm text-gray-500">
@@ -112,13 +131,18 @@ export default async function BookingsPage() {
                       <p className="text-lg font-semibold text-gray-900">
                         ${booking.totalPrice.toString()}
                       </p>
-                      <div className="mt-2 space-x-2">
+                      <div className="mt-2 space-y-2">
                         <Link
                           href={`/business/${booking.business.slug}`}
                           className="text-sm text-indigo-600 hover:text-indigo-500"
                         >
                           View Business
                         </Link>
+                        <RefundButton
+                          bookingId={booking.id}
+                          bookingDate={booking.startTime}
+                          paymentStatus={booking.paymentStatus}
+                        />
                       </div>
                     </div>
                   </div>
@@ -152,9 +176,37 @@ export default async function BookingsPage() {
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        {booking.business.businessName}
-                      </h3>
+                      <div className="flex items-center mb-2">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {booking.business.businessName}
+                        </h3>
+                        <span
+                          className={`ml-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            booking.status === 'COMPLETED'
+                              ? 'bg-green-100 text-green-800'
+                              : booking.status === 'CANCELLED'
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-gray-100 text-gray-800'
+                          }`}
+                        >
+                          {booking.status}
+                        </span>
+                        {booking.paymentStatus && (
+                          <span
+                            className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              booking.paymentStatus === 'SUCCEEDED'
+                                ? 'bg-green-100 text-green-800'
+                                : booking.paymentStatus === 'REFUNDED'
+                                ? 'bg-gray-100 text-gray-800'
+                                : 'bg-red-100 text-red-800'
+                            }`}
+                          >
+                            {booking.paymentStatus === 'SUCCEEDED' ? 'Paid' : 
+                             booking.paymentStatus === 'REFUNDED' ? 'Refunded' :
+                             'Payment Failed'}
+                          </span>
+                        )}
+                      </div>
                       <p className="text-gray-600">{booking.service.name}</p>
                       <p className="mt-1 text-sm text-gray-500">
                         {format(new Date(booking.date), 'MMMM d, yyyy')} at{' '}
