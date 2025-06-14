@@ -35,11 +35,13 @@ export default function StripeConnectSection({
         body: JSON.stringify({ businessId }),
       })
 
+      const data = await response.json()
+
       if (!response.ok) {
-        throw new Error('Failed to create Stripe account')
+        throw new Error(data.error || 'Failed to create Stripe account')
       }
 
-      const { url } = await response.json()
+      const { url } = data
       
       // Redirect to Stripe Connect onboarding
       window.location.href = url

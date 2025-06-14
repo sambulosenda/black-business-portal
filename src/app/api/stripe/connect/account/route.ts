@@ -35,8 +35,8 @@ export async function POST(request: Request) {
     if (!accountId) {
       const account = await stripe.accounts.create({
         type: 'express',
-        country: 'US',
-        email: business.user.email,
+        country: 'GB', // Changed to UK - update this based on your country
+        email: business.user.email || undefined,
         capabilities: {
           card_payments: { requested: true },
           transfers: { requested: true },
@@ -73,10 +73,18 @@ export async function POST(request: Request) {
     })
 
     return NextResponse.json({ url: accountLink.url })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating Stripe Connect account:', error)
+    
+    // Return more specific error message
+    const errorMessage = error.message || 'Failed to create Stripe account'
+    const isStripeError = error.type === 'StripeError'
+    
     return NextResponse.json(
-      { error: 'Failed to create Stripe account' },
+      { 
+        error: errorMessage,
+        details: isStripeError ? error.raw?.message : undefined 
+      },
       { status: 500 }
     )
   }
