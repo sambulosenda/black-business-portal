@@ -75,9 +75,11 @@ export default function AnalyticsDashboard({ businessId }: { businessId: string 
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Revenue Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div>
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Revenue Overview</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -116,6 +118,7 @@ export default function AnalyticsDashboard({ businessId }: { businessId: string 
           </div>
         </div>
       </div>
+      </div>
 
       {/* Fee Breakdown */}
       <div className="bg-white rounded-lg shadow p-6">
@@ -143,7 +146,9 @@ export default function AnalyticsDashboard({ businessId }: { businessId: string 
       </div>
 
       {/* Booking Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div>
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Booking Statistics</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white rounded-lg shadow p-6">
           <p className="text-sm font-medium text-gray-600">Total Bookings</p>
           <p className="text-2xl font-bold text-gray-900">{analytics.bookings.total}</p>
@@ -156,6 +161,7 @@ export default function AnalyticsDashboard({ businessId }: { businessId: string 
           <p className="text-sm font-medium text-gray-600">Upcoming</p>
           <p className="text-2xl font-bold text-blue-600">{analytics.bookings.upcoming}</p>
         </div>
+      </div>
       </div>
 
       {/* Top Services */}
