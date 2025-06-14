@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma"
 import Link from "next/link"
 import { format } from "date-fns"
 import RefundButton from "./refund-button"
+import CancelButton from "./cancel-button"
 
 export default async function BookingsPage() {
   const session = await requireAuth()
@@ -134,15 +135,22 @@ export default async function BookingsPage() {
                       <div className="mt-2 space-y-2">
                         <Link
                           href={`/business/${booking.business.slug}`}
-                          className="text-sm text-indigo-600 hover:text-indigo-500"
+                          className="text-sm text-indigo-600 hover:text-indigo-500 block"
                         >
                           View Business
                         </Link>
-                        <RefundButton
-                          bookingId={booking.id}
-                          bookingDate={booking.startTime}
-                          paymentStatus={booking.paymentStatus}
-                        />
+                        <div className="flex flex-col gap-1">
+                          <CancelButton
+                            bookingId={booking.id}
+                            bookingDate={booking.startTime}
+                            bookingStatus={booking.status}
+                          />
+                          <RefundButton
+                            bookingId={booking.id}
+                            bookingDate={booking.startTime}
+                            paymentStatus={booking.paymentStatus}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
