@@ -50,16 +50,35 @@ function CheckoutForm({
     setProcessing(true)
     setError(null)
 
-    const { error: submitError } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/booking/confirmation/${bookingId}`,
-      },
-    })
+    try {
+      const { error: submitError } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${window.location.origin}/booking/confirmation/${bookingId}`,
+        },
+      })
 
-    if (submitError) {
-      setError(submitError.message || 'Payment failed')
+      if (submitError) {
+        // Provide user-friendly error messages
+        let errorMessage = 'Payment failed. Please try again.'
+        
+        if (submitError.type === 'card_error') {
+          errorMessage = submitError.message || 'Your card was declined.'
+        } else if (submitError.type === 'validation_error') {
+          errorMessage = 'Please check your payment details and try again.'
+        } else if (submitError.code === 'payment_intent_authentication_failure') {
+          errorMessage = 'Authentication failed. Please try again.'
+        } else if (submitError.message) {
+          errorMessage = submitError.message
+        }
+        
+        setError(errorMessage)
+        setProcessing(false)
+      }
+    } catch (err) {
+      setError('An unexpected error occurred. Please try again.')
       setProcessing(false)
+      console.error('Payment error:', err)
     }
   }
 
