@@ -1,48 +1,42 @@
-import { prisma } from "@/lib/prisma"
 import Link from "next/link"
 import { getSession } from "@/lib/session"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import Footer from "@/components/footer"
 
 export default async function Home() {
   const session = await getSession()
 
-  // Get featured businesses
-  const businesses = await prisma.business.findMany({
-    where: {
-      isActive: true,
+  const valueProps = [
+    {
+      title: 'Smart prices',
+      description: 'Just book last-minute, or off-peak',
+      icon: (
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+      color: 'bg-purple-100 text-purple-700'
     },
-    include: {
-      reviews: true,
-      services: {
-        where: { isActive: true },
-        take: 3,
-      },
+    {
+      title: 'Book 24/7',
+      description: 'From bed, or the bus',
+      icon: (
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+      color: 'bg-green-100 text-green-700'
     },
-    take: 12,
-  })
-
-  // Calculate average ratings
-  const businessesWithRatings = businesses.map((business) => {
-    const avgRating =
-      business.reviews.length > 0
-        ? business.reviews.reduce((acc, review) => acc + review.rating, 0) /
-          business.reviews.length
-        : 0
-    return { ...business, avgRating }
-  })
-
-  const categories = [
-    { id: 'HAIR_SALON', name: 'Hair Salons', icon: '💇‍♀️' },
-    { id: 'BARBER_SHOP', name: 'Barber Shops', icon: '💈' },
-    { id: 'NAIL_SALON', name: 'Nail Salons', icon: '💅' },
-    { id: 'SPA', name: 'Spas', icon: '🧖‍♀️' },
-    { id: 'MASSAGE', name: 'Massage', icon: '💆‍♀️' },
-    { id: 'MAKEUP', name: 'Makeup', icon: '💄' },
-    { id: 'SKINCARE', name: 'Skincare', icon: '✨' },
-    { id: 'WELLNESS', name: 'Wellness', icon: '🧘‍♀️' },
+    {
+      title: 'Choice of top-rated salons',
+      description: 'Thousands of venues (and reviews)',
+      icon: (
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+      color: 'bg-pink-100 text-pink-700'
+    }
   ]
 
   return (
@@ -98,179 +92,209 @@ export default async function Home() {
       </nav>
 
       {/* Hero Section */}
-      <div className="bg-indigo-600">
-        <div className="relative max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-white/20 text-white mb-6">
-              <span className="animate-pulse mr-2">🌟</span>
-              Supporting Black Excellence in Beauty
-            </div>
-            <h1 className="text-5xl font-extrabold text-white sm:text-6xl md:text-7xl tracking-tight">
-              <span className="block">Discover Black-Owned</span>
-              <span className="block text-yellow-300">
-                Beauty & Wellness
-              </span>
-            </h1>
-            <p className="mt-6 max-w-2xl mx-auto text-xl text-white/90 leading-relaxed">
-              Book appointments with talented Black beauty professionals in your area.
-              Support local businesses while looking and feeling your best.
-            </p>
-            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/search">
-                <Button size="xl" className="bg-white text-indigo-600 hover:bg-gray-50 font-semibold shadow-sm hover:shadow-md transition-all duration-200">
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                  Find Services Near You
-                </Button>
-              </Link>
-              {!session?.user && (
-                <Link href="/signup/business">
-                  <Button size="xl" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-indigo-600 font-semibold">
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                    </svg>
-                    List Your Business
-                  </Button>
-                </Link>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Categories */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Browse by Category
-          </h2>
-          <p className="text-lg text-gray-600">Find the perfect service for your needs</p>
-          <div className="mt-4 w-24 h-1 bg-indigo-600 mx-auto rounded-full" />
-        </div>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-8">
-          {categories.map((category) => (
-            <Link
-              key={category.id}
-              href={`/search?category=${category.id}`}
-              className="group flex flex-col items-center p-6 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-gray-50"
-            >
-              <div className="text-4xl mb-3 transform group-hover:scale-110 transition-transform duration-200">
-                {category.icon}
+      <div className="relative bg-gray-50">
+        <div className="lg:grid lg:grid-cols-2 lg:gap-0 min-h-[700px]">
+          {/* Left side - Search form */}
+          <div className="flex items-center justify-center px-4 sm:px-6 lg:px-8 py-16 lg:py-0">
+            <div className="max-w-md w-full">
+              <div className="text-center mb-8">
+                <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl">
+                  Book Beauty & Wellness
+                </h1>
+                <p className="mt-3 text-lg text-gray-600">
+                  Support Black-owned businesses
+                </p>
               </div>
-              <span className="text-sm font-medium text-center text-gray-700 group-hover:text-indigo-600">
-                {category.name}
-              </span>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* Business Listings */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Featured Businesses
-          </h2>
-          <p className="text-lg text-gray-600">Discover top-rated beauty and wellness services</p>
-          <div className="mt-4 w-24 h-1 bg-indigo-600 mx-auto rounded-full" />
-        </div>
-        {businessesWithRatings.length > 0 ? (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {businessesWithRatings.map((business) => (
-              <Link
-                key={business.id}
-                href={`/business/${business.slug}`}
-                className="block"
-              >
-                <Card className="h-full hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        {business.businessName}
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        {business.category.replace(/_/g, ' ')}
-                      </p>
-                      <p className="text-sm text-gray-500 mt-1">
-                        {business.city}, {business.state}
-                      </p>
-                    </div>
-                    {business.isVerified && (
-                      <Badge variant="success">Verified</Badge>
-                    )}
+              
+              <div className="bg-white rounded-2xl shadow-xl p-8">
+                <form action="/search" method="GET" className="space-y-6">
+                  <div>
+                    <label htmlFor="service" className="block text-sm font-medium text-gray-700 mb-2">
+                      <svg className="inline w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                      What service are you looking for?
+                    </label>
+                    <input
+                      type="text"
+                      name="q"
+                      id="service"
+                      placeholder="Hair, Nails, Spa..."
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    />
                   </div>
                   
-                  {/* Rating */}
-                  <div className="mt-3 flex items-center">
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <svg
-                          key={i}
-                          className={`h-4 w-4 ${
-                            i < Math.floor(business.avgRating)
-                              ? 'text-yellow-400'
-                              : 'text-gray-300'
-                          }`}
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                      ))}
-                      <span className="ml-2 text-sm text-gray-500">
-                        ({business.reviews.length} reviews)
-                      </span>
-                    </div>
+                  <div>
+                    <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+                      <svg className="inline w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      Enter postcode or area
+                    </label>
+                    <input
+                      type="text"
+                      name="city"
+                      id="location"
+                      placeholder="New York, NY"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    />
                   </div>
-
-                  {/* Services Preview */}
-                  {business.services.length > 0 && (
-                    <div className="mt-4">
-                      <p className="text-sm font-medium text-gray-700 mb-2">
-                        Popular Services:
-                      </p>
-                      <div className="space-y-1">
-                        {business.services.map((service) => (
-                          <div
-                            key={service.id}
-                            className="flex justify-between text-sm"
-                          >
-                            <span className="text-gray-600">{service.name}</span>
-                            <span className="font-medium text-gray-900">
-                              ${service.price.toString()}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </Card>
-              </Link>
-            ))}
+                  
+                  <div>
+                    <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-2">
+                      <svg className="inline w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      When would you like to visit?
+                    </label>
+                    <input
+                      type="date"
+                      name="date"
+                      id="date"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    />
+                  </div>
+                  
+                  <Button type="submit" size="xl" fullWidth className="bg-indigo-600 hover:bg-indigo-700">
+                    Search BeautyPortal
+                  </Button>
+                </form>
+              </div>
+            </div>
           </div>
-        ) : (
-          <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">
-              No businesses listed yet.
-            </p>
-            <Link
-              href="/signup/business"
-              className="mt-4 inline-block text-indigo-600 hover:text-indigo-500"
-            >
-              Be the first to list your business →
-            </Link>
+          
+          {/* Right side - Image */}
+          <div className="relative lg:block hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-600">
+              <div className="absolute inset-0 bg-black/20" />
+            </div>
+            <div className="relative h-full flex items-center justify-center text-white p-12">
+              <div className="text-center">
+                <h2 className="text-5xl font-bold mb-4">
+                  Beauty is
+                  <span className="block text-6xl mt-2">in session</span>
+                </h2>
+                <p className="text-xl opacity-90 mt-6">
+                  Find and book the best Black-owned beauty<br />and wellness services in your area
+                </p>
+              </div>
+            </div>
           </div>
-        )}
+        </div>
       </div>
 
-      {/* CTA Section */}
-      <div className="relative bg-gradient-to-r from-indigo-600 to-purple-600 overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-black opacity-10" />
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.05%22%3E%3Cpath%20d%3D%22M0%2040L40%200H20L0%2020M40%2040V20L20%2040%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E')]" />
+      {/* Value Props */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+            The brighter way to book beauty
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {valueProps.map((prop, index) => (
+              <div key={index} className="text-center">
+                <div className={`inline-flex items-center justify-center w-20 h-20 rounded-2xl ${prop.color} mb-4`}>
+                  {prop.icon}
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  {prop.title}
+                </h3>
+                <p className="text-gray-600">
+                  {prop.description}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="relative max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+      </section>
+
+      {/* How it Works */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">
+                Supporting made meaningful
+              </h2>
+              <p className="text-lg text-gray-600 mb-8">
+                Give the gift of essential self-care and glow-from-within moments to the Black-owned businesses in your community.
+              </p>
+              <div className="space-y-6">
+                <div className="flex items-start">
+                  <div className="flex-shrink-0">
+                    <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-indigo-100 text-indigo-600">
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="ml-4">
+                    <h3 className="text-lg font-semibold text-gray-900">Search & Discover</h3>
+                    <p className="mt-1 text-gray-600">Find Black-owned salons and spas near you</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="flex-shrink-0">
+                    <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-indigo-100 text-indigo-600">
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="ml-4">
+                    <h3 className="text-lg font-semibold text-gray-900">Book Instantly</h3>
+                    <p className="mt-1 text-gray-600">Choose your service and time, book in seconds</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="flex-shrink-0">
+                    <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-indigo-100 text-indigo-600">
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="ml-4">
+                    <h3 className="text-lg font-semibold text-gray-900">Support & Enjoy</h3>
+                    <p className="mt-1 text-gray-600">Get pampered while supporting your community</p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-10">
+                <Link href="/search">
+                  <Button size="lg" className="shadow-sm hover:shadow-md">
+                    Start Booking Now
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            <div className="hidden lg:block">
+              <div className="relative">
+                <div className="bg-indigo-100 rounded-2xl p-8">
+                  <div className="bg-white rounded-xl shadow-xl p-8 text-center">
+                    <div className="text-5xl font-bold text-indigo-600 mb-2">5,000+</div>
+                    <div className="text-gray-600 mb-6">Black-owned businesses supported</div>
+                    <div className="grid grid-cols-2 gap-4 text-center">
+                      <div>
+                        <div className="text-2xl font-semibold text-gray-900">100K+</div>
+                        <div className="text-sm text-gray-500">Bookings made</div>
+                      </div>
+                      <div>
+                        <div className="text-2xl font-semibold text-gray-900">4.9/5</div>
+                        <div className="text-sm text-gray-500">Average rating</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="bg-indigo-600">
+        <div className="max-w-7xl mx-auto py-20 px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-4xl font-extrabold text-white">
               Are you a beauty professional?
@@ -280,7 +304,7 @@ export default async function Home() {
             </p>
             <div className="mt-8">
               <Link href="/signup/business">
-                <Button size="xl" className="bg-white text-indigo-600 hover:bg-gray-100 font-semibold shadow-xl">
+                <Button size="xl" className="bg-white text-indigo-600 hover:bg-gray-50 font-semibold shadow-sm hover:shadow-md">
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
@@ -310,7 +334,7 @@ export default async function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
       
       <Footer />
     </div>
