@@ -6,6 +6,7 @@ import { DayPicker } from 'react-day-picker'
 import { format, addDays, setHours, setMinutes, isBefore, isAfter, startOfDay } from 'date-fns'
 import Link from 'next/link'
 import 'react-day-picker/style.css'
+import { Breadcrumb, BreadcrumbWrapper } from '@/components/ui/breadcrumb'
 
 interface Service {
   id: string
@@ -235,6 +236,16 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
           </div>
         </div>
       </nav>
+      <BreadcrumbWrapper>
+        <Breadcrumb 
+          items={[
+            { label: 'Home', href: '/' },
+            { label: 'Search', href: '/search' },
+            { label: business.businessName, href: `/business/${business.slug}` },
+            { label: 'Book Appointment' }
+          ]}
+        />
+      </BreadcrumbWrapper>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">

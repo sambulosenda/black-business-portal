@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/session'
 import Navigation from '@/components/navigation'
 import Footer from '@/components/footer'
+import { Breadcrumb, BreadcrumbWrapper } from '@/components/ui/breadcrumb'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -54,8 +55,18 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
 
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-  return (<div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white">
+  return (
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white">
       <Navigation session={session} />
+      <BreadcrumbWrapper>
+        <Breadcrumb 
+          items={[
+            { label: 'Home', href: '/' },
+            { label: 'Search', href: '/search' },
+            { label: business.businessName }
+          ]}
+        />
+      </BreadcrumbWrapper>
 
       {/* Business Header */}
       <div className="bg-indigo-600 text-white">

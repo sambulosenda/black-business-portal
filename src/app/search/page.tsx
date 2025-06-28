@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { SkeletonGrid } from '@/components/ui/skeleton-card'
 import Navigation from '@/components/navigation'
 import Footer from '@/components/footer'
+import { Breadcrumb, BreadcrumbWrapper } from '@/components/ui/breadcrumb'
 
 interface Business {
   id: string
@@ -94,6 +95,14 @@ function SearchContent() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white">
       <Navigation session={null} />
+      <BreadcrumbWrapper>
+        <Breadcrumb 
+          items={[
+            { label: 'Home', href: '/' },
+            { label: 'Search Services' }
+          ]}
+        />
+      </BreadcrumbWrapper>
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="lg:grid lg:grid-cols-12 lg:gap-8">

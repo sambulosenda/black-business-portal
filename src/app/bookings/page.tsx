@@ -4,6 +4,7 @@ import Link from "next/link"
 import { format } from "date-fns"
 import RefundButton from "./refund-button"
 import CancelButton from "./cancel-button"
+import { Breadcrumb, BreadcrumbWrapper } from '@/components/ui/breadcrumb'
 
 export default async function BookingsPage() {
   const session = await requireAuth()
@@ -15,6 +16,7 @@ export default async function BookingsPage() {
     include: {
       business: true,
       service: true,
+      review: true,
     },
     orderBy: {
       date: 'desc',
@@ -56,6 +58,15 @@ export default async function BookingsPage() {
           </div>
         </div>
       </nav>
+      <BreadcrumbWrapper>
+        <Breadcrumb 
+          items={[
+            { label: 'Home', href: '/' },
+            { label: 'Dashboard', href: '/dashboard' },
+            { label: 'My Bookings' }
+          ]}
+        />
+      </BreadcrumbWrapper>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
