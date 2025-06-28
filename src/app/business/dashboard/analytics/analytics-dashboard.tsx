@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { BarChart, PieChart, StatCard, ChartContainer } from '@/components/ui/chart';
 import { EmptyState } from '@/components/ui/empty-state';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableContainer } from '@/components/ui/table';
 
 interface AnalyticsData {
   revenue: {
@@ -223,81 +224,69 @@ export default function AnalyticsDashboard({ businessId }: { businessId: string 
       )}
 
       {/* Recent Transactions Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="px-6 py-4 border-b">
-          <h3 className="text-lg font-semibold text-gray-900">Recent Transactions</h3>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Customer
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Service
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Your Revenue
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {analytics.recentTransactions.length > 0 ? (
-                analytics.recentTransactions.map((transaction) => (
-                  <tr key={transaction.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">{transaction.customerName}</p>
-                        <p className="text-sm text-gray-500">{transaction.customerEmail}</p>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {transaction.serviceName}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {format(new Date(transaction.date), 'MMM d, yyyy')}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        transaction.status === 'COMPLETED' 
-                          ? 'bg-green-100 text-green-800'
-                          : transaction.status === 'CONFIRMED'
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-gray-100 text-gray-800'
-                      }`}>
-                        {transaction.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-right font-medium text-gray-900">
-                      ${transaction.amount.toFixed(2)}
-                      <span className="text-xs text-gray-500 block">
-                        (Total: ${transaction.totalPaid.toFixed(2)})
-                      </span>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={5} className="px-6 py-12">
-                    <EmptyState
-                      icon="chart"
-                      title="No transactions yet"
-                      description="Your recent transactions will appear here"
-                    />
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <TableContainer 
+        title="Recent Transactions"
+        description="Your latest bookings and payments"
+      >
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Customer</TableHead>
+              <TableHead>Service</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="text-right">Your Revenue</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {analytics.recentTransactions.length > 0 ? (
+              analytics.recentTransactions.map((transaction) => (
+                <TableRow key={transaction.id}>
+                  <TableCell>
+                    <div>
+                      <p className="font-medium text-gray-900">{transaction.customerName}</p>
+                      <p className="text-sm text-gray-500">{transaction.customerEmail}</p>
+                    </div>
+                  </TableCell>
+                  <TableCell>{transaction.serviceName}</TableCell>
+                  <TableCell className="text-gray-500">
+                    {format(new Date(transaction.date), 'MMM d, yyyy')}
+                  </TableCell>
+                  <TableCell>
+                    <span className={`inline-flex px-2.5 py-1 text-xs font-semibold rounded-full ${
+                      transaction.status === 'COMPLETED' 
+                        ? 'bg-green-100 text-green-800'
+                        : transaction.status === 'CONFIRMED'
+                        ? 'bg-blue-100 text-blue-800'
+                        : 'bg-gray-100 text-gray-800'
+                    }`}>
+                      {transaction.status}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right font-medium">
+                    <div>
+                      <p className="text-gray-900">${transaction.amount.toFixed(2)}</p>
+                      <p className="text-xs text-gray-500">
+                        Total: ${transaction.totalPaid.toFixed(2)}
+                      </p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5} className="h-32">
+                  <EmptyState
+                    icon="chart"
+                    title="No transactions yet"
+                    description="Your recent transactions will appear here"
+                  />
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 }
