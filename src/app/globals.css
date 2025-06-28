@@ -278,6 +278,16 @@ body {
   }
 }
 
+@keyframes draw-line {
+  from {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
 /* Animation utility classes */
 .animate-fade-in {
   animation: fade-in 0.3s ease-out;
@@ -309,6 +319,10 @@ body {
 
 .animate-shake {
   animation: shake 0.5s ease-in-out;
+}
+
+.animate-draw-line {
+  animation: draw-line 1s ease-out forwards;
 }
 
 /* Stagger animations for lists */
