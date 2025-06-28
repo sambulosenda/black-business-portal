@@ -73,11 +73,12 @@ export default function Navigation({ session }: NavigationProps) {
                   <Button>Sign up</Button>
                 </Link>
                 <Link href="/signup/business">
-                  <Button variant="outline" className="hidden lg:inline-flex">
+                  <Button variant="outline">
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
-                    List your business
+                    <span className="hidden sm:inline">List your business</span>
+                    <span className="sm:hidden">List business</span>
                   </Button>
                 </Link>
               </>

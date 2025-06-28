@@ -1,8 +1,18 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select } from '@/components/ui/select'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { SkeletonGrid } from '@/components/ui/skeleton-card'
+import Navigation from '@/components/navigation'
+import Footer from '@/components/footer'
+import { getSession } from '@/lib/session'
 
 interface Business {
   id: string
@@ -33,7 +43,7 @@ const categories = [
   { value: 'OTHER', label: 'Other' },
 ]
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams()
   const [businesses, setBusinesses] = useState<Business[]>([])
   const [loading, setLoading] = useState(true)
@@ -77,144 +87,108 @@ export default function SearchPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
-      <nav className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <Link href="/" className="text-xl font-bold text-indigo-600">
-                BeautyPortal
-              </Link>
+
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="lg:grid lg:grid-cols-12 lg:gap-8">
+        {/* Filters Sidebar */}
+        <div className="lg:col-span-3">
+          <Card className="p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Filters</h2>
+            
+            {/* Search */}
+            <div className="mb-6">
+              <Label htmlFor="search">Search</Label>
+              <Input
+                type="text"
+                id="search"
+                value={filters.query}
+                onChange={(e) => handleFilterChange('query', e.target.value)}
+                placeholder="Business name or service..."
+                className="mt-1"
+              />
             </div>
-            <div className="flex items-center space-x-4">
-              <Link
-                href="/login"
-                className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+
+            {/* Category */}
+            <div className="mb-6">
+              <Label htmlFor="category">Category</Label>
+              <Select
+                id="category"
+                value={filters.category}
+                onChange={(e) => handleFilterChange('category', e.target.value)}
+                className="mt-1"
               >
-                Sign in
-              </Link>
-              <Link
-                href="/signup/customer"
-                className="bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2 rounded-md text-sm font-medium"
-              >
-                Sign up
-              </Link>
+                {categories.map(cat => (
+                  <option key={cat.value} value={cat.value}>{cat.label}</option>
+                ))}
+              </Select>
             </div>
-          </div>
+
+            {/* City */}
+            <div className="mb-6">
+              <Label htmlFor="city">City</Label>
+              <Input
+                type="text"
+                id="city"
+                value={filters.city}
+                onChange={(e) => handleFilterChange('city', e.target.value)}
+                placeholder="Enter city..."
+                className="mt-1"
+              />
+            </div>
+
+            {/* Minimum Rating */}
+            <div className="mb-6">
+              <Label htmlFor="minRating">Minimum Rating</Label>
+              <Select
+                id="minRating"
+                value={filters.minRating}
+                onChange={(e) => handleFilterChange('minRating', e.target.value)}
+                className="mt-1"
+              >
+                <option value="">Any rating</option>
+                <option value="4">4+ stars</option>
+                <option value="3">3+ stars</option>
+                <option value="2">2+ stars</option>
+              </Select>
+            </div>
+
+            {/* Clear Filters */}
+            <Button
+              onClick={() => setFilters({ query: '', category: '', city: '', minRating: '' })}
+              variant="outline"
+              fullWidth
+            >
+              Clear all filters
+            </Button>
+          </Card>
         </div>
-      </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="lg:grid lg:grid-cols-12 lg:gap-8">
-          {/* Filters Sidebar */}
-          <div className="lg:col-span-3">
-            <div className="bg-white shadow rounded-lg p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Filters</h2>
-              
-              {/* Search */}
-              <div className="mb-6">
-                <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-2">
-                  Search
-                </label>
-                <input
-                  type="text"
-                  id="search"
-                  value={filters.query}
-                  onChange={(e) => handleFilterChange('query', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  placeholder="Business name or service..."
-                />
-              </div>
-
-              {/* Category */}
-              <div className="mb-6">
-                <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
-                  Category
-                </label>
-                <select
-                  id="category"
-                  value={filters.category}
-                  onChange={(e) => handleFilterChange('category', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                >
-                  {categories.map(cat => (
-                    <option key={cat.value} value={cat.value}>{cat.label}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* City */}
-              <div className="mb-6">
-                <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
-                  City
-                </label>
-                <input
-                  type="text"
-                  id="city"
-                  value={filters.city}
-                  onChange={(e) => handleFilterChange('city', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  placeholder="Enter city..."
-                />
-              </div>
-
-              {/* Minimum Rating */}
-              <div className="mb-6">
-                <label htmlFor="minRating" className="block text-sm font-medium text-gray-700 mb-2">
-                  Minimum Rating
-                </label>
-                <select
-                  id="minRating"
-                  value={filters.minRating}
-                  onChange={(e) => handleFilterChange('minRating', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                >
-                  <option value="">Any rating</option>
-                  <option value="4">4+ stars</option>
-                  <option value="3">3+ stars</option>
-                  <option value="2">2+ stars</option>
-                </select>
-              </div>
-
-              {/* Clear Filters */}
-              <button
-                onClick={() => setFilters({ query: '', category: '', city: '', minRating: '' })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-              >
-                Clear all filters
-              </button>
-            </div>
+        {/* Results */}
+        <div className="mt-8 lg:mt-0 lg:col-span-9">
+          <div className="mb-4">
+            <h1 className="text-2xl font-bold text-gray-900">
+              {filters.category 
+                ? `${categories.find(c => c.value === filters.category)?.label} Services`
+                : 'All Services'}
+            </h1>
+            <p className="text-sm text-gray-600 mt-1">
+              {loading ? 'Loading...' : `${businesses.length} businesses found`}
+            </p>
           </div>
 
-          {/* Results */}
-          <div className="mt-8 lg:mt-0 lg:col-span-9">
-            <div className="mb-4">
-              <h1 className="text-2xl font-bold text-gray-900">
-                {filters.category 
-                  ? `${categories.find(c => c.value === filters.category)?.label} Services`
-                  : 'All Services'}
-              </h1>
-              <p className="text-sm text-gray-600 mt-1">
-                {loading ? 'Loading...' : `${businesses.length} businesses found`}
-              </p>
-            </div>
-
-            {loading ? (
-              <div className="flex justify-center items-center h-64">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-              </div>
-            ) : businesses.length > 0 ? (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                {businesses.map((business) => {
-                  const avgRating = calculateAvgRating(business.reviews)
-                  return (
-                    <Link
-                      key={business.id}
-                      href={`/business/${business.slug}`}
-                      className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow"
-                    >
-                      <div className="p-6">
+          {loading ? (
+            <SkeletonGrid count={6} />
+          ) : businesses.length > 0 ? (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {businesses.map((business) => {
+                const avgRating = calculateAvgRating(business.reviews)
+                return (
+                  <Link
+                    key={business.id}
+                    href={`/business/${business.slug}`}
+                    className="block"
+                  >
+                    <Card className="h-full hover:shadow-xl hover:-translate-y-1 transition-all duration-200 cursor-pointer">
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <h3 className="text-lg font-semibold text-gray-900">
@@ -227,11 +201,9 @@ export default function SearchPage() {
                               {business.city}, {business.state}
                             </p>
                           </div>
-                          {business.isVerified && (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                              Verified
-                            </span>
-                          )}
+                        {business.isVerified && (
+                          <Badge variant="success">Verified</Badge>
+                        )}
                         </div>
                         
                         {/* Rating */}
@@ -278,35 +250,48 @@ export default function SearchPage() {
                             </div>
                           </div>
                         )}
-                      </div>
-                    </Link>
-                  )
-                })}
-              </div>
-            ) : (
-              <div className="text-center py-12 bg-white rounded-lg shadow">
-                <svg
-                  className="mx-auto h-12 w-12 text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-                <h3 className="mt-2 text-sm font-medium text-gray-900">No results found</h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  Try adjusting your filters or search terms
-                </p>
-              </div>
-            )}
-          </div>
+                    </Card>
+                  </Link>
+                )
+              })}
+            </div>
+          ) : (
+            <Card className="text-center py-12">
+              <svg
+                className="mx-auto h-12 w-12 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">No results found</h3>
+              <p className="mt-1 text-sm text-gray-500">
+                Try adjusting your filters or search terms
+              </p>
+            </Card>
+          )}
         </div>
       </div>
+    </div>
+  )
+}
+
+export default async function SearchPage() {
+  const session = await getSession()
+  
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <Navigation session={session} />
+      <Suspense fallback={<div className="max-w-7xl mx-auto px-4 py-8"><SkeletonGrid count={6} /></div>}>
+        <SearchContent />
+      </Suspense>
+      <Footer />
     </div>
   )
 }
