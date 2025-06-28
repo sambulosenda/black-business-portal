@@ -99,7 +99,7 @@ function SearchContent() {
           <div className="lg:grid lg:grid-cols-12 lg:gap-8">
             {/* Filters Sidebar */}
             <div className="lg:col-span-3">
-              <Card className="p-6">
+              <Card className="p-6 animate-slide-in-left">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Filters</h2>
             
             {/* Search */}
@@ -171,7 +171,7 @@ function SearchContent() {
         </div>
 
         {/* Results */}
-        <div className="mt-8 lg:mt-0 lg:col-span-9">
+        <div className="mt-8 lg:mt-0 lg:col-span-9 animate-slide-in-right">
           <div className="mb-4">
             <h1 className="text-2xl font-bold text-gray-900">
               {filters.category 
@@ -186,7 +186,7 @@ function SearchContent() {
           {loading ? (
             <SkeletonGrid count={6} />
           ) : businesses.length > 0 ? (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 stagger">
               {businesses.map((business) => {
                 const avgRating = calculateAvgRating(business.reviews)
                 return (
@@ -195,7 +195,7 @@ function SearchContent() {
                     href={`/business/${business.slug}`}
                     className="block"
                   >
-                    <Card className="h-full hover:shadow-xl hover:-translate-y-1 transition-all duration-200 cursor-pointer">
+                    <Card className="h-full hover:shadow-xl hover:-translate-y-1 transition-all duration-200 cursor-pointer hover-lift">
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <h3 className="text-lg font-semibold text-gray-900">

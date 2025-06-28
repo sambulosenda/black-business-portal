@@ -21,8 +21,8 @@ export default function Navigation({ session }: NavigationProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2 group">
-              <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">
+            <Link href="/" className="flex items-center space-x-2 group hover-scale-sm transition-transform">
+              <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold group-hover:bg-indigo-700 transition-colors">
                 B
               </div>
               <span className="text-xl font-bold text-gray-900">BeautyPortal</span>
@@ -108,8 +108,8 @@ export default function Navigation({ session }: NavigationProps) {
 
       {/* Mobile menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-100">
+        <div className="md:hidden animate-slide-up">
+          <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-100 stagger">
             <Link href="/search" className="block">
               <Button variant="ghost" fullWidth className="justify-start">
                 Find Services
