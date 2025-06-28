@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import {
   Table,
   TableBody,
@@ -29,6 +29,8 @@ interface DataTableProps<T> {
   emptyState?: React.ReactNode
   onRowClick?: (item: T) => void
   className?: string
+  itemsPerPage?: number
+  showPagination?: boolean
 }
 
 export function DataTable<T extends Record<string, any>>({
@@ -38,13 +40,16 @@ export function DataTable<T extends Record<string, any>>({
   searchPlaceholder = 'Search...',
   emptyState,
   onRowClick,
-  className
+  className,
+  itemsPerPage = 10,
+  showPagination = true
 }: DataTableProps<T>) {
   const [searchTerm, setSearchTerm] = useState('')
   const [sortConfig, setSortConfig] = useState<{
     key: string
     direction: 'asc' | 'desc'
   } | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
 
   // Filter data based on search term
   const filteredData = searchTerm
@@ -100,6 +105,19 @@ export function DataTable<T extends Record<string, any>>({
     return value
   }
 
+  // Pagination
+  const totalPages = Math.ceil(sortedData.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const paginatedData = showPagination 
+    ? sortedData.slice(startIndex, endIndex)
+    : sortedData
+
+  // Reset to first page when search changes
+  React.useEffect(() => {
+    setCurrentPage(1)
+  }, [searchTerm])
+
   return (
     <div className={cn('space-y-4', className)}>
       {searchable && (
@@ -152,8 +170,8 @@ export function DataTable<T extends Record<string, any>>({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {sortedData.length > 0 ? (
-              sortedData.map((item, index) => (
+            {paginatedData.length > 0 ? (
+              paginatedData.map((item, index) => (
                 <TableRow
                   key={index}
                   className={cn(
@@ -191,8 +209,64 @@ export function DataTable<T extends Record<string, any>>({
       {sortedData.length > 0 && (
         <div className="flex items-center justify-between px-2">
           <p className="text-sm text-gray-700">
-            Showing {sortedData.length} of {data.length} results
+            Showing {startIndex + 1}-{Math.min(endIndex, sortedData.length)} of {sortedData.length} results
+            {searchTerm && ` (filtered from ${data.length} total)`}
           </p>
+          {showPagination && totalPages > 1 && (
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                disabled={currentPage === 1}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </Button>
+              <div className="flex items-center gap-1">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                  // Show first page, last page, current page, and pages around current
+                  if (
+                    page === 1 ||
+                    page === totalPages ||
+                    (page >= currentPage - 1 && page <= currentPage + 1)
+                  ) {
+                    return (
+                      <Button
+                        key={page}
+                        variant={page === currentPage ? "primary" : "outline"}
+                        size="sm"
+                        onClick={() => setCurrentPage(page)}
+                        className="min-w-[2rem]"
+                      >
+                        {page}
+                      </Button>
+                    )
+                  }
+                  // Show ellipsis
+                  if (page === currentPage - 2 || page === currentPage + 2) {
+                    return (
+                      <span key={page} className="px-2 text-gray-500">
+                        ...
+                      </span>
+                    )
+                  }
+                  return null
+                })}
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                disabled={currentPage === totalPages}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>
