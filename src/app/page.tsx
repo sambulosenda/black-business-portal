@@ -92,97 +92,66 @@ export default async function Home() {
       </nav>
 
       {/* Hero Section */}
-      <div className="relative bg-gray-50">
-        <div className="lg:grid lg:grid-cols-2 lg:gap-0 min-h-[700px]">
-          {/* Left side - Search form */}
-          <div className="flex items-center justify-center px-4 sm:px-6 lg:px-8 py-16 lg:py-0">
-            <div className="max-w-md w-full">
-              <div className="text-center mb-8">
-                <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl">
-                  Book Beauty & Wellness
-                </h1>
-                <p className="mt-3 text-lg text-gray-600">
-                  Support Black-owned businesses
-                </p>
-              </div>
-              
-              <div className="bg-white rounded-2xl shadow-xl p-8">
-                <form action="/search" method="GET" className="space-y-6">
-                  <div>
-                    <label htmlFor="service" className="block text-sm font-medium text-gray-700 mb-2">
-                      <svg className="inline w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                      </svg>
-                      What service are you looking for?
-                    </label>
-                    <input
-                      type="text"
-                      name="q"
-                      id="service"
-                      placeholder="Hair, Nails, Spa..."
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
-                      <svg className="inline w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      Enter postcode or area
-                    </label>
-                    <input
-                      type="text"
-                      name="city"
-                      id="location"
-                      placeholder="New York, NY"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-2">
-                      <svg className="inline w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                      When would you like to visit?
-                    </label>
-                    <input
-                      type="date"
-                      name="date"
-                      id="date"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                    />
-                  </div>
-                  
-                  <Button type="submit" size="xl" fullWidth className="bg-indigo-600 hover:bg-indigo-700">
-                    Search BeautyPortal
+      <section className="bg-indigo-600 py-20 lg:py-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-4xl mx-auto">
+            <div className="inline-flex items-center px-5 py-2.5 bg-white/20 text-white rounded-full text-sm font-medium mb-10">
+              <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              Supporting Black Excellence in Beauty
+            </div>
+            
+            <h1 className="text-4xl font-bold text-white sm:text-5xl lg:text-6xl xl:text-7xl mb-8 leading-tight">
+              Book with Black-Owned
+              <span className="block mt-3">Beauty & Wellness</span>
+            </h1>
+            
+            <p className="text-lg sm:text-xl lg:text-2xl text-white/90 max-w-3xl mx-auto mb-12 leading-relaxed">
+              Discover and support talented Black beauty professionals in your community. 
+              From hair care to wellness services, find your perfect match.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-16">
+              <Link href="/search">
+                <Button size="lg" className="bg-white text-indigo-600 hover:bg-gray-50 shadow-sm">
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  Find Services
+                </Button>
+              </Link>
+              {!session?.user && (
+                <Link href="/signup/business">
+                  <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white hover:text-indigo-600">
+                    List Your Business
                   </Button>
-                </form>
-              </div>
-            </div>
-          </div>
-          
-          {/* Right side - Image */}
-          <div className="relative lg:block hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-600">
-              <div className="absolute inset-0 bg-black/20" />
-            </div>
-            <div className="relative h-full flex items-center justify-center text-white p-12">
-              <div className="text-center">
-                <h2 className="text-5xl font-bold mb-4">
-                  Beauty is
-                  <span className="block text-6xl mt-2">in session</span>
-                </h2>
-                <p className="text-xl opacity-90 mt-6">
-                  Find and book the best Black-owned beauty<br />and wellness services in your area
-                </p>
-              </div>
+                </Link>
+              )}
             </div>
           </div>
         </div>
-      </div>
+      </section>
+      
+      {/* Stats Section */}
+      <section className="bg-gray-50 py-16 border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div>
+              <div className="text-3xl sm:text-4xl font-bold text-indigo-600 mb-2">1,000+</div>
+              <div className="text-gray-600">Black-owned businesses</div>
+            </div>
+            <div>
+              <div className="text-3xl sm:text-4xl font-bold text-indigo-600 mb-2">50,000+</div>
+              <div className="text-gray-600">Happy customers</div>
+            </div>
+            <div>
+              <div className="text-3xl sm:text-4xl font-bold text-indigo-600 mb-2">4.9 ★</div>
+              <div className="text-gray-600">Average rating</div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Value Props */}
       <section className="py-16 bg-white">
