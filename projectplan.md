@@ -302,3 +302,23 @@ The platform now has all core features:
 - **Consistent Spacing**: Used 4px base unit throughout for consistent rhythm
 - **Accessibility**: Maintained focus indicators and proper contrast ratios
 - **Professional Appearance**: Clean layouts with proper alignment and spacing
+
+## Revert Sidebar Implementation
+
+### Plan to Revert Dashboard Layouts to Horizontal Navigation
+
+**Objective**: Revert the dashboard layouts back to their original horizontal navigation state before the sidebar implementation (commit 8a17675).
+
+### Todo List
+
+- [x] Revert `/src/app/business/dashboard/layout.tsx` to horizontal navigation
+- [x] Revert `/src/app/dashboard/layout.tsx` to horizontal navigation  
+- [x] Remove `/src/components/logout-button.tsx` file (created for sidebar)
+- [x] Test that both dashboards work correctly with horizontal navigation
+- [x] Commit the changes
+
+### Implementation Notes
+- The original layouts used simple Link components for navigation
+- No complex dropdown menus or collapsible sidebars
+- Clean, horizontal navigation bars with shadow styling
+- Mobile responsiveness handled with hidden/shown classes

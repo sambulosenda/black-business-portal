@@ -1,34 +1,5 @@
 import { requireAuth } from "@/lib/session"
 import Link from "next/link"
-import { 
-  Home,
-  Calendar,
-  User,
-  Search,
-  ChevronUp,
-  User2
-} from "lucide-react"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-  SidebarRail,
-  SidebarTrigger,
-} from "@/components/ui/sidebar"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import LogoutButton from "@/components/logout-button"
 
 export default async function DashboardLayout({
   children,
@@ -38,140 +9,78 @@ export default async function DashboardLayout({
   const session = await requireAuth()
 
   return (
-    <SidebarProvider>
-      <div className="flex h-screen w-full">
-        <Sidebar collapsible="icon">
-          <SidebarHeader>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton size="lg" asChild>
-                  <Link href="/">
-                    <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-indigo-600 text-white">
-                      <Home className="size-4" />
-                    </div>
-                    <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">BeautyPortal</span>
-                      <span className="truncate text-xs">Customer Dashboard</span>
-                    </div>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarHeader>
-          
-          <SidebarContent>
-            <SidebarGroup>
-              <SidebarGroupLabel>Account</SidebarGroupLabel>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="/dashboard">
-                      <Home className="size-4" />
-                      <span>Overview</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="/bookings">
-                      <Calendar className="size-4" />
-                      <span>My Bookings</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="/profile">
-                      <User className="size-4" />
-                      <span>Profile</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroup>
-            
-            <SidebarGroup>
-              <SidebarGroupLabel>Browse</SidebarGroupLabel>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="/search">
-                      <Search className="size-4" />
-                      <span>Find Services</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="/">
-                      <Home className="size-4" />
-                      <span>Home</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroup>
-          </SidebarContent>
-          
-          <SidebarFooter>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <SidebarMenuButton
-                      size="lg"
-                      className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                    >
-                      <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
-                        <User2 className="size-4" />
-                      </div>
-                      <div className="grid flex-1 text-left text-sm leading-tight">
-                        <span className="truncate font-semibold">{session.user.name}</span>
-                        <span className="truncate text-xs">{session.user.email}</span>
-                      </div>
-                      <ChevronUp className="ml-auto size-4" />
-                    </SidebarMenuButton>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                    side="bottom"
-                    align="end"
-                    sideOffset={4}
+    <>
+      <nav className="bg-white shadow">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex">
+              <div className="flex-shrink-0 flex items-center">
+                <Link href="/" className="text-xl font-bold text-indigo-600">
+                  BeautyPortal
+                </Link>
+              </div>
+              <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+                <Link
+                  href="/dashboard"
+                  className="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  href="/"
+                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                >
+                  Find Services
+                </Link>
+                <Link
+                  href="/bookings"
+                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                >
+                  My Bookings
+                </Link>
+              </div>
+            </div>
+            <div className="hidden sm:ml-6 sm:flex sm:items-center">
+              <div className="ml-3 relative">
+                <div className="flex items-center space-x-4">
+                  <span className="text-sm text-gray-700">
+                    {session.user.name}
+                  </span>
+                  <Link
+                    href="/api/auth/signout"
+                    className="text-sm text-gray-500 hover:text-gray-700"
                   >
-                    <DropdownMenuItem asChild>
-                      <Link href="/profile">
-                        <User className="mr-2 size-4" />
-                        My Profile
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <LogoutButton />
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarFooter>
-          <SidebarRail />
-        </Sidebar>
-
-        {/* Main content area */}
-        <div className="flex-1 flex flex-col">
-          {/* Top bar */}
-          <header className="flex h-16 items-center gap-2 border-b bg-white px-4">
-            <SidebarTrigger className="-ml-1" />
-            <div className="flex-1" />
-          </header>
-
-          {/* Page content */}
-          <main className="flex-1 overflow-y-auto bg-gray-50">
-            {children}
-          </main>
+                    Sign out
+                  </Link>
+                </div>
+              </div>
+            </div>
+            <div className="-mr-2 flex items-center sm:hidden">
+              <button
+                type="button"
+                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+              >
+                <span className="sr-only">Open main menu</span>
+                <svg
+                  className="h-6 w-6"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-    </SidebarProvider>
+      </nav>
+      {children}
+    </>
   )
 }
