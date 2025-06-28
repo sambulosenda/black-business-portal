@@ -12,7 +12,6 @@ import { Badge } from '@/components/ui/badge'
 import { SkeletonGrid } from '@/components/ui/skeleton-card'
 import Navigation from '@/components/navigation'
 import Footer from '@/components/footer'
-import { getSession } from '@/lib/session'
 
 interface Business {
   id: string
@@ -55,27 +54,33 @@ function SearchContent() {
   })
 
   useEffect(() => {
+    const fetchBusinesses = async () => {
+      setLoading(true)
+      try {
+        const params = new URLSearchParams()
+        if (filters.query) params.append('q', filters.query)
+        if (filters.category) params.append('category', filters.category)
+        if (filters.city) params.append('city', filters.city)
+        if (filters.minRating) params.append('minRating', filters.minRating)
+
+        const response = await fetch(`/api/search?${params.toString()}`)
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        
+        const data = await response.json()
+        setBusinesses(data.businesses || [])
+      } catch (error) {
+        console.error('Error fetching businesses:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    
     fetchBusinesses()
   }, [filters])
 
-  const fetchBusinesses = async () => {
-    setLoading(true)
-    try {
-      const params = new URLSearchParams()
-      if (filters.query) params.append('q', filters.query)
-      if (filters.category) params.append('category', filters.category)
-      if (filters.city) params.append('city', filters.city)
-      if (filters.minRating) params.append('minRating', filters.minRating)
-
-      const response = await fetch(`/api/search?${params.toString()}`)
-      const data = await response.json()
-      setBusinesses(data.businesses || [])
-    } catch (error) {
-      console.error('Error fetching businesses:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const handleFilterChange = (key: string, value: string) => {
     setFilters(prev => ({ ...prev, [key]: value }))
@@ -87,12 +92,14 @@ function SearchContent() {
   }
 
   return (
-
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="lg:grid lg:grid-cols-12 lg:gap-8">
-        {/* Filters Sidebar */}
-        <div className="lg:col-span-3">
-          <Card className="p-6">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white">
+      <Navigation session={null} />
+      <main className="flex-1">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="lg:grid lg:grid-cols-12 lg:gap-8">
+            {/* Filters Sidebar */}
+            <div className="lg:col-span-3">
+              <Card className="p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Filters</h2>
             
             {/* Search */}
@@ -279,19 +286,18 @@ function SearchContent() {
         </div>
       </div>
     </div>
+      </main>
+      <Footer />
+    </div>
   )
 }
 
-export default async function SearchPage() {
-  const session = await getSession()
-  
+export default function SearchPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      <Navigation session={session} />
       <Suspense fallback={<div className="max-w-7xl mx-auto px-4 py-8"><SkeletonGrid count={6} /></div>}>
         <SearchContent />
       </Suspense>
-      <Footer />
     </div>
   )
 }
