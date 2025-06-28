@@ -46,14 +46,14 @@ export default async function Home() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
-      <nav className="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100">
+      <nav className="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <Link href="/" className="flex items-center space-x-2 group">
-                <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold shadow-md group-hover:shadow-lg transition-shadow">
+                <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">
                   B
                 </div>
                 <span className="text-xl font-bold text-gray-900">BeautyPortal</span>
@@ -98,18 +98,16 @@ export default async function Home() {
       </nav>
 
       {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 opacity-90" />
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.03%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E')] opacity-20" />
+      <div className="bg-indigo-600">
         <div className="relative max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-white/10 text-white mb-6 backdrop-blur-sm">
+            <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-white/20 text-white mb-6">
               <span className="animate-pulse mr-2">🌟</span>
               Supporting Black Excellence in Beauty
             </div>
             <h1 className="text-5xl font-extrabold text-white sm:text-6xl md:text-7xl tracking-tight">
               <span className="block">Discover Black-Owned</span>
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-pink-200">
+              <span className="block text-yellow-300">
                 Beauty & Wellness
               </span>
             </h1>
@@ -119,7 +117,7 @@ export default async function Home() {
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/search">
-                <Button size="xl" className="bg-white text-indigo-600 hover:bg-gray-100 font-semibold shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5 transition-all duration-200">
+                <Button size="xl" className="bg-white text-indigo-600 hover:bg-gray-50 font-semibold shadow-sm hover:shadow-md transition-all duration-200">
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
@@ -143,18 +141,19 @@ export default async function Home() {
 
       {/* Categories */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-gray-900">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
             Browse by Category
           </h2>
-          <p className="mt-2 text-gray-600">Find the perfect service for your needs</p>
+          <p className="text-lg text-gray-600">Find the perfect service for your needs</p>
+          <div className="mt-4 w-24 h-1 bg-indigo-600 mx-auto rounded-full" />
         </div>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-8">
           {categories.map((category) => (
             <Link
               key={category.id}
               href={`/search?category=${category.id}`}
-              className="group flex flex-col items-center p-6 bg-white rounded-xl border border-gray-100 hover:border-indigo-200 hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
+              className="group flex flex-col items-center p-6 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-gray-50"
             >
               <div className="text-4xl mb-3 transform group-hover:scale-110 transition-transform duration-200">
                 {category.icon}
@@ -168,12 +167,13 @@ export default async function Home() {
       </div>
 
       {/* Business Listings */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-gray-900">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
             Featured Businesses
           </h2>
-          <p className="mt-2 text-gray-600">Discover top-rated beauty and wellness services</p>
+          <p className="text-lg text-gray-600">Discover top-rated beauty and wellness services</p>
+          <div className="mt-4 w-24 h-1 bg-indigo-600 mx-auto rounded-full" />
         </div>
         {businessesWithRatings.length > 0 ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -183,7 +183,7 @@ export default async function Home() {
                 href={`/business/${business.slug}`}
                 className="block"
               >
-                <Card className="h-full hover:shadow-xl hover:-translate-y-1 transition-all duration-200 cursor-pointer">
+                <Card className="h-full hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <h3 className="text-lg font-semibold text-gray-900">

@@ -58,8 +58,8 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
       <Navigation session={session} />
 
       {/* Business Header */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="bg-indigo-600 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="lg:flex lg:items-center lg:justify-between">
             <div className="flex-1 min-w-0">
               <div className="flex items-center flex-wrap gap-3">
@@ -97,7 +97,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
                 </div>
               </div>
               <div className="mt-4 flex items-center">
-                <div className="flex items-center bg-white/10 rounded-full px-3 py-1 backdrop-blur-sm">
+                <div className="flex items-center bg-white/20 rounded-full px-4 py-2">
                   {[...Array(5)].map((_, i) => (
                     <svg
                       key={i}
@@ -125,7 +125,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Button variant="secondary" className="bg-white/10 text-white border-white/20 hover:bg-white/20">
+                  <Button variant="secondary" className="bg-white text-indigo-600 hover:bg-gray-100 transition-colors duration-200">
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                     </svg>
@@ -139,7 +139,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Button variant="secondary" className="bg-white/10 text-white border-white/20 hover:bg-white/20">
+                  <Button variant="secondary" className="bg-white text-indigo-600 hover:bg-gray-100 transition-colors duration-200">
                     <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.405a1.44 1.44 0 112.881.001 1.44 1.44 0 01-2.881-.001z"/>
                     </svg>
@@ -159,7 +159,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
             <div className="lg:col-span-2">
             {/* Description */}
             {business.description && (
-              <Card className="mb-6">
+              <Card className="mb-6 shadow-sm hover:shadow-md transition-shadow duration-200">
                 <CardHeader>
                   <CardTitle>About</CardTitle>
                 </CardHeader>
@@ -170,7 +170,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
             )}
 
             {/* Services */}
-            <Card>
+            <Card className="shadow-sm hover:shadow-md transition-shadow duration-200">
               <CardHeader>
                 <CardTitle>Services</CardTitle>
                 <CardDescription>Choose from our range of professional services</CardDescription>
@@ -181,7 +181,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
                   {business.services.map((service) => (
                     <div
                       key={service.id}
-                      className="border-2 border-gray-100 rounded-xl p-5 hover:border-indigo-200 hover:shadow-md transition-all duration-200"
+                      className="group border border-gray-200 rounded-lg p-6 hover:border-indigo-300 hover:shadow-md transition-all duration-200 bg-white hover:bg-gray-50"
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
@@ -241,7 +241,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
               </Card>
 
               {/* Reviews */}
-              <Card className="mt-6">
+              <Card className="mt-6 shadow-lg hover:shadow-xl transition-shadow duration-300 border-0">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle>Reviews</CardTitle>
@@ -335,7 +335,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
             {/* Business Info Sidebar */}
             <div className="lg:col-span-1 space-y-6">
               {/* Hours */}
-              <Card>
+              <Card className="shadow-sm hover:shadow-md transition-shadow duration-200">
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <svg className="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -363,7 +363,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
               </Card>
 
               {/* Contact Info */}
-              <Card>
+              <Card className="shadow-sm hover:shadow-md transition-shadow duration-200">
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <svg className="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
