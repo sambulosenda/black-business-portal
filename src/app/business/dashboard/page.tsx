@@ -119,7 +119,7 @@ export default async function BusinessDashboardPage() {
   })
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="container mx-auto max-w-7xl p-4 space-y-4">
       {/* Header */}
       <div className="space-y-1">
         <h1 className="text-2xl font-bold tracking-tight">
@@ -131,7 +131,7 @@ export default async function BusinessDashboardPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -197,7 +197,7 @@ export default async function BusinessDashboardPage() {
         </Card>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-2">
         {/* Quick Actions */}
         <Card>
           <CardHeader>
@@ -206,7 +206,7 @@ export default async function BusinessDashboardPage() {
               Manage your business operations
             </CardDescription>
           </CardHeader>
-          <CardContent className="grid gap-3">
+          <CardContent className="grid gap-2">
             <Link href="/business/services">
               <Button className="w-full">
                 <Package className="mr-2 h-4 w-4" />
@@ -243,7 +243,7 @@ export default async function BusinessDashboardPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <dl className="space-y-3">
+            <dl className="space-y-2">
               <div className="flex justify-between items-center">
                 <dt className="text-sm font-medium text-muted-foreground">Status</dt>
                 <dd>
@@ -298,11 +298,11 @@ export default async function BusinessDashboardPage() {
         </CardHeader>
         <CardContent>
           {business.bookings.length > 0 ? (
-            <div className="space-y-4">
+            <div className="space-y-3">
               {business.bookings.map((booking) => (
                 <div
                   key={booking.id}
-                  className="flex items-center justify-between p-4 rounded-lg border bg-card"
+                  className="flex items-center justify-between p-3 rounded-lg border bg-card"
                 >
                   <div className="space-y-1">
                     <p className="text-sm font-medium leading-none">
@@ -367,11 +367,11 @@ export default async function BusinessDashboardPage() {
         </CardHeader>
         <CardContent>
           {business.reviews.length > 0 ? (
-            <div className="space-y-4">
+            <div className="space-y-3">
               {business.reviews.map((review) => (
                 <div
                   key={review.id}
-                  className="space-y-2 p-4 rounded-lg border bg-card"
+                  className="space-y-2 p-3 rounded-lg border bg-card"
                 >
                   <div className="flex items-start justify-between">
                     <div>
