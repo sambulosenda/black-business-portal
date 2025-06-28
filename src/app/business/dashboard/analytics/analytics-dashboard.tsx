@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { BarChart, PieChart, StatCard, ChartContainer } from '@/components/ui/chart';
+import { EmptyState } from '@/components/ui/empty-state';
 
 interface AnalyticsData {
   revenue: {
@@ -69,8 +70,19 @@ export default function AnalyticsDashboard({ businessId }: { businessId: string 
 
   if (error || !analytics) {
     return (
-      <div className="bg-red-50 p-4 rounded-lg">
-        <p className="text-red-800">{error || 'Failed to load analytics'}</p>
+      <div className="bg-white rounded-lg shadow-sm">
+        <EmptyState
+          icon="error"
+          title="Failed to load analytics"
+          description={error || "We couldn't retrieve your analytics data. Please try again later."}
+          action={{
+            label: "Retry",
+            onClick: () => {
+              setError('');
+              fetchAnalytics();
+            }
+          }}
+        />
       </div>
     );
   }
@@ -237,39 +249,51 @@ export default function AnalyticsDashboard({ businessId }: { businessId: string 
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {analytics.recentTransactions.map((transaction) => (
-                <tr key={transaction.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">{transaction.customerName}</p>
-                      <p className="text-sm text-gray-500">{transaction.customerEmail}</p>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {transaction.serviceName}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {format(new Date(transaction.date), 'MMM d, yyyy')}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      transaction.status === 'COMPLETED' 
-                        ? 'bg-green-100 text-green-800'
-                        : transaction.status === 'CONFIRMED'
-                        ? 'bg-blue-100 text-blue-800'
-                        : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {transaction.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-right font-medium text-gray-900">
-                    ${transaction.amount.toFixed(2)}
-                    <span className="text-xs text-gray-500 block">
-                      (Total: ${transaction.totalPaid.toFixed(2)})
-                    </span>
+              {analytics.recentTransactions.length > 0 ? (
+                analytics.recentTransactions.map((transaction) => (
+                  <tr key={transaction.id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">{transaction.customerName}</p>
+                        <p className="text-sm text-gray-500">{transaction.customerEmail}</p>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {transaction.serviceName}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {format(new Date(transaction.date), 'MMM d, yyyy')}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                        transaction.status === 'COMPLETED' 
+                          ? 'bg-green-100 text-green-800'
+                          : transaction.status === 'CONFIRMED'
+                          ? 'bg-blue-100 text-blue-800'
+                          : 'bg-gray-100 text-gray-800'
+                      }`}>
+                        {transaction.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-right font-medium text-gray-900">
+                      ${transaction.amount.toFixed(2)}
+                      <span className="text-xs text-gray-500 block">
+                        (Total: ${transaction.totalPaid.toFixed(2)})
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={5} className="px-6 py-12">
+                    <EmptyState
+                      icon="chart"
+                      title="No transactions yet"
+                      description="Your recent transactions will appear here"
+                    />
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

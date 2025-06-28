@@ -5,6 +5,7 @@ import { format } from "date-fns"
 import RefundButton from "./refund-button"
 import CancelButton from "./cancel-button"
 import { Breadcrumb, BreadcrumbWrapper } from '@/components/ui/breadcrumb'
+import { EmptyState } from '@/components/ui/empty-state'
 
 export default async function BookingsPage() {
   const session = await requireAuth()
@@ -169,14 +170,16 @@ export default async function BookingsPage() {
               ))}
             </div>
           ) : (
-            <div className="bg-white shadow rounded-lg p-8 text-center">
-              <p className="text-gray-500">No upcoming appointments</p>
-              <Link
-                href="/"
-                className="mt-4 inline-block text-indigo-600 hover:text-indigo-500"
-              >
-                Book a service →
-              </Link>
+            <div className="bg-white shadow rounded-lg">
+              <EmptyState
+                icon="calendar"
+                title="No upcoming appointments"
+                description="Book a service with one of our talented professionals"
+                action={{
+                  label: "Find Services",
+                  href: "/search"
+                }}
+              />
             </div>
           )}
         </div>
@@ -250,8 +253,12 @@ export default async function BookingsPage() {
               ))}
             </div>
           ) : (
-            <div className="bg-white shadow rounded-lg p-8 text-center">
-              <p className="text-gray-500">No past appointments</p>
+            <div className="bg-white shadow rounded-lg">
+              <EmptyState
+                icon="bookings"
+                title="No past appointments"
+                description="Your booking history will appear here"
+              />
             </div>
           )}
         </div>

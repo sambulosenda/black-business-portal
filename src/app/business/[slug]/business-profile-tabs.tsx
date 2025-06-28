@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { EmptyState } from '@/components/ui/empty-state'
 import { Session } from 'next-auth'
 
 interface Business {
@@ -156,7 +157,11 @@ export default function BusinessProfileTabs({ business, averageRating, session }
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500 text-center py-8">No services listed yet.</p>
+              <EmptyState
+                icon="services"
+                title="No services available"
+                description="This business hasn't added any services yet"
+              />
             )}
           </CardContent>
         </Card>
@@ -289,10 +294,11 @@ export default function BusinessProfileTabs({ business, averageRating, session }
                 ))}
               </div>
             ) : (
-              <div className="text-center py-8">
-                <p className="text-gray-500">No reviews yet</p>
-                <p className="mt-1 text-sm text-gray-400">Be the first to review this business!</p>
-              </div>
+              <EmptyState
+                icon="reviews"
+                title="No reviews yet"
+                description="Be the first to review this business!"
+              />
             )}
           </CardContent>
         </Card>
