@@ -6,8 +6,7 @@ export default function SidebarTestPage() {
     <SidebarProvider>
       <div className="flex h-screen bg-gray-50">
         <BusinessSidebar userName="Test User" />
-        <main className="flex-1 overflow-auto">
-          <div className="md:hidden h-16 bg-white border-b" />
+        <main className="flex-1 overflow-auto pt-16 md:pt-0">
           <div className="p-4 md:p-6 space-y-6">
             <div className="space-y-1">
               <h1 className="text-2xl font-bold tracking-tight">

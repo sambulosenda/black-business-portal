@@ -12,9 +12,8 @@ export default async function BusinessLayout({
   return (
     <SidebarProvider>
       <div className="flex h-screen bg-gray-50">
-        <BusinessSidebar userName={session.user.name} />
-        <main className="flex-1 overflow-auto md:ml-0">
-          <div className="md:hidden h-16 bg-white border-b" />
+        <BusinessSidebar userName={session.user.name || undefined} />
+        <main className="flex-1 overflow-auto pt-16 md:pt-0">
           {children}
         </main>
       </div>

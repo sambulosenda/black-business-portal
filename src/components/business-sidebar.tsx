@@ -89,14 +89,14 @@ export function BusinessSidebar({ userName }: BusinessSidebarProps) {
 
   return (
     <>
-      {/* Mobile Menu Button */}
+      {/* Mobile Header with Menu Button */}
       {isMobile && (
-        <div className="fixed top-4 left-4 z-50">
+        <div className="fixed top-0 left-0 right-0 h-16 bg-white border-b z-40 flex items-center px-4">
           <Button
             variant="outline"
             size="sm"
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="bg-white shadow-md"
+            className="bg-white shadow-sm"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
           >
             {mobileOpen ? (
@@ -105,6 +105,9 @@ export function BusinessSidebar({ userName }: BusinessSidebarProps) {
               <Menu className="h-4 w-4" />
             )}
           </Button>
+          <span className="ml-3 font-semibold text-lg">
+            BeautyPortal Business
+          </span>
         </div>
       )}
 
