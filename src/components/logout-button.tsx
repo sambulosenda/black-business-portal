@@ -1,29 +1,28 @@
 'use client'
 
 import { signOut } from 'next-auth/react'
-import { Button } from '@/components/ui/button'
+import { LogOut } from 'lucide-react'
+import React from 'react'
 
-export default function LogoutButton() {
+interface LogoutButtonProps extends React.HTMLAttributes<HTMLDivElement> {
+  showIcon?: boolean
+  iconClassName?: string
+}
+
+export default function LogoutButton({ 
+  showIcon = true, 
+  iconClassName = "mr-2 size-4",
+  className,
+  ...props 
+}: LogoutButtonProps) {
   return (
-    <Button
+    <div
       onClick={() => signOut({ callbackUrl: '/' })}
-      variant="ghost"
-      className="w-full justify-start"
+      className={className}
+      {...props}
     >
-      <svg 
-        className="w-4 h-4 mr-2" 
-        fill="none" 
-        stroke="currentColor" 
-        viewBox="0 0 24 24"
-      >
-        <path 
-          strokeLinecap="round" 
-          strokeLinejoin="round" 
-          strokeWidth={2} 
-          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" 
-        />
-      </svg>
+      {showIcon && <LogOut className={iconClassName} />}
       Sign Out
-    </Button>
+    </div>
   )
 }

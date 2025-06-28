@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
 
 :root {
   /* Core Colors */
@@ -87,10 +90,21 @@
   --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
 
+  /* Border */
+  --border: hsl(220 13% 91%);
+
   /* Transitions */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --sidebar: hsl(0 0% 98%);
+  --sidebar-foreground: hsl(240 5.3% 26.1%);
+  --sidebar-primary: hsl(240 5.9% 10%);
+  --sidebar-primary-foreground: hsl(0 0% 98%);
+  --sidebar-accent: hsl(240 4.8% 95.9%);
+  --sidebar-accent-foreground: hsl(240 5.9% 10%);
+  --sidebar-border: hsl(220 13% 91%);
+  --sidebar-ring: hsl(217.2 91.2% 59.8%);
 }
 
 @theme inline {
@@ -98,6 +112,15 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-border: var(--border);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -106,7 +129,7 @@
     --foreground: var(--color-gray-50);
     --background-secondary: var(--color-gray-800);
     --background-tertiary: var(--color-gray-700);
-    
+
     /* Adjust primary colors for dark mode */
     --color-primary-50: #312e81;
     --color-primary-100: #3730a3;
@@ -467,4 +490,134 @@ body {
 
 .clickable:active {
   transform: scale(0.98);
+}
+
+.dark {
+  --sidebar: hsl(240 5.9% 10%);
+  --sidebar-foreground: hsl(240 4.8% 95.9%);
+  --sidebar-primary: hsl(224.3 76.3% 48%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(240 3.7% 15.9%);
+  --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
+  --sidebar-border: hsl(240 3.7% 15.9%);
+  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+}
+
+/* Sidebar specific styles */
+[data-sidebar="sidebar"] {
+  --sidebar-width: 16rem;
+  --sidebar-width-mobile: 18rem;
+  --sidebar-width-icon: 3rem;
+}
+
+[data-sidebar="sidebar"][data-mobile="true"] {
+  --sidebar-width: var(--sidebar-width-mobile);
+}
+
+/* Sidebar component styles */
+.bg-sidebar {
+  background-color: var(--sidebar);
+}
+
+.text-sidebar-foreground {
+  color: var(--sidebar-foreground);
+}
+
+.bg-sidebar-accent {
+  background-color: var(--sidebar-accent);
+}
+
+.text-sidebar-accent-foreground {
+  color: var(--sidebar-accent-foreground);
+}
+
+.border-sidebar-border {
+  border-color: var(--sidebar-border);
+}
+
+/* Group data states */
+.group-data-\[collapsible\=icon\]\:hidden[data-collapsible="icon"] > * {
+  display: none;
+}
+
+.group-data-\[side\=left\]\:border-r[data-side="left"] {
+  border-right-width: 1px;
+}
+
+.group-data-\[side\=right\]\:border-l[data-side="right"] {
+  border-left-width: 1px;
+}
+
+/* Width transitions for sidebar */
+.group-data-\[collapsible\=icon\]\:w-\[--sidebar-width-icon\][data-collapsible="icon"] {
+  width: var(--sidebar-width-icon);
+}
+
+/* Hover states */
+.hover\:bg-sidebar-accent:hover {
+  background-color: var(--sidebar-accent);
+}
+
+.hover\:text-sidebar-accent-foreground:hover {
+  color: var(--sidebar-accent-foreground);
+}
+
+/* Peer selectors */
+.peer-data-\[active\=true\]\/menu-button\:text-sidebar-accent-foreground:has(~ [data-active="true"]) {
+  color: var(--sidebar-accent-foreground);
+}
+
+/* Fix for Tailwind v4 compatibility */
+.size-4 {
+  width: 1rem;
+  height: 1rem;
+}
+
+.size-7 {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.size-8 {
+  width: 2rem;
+  height: 2rem;
+}
+
+/* Additional utility classes for sidebar */
+.h-svh {
+  height: 100vh;
+  height: 100svh;
+}
+
+.min-h-svh {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+.w-\[--sidebar-width\] {
+  width: var(--sidebar-width);
+}
+
+.w-\[--sidebar-width-icon\] {
+  width: var(--sidebar-width-icon);
+}
+
+/* Fix ring utilities */
+.ring-sidebar-ring {
+  --tw-ring-color: var(--sidebar-ring);
+}
+
+.outline-hidden {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
 }
