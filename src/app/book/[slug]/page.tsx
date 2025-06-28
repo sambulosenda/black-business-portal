@@ -47,6 +47,7 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
   const [loading, setLoading] = useState(true)
   const [bookingLoading, setBookingLoading] = useState(false)
   const [error, setError] = useState('')
+  const [timeOffDates, setTimeOffDates] = useState<Date[]>([])
 
   useEffect(() => {
     params.then(p => setSlug(p.slug))
@@ -75,6 +76,13 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
       
       if (!selectedService && data.services.length > 0) {
         setSelectedService(serviceId || data.services[0].id)
+      }
+      
+      // Fetch time off dates
+      const timeOffResponse = await fetch(`/api/business/timeoff/dates?businessId=${data.business.id}`)
+      if (timeOffResponse.ok) {
+        const { dates } = await timeOffResponse.json()
+        setTimeOffDates(dates.map((d: string) => new Date(d)))
       }
     } catch (error) {
       console.error('Error fetching business:', error)
@@ -120,13 +128,20 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
       currentTime = new Date(currentTime.getTime() + 30 * 60000) // 30-minute intervals
     }
 
-    // Check availability against existing bookings
+    // Check availability against existing bookings and time off
     try {
       const response = await fetch(
         `/api/booking/availability?businessId=${business.id}&date=${format(selectedDate, 'yyyy-MM-dd')}&serviceId=${selectedService}`
       )
       if (response.ok) {
-        const { bookedSlots } = await response.json()
+        const { bookedSlots, isClosedDay, reason } = await response.json()
+        
+        if (isClosedDay) {
+          setTimeSlots([])
+          setError(reason || 'Business is closed on this day')
+          return
+        }
+        
         slots.forEach(slot => {
           slot.available = !bookedSlots.includes(slot.time)
         })
@@ -145,7 +160,7 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
     setError('')
 
     try {
-      const response = await fetch('/api/booking', {
+      const response = await fetch('/api/booking/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -161,8 +176,18 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
         throw new Error(data.error || 'Failed to create booking')
       }
 
-      const { bookingId } = await response.json()
-      router.push(`/booking/confirmation/${bookingId}`)
+      const paymentData = await response.json()
+      
+      // Store payment data in sessionStorage for the payment page
+      sessionStorage.setItem('bookingPayment', JSON.stringify({
+        ...paymentData,
+        businessName: business?.businessName,
+        serviceName: selectedServiceData?.name,
+        date: selectedDate.toISOString(),
+        time: selectedTime,
+      }))
+      
+      router.push(`/book/${slug}/payment`)
     } catch (error: any) {
       setError(error.message || 'Failed to create booking')
     } finally {
@@ -267,7 +292,8 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
                   onSelect={setSelectedDate}
                   disabled={[
                     { before: new Date() },
-                    ...disabledDays.map(day => ({ dayOfWeek: [day] }))
+                    ...disabledDays.map(day => ({ dayOfWeek: [day] })),
+                    ...timeOffDates
                   ]}
                   className="rdp-custom"
                   classNames={{

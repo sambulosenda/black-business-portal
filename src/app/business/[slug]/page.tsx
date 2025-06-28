@@ -41,7 +41,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
   }
 
   // Calculate average rating
-  const avgRating =
+  const averageRating =
     business.reviews.length > 0
       ? business.reviews.reduce((acc, review) => acc + review.rating, 0) /
         business.reviews.length
@@ -131,7 +131,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
                     <svg
                       key={i}
                       className={`h-5 w-5 ${
-                        i < Math.floor(avgRating)
+                        i < Math.floor(averageRating)
                           ? 'text-yellow-400'
                           : 'text-gray-300'
                       }`}
@@ -142,7 +142,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
                     </svg>
                   ))}
                   <span className="ml-2 text-sm text-gray-600">
-                    {avgRating.toFixed(1)} ({business.reviews.length} reviews)
+                    {averageRating.toFixed(1)} ({business.reviews.length} reviews)
                   </span>
                 </div>
               </div>
@@ -240,41 +240,88 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
 
             {/* Reviews */}
             <div className="bg-white shadow rounded-lg p-6 mt-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Reviews</h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold text-gray-900">Reviews</h2>
+                {business.reviews.length > 0 && (
+                  <div className="flex items-center">
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          key={i}
+                          className={`h-5 w-5 ${
+                            i < Math.round(averageRating)
+                              ? 'text-yellow-400'
+                              : 'text-gray-300'
+                          }`}
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span className="ml-2 text-lg font-medium text-gray-900">
+                      {averageRating.toFixed(1)}
+                    </span>
+                    <span className="ml-1 text-sm text-gray-500">
+                      ({business.reviews.length} {business.reviews.length === 1 ? 'review' : 'reviews'})
+                    </span>
+                  </div>
+                )}
+              </div>
+              
               {business.reviews.length > 0 ? (
-                <div className="space-y-4">
-                  {business.reviews.map((review) => (
-                    <div key={review.id} className="border-b pb-4 last:border-0">
-                      <div className="flex items-center mb-2">
-                        <p className="font-medium text-gray-900">{review.user.name}</p>
-                        <div className="ml-2 flex items-center">
-                          {[...Array(5)].map((_, i) => (
-                            <svg
-                              key={i}
-                              className={`h-4 w-4 ${
-                                i < review.rating
-                                  ? 'text-yellow-400'
-                                  : 'text-gray-300'
-                              }`}
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                            >
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                          ))}
+                <div className="space-y-6">
+                  {business.reviews.slice(0, 5).map((review) => (
+                    <div key={review.id} className="border-b border-gray-100 pb-6 last:border-0 last:pb-0">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center">
+                            <p className="font-medium text-gray-900">{review.user.name}</p>
+                            <span className="mx-2 text-gray-300">•</span>
+                            <span className="text-sm text-gray-500">
+                              {new Date(review.createdAt).toLocaleDateString('en-US', {
+                                month: 'long',
+                                day: 'numeric',
+                                year: 'numeric'
+                              })}
+                            </span>
+                          </div>
+                          <div className="mt-1 flex items-center">
+                            {[...Array(5)].map((_, i) => (
+                              <svg
+                                key={i}
+                                className={`h-4 w-4 ${
+                                  i < review.rating
+                                    ? 'text-yellow-400'
+                                    : 'text-gray-300'
+                                }`}
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                              </svg>
+                            ))}
+                          </div>
+                          {review.comment && (
+                            <p className="mt-3 text-gray-700 leading-relaxed">{review.comment}</p>
+                          )}
                         </div>
-                        <span className="ml-2 text-sm text-gray-500">
-                          {new Date(review.createdAt).toLocaleDateString()}
-                        </span>
                       </div>
-                      {review.comment && (
-                        <p className="text-gray-600">{review.comment}</p>
-                      )}
                     </div>
                   ))}
+                  
+                  {business.reviews.length > 5 && (
+                    <p className="text-center text-sm text-gray-500 pt-2">
+                      Showing 5 of {business.reviews.length} reviews
+                    </p>
+                  )}
                 </div>
               ) : (
-                <p className="text-gray-500">No reviews yet.</p>
+                <div className="text-center py-8">
+                  <p className="text-gray-500">No reviews yet</p>
+                  <p className="mt-1 text-sm text-gray-400">Be the first to review this business!</p>
+                </div>
               )}
             </div>
           </div>
