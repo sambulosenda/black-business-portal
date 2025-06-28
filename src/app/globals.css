@@ -494,13 +494,33 @@ body {
 
 /* Sidebar specific styles */
 [data-sidebar="sidebar"] {
-  --sidebar-width: 16rem;
+  --sidebar-width: 15rem;
   --sidebar-width-mobile: 18rem;
-  --sidebar-width-icon: 3rem;
+  --sidebar-width-icon: 4rem;
 }
 
 [data-sidebar="sidebar"][data-mobile="true"] {
   --sidebar-width: var(--sidebar-width-mobile);
+}
+
+/* Mobile sidebar styles */
+@media (max-width: 768px) {
+  [data-sidebar="sidebar"] {
+    --sidebar-width: var(--sidebar-width-mobile);
+    position: fixed;
+    z-index: 50;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  [data-sidebar="sidebar"][data-mobile-open="true"] {
+    transform: translateX(0);
+  }
+  
+  [data-sidebar="sidebar"][data-collapsed="true"] {
+    transform: translateX(-100%);
+  }
 }
 
 /* Sidebar component styles */
