@@ -30,6 +30,7 @@ model User {
   business      Business?
   bookings      Booking[]
   reviews       Review[]
+  customerProfiles CustomerProfile[]
 }
 
 model Business {
@@ -69,6 +70,8 @@ model Business {
   timeOffs         TimeOff[]
   payouts          Payout[]
   staff            Staff[]
+  customerProfiles CustomerProfile[]
+  communications   Communication[]
 }
 
 model Service {
@@ -241,6 +244,7 @@ model Staff {
   services        StaffService[]   // Services this staff member can perform
   schedules       StaffSchedule[]  // Working hours
   bookings        Booking[]        // Bookings assigned to this staff
+  communications  Communication[]  // Communications sent by this staff
   
   @@unique([businessId, email])
   @@index([businessId, isActive])
@@ -282,4 +286,84 @@ enum StaffRole {
   OWNER
   MANAGER
   STAFF
+}
+
+// CRM Models
+model CustomerProfile {
+  id              String           @id @default(cuid())
+  businessId      String
+  userId          String
+  
+  // Denormalized data for quick access
+  customerName    String
+  customerEmail   String
+  customerPhone   String?
+  
+  // Customer insights
+  firstVisit      DateTime?
+  lastVisit       DateTime?
+  totalVisits     Int              @default(0)
+  totalSpent      Decimal          @default(0) @db.Decimal(10, 2)
+  averageSpent    Decimal          @default(0) @db.Decimal(10, 2)
+  favoriteService String?
+  
+  // Customer preferences
+  notes           String?          @db.Text
+  tags            String[]         @default([])
+  birthday        DateTime?
+  preferences     Json?            // Store preferences like "prefers morning appointments"
+  
+  // Status
+  isVip           Boolean          @default(false)
+  isBlocked       Boolean          @default(false)
+  
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  
+  // Relations
+  business        Business         @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  user            User             @relation(fields: [userId], references: [id])
+  communications  Communication[]
+  
+  @@unique([businessId, userId])
+  @@index([businessId, lastVisit])
+  @@index([businessId, totalSpent])
+}
+
+model Communication {
+  id              String           @id @default(cuid())
+  businessId      String
+  customerId      String
+  staffId         String?
+  
+  type            CommunicationType
+  subject         String?
+  content         String           @db.Text
+  status          CommunicationStatus @default(SENT)
+  
+  sentAt          DateTime         @default(now())
+  readAt          DateTime?
+  
+  // Relations
+  business        Business         @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  customer        CustomerProfile  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  staff           Staff?           @relation(fields: [staffId], references: [id])
+  
+  @@index([businessId, customerId])
+  @@index([businessId, sentAt])
+}
+
+enum CommunicationType {
+  EMAIL
+  SMS
+  NOTE
+  SYSTEM
+}
+
+enum CommunicationStatus {
+  DRAFT
+  SENT
+  DELIVERED
+  FAILED
+  READ
 }
