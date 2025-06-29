@@ -95,7 +95,7 @@ After seeding the database, you can use these test accounts:
 
 ```
 src/
-├── app/                    # Next.js App Router pages
+├── app/                   # Next.js App Router pages
 │   ├── api/               # API routes
 │   ├── business/          # Business management pages
 │   ├── book/              # Booking flow
