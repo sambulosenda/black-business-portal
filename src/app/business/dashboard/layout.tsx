@@ -18,6 +18,7 @@ import {
   LayoutDashboard,
   Package,
   Calendar,
+  CalendarDays,
   Clock,
   BarChart3,
   Star,
@@ -48,6 +49,11 @@ export default async function BusinessDashboardLayout({
       title: "Bookings",
       icon: Calendar,
       href: "/business/bookings",
+    },
+    {
+      title: "Calendar",
+      icon: CalendarDays,
+      href: "/business/dashboard/calendar",
     },
     {
       title: "Availability",
