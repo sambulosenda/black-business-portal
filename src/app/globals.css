@@ -59,7 +59,7 @@
   * {
     border-color: hsl(var(--border));
   }
-  
+
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
@@ -208,6 +208,15 @@
   --sidebar-width-icon: 3rem;
 }
 
+/* Sidebar width utilities */
+.w-sidebar {
+  width: var(--sidebar-width);
+}
+
+.w-sidebar-icon {
+  width: var(--sidebar-width-icon);
+}
+
 /* Additional utility classes */
 .container-max {
   max-width: 1280px;
@@ -226,3 +235,15 @@
     padding: 0 2rem;
   }
 }
+
+@theme inline {
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
