@@ -51,8 +51,8 @@ This plan outlines the steps to complete the business portal application, focusi
   - [x] Move services page into dashboard layout
 - [x] Implement staff/team member management
 - [x] Add customer management (CRM) features
-- [ ] Create email/SMS notification settings
-- [ ] Build inventory/product management (if needed)
+- [x] Create email/SMS notification settings
+- [x] Build inventory/product management
 - [ ] Implement promotions and discount management
 - [x] Add quick stats and KPI widgets (partial - in analytics)
 
@@ -247,3 +247,96 @@ Total: ~6 weeks for complete implementation
 - Create promotions and discount management system
 - Consider moving to Phase 4 for customer experience improvements
 - Add file upload capabilities for profile images
+
+### Phase 3 Continued Progress - Part 2 (June 29, 2025)
+
+#### Changes Made
+- **Email/SMS Notification Settings**:
+  - Created comprehensive notification database schema (NotificationSettings, NotificationTemplate, NotificationTrigger)
+  - Built notification preferences UI with tabs for general settings, templates, triggers, and testing
+  - Added timezone and quiet hours configuration
+  - Implemented notification template customization
+  - Created trigger management for different events (booking confirmations, reminders, etc.)
+  - Added test notification functionality (AWS-ready)
+  
+- **Product/Inventory Management**:
+  - Added Product, ProductCategory, InventoryLog, and BookingItem models to database
+  - Created full product management UI at `/business/dashboard/products`
+  - Implemented product CRUD operations with categories
+  - Added inventory tracking with low stock alerts
+  - Built product metrics dashboard (total value, stock counts)
+  - Added public product display on business profile pages
+  - Organized products by featured/category sections
+  - Implemented sale pricing with compare-at prices
+
+- **Bug Fixes**:
+  - Fixed Prisma Decimal type conversion issues in customer pages
+  - Added Number() conversions for all monetary values
+  - Fixed sorting and display of customer financial data
+
+#### Technical Implementation
+- Used Prisma relations for notification settings tied to businesses
+- Implemented proper Decimal to number conversions for JSON serialization
+- Created reusable product card components for public display
+- Added 5-column tab layout to accommodate products on business profiles
+
+#### Next Steps
+- Implement promotions and discount management
+- Integrate products into booking/checkout flow
+- Add shopping cart functionality
+- Move to Phase 4 for customer experience improvements
+
+### Phase 3 Continued Progress - Part 3 (June 29, 2025)
+
+#### Changes Made
+- **Shopping Cart & Checkout Integration**:
+  - Created global shopping cart context with localStorage persistence
+  - Added "Add to Cart" buttons for both products and services
+  - Built dedicated cart page with quantity management
+  - Implemented business validation (one business per cart)
+  - Created product-only checkout flow with delivery/pickup options
+  - Added mixed cart support (products + services)
+  
+- **Stripe Payment Integration for Products**:
+  - Extended orders API to create Stripe payment intents
+  - Implemented platform fees (15%) for product sales
+  - Created order payment page similar to booking payments
+  - Added order confirmation page with detailed receipt
+  - Updated webhook handler to process order payments
+  - Implemented automatic inventory deduction on successful payment
+  
+- **Order Management System**:
+  - Added Order and OrderItem models to database
+  - Created order types (PRODUCT_ONLY, SERVICE_ONLY, MIXED)
+  - Implemented fulfillment types (PICKUP, DELIVERY)
+  - Added order status tracking and payment status
+  - Created inventory logs for stock tracking
+  
+- **Testing Infrastructure**:
+  - Implemented comprehensive dummy products for all test businesses
+  - Added realistic product categories and pricing
+  - Created featured products with sale prices
+  - Set up inventory quantities and low stock alerts
+
+#### Technical Implementation
+- Stripe Connect integration works identically for products and services
+- Payment intents include proper metadata for webhook processing
+- Decimal serialization fixed for all client components
+- SessionProvider properly configured for auth throughout app
+
+#### Bug Fixes
+- Fixed Decimal serialization errors on business profile pages
+- Added SessionProvider to root layout providers
+- Converted all Prisma Decimal fields to numbers before passing to client
+- Fixed navigation and cart functionality across all pages
+
+#### Current Status
+- Full e-commerce functionality implemented alongside service bookings
+- Customers can purchase products with or without booking services
+- Complete Stripe payment flow for both bookings and orders
+- Inventory tracking and automatic stock management
+- Platform fees and business payouts calculated correctly
+
+#### Remaining Phase 3 Items
+- [ ] Implement promotions and discount management (last remaining item)
+- [x] All other Phase 3 features completed
