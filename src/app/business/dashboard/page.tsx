@@ -207,7 +207,7 @@ export default async function BusinessDashboardPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-2">
-            <Link href="/business/services">
+            <Link href="/business/dashboard/services">
               <Button className="w-full">
                 <Package className="mr-2 h-4 w-4" />
                 Manage Services

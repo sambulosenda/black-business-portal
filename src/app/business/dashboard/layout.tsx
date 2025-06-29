@@ -43,7 +43,7 @@ export default async function BusinessDashboardLayout({
     {
       title: "Services",
       icon: Package,
-      href: "/business/services",
+      href: "/business/dashboard/services",
     },
     {
       title: "Bookings",
