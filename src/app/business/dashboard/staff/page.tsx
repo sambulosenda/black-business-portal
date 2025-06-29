@@ -413,7 +413,7 @@ export default function StaffPage() {
                   <Label htmlFor="role">Role</Label>
                   <Select
                     value={watch('role')}
-                    onValueChange={(value) => setValue('role', value as any)}
+                    onValueChange={(value) => setValue('role', value as 'STAFF' | 'MANAGER' | 'OWNER')}
                   >
                     <SelectTrigger>
                       <SelectValue />
