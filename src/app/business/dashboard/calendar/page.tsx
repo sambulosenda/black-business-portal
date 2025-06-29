@@ -14,7 +14,7 @@ export default async function CalendarPage() {
   // Get the business for this owner
   const business = await prisma.business.findFirst({
     where: {
-      ownerId: session.user.id,
+      userId: session.user.id,
       isActive: true,
     },
   })
