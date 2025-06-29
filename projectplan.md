@@ -27,17 +27,39 @@ This plan outlines the steps to complete the business portal application, focusi
 - [x] Add Command/Combobox for search functionality
 - [x] Implement Popover for contextual information
 
-## Phase 3: Business Dashboard Enhancements
+## Phase 3: Business Dashboard Enhancements 🚧 IN PROGRESS
 
 ### TODO List
-- [ ] Create calendar view for appointments
-- [ ] Build enhanced analytics dashboard with charts
-- [ ] Implement staff/team member management
-- [ ] Add customer management (CRM) features
+- [x] Create calendar view for appointments
+  - [x] Month view with clickable days
+  - [x] Week view with hourly grid
+  - [x] Day view with detailed timeline
+  - [x] Interactive month navigation
+  - [x] Click days to view appointment details
+- [x] Add booking management from calendar
+  - [x] Confirm bookings
+  - [x] Complete bookings
+  - [x] Cancel bookings with confirmation dialog
+- [x] Build enhanced analytics dashboard with charts
+  - [x] Revenue chart with monthly breakdown
+  - [x] Popular services pie chart
+  - [x] Customer growth line chart
+  - [x] Service performance table
+  - [x] Interactive tabs for different metrics
+- [x] Fix navigation issues
+  - [x] Dashboard redirect for business owners
+  - [x] Move services page into dashboard layout
+- [x] Implement staff/team member management
+- [x] Add customer management (CRM) features
 - [ ] Create email/SMS notification settings
 - [ ] Build inventory/product management (if needed)
 - [ ] Implement promotions and discount management
-- [ ] Add quick stats and KPI widgets
+- [x] Add quick stats and KPI widgets (partial - in analytics)
+
+### Calendar Enhancements (Low Priority)
+- [ ] Add drag-and-drop to reschedule appointments
+- [ ] Implement recurring appointments
+- [ ] Add calendar sync (Google, Outlook)
 
 ## Phase 4: Customer Experience Improvements
 
@@ -102,18 +124,18 @@ This plan outlines the steps to complete the business portal application, focusi
 ## Technical Considerations
 
 ### Dependencies to Add
-- shadcn/ui components (via CLI)
+- shadcn/ui components (via CLI) ✅
 - @tanstack/react-query for data fetching
-- react-hot-toast or sonner for notifications
+- react-hot-toast or sonner for notifications ✅ (Sonner added)
 - @upstash/ratelimit for API protection
 - resend or sendgrid for emails
 - uploadthing or AWS S3 for file uploads
 
 ### Dependencies to Remove
-- All @radix-ui/* packages (after migration)
+- All @radix-ui/* packages (after migration) - Note: These are required by shadcn/ui
 
 ## Success Metrics
-- All Radix UI components successfully migrated to shadcn/ui
+- All Radix UI components successfully migrated to shadcn/ui ✅
 - Complete feature parity with modern business portals
 - Mobile-responsive design across all pages
 - Page load times under 3 seconds
@@ -121,8 +143,8 @@ This plan outlines the steps to complete the business portal application, focusi
 - Zero critical security vulnerabilities
 
 ## Timeline Estimate
-- Phase 1-2: 1 week (UI foundation)
-- Phase 3-4: 2 weeks (core features)
+- Phase 1-2: 1 week (UI foundation) ✅ COMPLETED
+- Phase 3-4: 2 weeks (core features) 🚧 IN PROGRESS
 - Phase 5-6: 2 weeks (admin & technical)
 - Phase 7-8: 1 week (advanced features & polish)
 
@@ -132,7 +154,7 @@ Total: ~6 weeks for complete implementation
 
 ### Phase 1 & 2 Completion Summary
 
-### Changes Made
+#### Changes Made
 - Successfully verified shadcn/ui was already initialized with components.json
 - Added all missing shadcn/ui components:
   - Dialog, Calendar, Alert, AlertDialog
@@ -142,12 +164,86 @@ Total: ~6 weeks for complete implementation
 - Verified all application code already uses shadcn/ui wrappers instead of direct Radix UI imports
 - Radix UI packages remain in package.json as they are required dependencies for shadcn/ui components
 
-### Challenges Encountered
+#### Challenges Encountered
 - Initial misunderstanding about Radix UI dependencies - they need to remain as shadcn/ui depends on them
 - Toast component was deprecated in favor of Sonner
 
-### Future Recommendations
-- Phase 3 (Business Dashboard) should be the next priority to enhance business owner experience
-- Consider implementing the notification system with Sonner for real-time updates
-- The calendar component is now available for the appointment scheduling feature
-- Focus on mobile responsiveness when implementing new features
+### Phase 3 Progress Summary (June 29, 2025)
+
+#### Changes Made
+- **Calendar Implementation**:
+  - Created comprehensive calendar view with month/week/day toggles
+  - Added interactive month navigation (previous/next/today)
+  - Implemented clickable days to view appointment details
+  - Added booking management (confirm/complete/cancel) directly from calendar
+  - Created API endpoints for booking status management
+  - Implemented week view with hourly grid layout
+  - Added day view with detailed timeline
+
+- **Analytics Dashboard**:
+  - Built modern analytics dashboard with interactive charts
+  - Added revenue tracking with monthly breakdown
+  - Created popular services pie chart
+  - Implemented customer growth visualization
+  - Added service performance metrics table
+  - Used tabs to organize different metric views
+
+- **Navigation Fixes**:
+  - Fixed dashboard redirect issue for business owners
+  - Moved services page into dashboard layout structure
+  - Updated all navigation links to correct paths
+
+#### Challenges Encountered
+- Homepage had hardcoded dashboard link not checking user role
+- Services page was outside dashboard layout causing navigation issues
+- Calendar needed conversion from server to client component for interactivity
+
+#### Future Recommendations
+- Implement staff management system next
+- Add customer CRM features
+- Create notification settings for email/SMS
+- Consider implementing drag-and-drop for appointment rescheduling
+- Add real-time updates using WebSocket/SSE
+
+### Phase 3 Continued Progress (June 29, 2025)
+
+#### Changes Made
+- **Staff Management System**:
+  - Added Staff, StaffService, and StaffSchedule models to database schema
+  - Created comprehensive staff management page with role-based permissions
+  - Implemented staff roles (Owner, Manager, Staff) with different access levels
+  - Added ability to link staff members to specific services they can perform
+  - Created API endpoints for full CRUD operations on staff
+  - Added validation to prevent deleting staff with upcoming bookings
+
+- **Customer Relationship Management (CRM)**:
+  - Added CustomerProfile and Communication models to database
+  - Built customer list with search, filter, and sort capabilities
+  - Implemented customer segmentation (VIP, New, Regular, At-Risk)
+  - Created detailed customer view with notes, tags, and booking history
+  - Added customer metrics dashboard showing revenue and insights
+  - Implemented CSV export functionality for customer data
+  - Auto-generation of customer profiles from booking history
+  - Created communication log for tracking all customer interactions
+  - Built AWS-ready architecture for future email/SMS integration
+
+- **UI/UX Improvements**:
+  - Fixed Select component import issues by installing proper shadcn/ui version
+  - Enhanced navigation with proper role-based redirects
+  - Improved sidebar organization with new menu items
+
+#### Challenges Encountered
+- Select component needed to be upgraded from simple HTML to shadcn/ui version
+- Database schema required careful planning for relationships between staff, services, and bookings
+- Customer profile generation needed to handle existing booking data retroactively
+
+#### Current Status
+- Phase 3 is nearly complete with major features implemented
+- Remaining items: notification settings, promotions system
+- Ready for AWS deployment with minimal changes needed
+
+#### Next Steps
+- Implement email/SMS notification settings
+- Create promotions and discount management system
+- Consider moving to Phase 4 for customer experience improvements
+- Add file upload capabilities for profile images

@@ -18,12 +18,15 @@ import {
   LayoutDashboard,
   Package,
   Calendar,
+  CalendarDays,
   Clock,
   BarChart3,
   Star,
   Settings,
   LogOut,
   User,
+  Users,
+  Bell,
 } from "lucide-react"
 
 export default async function BusinessDashboardLayout({
@@ -42,12 +45,27 @@ export default async function BusinessDashboardLayout({
     {
       title: "Services",
       icon: Package,
-      href: "/business/services",
+      href: "/business/dashboard/services",
+    },
+    {
+      title: "Staff",
+      icon: Users,
+      href: "/business/dashboard/staff",
+    },
+    {
+      title: "Customers",
+      icon: Users,
+      href: "/business/dashboard/customers",
     },
     {
       title: "Bookings",
       icon: Calendar,
       href: "/business/bookings",
+    },
+    {
+      title: "Calendar",
+      icon: CalendarDays,
+      href: "/business/dashboard/calendar",
     },
     {
       title: "Availability",
@@ -63,6 +81,11 @@ export default async function BusinessDashboardLayout({
       title: "Reviews",
       icon: Star,
       href: "/business/dashboard/reviews",
+    },
+    {
+      title: "Notifications",
+      icon: Bell,
+      href: "/business/dashboard/notifications",
     },
     {
       title: "Profile",
