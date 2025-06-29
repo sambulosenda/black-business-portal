@@ -1,116 +1,139 @@
 import { requireRole } from "@/lib/session"
 import Link from "next/link"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
+import {
+  LayoutDashboard,
+  Package,
+  Calendar,
+  Clock,
+  BarChart3,
+  Star,
+  Settings,
+  LogOut,
+  User,
+} from "lucide-react"
 
-export default async function BusinessLayout({
+export default async function BusinessDashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   const session = await requireRole("BUSINESS_OWNER")
 
+  const menuItems = [
+    {
+      title: "Dashboard",
+      icon: LayoutDashboard,
+      href: "/business/dashboard",
+    },
+    {
+      title: "Services",
+      icon: Package,
+      href: "/business/services",
+    },
+    {
+      title: "Bookings",
+      icon: Calendar,
+      href: "/business/bookings",
+    },
+    {
+      title: "Availability",
+      icon: Clock,
+      href: "/business/dashboard/availability",
+    },
+    {
+      title: "Analytics",
+      icon: BarChart3,
+      href: "/business/dashboard/analytics",
+    },
+    {
+      title: "Reviews",
+      icon: Star,
+      href: "/business/dashboard/reviews",
+    },
+    {
+      title: "Profile",
+      icon: User,
+      href: "/business/profile",
+    },
+    {
+      title: "Settings",
+      icon: Settings,
+      href: "/business/dashboard/settings",
+    },
+  ]
+
   return (
-    <>
-      <nav className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex">
-              <div className="flex-shrink-0 flex items-center">
-                <Link href="/" className="text-xl font-bold text-indigo-600">
-                  BeautyPortal Business
-                </Link>
-              </div>
-              <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                <Link
-                  href="/business/dashboard"
-                  className="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  href="/business/services"
-                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                >
-                  Services
-                </Link>
-                <Link
-                  href="/business/bookings"
-                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                >
-                  Bookings
-                </Link>
-                <Link
-                  href="/business/dashboard/availability"
-                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                >
-                  Availability
-                </Link>
-                <Link
-                  href="/business/dashboard/analytics"
-                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                >
-                  Analytics
-                </Link>
-                <Link
-                  href="/business/dashboard/reviews"
-                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                >
-                  Reviews
-                </Link>
-                <Link
-                  href="/business/profile"
-                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                >
-                  Profile
-                </Link>
-                <Link
-                  href="/business/dashboard/settings"
-                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                >
-                  Settings
-                </Link>
+    <SidebarProvider defaultOpen={true}>
+      <div className="flex min-h-screen w-full bg-background">
+        <Sidebar className="border-r">
+          <SidebarHeader className="border-b px-6 py-4 bg-sidebar">
+            <Link href="/" className="flex items-center space-x-2">
+              <span className="text-xl font-bold text-primary">BeautyPortal</span>
+              <span className="text-sm text-muted-foreground">Business</span>
+            </Link>
+          </SidebarHeader>
+          
+          <SidebarContent>
+            <SidebarGroup>
+              <SidebarGroupLabel>Menu</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {menuItems.map((item) => (
+                    <SidebarMenuItem key={item.href}>
+                      <SidebarMenuButton asChild>
+                        <Link href={item.href}>
+                          <item.icon className="h-4 w-4" />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </SidebarContent>
+
+          <SidebarFooter className="border-t px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col">
+                <span className="text-sm font-medium">{session.user.name}</span>
+                <span className="text-xs text-muted-foreground">{session.user.email}</span>
               </div>
             </div>
-            <div className="hidden sm:ml-6 sm:flex sm:items-center">
-              <div className="ml-3 relative">
-                <div className="flex items-center space-x-4">
-                  <span className="text-sm text-gray-700">
-                    {session.user.name}
-                  </span>
-                  <Link
-                    href="/api/auth/signout"
-                    className="text-sm text-gray-500 hover:text-gray-700"
-                  >
-                    Sign out
-                  </Link>
-                </div>
-              </div>
-            </div>
-            <div className="-mr-2 flex items-center sm:hidden">
-              <button
-                type="button"
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
-              >
-                <span className="sr-only">Open main menu</span>
-                <svg
-                  className="h-6 w-6"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              </button>
-            </div>
+            <Link
+              href="/api/auth/signout"
+              className="mt-4 flex items-center space-x-2 text-sm text-muted-foreground hover:text-foreground"
+            >
+              <LogOut className="h-4 w-4" />
+              <span>Sign out</span>
+            </Link>
+          </SidebarFooter>
+        </Sidebar>
+
+        <main className="flex-1 overflow-hidden">
+          <div className="sticky top-0 z-10 flex h-16 items-center border-b bg-background px-6">
+            <SidebarTrigger className="mr-4" />
+            <h2 className="text-lg font-semibold">Business Portal</h2>
           </div>
-        </div>
-      </nav>
-      {children}
-    </>
+          <div className="overflow-auto p-6">
+            {children}
+          </div>
+        </main>
+      </div>
+    </SidebarProvider>
   )
 }

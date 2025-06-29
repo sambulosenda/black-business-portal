@@ -1,324 +1,153 @@
-# Project Plan
-
-## Payment Integration Feature - COMPLETED
-
-### Summary of Changes
-
-The Stripe payment integration has been successfully implemented with the following features:
-
-1. **Core Payment Processing**
-   - Installed missing @stripe/react-stripe-js dependency
-   - Integrated Stripe Connect for business onboarding
-   - Implemented secure payment processing with automatic fee splitting
-   - Added payment intent creation with proper fee calculations
-
-2. **Refund & Cancellation System**
-   - Created refund API endpoint with 24-hour policy enforcement
-   - Built refund UI component with confirmation dialog
-   - Implemented booking cancellation with flexible policies
-   - Added cancellation reason tracking
-
-3. **Payment Status Tracking**
-   - Enhanced bookings page to display payment status badges
-   - Added visual indicators for payment states (pending, succeeded, failed, refunded)
-   - Integrated payment status throughout the booking flow
-
-4. **Email Notifications**
-   - Created email service with templates for all payment events
-   - Implemented booking confirmation and payment receipt emails
-   - Added cancellation and refund notification emails
-   - Currently using console.log for development (ready for production email service)
-
-5. **Business Analytics Dashboard**
-   - Built comprehensive revenue analytics API
-   - Created analytics dashboard with monthly/weekly revenue tracking
-   - Added fee breakdown visualization
-   - Implemented top services and recent transactions views
-
-6. **Enhanced Error Handling**
-   - Added detailed, user-friendly error messages
-   - Implemented specific handling for different Stripe error types
-   - Enhanced payment form error feedback
-   - Added proper error context for debugging
-
-7. **Production Security**
-   - Implemented webhook signature verification
-   - Added development/production mode detection
-   - Secured all payment endpoints with proper authentication
-   - Added environment variable validation
-
-### Environment Setup
-- Configured Stripe API keys (test mode)
-- Set up Stripe CLI for local webhook testing
-- Added all necessary environment variables
-
-### Next Steps for Production
-1. Replace console.log email service with actual provider (SendGrid/Resend)
-2. Switch to Stripe live keys
-3. Configure production webhook endpoint
-4. Set up proper error monitoring
-5. Add comprehensive logging for payment events
-
-# Project Plan: Wellness & Beauty Booking Platform for Black Businesses
+# Business Portal Project Plan
 
 ## Overview
-Building a Treatwell-like appointment booking platform specifically designed for Black-owned wellness and beauty businesses. The platform will connect customers with Black-owned salons, spas, barbershops, and wellness centers.
+This plan outlines the steps to complete the business portal application, focusing on migrating from Radix UI to shadcn/ui and implementing missing features for a production-ready business management platform.
 
-## Core Features
-1. Business listing and discovery
-2. Appointment booking system
-3. User authentication (customers & businesses)
-4. Business profiles with services and pricing
-5. Search and filtering functionality
-6. Review and rating system
-
-## Technology Stack
-- **Frontend**: Next.js 15 with TypeScript
-- **Styling**: Tailwind CSS v4
-- **Database**: PostgreSQL with Prisma ORM
-- **Authentication**: NextAuth.js
-- **Payment**: Stripe integration
-- **Image Storage**: Cloudinary or AWS S3
-
-## Phase 1: Foundation Setup (MVP)
+## Phase 1: shadcn/ui Migration & Setup ✅ COMPLETED
 
 ### TODO List
+- [x] Initialize shadcn/ui properly with components.json configuration
+- [x] Install missing shadcn/ui components (Dialog, Calendar, Toast, Alert, etc.)
+- [x] Replace @radix-ui/react-dialog with shadcn/ui Dialog
+- [x] Replace @radix-ui/react-dropdown-menu with shadcn/ui DropdownMenu
+- [x] Replace @radix-ui/react-tooltip with shadcn/ui Tooltip
+- [x] Update all component imports to use shadcn/ui versions
+- [x] Remove unused Radix UI dependencies from package.json (Note: Radix UI packages are required by shadcn/ui)
+- [x] Test all migrated components for functionality
 
-#### 1. Database Setup
-- [ ] Install Prisma and PostgreSQL dependencies
-- [ ] Create database schema for core entities
-- [ ] Set up Prisma client and migrations
-
-#### 2. Authentication System
-- [ ] Install and configure NextAuth.js
-- [ ] Create shared login page
-- [ ] Create separate customer signup flow
-- [ ] Create separate business signup flow with verification
-- [ ] Implement role-based auth and middleware
-- [ ] Create separate dashboards for customers and businesses
-
-#### 3. Business Listing Features
-- [ ] Create business model and API routes
-- [ ] Build business registration flow
-- [ ] Create business profile pages
-- [ ] Implement service and pricing management
-
-#### 4. Homepage and Discovery
-- [ ] Design and build landing page
-- [ ] Create business listing grid/list view
-- [ ] Implement search functionality
-- [ ] Add category filters (hair, nails, spa, etc.)
-
-#### 5. Booking System Core
-- [ ] Create booking model and API
-- [ ] Build calendar component for availability
-- [ ] Implement booking flow UI
-- [ ] Add booking confirmation system
-
-## Phase 2: Enhanced Features
+## Phase 2: Core UI Components ✅ COMPLETED
 
 ### TODO List
+- [x] Add Calendar/DatePicker component for appointment scheduling
+- [x] Implement Toast/Notification system for user feedback (using Sonner)
+- [x] Create Alert and AlertDialog components
+- [x] Add Checkbox, Radio, and Switch components
+- [x] Implement Progress indicators (bar and circular)
+- [x] Create Avatar component for user profiles
+- [x] Add Command/Combobox for search functionality
+- [x] Implement Popover for contextual information
 
-#### 6. User Dashboard
-- [ ] Customer booking history
-- [ ] Business owner dashboard
-- [ ] Analytics for business owners
+## Phase 3: Business Dashboard Enhancements
 
-#### 7. Review System
-- [ ] Review model and API
-- [ ] Review submission flow
-- [ ] Display reviews on business profiles
+### TODO List
+- [ ] Create calendar view for appointments
+- [ ] Build enhanced analytics dashboard with charts
+- [ ] Implement staff/team member management
+- [ ] Add customer management (CRM) features
+- [ ] Create email/SMS notification settings
+- [ ] Build inventory/product management (if needed)
+- [ ] Implement promotions and discount management
+- [ ] Add quick stats and KPI widgets
 
-#### 8. Payment Integration
-- [ ] Stripe setup for payment processing
-- [ ] Booking payment flow
-- [ ] Business payout system
+## Phase 4: Customer Experience Improvements
 
-## Design Considerations
-- Clean, modern UI celebrating Black beauty and wellness culture
-- Mobile-first responsive design
-- Accessibility compliance (WCAG 2.1)
-- Fast loading times for better user experience
+### TODO List
+- [ ] Implement advanced search filters (location, price, availability)
+- [ ] Add favorites/saved businesses feature
+- [ ] Enhance booking history with rebooking option
+- [ ] Create loyalty/rewards program
+- [ ] Add social sharing capabilities
+- [ ] Optimize mobile booking flow
+- [ ] Implement customer reviews with photos
+- [ ] Add booking reminders and confirmations
 
-## Authentication Flow Details
-### Customer Flow
-- Simple email/password signup
-- Optional social auth (Google, Facebook)
-- Immediate access to browse and book
+## Phase 5: Admin Dashboard
 
-### Business Flow
-- Detailed registration form (business name, type, location)
-- Business verification step
-- Profile completion before going live
-- Separate business portal at /business route
+### TODO List
+- [ ] Create admin authentication and routes
+- [ ] Build admin dashboard with platform analytics
+- [ ] Implement business verification workflow
+- [ ] Add user management interface
+- [ ] Create content moderation tools
+- [ ] Build financial reports and insights
+- [ ] Add platform settings management
+- [ ] Implement audit logs
+
+## Phase 6: Technical Enhancements
+
+### TODO List
+- [ ] Set up real-time notifications (WebSocket/SSE)
+- [ ] Implement email notification system
+- [ ] Add image upload with optimization
+- [ ] Enhance search with Elasticsearch/Algolia
+- [ ] Implement caching strategy
+- [ ] Add API rate limiting
+- [ ] Set up error tracking (Sentry)
+- [ ] Implement performance monitoring
+
+## Phase 7: Advanced Business Features
+
+### TODO List
+- [ ] Add recurring appointments functionality
+- [ ] Implement group bookings
+- [ ] Create waitlist management
+- [ ] Add dynamic pricing rules
+- [ ] Implement multi-location support
+- [ ] Create package/bundle services
+- [ ] Add gift cards and vouchers
+- [ ] Implement business hours exceptions
+
+## Phase 8: Final Polish
+
+### TODO List
+- [ ] Add dark mode support
+- [ ] Ensure full accessibility compliance
+- [ ] Optimize performance and bundle size
+- [ ] Add comprehensive error handling
+- [ ] Create user onboarding flow
+- [ ] Add help documentation
+- [ ] Implement feedback collection
+- [ ] Prepare for production deployment
+
+## Technical Considerations
+
+### Dependencies to Add
+- shadcn/ui components (via CLI)
+- @tanstack/react-query for data fetching
+- react-hot-toast or sonner for notifications
+- @upstash/ratelimit for API protection
+- resend or sendgrid for emails
+- uploadthing or AWS S3 for file uploads
+
+### Dependencies to Remove
+- All @radix-ui/* packages (after migration)
+
+## Success Metrics
+- All Radix UI components successfully migrated to shadcn/ui
+- Complete feature parity with modern business portals
+- Mobile-responsive design across all pages
+- Page load times under 3 seconds
+- Accessibility score of 95+ on Lighthouse
+- Zero critical security vulnerabilities
+
+## Timeline Estimate
+- Phase 1-2: 1 week (UI foundation)
+- Phase 3-4: 2 weeks (core features)
+- Phase 5-6: 2 weeks (admin & technical)
+- Phase 7-8: 1 week (advanced features & polish)
+
+Total: ~6 weeks for complete implementation
 
 ## Review Section
 
-### Completed Tasks (Phase 1 - Foundation)
-1. **Database Setup** ✓
-   - Installed Prisma and dependencies
-   - Created comprehensive schema with User, Business, Service, Booking, Review, and Availability models
-   - Set up Prisma client singleton
-   - Added .env.example for configuration
+### Phase 1 & 2 Completion Summary
 
-2. **Authentication System** ✓
-   - Installed NextAuth.js with Prisma adapter
-   - Created auth configuration with credentials provider
-   - Set up JWT session strategy with role support
-   - Created API route for NextAuth
-   - Added TypeScript definitions for session
+### Changes Made
+- Successfully verified shadcn/ui was already initialized with components.json
+- Added all missing shadcn/ui components:
+  - Dialog, Calendar, Alert, AlertDialog
+  - Checkbox, RadioGroup, Switch, Progress
+  - Avatar, Command, Popover
+  - Sonner (replaced deprecated Toast component)
+- Verified all application code already uses shadcn/ui wrappers instead of direct Radix UI imports
+- Radix UI packages remain in package.json as they are required dependencies for shadcn/ui components
 
-### Completed Tasks (Authentication)
-3. **Authentication Pages** ✓
-   - Created shared login page with form validation
-   - Built customer signup flow with simple registration
-   - Built business signup with 2-step form (personal info → business details)
-   - Created API routes for both signup types
-   - Added middleware for route protection and role-based access
+### Challenges Encountered
+- Initial misunderstanding about Radix UI dependencies - they need to remain as shadcn/ui depends on them
+- Toast component was deprecated in favor of Sonner
 
-### Completed Tasks (Dashboards & Homepage)
-4. **Dashboard Pages** ✓
-   - Created customer dashboard with bookings and reviews
-   - Built business owner dashboard with stats and management links
-   - Added navigation layouts for authenticated users
-   - Implemented role-based redirects
-
-5. **Homepage** ✓
-   - Built landing page with hero section
-   - Added category browsing with emoji icons
-   - Created business listings grid with ratings
-   - Included services preview and pricing
-   - Added CTA section for businesses
-
-### Completed Tasks (Business Features)
-6. **Business Profile Pages** ✓
-   - Created dynamic profile pages showing all business details
-   - Display services with pricing and booking buttons
-   - Show reviews and ratings
-   - Added contact information and hours sidebar
-
-7. **Search & Filtering** ✓
-   - Built search page with multiple filters
-   - Text search across business names and services
-   - Filter by category, city, and minimum rating
-   - API endpoint for search functionality
-
-8. **Service Management** ✓
-   - Business owners can add/edit/delete services
-   - Set pricing and duration for each service
-   - Toggle services active/inactive
-   - Categorize services for better organization
-
-### Completed Tasks (Data Seeding)
-9. **Database Seeding** ✓
-   - Created comprehensive seed script with dummy data
-   - Added 3 customer accounts and 4 business accounts
-   - Populated services, bookings, reviews, and availability
-   - Configured seed command in package.json
-
-### Current Status
-The platform MVP is nearly complete with:
-- ✅ Authentication system (login/signup for customers and businesses)
-- ✅ Customer and business dashboards
-- ✅ Business profile pages with services
-- ✅ Search functionality with filters
-- ✅ Service management for businesses
-- ✅ Database populated with test data
-
-### Completed Tasks (Booking System)
-10. **Booking System** ✓
-    - Created booking page with service selection
-    - Built calendar component with date picker
-    - Implemented time slot generation based on availability
-    - Added real-time availability checking
-    - Created booking confirmation page
-    - Built customer bookings management page
-
-### MVP Complete! 🎉
-The platform now has all core features:
-- ✅ User authentication (separate flows for customers/businesses)
-- ✅ Business profiles and discovery
-- ✅ Service management
-- ✅ Search and filtering
-- ✅ Complete booking system
-- ✅ Customer and business dashboards
-
-### Remaining Features (Phase 2)
-- Availability management for businesses
-- Review system after completed bookings
-- Payment integration (Stripe) ✅ COMPLETED
-- Email notifications ✅ COMPLETED
-- Business analytics dashboard ✅ COMPLETED
-
-## Design Improvements Phase - COMPLETED
-
-### Summary of Completed Design Improvements
-
-1. **Design System Foundation** ✓
-   - Created consistent flat design system (removed all gradients per user preference)
-   - Defined typography scale with Geist font family
-   - Standardized spacing and sizing tokens in globals.css
-   - Created reusable component variants (buttons, cards, forms)
-
-2. **Visual Enhancements** ✓
-   - Redesigned homepage hero with clean flat design
-   - Improved card designs with subtle shadows and hover states
-   - Added comprehensive animations and micro-interactions
-   - Animation utilities: fade-in, slide-up, scale-in, blur-in
-   - Interactive hover states throughout the application
-
-3. **Navigation & Layout** ✓
-   - Added breadcrumb navigation component
-   - Implemented breadcrumbs across all major pages
-   - Maintained clean navigation structure
-
-4. **Form & UI Polish** ✓
-   - Enhanced all form fields with improved focus states
-   - Added ring focus indicators for accessibility
-   - Updated button components with flat design
-   - Improved form field animations and transitions
-
-5. **Business Profile Enhancement** ✓
-   - Created tabbed interface for services/reviews/about/hours
-   - Enhanced service cards with better organization
-   - Improved review display with better formatting
-   - Added icon indicators for different sections
-
-6. **Dashboard Improvements** ✓
-   - Created comprehensive data visualization components:
-     - BarChart for revenue comparisons
-     - PieChart for fee breakdowns
-     - StatCard for key metrics
-   - Added empty states with 8 custom SVG illustrations
-   - Improved table designs with:
-     - Enhanced base table components
-     - Created DataTable with sorting, searching, and pagination
-     - Implemented responsive table layouts
-   - Updated analytics dashboard with visual charts
-
-### Key Design Decisions
-- **Flat Design**: Removed all gradients in favor of clean, modern flat design
-- **Subtle Animations**: Added tasteful micro-interactions without being overwhelming
-- **Consistent Spacing**: Used 4px base unit throughout for consistent rhythm
-- **Accessibility**: Maintained focus indicators and proper contrast ratios
-- **Professional Appearance**: Clean layouts with proper alignment and spacing
-
-## Revert Sidebar Implementation
-
-### Plan to Revert Dashboard Layouts to Horizontal Navigation
-
-**Objective**: Revert the dashboard layouts back to their original horizontal navigation state before the sidebar implementation (commit 8a17675).
-
-### Todo List
-
-- [x] Revert `/src/app/business/dashboard/layout.tsx` to horizontal navigation
-- [x] Revert `/src/app/dashboard/layout.tsx` to horizontal navigation  
-- [x] Remove `/src/components/logout-button.tsx` file (created for sidebar)
-- [x] Test that both dashboards work correctly with horizontal navigation
-- [x] Commit the changes
-
-### Implementation Notes
-- The original layouts used simple Link components for navigation
-- No complex dropdown menus or collapsible sidebars
-- Clean, horizontal navigation bars with shadow styling
-- Mobile responsiveness handled with hidden/shown classes
+### Future Recommendations
+- Phase 3 (Business Dashboard) should be the next priority to enhance business owner experience
+- Consider implementing the notification system with Sonner for real-time updates
+- The calendar component is now available for the appointment scheduling feature
+- Focus on mobile responsiveness when implementing new features
