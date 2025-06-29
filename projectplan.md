@@ -49,8 +49,8 @@ This plan outlines the steps to complete the business portal application, focusi
 - [x] Fix navigation issues
   - [x] Dashboard redirect for business owners
   - [x] Move services page into dashboard layout
-- [ ] Implement staff/team member management
-- [ ] Add customer management (CRM) features
+- [x] Implement staff/team member management
+- [x] Add customer management (CRM) features
 - [ ] Create email/SMS notification settings
 - [ ] Build inventory/product management (if needed)
 - [ ] Implement promotions and discount management
@@ -204,3 +204,46 @@ Total: ~6 weeks for complete implementation
 - Create notification settings for email/SMS
 - Consider implementing drag-and-drop for appointment rescheduling
 - Add real-time updates using WebSocket/SSE
+
+### Phase 3 Continued Progress (December 19, 2024)
+
+#### Changes Made
+- **Staff Management System**:
+  - Added Staff, StaffService, and StaffSchedule models to database schema
+  - Created comprehensive staff management page with role-based permissions
+  - Implemented staff roles (Owner, Manager, Staff) with different access levels
+  - Added ability to link staff members to specific services they can perform
+  - Created API endpoints for full CRUD operations on staff
+  - Added validation to prevent deleting staff with upcoming bookings
+
+- **Customer Relationship Management (CRM)**:
+  - Added CustomerProfile and Communication models to database
+  - Built customer list with search, filter, and sort capabilities
+  - Implemented customer segmentation (VIP, New, Regular, At-Risk)
+  - Created detailed customer view with notes, tags, and booking history
+  - Added customer metrics dashboard showing revenue and insights
+  - Implemented CSV export functionality for customer data
+  - Auto-generation of customer profiles from booking history
+  - Created communication log for tracking all customer interactions
+  - Built AWS-ready architecture for future email/SMS integration
+
+- **UI/UX Improvements**:
+  - Fixed Select component import issues by installing proper shadcn/ui version
+  - Enhanced navigation with proper role-based redirects
+  - Improved sidebar organization with new menu items
+
+#### Challenges Encountered
+- Select component needed to be upgraded from simple HTML to shadcn/ui version
+- Database schema required careful planning for relationships between staff, services, and bookings
+- Customer profile generation needed to handle existing booking data retroactively
+
+#### Current Status
+- Phase 3 is nearly complete with major features implemented
+- Remaining items: notification settings, promotions system
+- Ready for AWS deployment with minimal changes needed
+
+#### Next Steps
+- Implement email/SMS notification settings
+- Create promotions and discount management system
+- Consider moving to Phase 4 for customer experience improvements
+- Add file upload capabilities for profile images
