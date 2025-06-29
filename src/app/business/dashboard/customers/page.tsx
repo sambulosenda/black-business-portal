@@ -132,7 +132,7 @@ export default function CustomersPage() {
     // Sort
     switch (sortBy) {
       case 'spent':
-        filtered.sort((a, b) => b.totalSpent - a.totalSpent)
+        filtered.sort((a, b) => Number(b.totalSpent) - Number(a.totalSpent))
         break
       case 'visits':
         filtered.sort((a, b) => b.totalVisits - a.totalVisits)
@@ -157,7 +157,7 @@ export default function CustomersPage() {
       customer.customerEmail,
       customer.customerPhone || '',
       customer.totalVisits.toString(),
-      `$${customer.totalSpent.toFixed(2)}`,
+      `$${Number(customer.totalSpent).toFixed(2)}`,
       customer.lastVisit ? format(new Date(customer.lastVisit), 'MM/dd/yyyy') : '',
       customer.tags.join(', ')
     ])
@@ -239,7 +239,7 @@ export default function CustomersPage() {
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">${metrics.totalRevenue.toFixed(2)}</div>
+              <div className="text-2xl font-bold">${Number(metrics.totalRevenue).toFixed(2)}</div>
               <p className="text-xs text-muted-foreground">
                 From all customers
               </p>
@@ -252,7 +252,7 @@ export default function CustomersPage() {
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">${metrics.averageCustomerValue.toFixed(2)}</div>
+              <div className="text-2xl font-bold">${Number(metrics.averageCustomerValue).toFixed(2)}</div>
               <p className="text-xs text-muted-foreground">
                 Per customer lifetime
               </p>
@@ -362,7 +362,7 @@ export default function CustomersPage() {
                             
                             <div className="flex items-center gap-6 text-sm">
                               <div className="text-right">
-                                <p className="font-semibold">${customer.totalSpent.toFixed(2)}</p>
+                                <p className="font-semibold">${Number(customer.totalSpent).toFixed(2)}</p>
                                 <p className="text-xs text-muted-foreground">Total spent</p>
                               </div>
                               <div className="text-right">

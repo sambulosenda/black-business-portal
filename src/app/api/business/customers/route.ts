@@ -126,10 +126,24 @@ export async function GET(request: Request) {
         },
       })
 
-      return NextResponse.json({ customers: newCustomers })
+      // Convert Decimal fields to numbers for JSON serialization
+      const newCustomersWithNumbers = newCustomers.map(customer => ({
+        ...customer,
+        totalSpent: Number(customer.totalSpent),
+        averageSpent: Number(customer.averageSpent),
+      }))
+
+      return NextResponse.json({ customers: newCustomersWithNumbers })
     }
 
-    return NextResponse.json({ customers })
+    // Convert Decimal fields to numbers for JSON serialization
+    const customersWithNumbers = customers.map(customer => ({
+      ...customer,
+      totalSpent: Number(customer.totalSpent),
+      averageSpent: Number(customer.averageSpent),
+    }))
+
+    return NextResponse.json({ customers: customersWithNumbers })
   } catch (error) {
     console.error('Error fetching customers:', error)
     return NextResponse.json(

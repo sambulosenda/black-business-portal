@@ -26,6 +26,7 @@ import {
   LogOut,
   User,
   Users,
+  Bell,
 } from "lucide-react"
 
 export default async function BusinessDashboardLayout({
@@ -80,6 +81,11 @@ export default async function BusinessDashboardLayout({
       title: "Reviews",
       icon: Star,
       href: "/business/dashboard/reviews",
+    },
+    {
+      title: "Notifications",
+      icon: Bell,
+      href: "/business/dashboard/notifications",
     },
     {
       title: "Profile",

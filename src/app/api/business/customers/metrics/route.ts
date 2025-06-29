@@ -94,8 +94,16 @@ export async function GET(request: Request) {
       newCustomersThisMonth,
       totalRevenue,
       averageCustomerValue,
-      topSpenders,
-      atRiskCustomers,
+      topSpenders: topSpenders.map(customer => ({
+        ...customer,
+        totalSpent: Number(customer.totalSpent),
+        averageSpent: Number(customer.averageSpent),
+      })),
+      atRiskCustomers: atRiskCustomers.map(customer => ({
+        ...customer,
+        totalSpent: Number(customer.totalSpent),
+        averageSpent: Number(customer.averageSpent),
+      })),
     })
   } catch (error) {
     console.error('Error fetching customer metrics:', error)

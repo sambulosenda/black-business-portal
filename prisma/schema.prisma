@@ -72,6 +72,7 @@ model Business {
   staff            Staff[]
   customerProfiles CustomerProfile[]
   communications   Communication[]
+  notificationSettings NotificationSettings?
 }
 
 model Service {
@@ -366,4 +367,118 @@ enum CommunicationStatus {
   DELIVERED
   FAILED
   READ
+}
+
+// Notification Settings Models
+model NotificationSettings {
+  id              String   @id @default(cuid())
+  businessId      String   @unique
+  
+  // Email Settings
+  emailEnabled    Boolean  @default(true)
+  emailFrom       String?  // Custom from name
+  emailReplyTo    String?  // Reply-to email
+  
+  // SMS Settings
+  smsEnabled      Boolean  @default(false)
+  smsFrom         String?  // SMS sender ID/number
+  
+  // Global Settings
+  timezone        String   @default("America/New_York")
+  quietHoursStart String?  // HH:MM format (e.g., "21:00")
+  quietHoursEnd   String?  // HH:MM format (e.g., "09:00")
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  business        Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  templates       NotificationTemplate[]
+  triggers        NotificationTrigger[]
+}
+
+model NotificationTemplate {
+  id              String   @id @default(cuid())
+  settingsId      String
+  type            NotificationType
+  channel         NotificationChannel
+  
+  name            String
+  subject         String?  // For emails
+  content         String   @db.Text
+  variables       String[] // Available variables like {{customerName}}, {{serviceName}}
+  
+  isActive        Boolean  @default(true)
+  isDefault       Boolean  @default(false) // Use platform default if true
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  settings        NotificationSettings @relation(fields: [settingsId], references: [id], onDelete: Cascade)
+  
+  @@unique([settingsId, type, channel])
+  @@index([settingsId, isActive])
+}
+
+model NotificationTrigger {
+  id              String   @id @default(cuid())
+  settingsId      String
+  
+  event           NotificationEvent
+  channel         NotificationChannel
+  enabled         Boolean  @default(true)
+  
+  // Timing
+  timing          TriggerTiming @default(IMMEDIATE)
+  delayMinutes    Int?     // For DELAYED timing
+  advanceHours    Int?     // For ADVANCE timing (e.g., 24 hours before appointment)
+  
+  // Conditions
+  conditions      Json?    // Additional conditions like minimum spend, customer type, etc.
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  settings        NotificationSettings @relation(fields: [settingsId], references: [id], onDelete: Cascade)
+  
+  @@unique([settingsId, event, channel])
+  @@index([settingsId, enabled])
+}
+
+enum NotificationType {
+  BOOKING_CONFIRMATION
+  BOOKING_REMINDER
+  BOOKING_CANCELLED
+  BOOKING_RESCHEDULED
+  BOOKING_COMPLETED
+  REVIEW_REQUEST
+  PROMOTIONAL
+  BIRTHDAY
+  RE_ENGAGEMENT
+}
+
+enum NotificationChannel {
+  EMAIL
+  SMS
+  BOTH
+}
+
+enum NotificationEvent {
+  BOOKING_CREATED
+  BOOKING_CONFIRMED
+  BOOKING_CANCELLED
+  BOOKING_COMPLETED
+  BEFORE_APPOINTMENT
+  AFTER_APPOINTMENT
+  CUSTOMER_BIRTHDAY
+  CUSTOMER_INACTIVE
+}
+
+enum TriggerTiming {
+  IMMEDIATE
+  DELAYED
+  ADVANCE
+  SCHEDULED
 }

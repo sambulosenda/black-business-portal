@@ -77,7 +77,12 @@ export async function GET(
     return NextResponse.json({ 
       customer: {
         ...customer,
-        bookings,
+        totalSpent: Number(customer.totalSpent),
+        averageSpent: Number(customer.averageSpent),
+        bookings: bookings.map(booking => ({
+          ...booking,
+          totalPrice: Number(booking.totalPrice),
+        })),
       }
     })
   } catch (error) {
@@ -172,7 +177,12 @@ export async function PATCH(
     return NextResponse.json({ 
       customer: {
         ...updatedCustomer,
-        bookings,
+        totalSpent: Number(updatedCustomer.totalSpent),
+        averageSpent: Number(updatedCustomer.averageSpent),
+        bookings: bookings.map(booking => ({
+          ...booking,
+          totalPrice: Number(booking.totalPrice),
+        })),
       }
     })
   } catch (error) {
