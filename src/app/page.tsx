@@ -56,7 +56,7 @@ export default async function Home() {
             <div className="flex items-center space-x-2">
               {session ? (
                 <>
-                  <Link href="/dashboard">
+                  <Link href={session.user.role === 'BUSINESS_OWNER' ? '/business/dashboard' : '/dashboard'}>
                     <Button variant="ghost" className="text-gray-700 hover:text-gray-900">
                       Dashboard
                     </Button>

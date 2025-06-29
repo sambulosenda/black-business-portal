@@ -1,75 +1,152 @@
-import { requireRole } from "@/lib/session"
-import { prisma } from "@/lib/prisma"
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, startOfWeek, endOfWeek, isSameMonth, addMonths, subMonths } from "date-fns"
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, User, DollarSign, MapPin, Phone } from "lucide-react"
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, User, DollarSign, MapPin, Phone, Loader2 } from "lucide-react"
 import Link from "next/link"
 
-export default async function CalendarPage() {
-  const session = await requireRole("BUSINESS_OWNER")
-  
-  // Get the business for this owner
-  const business = await prisma.business.findFirst({
-    where: {
-      userId: session.user.id,
-      isActive: true,
-    },
-  })
-
-  if (!business) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-muted-foreground">No active business found</p>
-      </div>
-    )
+interface Booking {
+  id: string
+  date: Date
+  startTime: Date
+  endTime: Date
+  status: string
+  totalPrice: number
+  service: {
+    id: string
+    name: string
   }
+  user: {
+    id: string
+    name: string
+    email: string
+    phone: string | null
+  }
+}
 
-  // Get current month dates
-  const now = new Date()
-  const monthStart = startOfMonth(now)
-  const monthEnd = endOfMonth(now)
+export default function CalendarPage() {
+  const router = useRouter()
+  const [currentMonth, setCurrentMonth] = useState(new Date())
+  const [selectedDate, setSelectedDate] = useState(new Date())
+  const [bookings, setBookings] = useState<Booking[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  // Fetch bookings for the current month view
+  useEffect(() => {
+    const fetchBookings = async () => {
+      setLoading(true)
+      setError(null)
+      
+      try {
+        const monthStart = startOfMonth(currentMonth)
+        const monthEnd = endOfMonth(currentMonth)
+        const calendarStart = startOfWeek(monthStart)
+        const calendarEnd = endOfWeek(monthEnd)
+        
+        const response = await fetch(`/api/business/bookings?startDate=${calendarStart.toISOString()}&endDate=${calendarEnd.toISOString()}`)
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch bookings')
+        }
+        
+        const data = await response.json()
+        setBookings(data.bookings)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred')
+        console.error('Error fetching bookings:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchBookings()
+  }, [currentMonth])
+
+  // Calculate calendar dates
+  const monthStart = startOfMonth(currentMonth)
+  const monthEnd = endOfMonth(currentMonth)
   const calendarStart = startOfWeek(monthStart)
   const calendarEnd = endOfWeek(monthEnd)
-
-  // Get all bookings for the current month view
-  const bookings = await prisma.booking.findMany({
-    where: {
-      businessId: business.id,
-      date: {
-        gte: calendarStart,
-        lte: calendarEnd,
-      },
-    },
-    include: {
-      user: true,
-      service: true,
-    },
-    orderBy: {
-      startTime: 'asc',
-    },
-  })
+  const calendarDays = eachDayOfInterval({ start: calendarStart, end: calendarEnd })
+  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
   // Group bookings by date
   const bookingsByDate = bookings.reduce((acc, booking) => {
-    const dateKey = format(booking.date, 'yyyy-MM-dd')
+    const dateKey = format(new Date(booking.date), 'yyyy-MM-dd')
     if (!acc[dateKey]) {
       acc[dateKey] = []
     }
     acc[dateKey].push(booking)
     return acc
-  }, {} as Record<string, typeof bookings>)
+  }, {} as Record<string, Booking[]>)
 
-  // Get all days to display in calendar
-  const calendarDays = eachDayOfInterval({ start: calendarStart, end: calendarEnd })
-  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-
-  // Selected date for detail view (default to today)
-  const selectedDate = now
+  // Get selected date bookings
   const selectedDateKey = format(selectedDate, 'yyyy-MM-dd')
   const selectedDateBookings = bookingsByDate[selectedDateKey] || []
+
+  // Navigation handlers
+  const goToPreviousMonth = () => {
+    setCurrentMonth(subMonths(currentMonth, 1))
+  }
+
+  const goToNextMonth = () => {
+    setCurrentMonth(addMonths(currentMonth, 1))
+  }
+
+  const goToToday = () => {
+    const today = new Date()
+    setCurrentMonth(today)
+    setSelectedDate(today)
+  }
+
+  const handleDayClick = (day: Date) => {
+    setSelectedDate(day)
+  }
+
+  const handleConfirmBooking = async (bookingId: string) => {
+    try {
+      const response = await fetch(`/api/business/bookings/${bookingId}/confirm`, {
+        method: 'POST',
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to confirm booking')
+      }
+
+      // Refresh bookings
+      const updatedBookings = bookings.map(booking => 
+        booking.id === bookingId ? { ...booking, status: 'CONFIRMED' } : booking
+      )
+      setBookings(updatedBookings)
+    } catch (err) {
+      console.error('Error confirming booking:', err)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <p className="text-destructive mb-2">{error}</p>
+          <Button onClick={() => router.refresh()}>Try Again</Button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -87,13 +164,27 @@ export default async function CalendarPage() {
                 {format(monthStart, 'MMMM yyyy')}
               </CardTitle>
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="icon" disabled>
+                <Button 
+                  variant="outline" 
+                  size="icon"
+                  onClick={goToPreviousMonth}
+                  title="Previous month"
+                >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={goToToday}
+                >
                   Today
                 </Button>
-                <Button variant="outline" size="icon" disabled>
+                <Button 
+                  variant="outline" 
+                  size="icon"
+                  onClick={goToNextMonth}
+                  title="Next month"
+                >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
@@ -115,13 +206,14 @@ export default async function CalendarPage() {
                 {calendarDays.map((day, index) => {
                   const dateKey = format(day, 'yyyy-MM-dd')
                   const dayBookings = bookingsByDate[dateKey] || []
-                  const isToday = isSameDay(day, now)
+                  const isToday = isSameDay(day, new Date())
                   const isCurrentMonth = isSameMonth(day, monthStart)
                   const isSelected = isSameDay(day, selectedDate)
                   
                   return (
                     <div
                       key={index}
+                      onClick={() => handleDayClick(day)}
                       className={`
                         min-h-[120px] p-2 border-r border-b last:border-r-0
                         ${!isCurrentMonth ? 'bg-gray-50/50' : ''}
@@ -147,7 +239,7 @@ export default async function CalendarPage() {
                       
                       {/* Show up to 3 appointments */}
                       <div className="space-y-1">
-                        {dayBookings.slice(0, 3).map((booking, bookingIndex) => (
+                        {dayBookings.slice(0, 3).map((booking) => (
                           <div
                             key={booking.id}
                             className={`
@@ -157,9 +249,9 @@ export default async function CalendarPage() {
                               ${booking.status === 'CANCELLED' ? 'bg-gray-100 text-gray-500 line-through' : ''}
                               ${booking.status === 'COMPLETED' ? 'bg-green-100 text-green-700' : ''}
                             `}
-                            title={`${format(booking.startTime, 'h:mm a')} - ${booking.service.name}`}
+                            title={`${format(new Date(booking.startTime), 'h:mm a')} - ${booking.service.name}`}
                           >
-                            <span className="font-medium">{format(booking.startTime, 'h:mm a')}</span>
+                            <span className="font-medium">{format(new Date(booking.startTime), 'h:mm a')}</span>
                             <span className="ml-1">{booking.service.name}</span>
                           </div>
                         ))}
@@ -199,7 +291,7 @@ export default async function CalendarPage() {
                             <h4 className="font-medium">{booking.service.name}</h4>
                             <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
                               <Clock className="h-3 w-3" />
-                              {format(booking.startTime, 'h:mm a')} - {format(booking.endTime, 'h:mm a')}
+                              {format(new Date(booking.startTime), 'h:mm a')} - {format(new Date(booking.endTime), 'h:mm a')}
                             </div>
                           </div>
                           <Badge
@@ -237,7 +329,12 @@ export default async function CalendarPage() {
                             </Button>
                           </Link>
                           {booking.status === 'PENDING' && (
-                            <Button variant="default" size="sm" className="flex-1">
+                            <Button 
+                              variant="default" 
+                              size="sm" 
+                              className="flex-1"
+                              onClick={() => handleConfirmBooking(booking.id)}
+                            >
                               Confirm
                             </Button>
                           )}
