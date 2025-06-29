@@ -29,6 +29,21 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
         where: { isActive: true },
         orderBy: { name: 'asc' },
       },
+      products: {
+        where: { isActive: true },
+        include: {
+          category: true,
+        },
+        orderBy: [
+          { isFeatured: 'desc' },
+          { displayOrder: 'asc' },
+          { name: 'asc' },
+        ],
+      },
+      productCategories: {
+        where: { isActive: true },
+        orderBy: { displayOrder: 'asc' },
+      },
       reviews: {
         include: {
           user: true,
@@ -52,6 +67,22 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
       ? business.reviews.reduce((acc, review) => acc + review.rating, 0) /
         business.reviews.length
       : 0
+
+  // Serialize business data for client component
+  const serializedBusiness = {
+    ...business,
+    commissionRate: Number(business.commissionRate),
+    services: business.services.map(service => ({
+      ...service,
+      price: Number(service.price)
+    })),
+    products: business.products.map(product => ({
+      ...product,
+      price: Number(product.price),
+      compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
+      cost: product.cost ? Number(product.cost) : null
+    }))
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white">
@@ -164,7 +195,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <BusinessProfileTabs 
-            business={business} 
+            business={serializedBusiness} 
             averageRating={averageRating} 
             session={session} 
           />
