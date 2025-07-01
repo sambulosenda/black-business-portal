@@ -141,7 +141,7 @@ export default function Home() {
             {/* Left Content */}
             <div className="text-left space-y-8 animate-fade-in lg:pr-8">
               <div className="space-y-6">
-                <div className="inline-flex items-center px-4 py-2 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium">
+                <div className="inline-flex items-center px-4 py-2 bg-indigo-50 text-indigo-700 rounded-full text-sm font-medium border border-indigo-100">
                   <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
@@ -153,59 +153,63 @@ export default function Home() {
                   <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> 30 seconds</span>
                 </h1>
                 
-                <p className="text-xl text-gray-700 leading-relaxed max-w-xl">
+                <p className="text-xl text-gray-600 leading-relaxed max-w-xl">
                   Find and instantly book appointments at top-rated African beauty salons and professionals near you. No calls, no waiting.
                 </p>
               </div>
               
               {/* Search Bar */}
-              <div className="bg-white/80 backdrop-blur-sm p-3 rounded-2xl border border-gray-200 max-w-lg">
-                <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
-                  <div className="flex-1 relative">
-                    <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                    <input
-                      type="text"
-                      placeholder='Try "braids", "nails", or "spa"'
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 text-gray-900 placeholder-gray-500 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-xl transition-all"
-                    />
+              <div className="bg-white rounded-2xl shadow-xl p-6 max-w-2xl border border-gray-100">
+                <form onSubmit={handleSearch} className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="relative">
+                      <svg className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                      <input
+                        type="text"
+                        placeholder='Try "braids", "nails", or "spa"'
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 bg-gray-50 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-xl transition-all text-base"
+                      />
+                    </div>
+                    <div className="relative">
+                      <svg className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      <input
+                        type="text"
+                        placeholder="City or neighborhood"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                        className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 bg-gray-50 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-xl transition-all text-base"
+                      />
+                    </div>
                   </div>
-                  <div className="flex-1 relative">
-                    <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    <input
-                      type="text"
-                      placeholder="City or neighborhood"
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 text-gray-900 placeholder-gray-500 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-xl transition-all"
-                    />
-                  </div>
-                  <Button type="submit" size="lg" className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 rounded-xl transform hover:-translate-y-0.5 transition-all shadow-lg hover:shadow-xl">
+                  <Button type="submit" size="lg" className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl transform hover:-translate-y-0.5 transition-all shadow-lg hover:shadow-xl py-4 text-lg font-semibold">
                     Find Services
                   </Button>
                 </form>
                 
                 {/* Popular Searches */}
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <span className="text-xs text-gray-500">Popular:</span>
-                  {['Hair Braiding', 'Nail Art', 'Spa Day', 'Lash Extensions', 'Makeup'].map((term) => (
-                    <button
-                      key={term}
-                      onClick={() => {
-                        setSearchQuery(term.toLowerCase())
-                        router.push(`/search?q=${encodeURIComponent(term.toLowerCase())}`)
-                      }}
-                      className="text-xs px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors"
-                    >
-                      {term}
-                    </button>
-                  ))}
+                <div className="mt-6 pt-6 border-t border-gray-100">
+                  <p className="text-sm text-gray-500 mb-3">Popular:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {['Hair Braiding', 'Nail Art', 'Spa Day', 'Lash Extensions', 'Makeup'].map((term) => (
+                      <button
+                        key={term}
+                        onClick={() => {
+                          setSearchQuery(term.toLowerCase())
+                          router.push(`/search?q=${encodeURIComponent(term.toLowerCase())}`)
+                        }}
+                        className="text-sm px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-medium"
+                      >
+                        {term}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
               
