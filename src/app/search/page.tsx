@@ -145,81 +145,129 @@ function SearchContent() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
+      <style jsx>{`
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes blob {
+          0% {
+            transform: translate(0px, 0px) scale(1);
+          }
+          33% {
+            transform: translate(30px, -50px) scale(1.1);
+          }
+          66% {
+            transform: translate(-20px, 20px) scale(0.9);
+          }
+          100% {
+            transform: translate(0px, 0px) scale(1);
+          }
+        }
+        .animate-blob {
+          animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+      `}</style>
       <Navigation session={null} />
       
       {/* Hero Search Section */}
-      <div className="bg-gradient-to-r from-indigo-600 to-indigo-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="relative bg-gradient-to-br from-indigo-50 via-white to-purple-50 overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute top-0 left-0 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+        <div className="absolute top-0 right-0 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           {/* Search Container */}
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-xl p-4 shadow-sm">
-              <div className="flex flex-col md:flex-row gap-3">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-8">
+              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+                Find your perfect beauty match
+              </h1>
+              <p className="text-lg text-gray-600">
+                Discover top-rated beauty services near you
+              </p>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Service Search */}
-                <div className="flex-1">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 pointer-events-none" />
-                    <Input
-                      type="text"
-                      value={filters.query}
-                      onChange={(e) => handleFilterChange('query', e.target.value)}
-                      placeholder="Search services or businesses..."
-                      className="pl-10 pr-4 h-11 border border-gray-200 bg-white text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 rounded-lg"
-                    />
-                  </div>
+                <div className="relative">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 pointer-events-none" />
+                  <Input
+                    type="text"
+                    value={filters.query}
+                    onChange={(e) => handleFilterChange('query', e.target.value)}
+                    placeholder='Try "braids", "nails", or "spa"'
+                    className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 bg-gray-50 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-xl transition-all text-base"
+                  />
                 </div>
                 
                 {/* Location Search */}
-                <div className="md:w-72">
-                  <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 pointer-events-none" />
-                    <Input
-                      type="text"
-                      value={filters.city}
-                      onChange={(e) => handleFilterChange('city', e.target.value)}
-                      placeholder="Location"
-                      className="pl-10 pr-4 h-11 border border-gray-200 bg-white text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 rounded-lg"
-                    />
-                  </div>
+                <div className="relative">
+                  <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 pointer-events-none" />
+                  <Input
+                    type="text"
+                    value={filters.city}
+                    onChange={(e) => handleFilterChange('city', e.target.value)}
+                    placeholder="City or neighborhood"
+                    className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 bg-gray-50 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-xl transition-all text-base"
+                  />
                 </div>
-                
-                {/* Search Button */}
-                <Button 
-                  size="lg"
-                  className="h-11 px-8 text-sm font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white transition-colors"
-                >
-                  Search
-                </Button>
               </div>
+              
+              {/* Search Button */}
+              <Button 
+                size="lg"
+                className="w-full mt-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl transform hover:-translate-y-0.5 transition-all shadow-lg hover:shadow-xl py-4 text-lg font-semibold"
+              >
+                Search Services
+              </Button>
             </div>
 
-            {/* Popular Categories */}
-            <div className="mt-10">
-              <div className="flex flex-wrap justify-center gap-3">
-                {categories.slice(1, 7).map(cat => (
+            {/* Category Pills - Horizontal Scrollable */}
+            <div className="mt-8">
+              <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                <button
+                  onClick={() => handleFilterChange('category', '')}
+                  className={cn(
+                    "flex-shrink-0 px-6 py-3 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap",
+                    filters.category === ''
+                      ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg"
+                      : "bg-white text-gray-700 border border-gray-200 hover:border-gray-300"
+                  )}
+                >
+                  All Services
+                </button>
+                {categories.slice(1).map(cat => (
                   <button
                     key={cat.value}
                     onClick={() => handleFilterChange('category', filters.category === cat.value ? '' : cat.value)}
                     className={cn(
-                      "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
+                      "flex-shrink-0 px-6 py-3 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap",
                       filters.category === cat.value
-                        ? "bg-white text-indigo-600"
-                        : "bg-white/10 text-white border border-white/20 hover:bg-white/20"
+                        ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg"
+                        : "bg-white text-gray-700 border border-gray-200 hover:border-gray-300"
                     )}
                   >
                     {cat.label}
                   </button>
                 ))}
-                <button
-                  onClick={() => handleFilterChange('category', '')}
-                  className={cn(
-                    "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
-                    filters.category === ''
-                      ? "bg-white text-indigo-600"
-                      : "bg-white/10 text-white border border-white/20 hover:bg-white/20"
-                  )}
-                >
-                  All Services
-                </button>
               </div>
             </div>
           </div>
@@ -309,9 +357,9 @@ function SearchContent() {
                         key={cat.value}
                         onClick={() => handleFilterChange('category', cat.value)}
                         className={cn(
-                          "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors",
+                          "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-200",
                           filters.category === cat.value
-                            ? "bg-indigo-600 text-white"
+                            ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md"
                             : "hover:bg-indigo-50 hover:text-indigo-600"
                         )}
                       >
@@ -335,9 +383,9 @@ function SearchContent() {
                         key={rating}
                         onClick={() => handleFilterChange('minRating', rating)}
                         className={cn(
-                          "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors",
+                          "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-200",
                           filters.minRating === rating
-                            ? "bg-indigo-600 text-white"
+                            ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md"
                             : "hover:bg-indigo-50 hover:text-indigo-600"
                         )}
                       >
@@ -366,7 +414,7 @@ function SearchContent() {
                   <Button
                     onClick={() => setFilters({ query: '', category: '', city: '', minRating: '' })}
                     variant="outline"
-                    className="w-full"
+                    className="w-full border-2 hover:bg-gray-50 transition-all"
                   >
                     Clear all filters
                   </Button>
@@ -397,9 +445,9 @@ function SearchContent() {
                           animation: `fadeInUp 0.5s ease-out ${index * 0.1}s both`
                         }}
                       >
-                        <Card className="h-full overflow-hidden border border-gray-200 hover:border-indigo-300 transition-all duration-200">
+                        <Card className="h-full overflow-hidden border border-gray-100 hover:border-indigo-200 hover:shadow-xl transition-all duration-300 group">
                           {/* Image Placeholder */}
-                          <div className="relative h-40 bg-gradient-to-br from-gray-50 to-gray-100">
+                          <div className="relative h-40 bg-gradient-to-br from-indigo-50 to-purple-50">
                             <button
                               onClick={(e) => {
                                 e.preventDefault()
@@ -428,7 +476,7 @@ function SearchContent() {
                               <div className="space-y-2">
                                 {/* Business Name & Category */}
                                 <div>
-                                  <h3 className="font-semibold text-base text-gray-900 hover:text-indigo-600 transition-colors line-clamp-1">
+                                  <h3 className="font-semibold text-base text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-1">
                                     {business.businessName}
                                   </h3>
                                   <p className="text-xs text-gray-500 mt-0.5">
@@ -635,9 +683,9 @@ function SearchContent() {
                       key={cat.value}
                       onClick={() => handleFilterChange('category', cat.value)}
                       className={cn(
-                        "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm",
+                        "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-200",
                         filters.category === cat.value
-                          ? "bg-indigo-600 text-white"
+                          ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md"
                           : "hover:bg-indigo-50 hover:text-indigo-600"
                       )}
                     >
@@ -658,9 +706,9 @@ function SearchContent() {
                       key={rating}
                       onClick={() => handleFilterChange('minRating', rating)}
                       className={cn(
-                        "w-full flex items-center px-3 py-2 rounded-lg text-sm",
+                        "w-full flex items-center px-3 py-2 rounded-lg text-sm transition-all duration-200",
                         filters.minRating === rating
-                          ? "bg-indigo-600 text-white"
+                          ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md"
                           : "hover:bg-indigo-50 hover:text-indigo-600"
                       )}
                     >
@@ -683,7 +731,7 @@ function SearchContent() {
             <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t">
               <Button
                 onClick={() => setShowMobileFilters(false)}
-                className="w-full"
+                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg"
               >
                 Apply Filters
               </Button>
