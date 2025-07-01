@@ -167,7 +167,7 @@ export default function Home() {
                     </svg>
                     <input
                       type="text"
-                      placeholder="Try "braids", "nails", or "spa""
+                      placeholder='Try "braids", "nails", or "spa"'
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-full pl-10 pr-4 py-3 text-gray-900 placeholder-gray-500 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-xl transition-all"
@@ -675,7 +675,7 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
                 <h3 className="text-white font-semibold mb-2">24/7 Support</h3>
-                <p className="text-white/80 text-sm">We're here to help you succeed</p>
+                <p className="text-white/80 text-sm">We&apos;re here to help you succeed</p>
               </div>
             </div>
           </div>
