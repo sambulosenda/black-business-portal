@@ -92,8 +92,18 @@ export default async function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section className="bg-indigo-600 py-20 lg:py-32">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative bg-indigo-600 py-20 lg:py-32 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="/images/client-bg-new.png" 
+            alt="Background pattern" 
+            className="w-full h-full object-cover opacity-20"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/90 to-indigo-800/90"></div>
+        </div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto animate-fade-in">
             <div className="inline-flex items-center px-5 py-2.5 bg-white/20 text-white rounded-full text-sm font-medium mb-10 animate-bounce">
               <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">

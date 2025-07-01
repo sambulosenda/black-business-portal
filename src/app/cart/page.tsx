@@ -10,10 +10,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
-import { Badge } from '@/components/ui/badge'
 import { 
-  ShoppingCart, Trash2, Plus, Minus, ArrowRight, 
-  Calendar, Clock, Package, AlertCircle 
+  ShoppingCart, Trash2, Plus, Minus, ArrowRight, Package
 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { toast } from 'sonner'
@@ -50,18 +48,8 @@ export default function CartPage() {
       return
     }
 
-    // Since cart can only have items from one business, we can proceed
-    const businessId = Object.keys(itemsByBusiness)[0]
-    const businessData = itemsByBusiness[businessId]
-    
-    // If cart has services, go to booking flow
-    const hasServices = items.some(item => item.type === 'service')
-    if (hasServices) {
-      router.push(`/book/${businessData.businessSlug}?fromCart=true`)
-    } else {
-      // Products only - go to checkout
-      router.push('/checkout')
-    }
+    // Products only - go to checkout
+    router.push('/checkout')
   }
 
   if (items.length === 0) {
@@ -74,7 +62,7 @@ export default function CartPage() {
               <ShoppingCart className="h-16 w-16 text-gray-400 mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Your cart is empty</h2>
               <p className="text-gray-600 mb-8">
-                Browse our businesses and add services or products to your cart
+                Browse our businesses and add products to your cart
               </p>
               <Link href="/search">
                 <Button size="lg">
@@ -117,9 +105,9 @@ export default function CartPage() {
                   <CardContent className="space-y-4">
                     {businessItems.map((item) => (
                       <div key={item.id} className="flex items-start gap-4">
-                        {/* Product/Service Image */}
+                        {/* Product Image */}
                         <div className="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                          {item.type === 'product' && item.image ? (
+                          {item.image ? (
                             <img 
                               src={item.image} 
                               alt={item.name}
@@ -135,20 +123,6 @@ export default function CartPage() {
                           <div className="flex items-start justify-between">
                             <div>
                               <h3 className="font-medium">{item.name}</h3>
-                              {item.type === 'service' && (
-                                <div className="flex items-center gap-3 mt-1 text-sm text-gray-600">
-                                  <span className="flex items-center gap-1">
-                                    <Clock className="h-3 w-3" />
-                                    {item.duration} min
-                                  </span>
-                                  {item.date && (
-                                    <span className="flex items-center gap-1">
-                                      <Calendar className="h-3 w-3" />
-                                      {new Date(item.date).toLocaleDateString()}
-                                    </span>
-                                  )}
-                                </div>
-                              )}
                             </div>
                             <Button
                               variant="ghost"
@@ -161,39 +135,35 @@ export default function CartPage() {
 
                           {/* Quantity and Price */}
                           <div className="flex items-center justify-between mt-3">
-                            {item.type === 'product' ? (
-                              <div className="flex items-center gap-2">
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                  disabled={item.quantity <= 1}
-                                >
-                                  <Minus className="h-3 w-3" />
-                                </Button>
-                                <Input
-                                  type="number"
-                                  value={item.quantity}
-                                  onChange={(e) => updateQuantity(item.id, parseInt(e.target.value) || 1)}
-                                  className="w-16 text-center"
-                                  min="1"
-                                />
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                >
-                                  <Plus className="h-3 w-3" />
-                                </Button>
-                              </div>
-                            ) : (
-                              <Badge variant="secondary">Service</Badge>
-                            )}
+                            <div className="flex items-center gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                disabled={item.quantity <= 1}
+                              >
+                                <Minus className="h-3 w-3" />
+                              </Button>
+                              <Input
+                                type="number"
+                                value={item.quantity}
+                                onChange={(e) => updateQuantity(item.id, parseInt(e.target.value) || 1)}
+                                className="w-16 text-center"
+                                min="1"
+                              />
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                              >
+                                <Plus className="h-3 w-3" />
+                              </Button>
+                            </div>
                             <div className="text-right">
                               <p className="font-semibold">
-                                ${(item.price * (item.type === 'product' ? item.quantity : 1)).toFixed(2)}
+                                ${(item.price * item.quantity).toFixed(2)}
                               </p>
-                              {item.type === 'product' && item.quantity > 1 && (
+                              {item.quantity > 1 && (
                                 <p className="text-sm text-gray-600">
                                   ${item.price.toFixed(2)} each
                                 </p>
@@ -240,14 +210,6 @@ export default function CartPage() {
                     </div>
                   </div>
 
-                  {items.some(item => item.type === 'service') && (
-                    <div className="p-3 bg-blue-50 rounded-lg">
-                      <p className="text-sm text-blue-800 flex items-start gap-2">
-                        <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                        Service bookings require date and time selection in the next step
-                      </p>
-                    </div>
-                  )}
 
                   <Button 
                     className="w-full" 

@@ -77,7 +77,7 @@ interface BusinessProfileTabsProps {
 
 export default function BusinessProfileTabs({ business, averageRating, session }: BusinessProfileTabsProps) {
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-  const { addProduct, addService } = useCart()
+  const { addProduct } = useCart()
 
   const handleAddToCart = (product: any) => {
     addProduct({
@@ -92,17 +92,6 @@ export default function BusinessProfileTabs({ business, averageRating, session }
     })
   }
 
-  const handleAddServiceToCart = (service: any) => {
-    addService({
-      id: service.id,
-      businessId: business.id,
-      businessName: business.businessName,
-      businessSlug: business.slug,
-      name: service.name,
-      price: Number(service.price),
-      duration: service.duration,
-    })
-  }
 
   return (
     <Tabs defaultValue="services" className="w-full">
@@ -187,14 +176,7 @@ export default function BusinessProfileTabs({ business, averageRating, session }
                         <p className="text-2xl font-bold text-indigo-600">
                           ${service.price.toFixed(2)}
                         </p>
-                        <div className="flex gap-2 mt-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleAddServiceToCart(service)}
-                          >
-                            <ShoppingCart className="h-4 w-4" />
-                          </Button>
+                        <div className="mt-2">
                           {session ? (
                             <Link
                               href={`/book/${business.slug}?service=${service.id}`}
@@ -208,7 +190,7 @@ export default function BusinessProfileTabs({ business, averageRating, session }
                               href="/login"
                             >
                               <Button size="sm" variant="outline">
-                                Sign in
+                                Sign in to Book
                               </Button>
                             </Link>
                           )}
