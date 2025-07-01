@@ -212,69 +212,6 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              
-              {/* CTA Buttons */}
-              <div className="flex flex-wrap gap-4">
-                <Link href="/search">
-                  <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-50 border border-gray-200 transform hover:-translate-y-0.5 transition-all shadow-md hover:shadow-lg">
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                    Explore Near You
-                  </Button>
-                </Link>
-                {!session && (
-                  <Link href="/signup/business">
-                    <Button size="lg" variant="outline" className="border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white transition-all">
-                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                    </svg>
-                    List Your Business
-                  </Button>
-                  </Link>
-                )}
-              </div>
-              
-              {/* Trust Badges */}
-              <div className="pt-8 space-y-4">
-                <div className="flex flex-wrap items-center gap-6">
-                  <div className="flex items-center gap-2">
-                    <div className="flex -space-x-2">
-                      <Image src="/images/client-bg-new.png" alt="Customer" width={32} height={32} className="rounded-full border-2 border-white object-cover" />
-                      <div className="w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full border-2 border-white"></div>
-                      <div className="w-8 h-8 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full border-2 border-white"></div>
-                      <div className="w-8 h-8 bg-gray-200 rounded-full border-2 border-white flex items-center justify-center">
-                        <span className="text-xs font-medium text-gray-600">+10k</span>
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-900">10,000+ Happy Customers</p>
-                      <p className="text-xs text-gray-600">Join our growing community</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-lg border border-gray-200">
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <svg key={i} className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                      ))}
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-gray-900">4.9/5</p>
-                      <p className="text-xs text-gray-600">2,847 reviews</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 text-green-600">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                    <span className="text-sm font-medium">Secure Booking</span>
-                  </div>
-                </div>
-              </div>
             </div>
             
             {/* Right Image */}
@@ -410,213 +347,48 @@ export default function Home() {
       </section>
 
       {/* How it Works */}
-      <section className="py-24 bg-gradient-to-br from-purple-50 via-indigo-50 to-white relative overflow-hidden">
-        {/* Background decoration */}
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
-          <div className="absolute bottom-20 right-10 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
-        </div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="text-center mb-16">
-            <div className="inline-flex items-center px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold mb-6">
-              <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              Simple 3-Step Process
-            </div>
-            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-              Supporting made
-              <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent"> meaningful</span>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              How it works
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Join thousands who are already supporting Black-owned beauty businesses while enjoying premium services
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Book your next beauty appointment in three simple steps
             </p>
           </div>
 
           {/* Steps Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            {/* Step 1 */}
-            <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl opacity-0 group-hover:opacity-5 transition-opacity"></div>
-              <div className="relative text-center">
-                <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-2xl border-2 border-indigo-200 mb-6 group-hover:border-indigo-400 transition-colors">
-                  <span className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">1</span>
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Discover</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Browse through our curated list of Black-owned salons, spas, and beauty professionals in your area
-                </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-100 rounded-full mb-4">
+                <span className="text-2xl font-bold text-indigo-600">1</span>
               </div>
-              {/* Connector Line */}
-              <div className="hidden md:block absolute top-10 left-full w-full h-0.5 bg-gradient-to-r from-indigo-200 to-purple-200 -translate-x-1/2"></div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Search</h3>
+              <p className="text-gray-600">
+                Find beauty services and professionals near you
+              </p>
             </div>
 
-            {/* Step 2 */}
-            <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl opacity-0 group-hover:opacity-5 transition-opacity"></div>
-              <div className="relative text-center">
-                <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-2xl border-2 border-purple-200 mb-6 group-hover:border-purple-400 transition-colors">
-                  <span className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">2</span>
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Book</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Select your service, pick a convenient time, and book instantly with real-time availability
-                </p>
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4">
+                <span className="text-2xl font-bold text-purple-600">2</span>
               </div>
-              {/* Connector Line */}
-              <div className="hidden md:block absolute top-10 left-full w-full h-0.5 bg-gradient-to-r from-purple-200 to-pink-200 -translate-x-1/2"></div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Book</h3>
+              <p className="text-gray-600">
+                Choose your service and pick a convenient time
+              </p>
             </div>
 
-            {/* Step 3 */}
-            <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-orange-600 rounded-2xl opacity-0 group-hover:opacity-5 transition-opacity"></div>
-              <div className="relative text-center">
-                <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-2xl border-2 border-pink-200 mb-6 group-hover:border-pink-400 transition-colors">
-                  <span className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-orange-600 bg-clip-text text-transparent">3</span>
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Enjoy</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Experience exceptional service while making a positive impact in your community
-                </p>
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-pink-100 rounded-full mb-4">
+                <span className="text-2xl font-bold text-pink-600">3</span>
               </div>
-            </div>
-          </div>
-
-          {/* Feature Cards */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left side - Feature list */}
-            <div className="space-y-6">
-              <h3 className="text-2xl font-bold text-gray-900 mb-8">
-                Why choose BeautyPortal?
-              </h3>
-              
-              {[
-                {
-                  icon: (
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                  ),
-                  title: "Verified Businesses",
-                  description: "All businesses are verified to ensure quality and authenticity"
-                },
-                {
-                  icon: (
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  ),
-                  title: "Real-time Availability",
-                  description: "See live availability and book appointments instantly"
-                },
-                {
-                  icon: (
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                    </svg>
-                  ),
-                  title: "Community Impact",
-                  description: "Every booking supports Black-owned businesses directly"
-                },
-                {
-                  icon: (
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                    </svg>
-                  ),
-                  title: "Easy Management",
-                  description: "Manage all your bookings in one convenient place"
-                }
-              ].map((feature, index) => (
-                <div key={index} className="flex items-start group">
-                  <div className="flex-shrink-0">
-                    <div className="w-12 h-12 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-xl flex items-center justify-center text-indigo-600 group-hover:scale-110 transition-transform">
-                      {feature.icon}
-                    </div>
-                  </div>
-                  <div className="ml-4">
-                    <h4 className="text-lg font-semibold text-gray-900 mb-1">{feature.title}</h4>
-                    <p className="text-gray-600">{feature.description}</p>
-                  </div>
-                </div>
-              ))}
-              
-              <div className="pt-8">
-                <Link href="/search">
-                  <Button size="lg" className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white transform hover:-translate-y-0.5 transition-all">
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                    Start Your Journey
-                  </Button>
-                </Link>
-              </div>
-            </div>
-
-            {/* Right side - Stats Card */}
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-3xl transform rotate-3 opacity-10"></div>
-              <div className="relative bg-white rounded-3xl border border-gray-200 overflow-hidden">
-                <div className="p-8">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-6">Our Growing Community</h3>
-                  
-                  <div className="space-y-6">
-                    <div>
-                      <div className="flex justify-between items-end mb-2">
-                        <span className="text-gray-600">Businesses Onboarded</span>
-                        <span className="text-2xl font-bold text-indigo-600">1,247</span>
-                      </div>
-                      <div className="w-full bg-gray-100 rounded-full h-2">
-                        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full" style={{width: '82%'}}></div>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <div className="flex justify-between items-end mb-2">
-                        <span className="text-gray-600">Monthly Active Users</span>
-                        <span className="text-2xl font-bold text-purple-600">52.3K</span>
-                      </div>
-                      <div className="w-full bg-gray-100 rounded-full h-2">
-                        <div className="bg-gradient-to-r from-purple-500 to-pink-600 h-2 rounded-full" style={{width: '91%'}}></div>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <div className="flex justify-between items-end mb-2">
-                        <span className="text-gray-600">Total Bookings</span>
-                        <span className="text-2xl font-bold text-pink-600">148K+</span>
-                      </div>
-                      <div className="w-full bg-gray-100 rounded-full h-2">
-                        <div className="bg-gradient-to-r from-pink-500 to-orange-600 h-2 rounded-full" style={{width: '95%'}}></div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-8 pt-6 border-t border-gray-200">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm text-gray-600">Average Rating</p>
-                        <div className="flex items-center mt-1">
-                          <span className="text-2xl font-bold text-gray-900 mr-2">4.9</span>
-                          <div className="flex">
-                            {[...Array(5)].map((_, i) => (
-                              <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                              </svg>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm text-gray-600">Response Time</p>
-                        <p className="text-2xl font-bold text-green-600 mt-1">&lt; 2 min</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Enjoy</h3>
+              <p className="text-gray-600">
+                Show up and enjoy your beauty treatment
+              </p>
             </div>
           </div>
         </div>
