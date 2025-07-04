@@ -77,6 +77,7 @@ model Business {
   products         Product[]
   productCategories ProductCategory[]
   orders           Order[]
+  promotions       Promotion[]
 }
 
 model Service {
@@ -696,4 +697,91 @@ enum OrderStatus {
 enum FulfillmentType {
   PICKUP
   DELIVERY
+}
+
+// Promotion Management Models
+model Promotion {
+  id              String   @id @default(cuid())
+  businessId      String
+  
+  // Basic Info
+  name            String
+  description     String?
+  code            String?  // Promo code (null for automatic promotions)
+  
+  // Type and Value
+  type            PromotionType
+  value           Decimal  @db.Decimal(10, 2) // Percentage or fixed amount
+  
+  // Scope
+  scope           PromotionScope
+  serviceIds      String[] // Specific services (if scope is SPECIFIC_SERVICES)
+  productIds      String[] // Specific products (if scope is SPECIFIC_PRODUCTS)
+  
+  // Validity
+  startDate       DateTime
+  endDate         DateTime
+  isActive        Boolean  @default(true)
+  
+  // Usage Limits
+  usageLimit      Int?     // Total number of times this can be used
+  usageCount      Int      @default(0)
+  perCustomerLimit Int?    // Times a single customer can use this
+  
+  // Requirements
+  minimumAmount   Decimal? @db.Decimal(10, 2) // Minimum purchase amount
+  minimumItems    Int?     // Minimum number of items
+  firstTimeOnly   Boolean  @default(false) // Only for first-time customers
+  
+  // Display
+  featured        Boolean  @default(false) // Show prominently on business page
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  business        Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  usages          PromotionUsage[]
+  
+  @@unique([businessId, code])
+  @@index([businessId, isActive])
+  @@index([businessId, startDate, endDate])
+}
+
+model PromotionUsage {
+  id              String   @id @default(cuid())
+  promotionId     String
+  userId          String
+  
+  // Usage Details
+  discountAmount  Decimal  @db.Decimal(10, 2)
+  orderTotal      Decimal  @db.Decimal(10, 2)
+  
+  // Reference
+  bookingId       String?  // If used for a booking
+  orderId         String?  // If used for an order
+  
+  usedAt          DateTime @default(now())
+  
+  // Relations
+  promotion       Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  
+  @@index([promotionId])
+  @@index([userId])
+  @@index([usedAt])
+}
+
+enum PromotionType {
+  PERCENTAGE      // X% off
+  FIXED_AMOUNT    // $X off
+  BOGO            // Buy one get one
+  BUNDLE          // Bundle discount
+}
+
+enum PromotionScope {
+  ALL_SERVICES
+  SPECIFIC_SERVICES
+  ALL_PRODUCTS
+  SPECIFIC_PRODUCTS
+  ENTIRE_PURCHASE // Applies to total (services + products)
 }

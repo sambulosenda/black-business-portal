@@ -28,6 +28,7 @@ import {
   Users,
   Bell,
   ShoppingCart,
+  Tag,
 } from "lucide-react"
 
 export default async function BusinessDashboardLayout({
@@ -52,6 +53,11 @@ export default async function BusinessDashboardLayout({
       title: "Products",
       icon: ShoppingCart,
       href: "/business/dashboard/products",
+    },
+    {
+      title: "Promotions",
+      icon: Tag,
+      href: "/business/dashboard/promotions",
     },
     {
       title: "Staff",
