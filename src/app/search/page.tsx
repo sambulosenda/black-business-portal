@@ -67,6 +67,7 @@ function SearchContent() {
   const [loading, setLoading] = useState(true)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [showMobileFilters, setShowMobileFilters] = useState(false)
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
   const [sortBy, setSortBy] = useState('recommended')
   const [savedBusinesses, setSavedBusinesses] = useState<string[]>([])
   const [filters, setFilters] = useState({
@@ -145,45 +146,6 @@ function SearchContent() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <style jsx>{`
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        @keyframes blob {
-          0% {
-            transform: translate(0px, 0px) scale(1);
-          }
-          33% {
-            transform: translate(30px, -50px) scale(1.1);
-          }
-          66% {
-            transform: translate(-20px, 20px) scale(0.9);
-          }
-          100% {
-            transform: translate(0px, 0px) scale(1);
-          }
-        }
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-      `}</style>
       <Navigation session={null} />
       
       {/* Hero Search Section */}
@@ -274,424 +236,417 @@ function SearchContent() {
         </div>
       </div>
 
-      <main className="flex-1">
+      <main className="flex-1 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Results Header */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                {filters.category 
-                  ? categories.find(c => c.value === filters.category)?.label
-                  : 'All Services'}
-                {filters.city && ` in ${filters.city}`}
-              </h1>
-              <p className="text-gray-600 mt-2">
-                {loading ? 'Searching...' : `${sortedBusinesses.length} businesses found`}
-              </p>
-            </div>
+          {/* Filters Bar */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-8">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+              {/* Left side - Active filters */}
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className="text-sm font-medium text-gray-700">Filters:</span>
+                
+                {/* Category Filter Dropdown */}
+                <div className="relative">
+                  <button
+                    onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
+                    className={cn(
+                      "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all",
+                      filters.category 
+                        ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    )}
+                  >
+                    <span>{filters.category ? categories.find(c => c.value === filters.category)?.label : 'All Categories'}</span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  
+                  {/* Category dropdown menu */}
+                  {showCategoryDropdown && (
+                    <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 p-2 z-20">
+                      {categories.map(cat => (
+                        <button
+                          key={cat.value}
+                          onClick={() => {
+                            handleFilterChange('category', cat.value)
+                            setShowCategoryDropdown(false)
+                          }}
+                          className={cn(
+                            "w-full text-left px-4 py-2 rounded-lg text-sm transition-all",
+                            filters.category === cat.value
+                              ? "bg-indigo-50 text-indigo-600 font-medium"
+                              : "hover:bg-gray-50"
+                          )}
+                        >
+                          {cat.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
-            <div className="flex items-center gap-3">
-              {/* Mobile Filter Toggle */}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowMobileFilters(true)}
-                className="md:hidden"
-              >
-                <Filter className="h-4 w-4 mr-2" />
-                Filters
-                {activeFiltersCount > 0 && (
-                  <Badge variant="outline" className="ml-2">
-                    {activeFiltersCount}
-                  </Badge>
+                {/* Rating Filter */}
+                <div className="relative">
+                  <select
+                    value={filters.minRating}
+                    onChange={(e) => handleFilterChange('minRating', e.target.value)}
+                    className={cn(
+                      "px-4 py-2 rounded-xl text-sm font-medium appearance-none cursor-pointer transition-all",
+                      filters.minRating
+                        ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    )}
+                  >
+                    <option value="">Any Rating</option>
+                    <option value="4">4+ Stars</option>
+                    <option value="3">3+ Stars</option>
+                    <option value="2">2+ Stars</option>
+                  </select>
+                </div>
+
+                {/* Location tag */}
+                {filters.city && (
+                  <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-purple-100 text-purple-700 rounded-lg text-sm">
+                    <MapPin className="w-3 h-3" />
+                    {filters.city}
+                    <button onClick={() => handleFilterChange('city', '')} className="ml-1 hover:text-purple-900">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
                 )}
-              </Button>
 
-              {/* Sort Dropdown */}
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                {sortOptions.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+                {/* Clear all */}
+                {activeFiltersCount > 0 && (
+                  <button
+                    onClick={() => setFilters({ query: '', category: '', city: '', minRating: '' })}
+                    className="text-sm text-gray-500 hover:text-gray-700 underline"
+                  >
+                    Clear all
+                  </button>
+                )}
+              </div>
 
-              {/* View Mode Toggle */}
-              <div className="hidden md:flex items-center bg-gray-100 rounded-lg p-1">
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={cn(
-                    "p-2 rounded",
-                    viewMode === 'grid' ? "bg-white shadow-sm" : "text-gray-600"
-                  )}
+              {/* Right side - Sort and View */}
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-gray-500">{sortedBusinesses.length} results</span>
+                
+                {/* Sort */}
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="px-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
                 >
-                  <Grid3X3 className="h-4 w-4" />
-                </button>
-                <button
-                  onClick={() => setViewMode('list')}
-                  className={cn(
-                    "p-2 rounded",
-                    viewMode === 'list' ? "bg-white shadow-sm" : "text-gray-600"
-                  )}
-                >
-                  <List className="h-4 w-4" />
-                </button>
+                  {sortOptions.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+
+                {/* View Toggle */}
+                <div className="hidden sm:flex items-center bg-gray-100 rounded-xl p-1">
+                  <button
+                    onClick={() => setViewMode('grid')}
+                    className={cn(
+                      "p-2 rounded-lg transition-all",
+                      viewMode === 'grid' ? "bg-white shadow-sm text-indigo-600" : "text-gray-600"
+                    )}
+                  >
+                    <Grid3X3 className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode('list')}
+                    className={cn(
+                      "p-2 rounded-lg transition-all",
+                      viewMode === 'list' ? "bg-white shadow-sm text-indigo-600" : "text-gray-600"
+                    )}
+                  >
+                    <List className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="lg:grid lg:grid-cols-12 lg:gap-8">
-            {/* Desktop Filters Sidebar */}
-            <aside className="hidden md:block lg:col-span-3">
-              <div className="sticky top-4 space-y-4">
-                {/* Categories */}
-                <div className="bg-white rounded-lg border border-gray-200 p-5">
-                  <h3 className="font-semibold text-gray-900 mb-3">Categories</h3>
-                  <div className="space-y-2">
-                    {categories.map(cat => (
-                      <button
-                        key={cat.value}
-                        onClick={() => handleFilterChange('category', cat.value)}
-                        className={cn(
-                          "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-200",
-                          filters.category === cat.value
-                            ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md"
-                            : "hover:bg-indigo-50 hover:text-indigo-600"
-                        )}
-                      >
-                        <span className="flex items-center">
-                          {cat.label}
-                        </span>
-                        {filters.category === cat.value && (
-                          <X className="h-4 w-4" />
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Rating Filter */}
-                <div className="bg-white rounded-lg border border-gray-200 p-5">
-                  <h3 className="font-semibold text-gray-900 mb-3">Minimum Rating</h3>
-                  <div className="space-y-2">
-                    {['', '4', '3', '2'].map(rating => (
-                      <button
-                        key={rating}
-                        onClick={() => handleFilterChange('minRating', rating)}
-                        className={cn(
-                          "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-200",
-                          filters.minRating === rating
-                            ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md"
-                            : "hover:bg-indigo-50 hover:text-indigo-600"
-                        )}
-                      >
-                        <span className="flex items-center">
-                          {rating ? (
-                            <>
-                              {[...Array(parseInt(rating))].map((_, i) => (
-                                <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                              ))}
-                              <span className="ml-2">{rating}+ stars</span>
-                            </>
-                          ) : (
-                            'Any rating'
-                          )}
-                        </span>
-                        {filters.minRating === rating && rating && (
-                          <X className="h-4 w-4" />
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Clear Filters */}
-                {activeFiltersCount > 0 && (
-                  <Button
-                    onClick={() => setFilters({ query: '', category: '', city: '', minRating: '' })}
-                    variant="outline"
-                    className="w-full border-2 hover:bg-gray-50 transition-all"
+          {/* Results Grid */}
+          {loading ? (
+            <SkeletonGrid count={8} />
+          ) : sortedBusinesses.length > 0 ? (
+            <div className={cn(
+              viewMode === 'grid' 
+                ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                : "max-w-4xl mx-auto space-y-4"
+            )}>
+              {sortedBusinesses.map((business, index) => {
+                const avgRating = calculateAvgRating(business.reviews)
+                const isSaved = savedBusinesses.includes(business.id)
+                
+                return viewMode === 'grid' ? (
+                  // Grid View Card
+                  <Link
+                    key={business.id}
+                    href={`/business/${business.slug}`}
+                    className="group block animate-fadeIn"
+                    style={{
+                      animationDelay: `${index * 50}ms`
+                    }}
                   >
-                    Clear all filters
-                  </Button>
-                )}
-              </div>
-            </aside>
+                    <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-indigo-200 hover:shadow-2xl transition-all duration-300 h-full">
+                      {/* Image */}
+                      <div className="relative h-48 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                        
+                        {/* Save Button */}
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault()
+                            toggleSaved(business.id)
+                          }}
+                          className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-all shadow-md"
+                        >
+                          <Heart className={cn(
+                            "h-4 w-4 transition-colors",
+                            isSaved ? "fill-red-500 text-red-500" : "text-gray-700"
+                          )} />
+                        </button>
+                        
+                        {/* Badge */}
+                        {business.isVerified && (
+                          <div className="absolute top-3 left-3 inline-flex items-center gap-1.5 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium">
+                            <Shield className="h-3.5 w-3.5 text-green-600" />
+                            <span className="text-gray-800">Verified</span>
+                          </div>
+                        )}
+                        
+                        {/* Price Tag */}
+                        {business.services.length > 0 && (
+                          <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                            <p className="text-sm font-bold text-gray-900">
+                              From ${Math.min(...business.services.map(s => parseFloat(s.price)))}
+                            </p>
+                          </div>
+                        )}
+                      </div>
 
-            {/* Results Grid/List */}
-            <div className="lg:col-span-9">
-              {loading ? (
-                <SkeletonGrid count={6} />
-              ) : sortedBusinesses.length > 0 ? (
-                <div className={cn(
-                  viewMode === 'grid' 
-                    ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                    : "space-y-4"
-                )}>
-                  {sortedBusinesses.map((business, index) => {
-                    const avgRating = calculateAvgRating(business.reviews)
-                    const isSaved = savedBusinesses.includes(business.id)
-                    
-                    return viewMode === 'grid' ? (
-                      // Grid View Card
-                      <div
-                        key={business.id}
-                        className="group"
-                        style={{
-                          animation: `fadeInUp 0.5s ease-out ${index * 0.1}s both`
-                        }}
-                      >
-                        <Card className="h-full overflow-hidden border border-gray-100 hover:border-indigo-200 hover:shadow-xl transition-all duration-300 group">
-                          {/* Image Placeholder */}
-                          <div className="relative h-40 bg-gradient-to-br from-indigo-50 to-purple-50">
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault()
-                                toggleSaved(business.id)
-                              }}
-                              className="absolute top-2 right-2 p-1.5 bg-white rounded-full hover:bg-gray-50 transition-colors"
-                            >
-                              <Heart className={cn(
-                                "h-4 w-4 transition-colors",
-                                isSaved ? "fill-red-500 text-red-500" : "text-gray-600"
-                              )} />
-                            </button>
-                            {business.isVerified && (
-                              <div className="absolute top-2 left-2 flex items-center gap-1 bg-white px-2 py-1 rounded-md text-xs font-medium border border-gray-200">
-                                <Shield className="h-3 w-3 text-green-600" />
-                                <span className="text-gray-700">Verified</span>
-                              </div>
-                            )}
+                      {/* Content */}
+                      <div className="p-5">
+                        <div className="space-y-3">
+                          {/* Name & Category */}
+                          <div>
+                            <h3 className="font-semibold text-lg text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-1">
+                              {business.businessName}
+                            </h3>
+                            <p className="text-sm text-gray-500 mt-1">
+                              {business.category.replace(/_/g, ' ')}
+                            </p>
+                          </div>
+                          
+                          {/* Location */}
+                          <div className="flex items-center text-sm text-gray-600">
+                            <MapPin className="h-4 w-4 mr-1.5 text-gray-400" />
+                            <span>{business.city}, {business.state}</span>
                           </div>
 
-                          <CardContent className="p-4">
-                            <Link
-                              href={`/business/${business.slug}`}
-                              className="block"
-                            >
-                              <div className="space-y-2">
-                                {/* Business Name & Category */}
+                          {/* Rating & Reviews */}
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <div className="flex items-center">
+                                <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                                <span className="ml-1 font-semibold text-gray-900">
+                                  {avgRating.toFixed(1)}
+                                </span>
+                              </div>
+                              <span className="text-sm text-gray-500">
+                                ({business.reviews.length})
+                              </span>
+                            </div>
+                            
+                            {business.services.length > 0 && (
+                              <span className="text-sm text-gray-500">
+                                {business.services.length} services
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ) : (
+                  // List View Card
+                  <Link
+                    key={business.id}
+                    href={`/business/${business.slug}`}
+                    className="block animate-fadeIn"
+                    style={{
+                      animationDelay: `${index * 50}ms`
+                    }}
+                  >
+                    <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-indigo-200 hover:shadow-2xl transition-all duration-300">
+                      <div className="flex">
+                        {/* Image */}
+                        <div className="w-64 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 relative">
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                          
+                          {/* Save Button */}
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault()
+                              toggleSaved(business.id)
+                            }}
+                            className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-all shadow-md z-10"
+                          >
+                            <Heart className={cn(
+                              "h-4 w-4 transition-colors",
+                              isSaved ? "fill-red-500 text-red-500" : "text-gray-700"
+                            )} />
+                          </button>
+                          
+                          {/* Badge */}
+                          {business.isVerified && (
+                            <div className="absolute top-3 left-3 inline-flex items-center gap-1.5 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium">
+                              <Shield className="h-3.5 w-3.5 text-green-600" />
+                              <span className="text-gray-800">Verified</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Content */}
+                        <div className="flex-1 p-6">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-start justify-between">
                                 <div>
-                                  <h3 className="font-semibold text-base text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-1">
+                                  <h3 className="font-semibold text-xl text-gray-900 group-hover:text-indigo-600 transition-colors">
                                     {business.businessName}
                                   </h3>
-                                  <p className="text-xs text-gray-500 mt-0.5">
+                                  <p className="text-sm text-gray-500 mt-1">
                                     {business.category.replace(/_/g, ' ')}
                                   </p>
                                 </div>
                                 
-                                {/* Location */}
-                                <div className="flex items-center text-xs text-gray-600">
-                                  <MapPin className="h-3 w-3 mr-1 flex-shrink-0 text-gray-400" />
-                                  <span className="line-clamp-1">{business.city}, {business.state}</span>
-                                </div>
-
-                                {/* Rating */}
-                                <div className="flex items-center gap-2">
-                                  <div className="flex items-center">
-                                    {[...Array(5)].map((_, i) => (
-                                      <Star
-                                        key={i}
-                                        className={cn(
-                                          "h-4 w-4",
-                                          i < Math.floor(avgRating)
-                                            ? "fill-yellow-400 text-yellow-400"
-                                            : "fill-gray-100 text-gray-100"
-                                        )}
-                                      />
-                                    ))}
-                                  </div>
-                                  <span className="text-sm text-gray-700 font-medium">
-                                    {avgRating.toFixed(1)}
-                                  </span>
-                                  <span className="text-sm text-gray-500">
-                                    ({business.reviews.length} reviews)
-                                  </span>
-                                </div>
-
-                                {/* Price & Services */}
+                                {/* Price Tag Desktop */}
                                 {business.services.length > 0 && (
-                                  <div className="pt-2 border-t border-gray-100">
-                                    <div className="flex items-center justify-between">
-                                      <p className="text-xs text-gray-600">
-                                        {business.services.length} services
-                                      </p>
-                                      <p className="text-sm font-semibold text-gray-900">
-                                        From ${Math.min(...business.services.map(s => parseFloat(s.price)))}
+                                  <div className="hidden sm:block ml-4">
+                                    <div className="bg-gradient-to-r from-indigo-50 to-purple-50 px-4 py-2 rounded-xl">
+                                      <p className="text-sm text-gray-600">From</p>
+                                      <p className="text-xl font-bold text-gray-900">
+                                        ${Math.min(...business.services.map(s => parseFloat(s.price)))}
                                       </p>
                                     </div>
                                   </div>
                                 )}
                               </div>
-                            </Link>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    ) : (
-                      // List View Card
-                      <Card
-                        key={business.id}
-                        className="overflow-hidden border border-gray-200 hover:border-indigo-300 transition-all duration-200"
-                        style={{
-                          animation: `fadeInUp 0.5s ease-out ${index * 0.1}s both`
-                        }}
-                      >
-                        <div className="flex">
-                          {/* Image */}
-                          <div className="w-48 h-full bg-gradient-to-br from-gray-50 to-gray-100 relative">
-                          </div>
 
-                          {/* Content */}
-                          <CardContent className="flex-1 p-5">
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <Link
-                                  href={`/business/${business.slug}`}
-                                  className="block"
-                                >
-                                  <h3 className="font-semibold text-lg text-gray-900 hover:text-indigo-600 transition-colors">
-                                    {business.businessName}
-                                  </h3>
-                                </Link>
-                                <p className="text-gray-500 mt-1">
-                                  {business.category.replace(/_/g, ' ')}
-                                </p>
-
-                                <div className="flex items-center gap-4 mt-3">
-                                  <div className="flex items-center text-sm text-gray-600">
-                                    <MapPin className="h-4 w-4 mr-1" />
-                                    {business.city}, {business.state}
-                                  </div>
-                                  {business.isVerified && (
-                                    <Badge variant="success" className="text-xs">
-                                      <Shield className="h-3 w-3 mr-1" />
-                                      Verified
-                                    </Badge>
-                                  )}
+                              <div className="flex items-center gap-4 mt-3">
+                                <div className="flex items-center text-sm text-gray-600">
+                                  <MapPin className="h-4 w-4 mr-1.5 text-gray-400" />
+                                  {business.city}, {business.state}
                                 </div>
-
+                                
                                 {/* Rating */}
-                                <div className="flex items-center mt-3">
-                                  {[...Array(5)].map((_, i) => (
-                                    <Star
-                                      key={i}
-                                      className={cn(
-                                        "h-4 w-4",
-                                        i < Math.floor(avgRating)
-                                          ? "fill-yellow-400 text-yellow-400"
-                                          : "text-gray-200"
-                                      )}
-                                    />
-                                  ))}
-                                  <span className="ml-2 font-medium">
-                                    {avgRating.toFixed(1)}
-                                  </span>
-                                  <span className="text-gray-400 text-sm ml-1">
+                                <div className="flex items-center gap-2">
+                                  <div className="flex items-center">
+                                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                                    <span className="ml-1 font-semibold text-gray-900">
+                                      {avgRating.toFixed(1)}
+                                    </span>
+                                  </div>
+                                  <span className="text-sm text-gray-500">
                                     ({business.reviews.length} reviews)
                                   </span>
                                 </div>
-
-                                {/* Services Preview */}
+                                
                                 {business.services.length > 0 && (
-                                  <div className="mt-4 flex flex-wrap gap-2">
-                                    {business.services.slice(0, 3).map((service) => (
-                                      <Badge key={service.id} variant="outline">
-                                        {service.name} • ${service.price}
-                                      </Badge>
-                                    ))}
-                                    {business.services.length > 3 && (
-                                      <Badge variant="outline">
-                                        +{business.services.length - 3} more
-                                      </Badge>
-                                    )}
-                                  </div>
+                                  <span className="text-sm text-gray-500">
+                                    {business.services.length} services
+                                  </span>
                                 )}
                               </div>
 
-                              <div className="flex flex-col items-end gap-3 ml-4">
-                                <button
-                                  onClick={(e) => {
-                                    e.preventDefault()
-                                    toggleSaved(business.id)
-                                  }}
-                                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                                >
-                                  <Heart className={cn(
-                                    "h-5 w-5",
-                                    isSaved ? "fill-red-500 text-red-500" : "text-gray-400"
-                                  )} />
-                                </button>
-                                {business.services.length > 0 && (
-                                  <p className="text-lg font-semibold">
+                              {/* Services Preview */}
+                              {business.services.length > 0 && (
+                                <div className="mt-4 flex flex-wrap gap-2">
+                                  {business.services.slice(0, 4).map((service) => (
+                                    <span key={service.id} className="inline-flex items-center px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm">
+                                      {service.name} <span className="text-gray-500 ml-1">• ${service.price}</span>
+                                    </span>
+                                  ))}
+                                  {business.services.length > 4 && (
+                                    <span className="inline-flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded-lg text-sm font-medium">
+                                      +{business.services.length - 4} more
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+                              
+                              {/* Mobile Price */}
+                              {business.services.length > 0 && (
+                                <div className="sm:hidden mt-4">
+                                  <p className="text-lg font-semibold text-gray-900">
                                     From ${Math.min(...business.services.map(s => parseFloat(s.price)))}
                                   </p>
-                                )}
-                              </div>
+                                </div>
+                              )}
                             </div>
-                          </CardContent>
+                          </div>
                         </div>
-                      </Card>
-                    )
-                  })}
-                </div>
-              ) : (
-                <Card className="p-12">
-                  <EmptyState
-                    icon="search"
-                    title="No businesses found"
-                    description="Try adjusting your filters or search in a different area"
-                    action={{
-                      label: "Clear filters",
-                      onClick: () => setFilters({ query: '', category: '', city: '', minRating: '' })
-                    }}
-                  />
-                </Card>
-              )}
+                      </div>
+                    </div>
+                  </Link>
+                )
+              })}
             </div>
-          </div>
+          ) : (
+            <Card className="p-12">
+              <EmptyState
+                icon="search"
+                title="No businesses found"
+                description="Try adjusting your filters or search in a different area"
+                action={{
+                  label: "Clear filters",
+                  onClick: () => setFilters({ query: '', category: '', city: '', minRating: '' })
+                }}
+              />
+            </Card>
+          )}
         </div>
       </main>
 
       {/* Mobile Filters Modal */}
       {showMobileFilters && (
-        <div className="fixed inset-0 z-50 bg-black/50" onClick={() => setShowMobileFilters(false)}>
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" onClick={() => setShowMobileFilters(false)}>
           <div
-            className="absolute right-0 top-0 h-full w-full max-w-sm bg-white border-l border-gray-200"
+            className="absolute right-0 top-0 h-full w-full max-w-sm bg-white shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between p-4 border-b">
-              <h2 className="text-lg font-semibold">Filters</h2>
+            <div className="flex items-center justify-between p-6 border-b border-gray-100">
+              <h2 className="text-xl font-semibold text-gray-900">Filters</h2>
               <button
                 onClick={() => setShowMobileFilters(false)}
-                className="p-2 hover:bg-gray-100 rounded-lg"
+                className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            <div className="p-4 space-y-6 overflow-y-auto max-h-[calc(100vh-120px)]">
+            <div className="p-6 space-y-8 overflow-y-auto max-h-[calc(100vh-140px)]">
               {/* Categories */}
               <div>
-                <h3 className="font-medium text-gray-900 mb-3">Categories</h3>
+                <h3 className="font-semibold text-gray-900 mb-4">Categories</h3>
                 <div className="space-y-2">
                   {categories.map(cat => (
                     <button
                       key={cat.value}
                       onClick={() => handleFilterChange('category', cat.value)}
                       className={cn(
-                        "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-200",
+                        "w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
                         filters.category === cat.value
-                          ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md"
-                          : "hover:bg-indigo-50 hover:text-indigo-600"
+                          ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg"
+                          : "bg-gray-50 hover:bg-gray-100 text-gray-700"
                       )}
                     >
-                      <span className="flex items-center">
-                        {cat.label}
-                      </span>
+                      {cat.label}
                     </button>
                   ))}
                 </div>
@@ -699,25 +654,27 @@ function SearchContent() {
 
               {/* Rating */}
               <div>
-                <h3 className="font-medium text-gray-900 mb-3">Minimum Rating</h3>
+                <h3 className="font-semibold text-gray-900 mb-4">Minimum Rating</h3>
                 <div className="space-y-2">
                   {['', '4', '3', '2'].map(rating => (
                     <button
                       key={rating}
                       onClick={() => handleFilterChange('minRating', rating)}
                       className={cn(
-                        "w-full flex items-center px-3 py-2 rounded-lg text-sm transition-all duration-200",
+                        "w-full flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
                         filters.minRating === rating
-                          ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md"
-                          : "hover:bg-indigo-50 hover:text-indigo-600"
+                          ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg"
+                          : "bg-gray-50 hover:bg-gray-100 text-gray-700"
                       )}
                     >
                       {rating ? (
                         <>
-                          {[...Array(parseInt(rating))].map((_, i) => (
-                            <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                          ))}
-                          <span className="ml-2">{rating}+ stars</span>
+                          <div className="flex items-center mr-2">
+                            {[...Array(parseInt(rating))].map((_, i) => (
+                              <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                            ))}
+                          </div>
+                          <span>{rating}+ stars</span>
                         </>
                       ) : (
                         'Any rating'
@@ -728,10 +685,10 @@ function SearchContent() {
               </div>
             </div>
 
-            <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t">
+            <div className="absolute bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-100">
               <Button
                 onClick={() => setShowMobileFilters(false)}
-                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg"
+                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg py-3 text-base font-semibold rounded-xl"
               >
                 Apply Filters
               </Button>
@@ -741,6 +698,51 @@ function SearchContent() {
       )}
       
       <Footer />
+      
+      <style jsx global>{`
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        
+        @keyframes blob {
+          0%, 100% {
+            transform: translate(0px, 0px) scale(1);
+          }
+          33% {
+            transform: translate(30px, -50px) scale(1.1);
+          }
+          66% {
+            transform: translate(-20px, 20px) scale(0.9);
+          }
+        }
+        
+        .animate-blob {
+          animation: blob 7s infinite;
+        }
+        
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+        
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .animate-fadeIn {
+          animation: fadeIn 0.4s ease-out forwards;
+        }
+      `}</style>
     </div>
   )
 }
