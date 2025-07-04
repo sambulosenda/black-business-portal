@@ -213,7 +213,7 @@ export default async function BusinessDashboardPage() {
                 Manage Services
               </Button>
             </Link>
-            <Link href="/business/bookings">
+            <Link href="/business/dashboard/bookings">
               <Button variant="outline" className="w-full">
                 <Calendar className="mr-2 h-4 w-4" />
                 View All Bookings
@@ -267,7 +267,7 @@ export default async function BusinessDashboardPage() {
             </dl>
             <div className="mt-4 pt-4 border-t">
               <Link
-                href="/business/profile"
+                href="/business/dashboard/settings"
                 className="text-sm text-primary hover:underline inline-flex items-center"
               >
                 Edit Business Profile
@@ -288,7 +288,7 @@ export default async function BusinessDashboardPage() {
                 Your latest customer appointments
               </CardDescription>
             </div>
-            <Link href="/business/bookings">
+            <Link href="/business/dashboard/bookings">
               <Button variant="ghost" size="sm">
                 View all
                 <ChevronRight className="ml-1 h-3 w-3" />

@@ -72,7 +72,7 @@ export default async function BusinessDashboardLayout({
     {
       title: "Bookings",
       icon: Calendar,
-      href: "/business/bookings",
+      href: "/business/dashboard/bookings",
     },
     {
       title: "Calendar",

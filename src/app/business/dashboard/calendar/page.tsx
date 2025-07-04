@@ -644,7 +644,7 @@ export default function CalendarPage() {
                           </Button>
                         </>
                       )}
-                      <Link href={`/business/bookings/${selectedBooking.id}`} className="w-full">
+                      <Link href={`/business/dashboard/bookings`} className="w-full">
                         <Button variant="outline" className="w-full">
                           View Full Details
                         </Button>
