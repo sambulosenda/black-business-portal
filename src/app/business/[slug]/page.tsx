@@ -4,7 +4,6 @@ import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/session'
 import Navigation from '@/components/navigation'
 import Footer from '@/components/footer'
-import { Breadcrumb, BreadcrumbWrapper } from '@/components/ui/breadcrumb'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import BusinessProfileTabs from './business-profile-tabs'
@@ -28,6 +27,21 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
       services: {
         where: { isActive: true },
         orderBy: { name: 'asc' },
+      },
+      products: {
+        where: { isActive: true },
+        include: {
+          category: true,
+        },
+        orderBy: [
+          { isFeatured: 'desc' },
+          { displayOrder: 'asc' },
+          { name: 'asc' },
+        ],
+      },
+      productCategories: {
+        where: { isActive: true },
+        orderBy: { displayOrder: 'asc' },
       },
       reviews: {
         include: {
@@ -53,18 +67,25 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
         business.reviews.length
       : 0
 
+  // Serialize business data for client component
+  const serializedBusiness = {
+    ...business,
+    commissionRate: Number(business.commissionRate),
+    services: business.services.map(service => ({
+      ...service,
+      price: Number(service.price)
+    })),
+    products: business.products.map(product => ({
+      ...product,
+      price: Number(product.price),
+      compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
+      cost: product.cost ? Number(product.cost) : null
+    }))
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white">
       <Navigation session={session} />
-      <BreadcrumbWrapper>
-        <Breadcrumb 
-          items={[
-            { label: 'Home', href: '/' },
-            { label: 'Search', href: '/search' },
-            { label: business.businessName }
-          ]}
-        />
-      </BreadcrumbWrapper>
 
       {/* Business Header */}
       <div className="bg-indigo-600 text-white">
@@ -164,7 +185,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <BusinessProfileTabs 
-            business={business} 
+            business={serializedBusiness} 
             averageRating={averageRating} 
             session={session} 
           />

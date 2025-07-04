@@ -7,6 +7,8 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Session } from 'next-auth'
+import { useCart } from '@/contexts/cart-context'
+import { ShoppingCart } from 'lucide-react'
 
 interface Business {
   id: string
@@ -30,6 +32,24 @@ interface Business {
     price: any
     duration: number
     category: string | null
+  }[]
+  products: {
+    id: string
+    name: string
+    description: string | null
+    price: any
+    compareAtPrice: any | null
+    images: string[]
+    brand: string | null
+    isFeatured: boolean
+    category: {
+      id: string
+      name: string
+    } | null
+  }[]
+  productCategories: {
+    id: string
+    name: string
   }[]
   reviews: {
     id: string
@@ -57,16 +77,38 @@ interface BusinessProfileTabsProps {
 
 export default function BusinessProfileTabs({ business, averageRating, session }: BusinessProfileTabsProps) {
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  const { addProduct } = useCart()
+
+  const handleAddToCart = (product: any) => {
+    addProduct({
+      id: product.id,
+      businessId: business.id,
+      businessName: business.businessName,
+      businessSlug: business.slug,
+      name: product.name,
+      price: Number(product.price),
+      quantity: 1,
+      image: product.images?.[0],
+    })
+  }
+
 
   return (
     <Tabs defaultValue="services" className="w-full">
-      <TabsList className="grid w-full grid-cols-4 mb-8">
+      <TabsList className="grid w-full grid-cols-5 mb-8">
         <TabsTrigger value="services" className="gap-2">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
           </svg>
           <span className="hidden sm:inline">Services</span>
           <span className="sm:hidden">Services</span>
+        </TabsTrigger>
+        <TabsTrigger value="products" className="gap-2">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+          </svg>
+          <span className="hidden sm:inline">Products</span>
+          <span className="sm:hidden">{business.products.length}</span>
         </TabsTrigger>
         <TabsTrigger value="about" className="gap-2">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,25 +174,27 @@ export default function BusinessProfileTabs({ business, averageRating, session }
                       </div>
                       <div className="ml-4 flex flex-col items-end">
                         <p className="text-2xl font-bold text-indigo-600">
-                          ${service.price.toString()}
+                          ${service.price.toFixed(2)}
                         </p>
-                        {session ? (
-                          <Link
-                            href={`/book/${business.slug}?service=${service.id}`}
-                          >
-                            <Button size="sm" className="mt-2">
-                              Book Now
-                            </Button>
-                          </Link>
-                        ) : (
-                          <Link
-                            href="/login"
-                          >
-                            <Button size="sm" variant="outline" className="mt-2">
-                              Sign in to book
-                            </Button>
-                          </Link>
-                        )}
+                        <div className="mt-2">
+                          {session ? (
+                            <Link
+                              href={`/book/${business.slug}?service=${service.id}`}
+                            >
+                              <Button size="sm">
+                                Book Now
+                              </Button>
+                            </Link>
+                          ) : (
+                            <Link
+                              href="/login"
+                            >
+                              <Button size="sm" variant="outline">
+                                Sign in to Book
+                              </Button>
+                            </Link>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -161,6 +205,250 @@ export default function BusinessProfileTabs({ business, averageRating, session }
                 icon="services"
                 title="No services available"
                 description="This business hasn't added any services yet"
+              />
+            )}
+          </CardContent>
+        </Card>
+      </TabsContent>
+
+      <TabsContent value="products" className="space-y-4">
+        <Card className="shadow-sm hover:shadow-md transition-shadow duration-200">
+          <CardHeader>
+            <CardTitle>Our Products</CardTitle>
+            <CardDescription>Browse our selection of quality products</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {business.products.length > 0 ? (
+              <div className="space-y-6">
+                {/* Featured Products */}
+                {business.products.filter(p => p.isFeatured).length > 0 && (
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4">Featured Products</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {business.products
+                        .filter(p => p.isFeatured)
+                        .map((product) => (
+                          <div
+                            key={product.id}
+                            className="group border border-gray-200 rounded-lg overflow-hidden hover:border-indigo-300 hover:shadow-lg transition-all duration-200"
+                          >
+                            <div className="aspect-square bg-gray-100 relative">
+                              {product.images.length > 0 ? (
+                                <img
+                                  src={product.images[0]}
+                                  alt={product.name}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center">
+                                  <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                  </svg>
+                                </div>
+                              )}
+                              {product.compareAtPrice && (
+                                <Badge className="absolute top-2 right-2 bg-red-500 text-white">
+                                  Sale
+                                </Badge>
+                              )}
+                            </div>
+                            <div className="p-4">
+                              <h4 className="font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
+                                {product.name}
+                              </h4>
+                              {product.brand && (
+                                <p className="text-sm text-gray-500 mt-1">{product.brand}</p>
+                              )}
+                              {product.description && (
+                                <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+                                  {product.description}
+                                </p>
+                              )}
+                              <div className="mt-3 flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-lg font-bold text-indigo-600">
+                                    ${Number(product.price).toFixed(2)}
+                                  </span>
+                                  {product.compareAtPrice && (
+                                    <span className="text-sm text-gray-500 line-through">
+                                      ${Number(product.compareAtPrice).toFixed(2)}
+                                    </span>
+                                  )}
+                                </div>
+                                {product.category && (
+                                  <Badge variant="secondary" className="text-xs">
+                                    {product.category.name}
+                                  </Badge>
+                                )}
+                              </div>
+                              <Button
+                                size="sm"
+                                className="w-full mt-3"
+                                onClick={() => handleAddToCart(product)}
+                              >
+                                <ShoppingCart className="h-4 w-4 mr-2" />
+                                Add to Cart
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* All Products by Category */}
+                {business.productCategories.map((category) => {
+                  const categoryProducts = business.products.filter(
+                    p => p.category?.id === category.id && !p.isFeatured
+                  )
+                  
+                  if (categoryProducts.length === 0) return null
+
+                  return (
+                    <div key={category.id}>
+                      <h3 className="text-lg font-semibold mb-4">{category.name}</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {categoryProducts.map((product) => (
+                          <div
+                            key={product.id}
+                            className="group border border-gray-200 rounded-lg overflow-hidden hover:border-indigo-300 hover:shadow-lg transition-all duration-200"
+                          >
+                            <div className="aspect-square bg-gray-100 relative">
+                              {product.images.length > 0 ? (
+                                <img
+                                  src={product.images[0]}
+                                  alt={product.name}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center">
+                                  <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                  </svg>
+                                </div>
+                              )}
+                              {product.compareAtPrice && (
+                                <Badge className="absolute top-2 right-2 bg-red-500 text-white">
+                                  Sale
+                                </Badge>
+                              )}
+                            </div>
+                            <div className="p-4">
+                              <h4 className="font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
+                                {product.name}
+                              </h4>
+                              {product.brand && (
+                                <p className="text-sm text-gray-500 mt-1">{product.brand}</p>
+                              )}
+                              {product.description && (
+                                <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+                                  {product.description}
+                                </p>
+                              )}
+                              <div className="mt-3 flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-lg font-bold text-indigo-600">
+                                    ${Number(product.price).toFixed(2)}
+                                  </span>
+                                  {product.compareAtPrice && (
+                                    <span className="text-sm text-gray-500 line-through">
+                                      ${Number(product.compareAtPrice).toFixed(2)}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                              <Button
+                                size="sm"
+                                className="w-full mt-3"
+                                onClick={() => handleAddToCart(product)}
+                              >
+                                <ShoppingCart className="h-4 w-4 mr-2" />
+                                Add to Cart
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )
+                })}
+
+                {/* Uncategorized Products */}
+                {business.products.filter(p => !p.category && !p.isFeatured).length > 0 && (
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4">Other Products</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {business.products
+                        .filter(p => !p.category && !p.isFeatured)
+                        .map((product) => (
+                          <div
+                            key={product.id}
+                            className="group border border-gray-200 rounded-lg overflow-hidden hover:border-indigo-300 hover:shadow-lg transition-all duration-200"
+                          >
+                            <div className="aspect-square bg-gray-100 relative">
+                              {product.images.length > 0 ? (
+                                <img
+                                  src={product.images[0]}
+                                  alt={product.name}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center">
+                                  <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                  </svg>
+                                </div>
+                              )}
+                              {product.compareAtPrice && (
+                                <Badge className="absolute top-2 right-2 bg-red-500 text-white">
+                                  Sale
+                                </Badge>
+                              )}
+                            </div>
+                            <div className="p-4">
+                              <h4 className="font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
+                                {product.name}
+                              </h4>
+                              {product.brand && (
+                                <p className="text-sm text-gray-500 mt-1">{product.brand}</p>
+                              )}
+                              {product.description && (
+                                <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+                                  {product.description}
+                                </p>
+                              )}
+                              <div className="mt-3 flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-lg font-bold text-indigo-600">
+                                    ${Number(product.price).toFixed(2)}
+                                  </span>
+                                  {product.compareAtPrice && (
+                                    <span className="text-sm text-gray-500 line-through">
+                                      ${Number(product.compareAtPrice).toFixed(2)}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                              <Button
+                                size="sm"
+                                className="w-full mt-3"
+                                onClick={() => handleAddToCart(product)}
+                              >
+                                <ShoppingCart className="h-4 w-4 mr-2" />
+                                Add to Cart
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <EmptyState
+                icon="products"
+                title="No products available"
+                description="This business hasn't added any products yet"
               />
             )}
           </CardContent>

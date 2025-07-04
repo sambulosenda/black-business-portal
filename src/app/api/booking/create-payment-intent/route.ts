@@ -13,7 +13,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { businessId, serviceId, date, time } = await request.json()
+    const { businessId, serviceId, date, time, promotionId, promoDiscount } = await request.json()
 
     // Get business with Stripe account
     const business = await prisma.business.findUnique({
@@ -106,7 +106,9 @@ export async function POST(request: Request) {
     }
 
     // Calculate fees
-    const amount = Number(service.price)
+    const originalAmount = Number(service.price)
+    const discount = promoDiscount || 0
+    const amount = Math.max(0, originalAmount - discount)
     const fees = calculateFees(amount)
 
     // Create payment intent with automatic transfer
@@ -127,6 +129,8 @@ export async function POST(request: Request) {
         time: time,
         serviceName: service.name,
         businessName: business.businessName,
+        promotionId: promotionId || '',
+        discountAmount: discount.toString(),
       },
     })
 
@@ -142,7 +146,7 @@ export async function POST(request: Request) {
         status: 'PENDING',
         paymentStatus: 'PENDING',
         stripePaymentIntentId: paymentIntent.id,
-        totalPrice: service.price,
+        totalPrice: amount,
         stripeFee: fees.stripeFeeDollars,
         platformFee: fees.platformFeeDollars,
         businessPayout: fees.businessPayoutDollars,

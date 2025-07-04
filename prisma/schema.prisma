@@ -30,6 +30,8 @@ model User {
   business      Business?
   bookings      Booking[]
   reviews       Review[]
+  customerProfiles CustomerProfile[]
+  orders        Order[]
 }
 
 model Business {
@@ -68,23 +70,32 @@ model Business {
   availabilities   Availability[]
   timeOffs         TimeOff[]
   payouts          Payout[]
+  staff            Staff[]
+  customerProfiles CustomerProfile[]
+  communications   Communication[]
+  notificationSettings NotificationSettings?
+  products         Product[]
+  productCategories ProductCategory[]
+  orders           Order[]
+  promotions       Promotion[]
 }
 
 model Service {
-  id          String    @id @default(cuid())
+  id          String         @id @default(cuid())
   businessId  String
   name        String
   description String?
-  price       Decimal   @db.Decimal(10, 2)
-  duration    Int       // Duration in minutes
+  price       Decimal        @db.Decimal(10, 2)
+  duration    Int            // Duration in minutes
   category    String
-  isActive    Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  isActive    Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
   
   // Relations
-  business    Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  business    Business       @relation(fields: [businessId], references: [id], onDelete: Cascade)
   bookings    Booking[]
+  staff       StaffService[] // Staff members who can perform this service
 }
 
 model Booking {
@@ -92,6 +103,7 @@ model Booking {
   userId      String
   businessId  String
   serviceId   String
+  staffId     String?       // Optional staff assignment
   date        DateTime
   startTime   DateTime
   endTime     DateTime
@@ -113,7 +125,10 @@ model Booking {
   user        User          @relation(fields: [userId], references: [id])
   business    Business      @relation(fields: [businessId], references: [id])
   service     Service       @relation(fields: [serviceId], references: [id])
+  staff       Staff?        @relation(fields: [staffId], references: [id])
   review      Review?
+  items       BookingItem[] // Products purchased with booking
+  order       Order?        // Link to order if part of a combined purchase
 }
 
 model Review {
@@ -214,4 +229,559 @@ enum PaymentStatus {
   FAILED
   REFUNDED
   CANCELLED
+}
+
+model Staff {
+  id              String           @id @default(cuid())
+  businessId      String
+  name            String
+  email           String
+  phone           String?
+  role            StaffRole        @default(STAFF)
+  isActive        Boolean          @default(true)
+  canManageBookings Boolean        @default(true)
+  canManageStaff  Boolean          @default(false)
+  profileImage    String?
+  bio             String?
+  
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  
+  // Relations
+  business        Business         @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  services        StaffService[]   // Services this staff member can perform
+  schedules       StaffSchedule[]  // Working hours
+  bookings        Booking[]        // Bookings assigned to this staff
+  communications  Communication[]  // Communications sent by this staff
+  
+  @@unique([businessId, email])
+  @@index([businessId, isActive])
+}
+
+model StaffService {
+  id          String   @id @default(cuid())
+  staffId     String
+  serviceId   String
+  createdAt   DateTime @default(now())
+  
+  // Relations
+  staff       Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  service     Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  
+  @@unique([staffId, serviceId])
+  @@index([staffId])
+  @@index([serviceId])
+}
+
+model StaffSchedule {
+  id          String   @id @default(cuid())
+  staffId     String
+  dayOfWeek   Int      // 0-6 (Sunday-Saturday)
+  startTime   String   // HH:MM format
+  endTime     String   // HH:MM format
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  staff       Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  
+  @@unique([staffId, dayOfWeek])
+  @@index([staffId, isActive])
+}
+
+enum StaffRole {
+  OWNER
+  MANAGER
+  STAFF
+}
+
+// CRM Models
+model CustomerProfile {
+  id              String           @id @default(cuid())
+  businessId      String
+  userId          String
+  
+  // Denormalized data for quick access
+  customerName    String
+  customerEmail   String
+  customerPhone   String?
+  
+  // Customer insights
+  firstVisit      DateTime?
+  lastVisit       DateTime?
+  totalVisits     Int              @default(0)
+  totalSpent      Decimal          @default(0) @db.Decimal(10, 2)
+  averageSpent    Decimal          @default(0) @db.Decimal(10, 2)
+  favoriteService String?
+  
+  // Customer preferences
+  notes           String?          @db.Text
+  tags            String[]         @default([])
+  birthday        DateTime?
+  preferences     Json?            // Store preferences like "prefers morning appointments"
+  
+  // Status
+  isVip           Boolean          @default(false)
+  isBlocked       Boolean          @default(false)
+  
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  
+  // Relations
+  business        Business         @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  user            User             @relation(fields: [userId], references: [id])
+  communications  Communication[]
+  
+  @@unique([businessId, userId])
+  @@index([businessId, lastVisit])
+  @@index([businessId, totalSpent])
+}
+
+model Communication {
+  id              String           @id @default(cuid())
+  businessId      String
+  customerId      String
+  staffId         String?
+  
+  type            CommunicationType
+  subject         String?
+  content         String           @db.Text
+  status          CommunicationStatus @default(SENT)
+  
+  sentAt          DateTime         @default(now())
+  readAt          DateTime?
+  
+  // Relations
+  business        Business         @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  customer        CustomerProfile  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  staff           Staff?           @relation(fields: [staffId], references: [id])
+  
+  @@index([businessId, customerId])
+  @@index([businessId, sentAt])
+}
+
+enum CommunicationType {
+  EMAIL
+  SMS
+  NOTE
+  SYSTEM
+}
+
+enum CommunicationStatus {
+  DRAFT
+  SENT
+  DELIVERED
+  FAILED
+  READ
+}
+
+// Notification Settings Models
+model NotificationSettings {
+  id              String   @id @default(cuid())
+  businessId      String   @unique
+  
+  // Email Settings
+  emailEnabled    Boolean  @default(true)
+  emailFrom       String?  // Custom from name
+  emailReplyTo    String?  // Reply-to email
+  
+  // SMS Settings
+  smsEnabled      Boolean  @default(false)
+  smsFrom         String?  // SMS sender ID/number
+  
+  // Global Settings
+  timezone        String   @default("America/New_York")
+  quietHoursStart String?  // HH:MM format (e.g., "21:00")
+  quietHoursEnd   String?  // HH:MM format (e.g., "09:00")
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  business        Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  templates       NotificationTemplate[]
+  triggers        NotificationTrigger[]
+}
+
+model NotificationTemplate {
+  id              String   @id @default(cuid())
+  settingsId      String
+  type            NotificationType
+  channel         NotificationChannel
+  
+  name            String
+  subject         String?  // For emails
+  content         String   @db.Text
+  variables       String[] // Available variables like {{customerName}}, {{serviceName}}
+  
+  isActive        Boolean  @default(true)
+  isDefault       Boolean  @default(false) // Use platform default if true
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  settings        NotificationSettings @relation(fields: [settingsId], references: [id], onDelete: Cascade)
+  
+  @@unique([settingsId, type, channel])
+  @@index([settingsId, isActive])
+}
+
+model NotificationTrigger {
+  id              String   @id @default(cuid())
+  settingsId      String
+  
+  event           NotificationEvent
+  channel         NotificationChannel
+  enabled         Boolean  @default(true)
+  
+  // Timing
+  timing          TriggerTiming @default(IMMEDIATE)
+  delayMinutes    Int?     // For DELAYED timing
+  advanceHours    Int?     // For ADVANCE timing (e.g., 24 hours before appointment)
+  
+  // Conditions
+  conditions      Json?    // Additional conditions like minimum spend, customer type, etc.
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  settings        NotificationSettings @relation(fields: [settingsId], references: [id], onDelete: Cascade)
+  
+  @@unique([settingsId, event, channel])
+  @@index([settingsId, enabled])
+}
+
+enum NotificationType {
+  BOOKING_CONFIRMATION
+  BOOKING_REMINDER
+  BOOKING_CANCELLED
+  BOOKING_RESCHEDULED
+  BOOKING_COMPLETED
+  REVIEW_REQUEST
+  PROMOTIONAL
+  BIRTHDAY
+  RE_ENGAGEMENT
+}
+
+enum NotificationChannel {
+  EMAIL
+  SMS
+  BOTH
+}
+
+enum NotificationEvent {
+  BOOKING_CREATED
+  BOOKING_CONFIRMED
+  BOOKING_CANCELLED
+  BOOKING_COMPLETED
+  BEFORE_APPOINTMENT
+  AFTER_APPOINTMENT
+  CUSTOMER_BIRTHDAY
+  CUSTOMER_INACTIVE
+}
+
+enum TriggerTiming {
+  IMMEDIATE
+  DELAYED
+  ADVANCE
+  SCHEDULED
+}
+
+// Product Management Models
+model ProductCategory {
+  id          String   @id @default(cuid())
+  businessId  String
+  name        String
+  description String?
+  displayOrder Int     @default(0)
+  isActive    Boolean  @default(true)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  products    Product[]
+  
+  @@unique([businessId, name])
+  @@index([businessId, isActive])
+}
+
+model Product {
+  id              String   @id @default(cuid())
+  businessId      String
+  categoryId      String?
+  
+  // Basic Info
+  name            String
+  description     String?
+  sku             String?
+  barcode         String?
+  
+  // Pricing
+  price           Decimal  @db.Decimal(10, 2)
+  compareAtPrice  Decimal? @db.Decimal(10, 2) // Original price for sales
+  cost            Decimal? @db.Decimal(10, 2) // Cost to business
+  
+  // Inventory
+  trackInventory  Boolean  @default(true)
+  quantity        Int      @default(0)
+  lowStockAlert   Int?     // Alert when quantity falls below this
+  
+  // Display
+  images          String[]
+  displayOrder    Int      @default(0)
+  isActive        Boolean  @default(true)
+  isFeatured      Boolean  @default(false)
+  
+  // Additional Info
+  brand           String?
+  tags            String[]
+  weight          Float?   // In ounces
+  weightUnit      String?  // oz, lb, g, kg
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  business        Business         @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  category        ProductCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  inventoryLogs   InventoryLog[]
+  bookingItems    BookingItem[]
+  orderItems      OrderItem[]
+  
+  @@unique([businessId, sku])
+  @@index([businessId, isActive])
+  @@index([businessId, categoryId])
+  @@index([businessId, isFeatured])
+}
+
+model InventoryLog {
+  id          String   @id @default(cuid())
+  productId   String
+  
+  type        InventoryLogType
+  quantity    Int      // Positive for additions, negative for removals
+  previousQty Int
+  newQty      Int
+  
+  reason      String?
+  reference   String?  // Order ID, adjustment ID, etc.
+  notes       String?
+  
+  createdAt   DateTime @default(now())
+  createdBy   String?  // User ID who made the change
+  
+  // Relations
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  @@index([productId, createdAt])
+}
+
+model BookingItem {
+  id          String   @id @default(cuid())
+  bookingId   String
+  productId   String
+  
+  quantity    Int
+  price       Decimal  @db.Decimal(10, 2) // Price at time of booking
+  total       Decimal  @db.Decimal(10, 2)
+  
+  createdAt   DateTime @default(now())
+  
+  // Relations
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  product     Product  @relation(fields: [productId], references: [id])
+  
+  @@index([bookingId])
+  @@index([productId])
+}
+
+enum InventoryLogType {
+  SALE
+  RETURN
+  ADJUSTMENT
+  RESTOCK
+  DAMAGE
+  LOSS
+  INITIAL
+}
+
+// Order Management Models
+model Order {
+  id              String   @id @default(cuid())
+  orderNumber     String   @unique @default(cuid())
+  userId          String
+  businessId      String
+  
+  // Order Details
+  type            OrderType @default(PRODUCT_ONLY) // PRODUCT_ONLY, SERVICE_ONLY, MIXED
+  status          OrderStatus @default(PENDING)
+  
+  // Pricing
+  subtotal        Decimal  @db.Decimal(10, 2)
+  tax             Decimal  @db.Decimal(10, 2)
+  deliveryFee     Decimal? @db.Decimal(10, 2)
+  total           Decimal  @db.Decimal(10, 2)
+  
+  // Fulfillment
+  fulfillmentType FulfillmentType @default(PICKUP) // PICKUP, DELIVERY
+  
+  // Customer Info
+  customerEmail   String
+  customerPhone   String
+  
+  // Delivery Address (if applicable)
+  deliveryAddress Json?
+  deliveryNotes   String?
+  
+  // Payment
+  paymentStatus   PaymentStatus @default(PENDING)
+  stripePaymentIntentId String? @unique
+  paidAt          DateTime?
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  user            User     @relation(fields: [userId], references: [id])
+  business        Business @relation(fields: [businessId], references: [id])
+  orderItems      OrderItem[]
+  booking         Booking? @relation(fields: [bookingId], references: [id])
+  bookingId       String?  @unique
+  
+  @@index([businessId, status])
+  @@index([userId])
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  orderId     String
+  productId   String
+  
+  quantity    Int
+  price       Decimal  @db.Decimal(10, 2) // Price at time of order
+  total       Decimal  @db.Decimal(10, 2)
+  
+  createdAt   DateTime @default(now())
+  
+  // Relations
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product  @relation(fields: [productId], references: [id])
+  
+  @@index([orderId])
+  @@index([productId])
+}
+
+enum OrderType {
+  PRODUCT_ONLY
+  SERVICE_ONLY
+  MIXED
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  READY_FOR_PICKUP
+  OUT_FOR_DELIVERY
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum FulfillmentType {
+  PICKUP
+  DELIVERY
+}
+
+// Promotion Management Models
+model Promotion {
+  id              String   @id @default(cuid())
+  businessId      String
+  
+  // Basic Info
+  name            String
+  description     String?
+  code            String?  // Promo code (null for automatic promotions)
+  
+  // Type and Value
+  type            PromotionType
+  value           Decimal  @db.Decimal(10, 2) // Percentage or fixed amount
+  
+  // Scope
+  scope           PromotionScope
+  serviceIds      String[] // Specific services (if scope is SPECIFIC_SERVICES)
+  productIds      String[] // Specific products (if scope is SPECIFIC_PRODUCTS)
+  
+  // Validity
+  startDate       DateTime
+  endDate         DateTime
+  isActive        Boolean  @default(true)
+  
+  // Usage Limits
+  usageLimit      Int?     // Total number of times this can be used
+  usageCount      Int      @default(0)
+  perCustomerLimit Int?    // Times a single customer can use this
+  
+  // Requirements
+  minimumAmount   Decimal? @db.Decimal(10, 2) // Minimum purchase amount
+  minimumItems    Int?     // Minimum number of items
+  firstTimeOnly   Boolean  @default(false) // Only for first-time customers
+  
+  // Display
+  featured        Boolean  @default(false) // Show prominently on business page
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  business        Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  usages          PromotionUsage[]
+  
+  @@unique([businessId, code])
+  @@index([businessId, isActive])
+  @@index([businessId, startDate, endDate])
+}
+
+model PromotionUsage {
+  id              String   @id @default(cuid())
+  promotionId     String
+  userId          String
+  
+  // Usage Details
+  discountAmount  Decimal  @db.Decimal(10, 2)
+  orderTotal      Decimal  @db.Decimal(10, 2)
+  
+  // Reference
+  bookingId       String?  // If used for a booking
+  orderId         String?  // If used for an order
+  
+  usedAt          DateTime @default(now())
+  
+  // Relations
+  promotion       Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  
+  @@index([promotionId])
+  @@index([userId])
+  @@index([usedAt])
+}
+
+enum PromotionType {
+  PERCENTAGE      // X% off
+  FIXED_AMOUNT    // $X off
+  BOGO            // Buy one get one
+  BUNDLE          // Bundle discount
+}
+
+enum PromotionScope {
+  ALL_SERVICES
+  SPECIFIC_SERVICES
+  ALL_PRODUCTS
+  SPECIFIC_PRODUCTS
+  ENTIRE_PURCHASE // Applies to total (services + products)
 }

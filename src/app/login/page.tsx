@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -21,8 +21,11 @@ type LoginFormData = z.infer<typeof loginSchema>
 
 export default function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirect = searchParams.get('redirect')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+
 
   const {
     register,
@@ -46,7 +49,18 @@ export default function LoginPage() {
       if (result?.error) {
         setError('Invalid email or password')
       } else {
-        router.push('/dashboard')
+        // Get the session to check user role
+        const response = await fetch('/api/auth/session')
+        const session = await response.json()
+        
+        // Redirect based on user role and redirect parameter
+        if (redirect) {
+          router.push(redirect)
+        } else if (session?.user?.role === 'BUSINESS_OWNER') {
+          router.push('/business/dashboard')
+        } else {
+          router.push('/dashboard')
+        }
         router.refresh()
       }
     } catch (error) {

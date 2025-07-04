@@ -45,73 +45,120 @@ export async function POST(request: NextRequest) {
       case 'payment_intent.succeeded': {
         const paymentIntent = event.data.object as Stripe.PaymentIntent
         
-        // Update booking status and get booking details
-        const booking = await prisma.booking.update({
-          where: {
-            stripePaymentIntentId: paymentIntent.id,
-          },
-          data: {
-            status: 'CONFIRMED',
-            paymentStatus: 'SUCCEEDED',
-          },
-          include: {
-            user: true,
-            business: true,
-            service: true,
-          },
-        })
-        
-        // Send confirmation email
-        if (booking && booking.user.email) {
-          const emailData = emailTemplates.bookingConfirmation({
-            customerName: booking.user.name || 'Customer',
-            businessName: booking.business.businessName,
-            serviceName: booking.service.name,
-            date: format(new Date(booking.date), 'EEEE, MMMM d, yyyy'),
-            time: format(new Date(booking.startTime), 'h:mm a'),
-            totalPrice: booking.totalPrice.toNumber(),
-            bookingId: booking.id,
+        // Check if it's a booking or order based on metadata
+        if (paymentIntent.metadata.bookingId) {
+          // Update booking status and get booking details
+          const booking = await prisma.booking.update({
+            where: {
+              stripePaymentIntentId: paymentIntent.id,
+            },
+            data: {
+              status: 'CONFIRMED',
+              paymentStatus: 'SUCCEEDED',
+            },
+            include: {
+              user: true,
+              business: true,
+              service: true,
+            },
           })
           
-          await sendEmail({
-            to: booking.user.email,
-            ...emailData,
+          // Send confirmation email
+          if (booking && booking.user.email) {
+            const emailData = emailTemplates.bookingConfirmation({
+              customerName: booking.user.name || 'Customer',
+              businessName: booking.business.businessName,
+              serviceName: booking.service.name,
+              date: format(new Date(booking.date), 'EEEE, MMMM d, yyyy'),
+              time: format(new Date(booking.startTime), 'h:mm a'),
+              totalPrice: booking.totalPrice.toNumber(),
+              bookingId: booking.id,
+            })
+            
+            await sendEmail({
+              to: booking.user.email,
+              ...emailData,
+            })
+            
+            // Also send payment receipt
+            const receiptData = emailTemplates.paymentReceipt({
+              customerName: booking.user.name || 'Customer',
+              businessName: booking.business.businessName,
+              serviceName: booking.service.name,
+              amount: booking.totalPrice.toNumber(),
+              paymentId: paymentIntent.id,
+              date: format(new Date(), 'MMMM d, yyyy'),
+            })
+            
+            await sendEmail({
+              to: booking.user.email,
+              ...receiptData,
+            })
+          }
+          
+          console.log('Payment succeeded for booking:', paymentIntent.metadata)
+        } else if (paymentIntent.metadata.orderId) {
+          // Update order status
+          const order = await prisma.order.update({
+            where: {
+              stripePaymentIntentId: paymentIntent.id,
+            },
+            data: {
+              status: 'CONFIRMED',
+              paymentStatus: 'SUCCEEDED',
+              paidAt: new Date(),
+            },
+            include: {
+              user: true,
+              business: true,
+              orderItems: {
+                include: {
+                  product: true,
+                },
+              },
+            },
           })
           
-          // Also send payment receipt
-          const receiptData = emailTemplates.paymentReceipt({
-            customerName: booking.user.name || 'Customer',
-            businessName: booking.business.businessName,
-            serviceName: booking.service.name,
-            amount: booking.totalPrice.toNumber(),
-            paymentId: paymentIntent.id,
-            date: format(new Date(), 'MMMM d, yyyy'),
-          })
+          // Send order confirmation email
+          if (order && order.user.email) {
+            // TODO: Add order confirmation email template
+            console.log('Order confirmed:', order.orderNumber)
+          }
           
-          await sendEmail({
-            to: booking.user.email,
-            ...receiptData,
-          })
+          console.log('Payment succeeded for order:', paymentIntent.metadata)
         }
-        
-        console.log('Payment succeeded for booking:', paymentIntent.metadata)
         break
       }
 
       case 'payment_intent.payment_failed': {
         const paymentIntent = event.data.object as Stripe.PaymentIntent
         
-        // Update booking status
-        await prisma.booking.update({
-          where: {
-            stripePaymentIntentId: paymentIntent.id,
-          },
-          data: {
-            paymentStatus: 'FAILED',
-          },
-        })
-        
-        console.log('Payment failed for booking:', paymentIntent.metadata)
+        if (paymentIntent.metadata.bookingId) {
+          // Update booking status
+          await prisma.booking.update({
+            where: {
+              stripePaymentIntentId: paymentIntent.id,
+            },
+            data: {
+              paymentStatus: 'FAILED',
+            },
+          })
+          
+          console.log('Payment failed for booking:', paymentIntent.metadata)
+        } else if (paymentIntent.metadata.orderId) {
+          // Update order status
+          await prisma.order.update({
+            where: {
+              stripePaymentIntentId: paymentIntent.id,
+            },
+            data: {
+              paymentStatus: 'FAILED',
+              status: 'CANCELLED',
+            },
+          })
+          
+          console.log('Payment failed for order:', paymentIntent.metadata)
+        }
         break
       }
 
