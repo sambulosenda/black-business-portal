@@ -124,15 +124,15 @@ export default async function BusinessDashboardLayout({
           
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel className="text-gray-500 font-medium">Menu</SidebarGroupLabel>
+              <SidebarGroupLabel className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Navigation</SidebarGroupLabel>
               <SidebarGroupContent>
-                <SidebarMenu>
+                <SidebarMenu className="space-y-1">
                   {menuItems.map((item) => (
                     <SidebarMenuItem key={item.href}>
-                      <SidebarMenuButton asChild className="hover:bg-gray-100 transition-colors">
-                        <Link href={item.href} className="group">
-                          <item.icon className="h-4 w-4 text-gray-600 group-hover:text-indigo-600 transition-colors" />
-                          <span className="text-gray-700 group-hover:text-gray-900 transition-colors">{item.title}</span>
+                      <SidebarMenuButton asChild className="hover:bg-gray-50 transition-all data-[active=true]:bg-indigo-50 data-[active=true]:text-indigo-700">
+                        <Link href={item.href} className="flex items-center gap-3 px-3 py-2 rounded-lg group">
+                          <item.icon className="h-5 w-5 text-gray-400 group-hover:text-gray-600 group-data-[active=true]:text-indigo-600 transition-colors" />
+                          <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900 group-data-[active=true]:text-indigo-700 transition-colors">{item.title}</span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -160,12 +160,16 @@ export default async function BusinessDashboardLayout({
         </Sidebar>
 
         <main className="flex-1 overflow-hidden">
-          <div className="sticky top-0 z-10 flex h-16 items-center border-b bg-white px-6">
+          <div className="sticky top-0 z-10 flex h-16 items-center border-b bg-white px-8 shadow-sm">
             <SidebarTrigger className="mr-4 hover:bg-gray-100 rounded-lg transition-colors" />
-            <h2 className="text-lg font-semibold text-indigo-600">Business Portal</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Business Portal</h2>
           </div>
-          <div className="overflow-auto p-6 bg-gray-50">
-            {children}
+          <div className="overflow-auto">
+            <div className="min-h-[calc(100vh-4rem)] bg-gray-50">
+              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+                {children}
+              </div>
+            </div>
           </div>
         </main>
       </div>

@@ -119,10 +119,10 @@ export default async function BusinessDashboardPage() {
   })
 
   return (
-    <div className="container mx-auto max-w-7xl p-6 space-y-6">
+    <div className="space-y-8">
       {/* Header */}
       <div className="space-y-1">
-        <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900">
           Welcome back, {business.businessName}!
         </h1>
         <p className="text-gray-600">
@@ -131,110 +131,110 @@ export default async function BusinessDashboardPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="border-0 bg-indigo-600 text-white shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-white/90">
+            <CardTitle className="text-sm font-medium text-gray-600">
               Total Revenue
             </CardTitle>
-            <div className="h-10 w-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-              <DollarSign className="h-5 w-5 text-white" />
+            <div className="h-12 w-12 rounded-full bg-gradient-to-br from-indigo-50 to-indigo-100 flex items-center justify-center">
+              <DollarSign className="h-6 w-6 text-indigo-600" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-white">
+            <div className="text-2xl font-bold text-gray-900">
               ${thisMonthRevenue._sum.totalPrice?.toFixed(2) || '0.00'}
             </div>
-            <p className="text-sm text-white/80 mt-1">
-              This month
+            <p className="text-xs text-gray-500 mt-1">
+              <span className="text-green-600 font-medium">+12.5%</span> from last month
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border-0 bg-purple-600 text-white shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+        <Card className="border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-white/90">
+            <CardTitle className="text-sm font-medium text-gray-600">
               Bookings
             </CardTitle>
-            <div className="h-10 w-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-              <Calendar className="h-5 w-5 text-white" />
+            <div className="h-12 w-12 rounded-full bg-gradient-to-br from-purple-50 to-purple-100 flex items-center justify-center">
+              <Calendar className="h-6 w-6 text-purple-600" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-white">{thisMonthBookings}</div>
-            <p className="text-sm text-white/80 mt-1">
-              This month ({upcomingBookings} upcoming)
+            <div className="text-2xl font-bold text-gray-900">{thisMonthBookings}</div>
+            <p className="text-xs text-gray-500 mt-1">
+              <span className="text-purple-600 font-medium">{upcomingBookings}</span> upcoming
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border-0 bg-pink-600 text-white shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+        <Card className="border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-white/90">
+            <CardTitle className="text-sm font-medium text-gray-600">
               Average Rating
             </CardTitle>
-            <div className="h-10 w-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-              <Star className="h-5 w-5 text-white fill-white" />
+            <div className="h-12 w-12 rounded-full bg-gradient-to-br from-yellow-50 to-yellow-100 flex items-center justify-center">
+              <Star className="h-6 w-6 text-yellow-600 fill-yellow-600" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-white">
+            <div className="text-2xl font-bold text-gray-900">
               {averageRating > 0 ? averageRating.toFixed(1) : 'N/A'}
             </div>
-            <p className="text-sm text-white/80 mt-1">
-              Based on {totalReviews} reviews
+            <p className="text-xs text-gray-500 mt-1">
+              From <span className="font-medium">{totalReviews}</span> reviews
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border-0 bg-emerald-600 text-white shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+        <Card className="border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-white/90">
+            <CardTitle className="text-sm font-medium text-gray-600">
               Active Services
             </CardTitle>
-            <div className="h-10 w-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-              <Package className="h-5 w-5 text-white" />
+            <div className="h-12 w-12 rounded-full bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center">
+              <Package className="h-6 w-6 text-emerald-600" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-white">{business.services.length}</div>
-            <p className="text-sm text-white/80 mt-1">
+            <div className="text-2xl font-bold text-gray-900">{business.services.length}</div>
+            <p className="text-xs text-gray-500 mt-1">
               Available for booking
             </p>
           </CardContent>
         </Card>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2">
         {/* Quick Actions */}
-        <Card className="border-0 shadow-lg bg-white">
-          <CardHeader className="bg-indigo-50 rounded-t-lg">
-            <CardTitle className="text-xl">Quick Actions</CardTitle>
-            <CardDescription className="text-gray-600">
+        <Card className="border border-gray-200 bg-white shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold">Quick Actions</CardTitle>
+            <CardDescription>
               Manage your business operations
             </CardDescription>
           </CardHeader>
-          <CardContent className="grid gap-3 p-6">
+          <CardContent className="grid gap-3">
             <Link href="/business/dashboard/services">
-              <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all">
+              <Button className="w-full justify-start bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white">
                 <Package className="mr-2 h-4 w-4" />
                 Manage Services
               </Button>
             </Link>
             <Link href="/business/dashboard/bookings">
-              <Button variant="outline" className="w-full border-2 hover:bg-indigo-50 hover:border-indigo-300 transition-all">
+              <Button variant="outline" className="w-full justify-start hover:bg-gray-50">
                 <Calendar className="mr-2 h-4 w-4" />
                 View All Bookings
               </Button>
             </Link>
             <Link href="/business/dashboard/availability">
-              <Button variant="outline" className="w-full border-2 hover:bg-purple-50 hover:border-purple-300 transition-all">
+              <Button variant="outline" className="w-full justify-start hover:bg-gray-50">
                 <Clock className="mr-2 h-4 w-4" />
                 Set Availability
               </Button>
             </Link>
             <Link href="/business/dashboard/analytics">
-              <Button variant="outline" className="w-full border-2 hover:bg-pink-50 hover:border-pink-300 transition-all">
+              <Button variant="outline" className="w-full justify-start hover:bg-gray-50">
                 <BarChart3 className="mr-2 h-4 w-4" />
                 View Analytics
               </Button>
@@ -243,43 +243,43 @@ export default async function BusinessDashboardPage() {
         </Card>
 
         {/* Business Info */}
-        <Card className="border-0 shadow-lg bg-white">
-          <CardHeader className="bg-purple-50 rounded-t-lg">
-            <CardTitle className="text-xl">Business Information</CardTitle>
-            <CardDescription className="text-gray-600">
+        <Card className="border border-gray-200 bg-white shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold">Business Information</CardTitle>
+            <CardDescription>
               Your business details and status
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <dl className="space-y-2">
+            <dl className="space-y-4">
               <div className="flex justify-between items-center">
-                <dt className="text-sm font-medium text-muted-foreground">Status</dt>
+                <dt className="text-sm font-medium text-gray-500">Status</dt>
                 <dd>
-                  <Badge className={business.isVerified ? 'bg-green-600 text-white border-0' : 'bg-yellow-600 text-white border-0'}>
+                  <Badge variant={business.isVerified ? 'default' : 'secondary'} className={business.isVerified ? 'bg-green-50 text-green-700 border-green-200' : 'bg-yellow-50 text-yellow-700 border-yellow-200'}>
                     {business.isVerified ? 'Verified' : 'Pending Verification'}
                   </Badge>
                 </dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-sm font-medium text-muted-foreground">Category</dt>
-                <dd className="text-sm">{business.category.replace(/_/g, ' ')}</dd>
+                <dt className="text-sm font-medium text-gray-500">Category</dt>
+                <dd className="text-sm text-gray-900">{business.category.replace(/_/g, ' ')}</dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-sm font-medium text-muted-foreground">Location</dt>
-                <dd className="text-sm">{business.city}, {business.state}</dd>
+                <dt className="text-sm font-medium text-gray-500">Location</dt>
+                <dd className="text-sm text-gray-900">{business.city}, {business.state}</dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-sm font-medium text-muted-foreground">Phone</dt>
-                <dd className="text-sm">{business.phone}</dd>
+                <dt className="text-sm font-medium text-gray-500">Phone</dt>
+                <dd className="text-sm text-gray-900">{business.phone}</dd>
               </div>
             </dl>
-            <div className="mt-4 pt-4 border-t">
+            <div className="mt-6 pt-6 border-t">
               <Link
                 href="/business/dashboard/settings"
                 className="text-sm text-indigo-600 hover:text-indigo-700 inline-flex items-center font-medium transition-colors"
               >
                 Edit Business Profile
-                <ChevronRight className="ml-1 h-3 w-3" />
+                <ChevronRight className="ml-1 h-4 w-4" />
               </Link>
             </div>
           </CardContent>
@@ -287,19 +287,19 @@ export default async function BusinessDashboardPage() {
       </div>
 
       {/* Recent Bookings */}
-      <Card className="border-0 shadow-lg bg-white">
-        <CardHeader className="bg-indigo-50 rounded-t-lg">
+      <Card className="border border-gray-200 bg-white shadow-sm">
+        <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-xl">Recent Bookings</CardTitle>
-              <CardDescription className="text-gray-600">
+              <CardTitle className="text-lg font-semibold">Recent Bookings</CardTitle>
+              <CardDescription>
                 Your latest customer appointments
               </CardDescription>
             </div>
             <Link href="/business/dashboard/bookings">
-              <Button variant="ghost" size="sm" className="hover:bg-white/50">
+              <Button variant="ghost" size="sm">
                 View all
-                <ChevronRight className="ml-1 h-3 w-3" />
+                <ChevronRight className="ml-1 h-4 w-4" />
               </Button>
             </Link>
           </div>
@@ -310,13 +310,14 @@ export default async function BusinessDashboardPage() {
               {business.bookings.map((booking) => (
                 <div
                   key={booking.id}
-                  className="flex items-center justify-between p-3 rounded-lg border bg-gray-50 hover:bg-gray-100 transition-colors"
+                  className="flex items-center justify-between p-4 rounded-lg border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all"
                 >
                   <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      {booking.user.name} - {booking.service.name}
+                    <p className="text-sm font-medium text-gray-900">
+                      {booking.user.name}
                     </p>
-                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                    <p className="text-sm text-gray-600">{booking.service.name}</p>
+                    <div className="flex items-center gap-4 text-xs text-gray-500">
                       <span className="flex items-center gap-1">
                         <Calendar className="h-3 w-3" />
                         {format(new Date(booking.date), 'MMM d, yyyy')}
@@ -329,16 +330,17 @@ export default async function BusinessDashboardPage() {
                   </div>
                   <div className="flex items-center gap-3">
                     <Badge
-                      variant={
-                        booking.status === 'CONFIRMED' ? 'success' :
-                        booking.status === 'PENDING' ? 'warning' :
-                        booking.status === 'CANCELLED' ? 'destructive' :
-                        'default'
+                      variant="outline"
+                      className={
+                        booking.status === 'CONFIRMED' ? 'border-green-200 bg-green-50 text-green-700' :
+                        booking.status === 'PENDING' ? 'border-yellow-200 bg-yellow-50 text-yellow-700' :
+                        booking.status === 'CANCELLED' ? 'border-red-200 bg-red-50 text-red-700' :
+                        'border-gray-200 bg-gray-50 text-gray-700'
                       }
                     >
-                      {booking.status}
+                      {booking.status.charAt(0) + booking.status.slice(1).toLowerCase()}
                     </Badge>
-                    <span className="text-sm font-medium">
+                    <span className="text-sm font-semibold text-gray-900">
                       ${booking.totalPrice.toString()}
                     </span>
                   </div>
@@ -356,19 +358,19 @@ export default async function BusinessDashboardPage() {
       </Card>
 
       {/* Recent Reviews */}
-      <Card className="border-0 shadow-lg bg-white">
-        <CardHeader className="bg-purple-50 rounded-t-lg">
+      <Card className="border border-gray-200 bg-white shadow-sm">
+        <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-xl">Recent Reviews</CardTitle>
-              <CardDescription className="text-gray-600">
+              <CardTitle className="text-lg font-semibold">Recent Reviews</CardTitle>
+              <CardDescription>
                 Customer feedback and ratings
               </CardDescription>
             </div>
             <Link href="/business/dashboard/reviews">
-              <Button variant="ghost" size="sm" className="hover:bg-white/50">
+              <Button variant="ghost" size="sm">
                 View all
-                <ChevronRight className="ml-1 h-3 w-3" />
+                <ChevronRight className="ml-1 h-4 w-4" />
               </Button>
             </Link>
           </div>
@@ -379,11 +381,11 @@ export default async function BusinessDashboardPage() {
               {business.reviews.map((review) => (
                 <div
                   key={review.id}
-                  className="space-y-2 p-3 rounded-lg border bg-gray-50 hover:bg-gray-100 transition-colors"
+                  className="space-y-2 p-4 rounded-lg border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all"
                 >
                   <div className="flex items-start justify-between">
                     <div>
-                      <p className="text-sm font-medium">
+                      <p className="text-sm font-medium text-gray-900">
                         {review.user.name}
                       </p>
                       <div className="flex items-center gap-1 mt-1">
@@ -393,18 +395,21 @@ export default async function BusinessDashboardPage() {
                             className={`h-4 w-4 ${
                               i < review.rating
                                 ? 'fill-yellow-400 text-yellow-400'
-                                : 'fill-muted text-muted'
+                                : 'fill-gray-200 text-gray-200'
                             }`}
                           />
                         ))}
+                        <span className="text-sm text-gray-600 ml-2">
+                          {review.rating}.0
+                        </span>
                       </div>
                     </div>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-xs text-gray-500">
                       {format(new Date(review.createdAt), 'MMM d, yyyy')}
                     </span>
                   </div>
                   {review.comment && (
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-gray-600 leading-relaxed">
                       {review.comment}
                     </p>
                   )}
