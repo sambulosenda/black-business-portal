@@ -256,10 +256,10 @@ export default function CalendarPage() {
                 key={index}
                 onClick={() => setSelectedDate(day)}
                 className={`
-                  min-h-[120px] p-2 border-r border-b last:border-r-0
+                  min-h-[120px] p-2 border-r border-b border-gray-200 last:border-r-0
                   ${!isCurrentMonth ? 'bg-gray-50/50' : ''}
-                  ${isToday ? 'bg-blue-50/50' : ''}
-                  ${isSelected ? 'ring-2 ring-primary ring-inset' : ''}
+                  ${isToday ? 'bg-indigo-50/50' : ''}
+                  ${isSelected ? 'ring-2 ring-indigo-600 ring-inset' : ''}
                   hover:bg-gray-50 cursor-pointer transition-colors
                 `}
               >
@@ -321,10 +321,10 @@ export default function CalendarPage() {
     const hours = Array.from({ length: 24 }, (_, i) => i)
 
     return (
-      <div className="border-t">
+      <div className="border-t border-gray-200">
         {/* Day headers */}
-        <div className="grid grid-cols-8 border-b sticky top-0 bg-white z-10">
-          <div className="p-2 text-center text-sm font-medium text-muted-foreground border-r">
+        <div className="grid grid-cols-8 border-b border-gray-200 sticky top-0 bg-white z-10">
+          <div className="p-2 text-center text-sm font-semibold text-gray-700 border-r border-gray-200 bg-gray-50">
             Time
           </div>
           {weekDays.map((day) => {
@@ -335,9 +335,9 @@ export default function CalendarPage() {
                 key={day.toISOString()}
                 onClick={() => setSelectedDate(day)}
                 className={`
-                  p-2 text-center text-sm font-medium border-r last:border-r-0 cursor-pointer
-                  ${isToday ? 'bg-blue-50 text-primary' : 'text-muted-foreground'}
-                  ${isSelected ? 'ring-2 ring-primary ring-inset' : ''}
+                  p-2 text-center text-sm font-medium border-r border-gray-200 last:border-r-0 cursor-pointer
+                  ${isToday ? 'bg-indigo-50 text-indigo-600' : 'text-gray-700'}
+                  ${isSelected ? 'ring-2 ring-indigo-600 ring-inset' : ''}
                   hover:bg-gray-50
                 `}
               >
@@ -352,8 +352,8 @@ export default function CalendarPage() {
         <ScrollArea className="h-[600px]">
           <div>
             {hours.map((hour) => (
-              <div key={hour} className="grid grid-cols-8 border-b">
-                <div className="p-2 text-xs text-muted-foreground border-r">
+              <div key={hour} className="grid grid-cols-8 border-b border-gray-200">
+                <div className="p-2 text-xs text-gray-500 border-r border-gray-200 bg-gray-50">
                   {format(new Date().setHours(hour, 0), 'h a')}
                 </div>
                 {weekDays.map((day) => {
@@ -367,18 +367,18 @@ export default function CalendarPage() {
                   return (
                     <div
                       key={`${day.toISOString()}-${hour}`}
-                      className="min-h-[60px] p-1 border-r last:border-r-0 relative"
+                      className="min-h-[60px] p-1 border-r border-gray-200 last:border-r-0 relative"
                     >
                       {hourBookings.map((booking) => (
                         <div
                           key={booking.id}
                           onClick={() => setSelectedBooking(booking)}
                           className={`
-                            absolute left-1 right-1 p-1 rounded text-xs cursor-pointer
-                            ${booking.status === 'CONFIRMED' ? 'bg-blue-100 text-blue-700 hover:bg-blue-200' : ''}
-                            ${booking.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200' : ''}
-                            ${booking.status === 'CANCELLED' ? 'bg-gray-100 text-gray-500 line-through' : ''}
-                            ${booking.status === 'COMPLETED' ? 'bg-green-100 text-green-700 hover:bg-green-200' : ''}
+                            absolute left-1 right-1 p-1 rounded text-xs cursor-pointer shadow-sm border
+                            ${booking.status === 'CONFIRMED' ? 'bg-blue-50 text-blue-700 hover:bg-blue-100 border-blue-200' : ''}
+                            ${booking.status === 'PENDING' ? 'bg-yellow-50 text-yellow-700 hover:bg-yellow-100 border-yellow-200' : ''}
+                            ${booking.status === 'CANCELLED' ? 'bg-gray-50 text-gray-500 line-through border-gray-200' : ''}
+                            ${booking.status === 'COMPLETED' ? 'bg-green-50 text-green-700 hover:bg-green-100 border-green-200' : ''}
                           `}
                           style={{
                             top: `${(new Date(booking.startTime).getMinutes() / 60) * 100}%`,
@@ -407,7 +407,7 @@ export default function CalendarPage() {
     const dayBookings = bookingsByDate[dateKey] || []
 
     return (
-      <div className="border-t">
+      <div className="border-t border-gray-200">
         <ScrollArea className="h-[700px]">
           <div className="min-w-[600px]">
             {hours.map((hour) => {
@@ -417,8 +417,8 @@ export default function CalendarPage() {
               })
 
               return (
-                <div key={hour} className="flex border-b">
-                  <div className="w-20 p-3 text-sm text-muted-foreground border-r flex-shrink-0">
+                <div key={hour} className="flex border-b border-gray-200">
+                  <div className="w-20 p-3 text-sm text-gray-500 border-r border-gray-200 bg-gray-50 flex-shrink-0">
                     {format(new Date().setHours(hour, 0), 'h a')}
                   </div>
                   <div className="flex-1 min-h-[80px] p-2 relative">
@@ -427,11 +427,11 @@ export default function CalendarPage() {
                         key={booking.id}
                         onClick={() => setSelectedBooking(booking)}
                         className={`
-                          absolute left-2 right-2 p-3 rounded cursor-pointer
-                          ${booking.status === 'CONFIRMED' ? 'bg-blue-100 text-blue-700 hover:bg-blue-200' : ''}
-                          ${booking.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200' : ''}
-                          ${booking.status === 'CANCELLED' ? 'bg-gray-100 text-gray-500 line-through' : ''}
-                          ${booking.status === 'COMPLETED' ? 'bg-green-100 text-green-700 hover:bg-green-200' : ''}
+                          absolute left-2 right-2 p-3 rounded cursor-pointer shadow-sm border
+                          ${booking.status === 'CONFIRMED' ? 'bg-blue-50 text-blue-700 hover:bg-blue-100 border-blue-200' : ''}
+                          ${booking.status === 'PENDING' ? 'bg-yellow-50 text-yellow-700 hover:bg-yellow-100 border-yellow-200' : ''}
+                          ${booking.status === 'CANCELLED' ? 'bg-gray-50 text-gray-500 line-through border-gray-200' : ''}
+                          ${booking.status === 'COMPLETED' ? 'bg-green-50 text-green-700 hover:bg-green-100 border-green-200' : ''}
                         `}
                         style={{
                           top: `${(new Date(booking.startTime).getMinutes() / 60) * 80}px`,

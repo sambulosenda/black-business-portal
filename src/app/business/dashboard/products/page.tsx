@@ -505,7 +505,7 @@ export default function ProductsPage() {
                           )}
                         </div>
                       ) : (
-                        <span className="text-sm text-muted-foreground">-</span>
+                        <span className="text-sm text-gray-500">-</span>
                       )}
                     </td>
                     <td className="p-4 text-center">
@@ -688,8 +688,8 @@ export default function ProductsPage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label>Track Inventory</Label>
-                    <p className="text-sm text-muted-foreground">
+                    <Label className="text-gray-900">Track Inventory</Label>
+                    <p className="text-sm text-gray-600">
                       Monitor stock levels for this product
                     </p>
                   </div>
@@ -831,8 +831,8 @@ export default function ProductsPage() {
 
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label>Active</Label>
-                <p className="text-sm text-muted-foreground">
+                <Label className="text-gray-900">Active</Label>
+                <p className="text-sm text-gray-600">
                   Category is visible
                 </p>
               </div>
