@@ -2,7 +2,6 @@ import { requireAuth } from "@/lib/session"
 import { prisma } from "@/lib/prisma"
 import { redirect } from "next/navigation"
 import AnalyticsDashboard from "./analytics-dashboard"
-import { Breadcrumb, BreadcrumbWrapper } from '@/components/ui/breadcrumb'
 
 export default async function AnalyticsPage() {
   const session = await requireAuth()

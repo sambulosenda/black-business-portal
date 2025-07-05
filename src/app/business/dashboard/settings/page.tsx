@@ -2,6 +2,7 @@ import { requireAuth } from "@/lib/session"
 import { redirect } from "next/navigation"
 import { prisma } from "@/lib/prisma"
 import StripeConnectSection from "./stripe-connect-section"
+import BusinessProfileForm from "./business-profile-form"
 
 export default async function BusinessSettingsPage() {
   const session = await requireAuth()
@@ -15,6 +16,16 @@ export default async function BusinessSettingsPage() {
     select: {
       id: true,
       businessName: true,
+      description: true,
+      category: true,
+      address: true,
+      city: true,
+      state: true,
+      zipCode: true,
+      phone: true,
+      email: true,
+      website: true,
+      instagram: true,
       stripeAccountId: true,
       stripeOnboarded: true,
       commissionRate: true,
@@ -26,14 +37,17 @@ export default async function BusinessSettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Business Settings</h1>
-          <p className="mt-2 text-gray-600">
-            Manage your business settings and payment information
-          </p>
-        </div>
+    <div className="max-w-7xl mx-auto p-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">Business Settings</h1>
+        <p className="mt-2 text-gray-600">
+          Manage your business profile and payment information
+        </p>
+      </div>
+
+      <div className="space-y-8">
+        {/* Business Profile Section */}
+        <BusinessProfileForm business={business} />
 
         {/* Stripe Connect Section */}
         <StripeConnectSection 
@@ -41,10 +55,8 @@ export default async function BusinessSettingsPage() {
           businessName={business.businessName}
           stripeAccountId={business.stripeAccountId}
           stripeOnboarded={business.stripeOnboarded}
-          commissionRate={business.commissionRate}
+          commissionRate={Number(business.commissionRate)}
         />
-
-        {/* Other settings sections can be added here */}
       </div>
     </div>
   )

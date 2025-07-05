@@ -50,7 +50,7 @@ export default async function BusinessDashboardPage() {
 
   if (!business) {
     return (
-      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
+      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-gray-50">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Complete Your Business Profile</CardTitle>
@@ -60,7 +60,7 @@ export default async function BusinessDashboardPage() {
           </CardHeader>
           <CardContent className="text-center">
             <Link href="/business/setup">
-              <Button>
+              <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
                 Complete Setup
               </Button>
             </Link>
@@ -119,78 +119,86 @@ export default async function BusinessDashboardPage() {
   })
 
   return (
-    <div className="container mx-auto max-w-7xl p-4 space-y-4">
+    <div className="container mx-auto max-w-7xl p-6 space-y-6">
       {/* Header */}
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold tracking-tight">
+        <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
           Welcome back, {business.businessName}!
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-gray-600">
           Here's an overview of your business performance
         </p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="border-0 bg-indigo-600 text-white shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-sm font-medium text-white/90">
               Total Revenue
             </CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <div className="h-10 w-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+              <DollarSign className="h-5 w-5 text-white" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-3xl font-bold text-white">
               ${thisMonthRevenue._sum.totalPrice?.toFixed(2) || '0.00'}
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-sm text-white/80 mt-1">
               This month
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-0 bg-purple-600 text-white shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-sm font-medium text-white/90">
               Bookings
             </CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <div className="h-10 w-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+              <Calendar className="h-5 w-5 text-white" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{thisMonthBookings}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-3xl font-bold text-white">{thisMonthBookings}</div>
+            <p className="text-sm text-white/80 mt-1">
               This month ({upcomingBookings} upcoming)
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-0 bg-pink-600 text-white shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-sm font-medium text-white/90">
               Average Rating
             </CardTitle>
-            <Star className="h-4 w-4 text-muted-foreground" />
+            <div className="h-10 w-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+              <Star className="h-5 w-5 text-white fill-white" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-3xl font-bold text-white">
               {averageRating > 0 ? averageRating.toFixed(1) : 'N/A'}
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-sm text-white/80 mt-1">
               Based on {totalReviews} reviews
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-0 bg-emerald-600 text-white shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-sm font-medium text-white/90">
               Active Services
             </CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
+            <div className="h-10 w-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+              <Package className="h-5 w-5 text-white" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{business.services.length}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-3xl font-bold text-white">{business.services.length}</div>
+            <p className="text-sm text-white/80 mt-1">
               Available for booking
             </p>
           </CardContent>
@@ -199,34 +207,34 @@ export default async function BusinessDashboardPage() {
 
       <div className="grid gap-4 lg:grid-cols-2">
         {/* Quick Actions */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>
+        <Card className="border-0 shadow-lg bg-white">
+          <CardHeader className="bg-indigo-50 rounded-t-lg">
+            <CardTitle className="text-xl">Quick Actions</CardTitle>
+            <CardDescription className="text-gray-600">
               Manage your business operations
             </CardDescription>
           </CardHeader>
-          <CardContent className="grid gap-2">
+          <CardContent className="grid gap-3 p-6">
             <Link href="/business/dashboard/services">
-              <Button className="w-full">
+              <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all">
                 <Package className="mr-2 h-4 w-4" />
                 Manage Services
               </Button>
             </Link>
             <Link href="/business/dashboard/bookings">
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full border-2 hover:bg-indigo-50 hover:border-indigo-300 transition-all">
                 <Calendar className="mr-2 h-4 w-4" />
                 View All Bookings
               </Button>
             </Link>
             <Link href="/business/dashboard/availability">
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full border-2 hover:bg-purple-50 hover:border-purple-300 transition-all">
                 <Clock className="mr-2 h-4 w-4" />
                 Set Availability
               </Button>
             </Link>
             <Link href="/business/dashboard/analytics">
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full border-2 hover:bg-pink-50 hover:border-pink-300 transition-all">
                 <BarChart3 className="mr-2 h-4 w-4" />
                 View Analytics
               </Button>
@@ -235,10 +243,10 @@ export default async function BusinessDashboardPage() {
         </Card>
 
         {/* Business Info */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Business Information</CardTitle>
-            <CardDescription>
+        <Card className="border-0 shadow-lg bg-white">
+          <CardHeader className="bg-purple-50 rounded-t-lg">
+            <CardTitle className="text-xl">Business Information</CardTitle>
+            <CardDescription className="text-gray-600">
               Your business details and status
             </CardDescription>
           </CardHeader>
@@ -247,7 +255,7 @@ export default async function BusinessDashboardPage() {
               <div className="flex justify-between items-center">
                 <dt className="text-sm font-medium text-muted-foreground">Status</dt>
                 <dd>
-                  <Badge variant={business.isVerified ? 'success' : 'warning'}>
+                  <Badge className={business.isVerified ? 'bg-green-600 text-white border-0' : 'bg-yellow-600 text-white border-0'}>
                     {business.isVerified ? 'Verified' : 'Pending Verification'}
                   </Badge>
                 </dd>
@@ -268,7 +276,7 @@ export default async function BusinessDashboardPage() {
             <div className="mt-4 pt-4 border-t">
               <Link
                 href="/business/dashboard/settings"
-                className="text-sm text-primary hover:underline inline-flex items-center"
+                className="text-sm text-indigo-600 hover:text-indigo-700 inline-flex items-center font-medium transition-colors"
               >
                 Edit Business Profile
                 <ChevronRight className="ml-1 h-3 w-3" />
@@ -279,17 +287,17 @@ export default async function BusinessDashboardPage() {
       </div>
 
       {/* Recent Bookings */}
-      <Card>
-        <CardHeader>
+      <Card className="border-0 shadow-lg bg-white">
+        <CardHeader className="bg-indigo-50 rounded-t-lg">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Recent Bookings</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-xl">Recent Bookings</CardTitle>
+              <CardDescription className="text-gray-600">
                 Your latest customer appointments
               </CardDescription>
             </div>
             <Link href="/business/dashboard/bookings">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" className="hover:bg-white/50">
                 View all
                 <ChevronRight className="ml-1 h-3 w-3" />
               </Button>
@@ -302,7 +310,7 @@ export default async function BusinessDashboardPage() {
               {business.bookings.map((booking) => (
                 <div
                   key={booking.id}
-                  className="flex items-center justify-between p-3 rounded-lg border bg-card"
+                  className="flex items-center justify-between p-3 rounded-lg border bg-gray-50 hover:bg-gray-100 transition-colors"
                 >
                   <div className="space-y-1">
                     <p className="text-sm font-medium leading-none">
@@ -348,17 +356,17 @@ export default async function BusinessDashboardPage() {
       </Card>
 
       {/* Recent Reviews */}
-      <Card>
-        <CardHeader>
+      <Card className="border-0 shadow-lg bg-white">
+        <CardHeader className="bg-purple-50 rounded-t-lg">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Recent Reviews</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-xl">Recent Reviews</CardTitle>
+              <CardDescription className="text-gray-600">
                 Customer feedback and ratings
               </CardDescription>
             </div>
             <Link href="/business/dashboard/reviews">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" className="hover:bg-white/50">
                 View all
                 <ChevronRight className="ml-1 h-3 w-3" />
               </Button>
@@ -371,7 +379,7 @@ export default async function BusinessDashboardPage() {
               {business.reviews.map((review) => (
                 <div
                   key={review.id}
-                  className="space-y-2 p-3 rounded-lg border bg-card"
+                  className="space-y-2 p-3 rounded-lg border bg-gray-50 hover:bg-gray-100 transition-colors"
                 >
                   <div className="flex items-start justify-between">
                     <div>

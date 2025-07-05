@@ -265,134 +265,95 @@ export default function Home() {
    
 
       {/* Value Props */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
+      <section className="relative py-24 bg-gradient-to-b from-white to-gray-50 overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-[0.03]">
+          <div className="absolute inset-0" style={{backgroundImage: 'radial-gradient(circle at 2px 2px, #6366F1 1px, transparent 1px)', backgroundSize: '48px 48px'}}></div>
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 rounded-full text-sm font-medium mb-6 border border-indigo-100">
+              <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clipRule="evenodd" />
+              </svg>
+              Why choose BeautyPortal
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
               The brighter way to
               <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> book beauty</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Experience the future of beauty booking with our modern platform
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Join thousands who&apos;ve discovered the easiest way to book beauty services. 
+              Save time, save money, and get pampered.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
             {valueProps.map((prop, index) => (
               <div key={index} className="group relative">
                 {prop.highlight && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 px-3 py-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-semibold rounded-full z-10">
-                    {prop.highlight}
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-bold rounded-full z-10 shadow-lg animate-pulse">
+                    <div className="flex items-center gap-1">
+                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
+                      </svg>
+                      {prop.highlight}
+                    </div>
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity"></div>
-                <div className="relative bg-gray-50 rounded-2xl p-8 border border-gray-200 hover:border-indigo-300 transition-all duration-300 transform hover:-translate-y-1">
-                  <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl ${prop.color} mb-6 group-hover:scale-110 transition-transform`}>
-                    {prop.icon}
+                
+                {/* Card with enhanced design */}
+                <div className="relative h-full">
+                  {/* Gradient border effect */}
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-100 transition duration-300 blur"></div>
+                  
+                  {/* Main card */}
+                  <div className="relative bg-white rounded-3xl p-8 lg:p-10 h-full flex flex-col border border-gray-100 hover:border-transparent transition-all duration-300 transform group-hover:-translate-y-2 group-hover:shadow-2xl">
+                    {/* Icon container with animation */}
+                    <div className="relative mb-8">
+                      <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all"></div>
+                      <div className={`relative inline-flex items-center justify-center w-20 h-20 rounded-2xl ${prop.color} group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                        {prop.icon}
+                      </div>
+                    </div>
+                    
+                    {/* Content */}
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-indigo-600 group-hover:to-purple-600 group-hover:bg-clip-text transition-all">
+                      {prop.title}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed flex-grow">
+                      {prop.description}
+                    </p>
+                    
+                    {/* Learn more link */}
+                    <div className="mt-6 flex items-center text-indigo-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <span className="text-sm">Learn more</span>
+                      <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                    {prop.title}
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    {prop.description}
-                  </p>
                 </div>
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Social Proof Section */}
-      <section className="py-16 bg-gradient-to-r from-indigo-600 to-purple-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div className="space-y-2">
-              <p className="text-4xl font-bold text-white">10K+</p>
-              <p className="text-white/80">Active Customers</p>
-            </div>
-            <div className="space-y-2">
-              <p className="text-4xl font-bold text-white">1.2K+</p>
-              <p className="text-white/80">Partner Salons</p>
-            </div>
-            <div className="space-y-2">
-              <p className="text-4xl font-bold text-white">148K</p>
-              <p className="text-white/80">Bookings Made</p>
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-center gap-1">
-                <p className="text-4xl font-bold text-white">4.9</p>
-                <svg className="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              </div>
-              <p className="text-white/80">Average Rating</p>
-            </div>
-          </div>
           
-          {/* Live Activity Ticker */}
-          <div className="mt-12 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-            <div className="flex items-center justify-center gap-4 text-white">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-sm">Live</span>
-              </div>
-              <div className="text-sm font-medium">
-                <span className="font-bold">Sarah M.</span> just booked a hair appointment in Lagos • 
-                <span className="font-bold ml-4">12 people</span> viewing salons near you • 
-                <span className="font-bold ml-4">Next available slot:</span> in 45 minutes
-              </div>
-            </div>
+          {/* Bottom CTA */}
+          <div className="mt-16 text-center">
+            <Link href="/search">
+              <Button size="lg" className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all">
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Start Browsing Services
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* How it Works */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Section Header */}
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              How it works
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Book your next beauty appointment in three simple steps
-            </p>
-          </div>
 
-          {/* Steps Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-100 rounded-full mb-4">
-                <span className="text-2xl font-bold text-indigo-600">1</span>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Search</h3>
-              <p className="text-gray-600">
-                Find beauty services and professionals near you
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4">
-                <span className="text-2xl font-bold text-purple-600">2</span>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Book</h3>
-              <p className="text-gray-600">
-                Choose your service and pick a convenient time
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-pink-100 rounded-full mb-4">
-                <span className="text-2xl font-bold text-pink-600">3</span>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Enjoy</h3>
-              <p className="text-gray-600">
-                Show up and enjoy your beauty treatment
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* CTA Section */}
       <section className="relative bg-gradient-to-r from-indigo-600 to-purple-700 overflow-hidden">
@@ -511,73 +472,6 @@ export default function Home() {
         </div>
       </section>
       
-      {/* FAQ Section */}
-      <section className="py-24 bg-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-              Frequently asked
-              <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> questions</span>
-            </h2>
-            <p className="text-xl text-gray-600">
-              Everything you need to know about BeautyPortal
-            </p>
-          </div>
-          
-          <div className="space-y-8">
-            {[
-              {
-                question: "How does BeautyPortal work?",
-                answer: "Simply search for beauty services in your area, browse available professionals, check real-time availability, and book instantly. You'll receive an immediate confirmation and reminders before your appointment."
-              },
-              {
-                question: "Is it really free to list my business?",
-                answer: "Yes! Creating a business profile is completely free. We only charge a small commission on completed bookings, so you only pay when you earn."
-              },
-              {
-                question: "How do I know the businesses are legitimate?",
-                answer: "All businesses go through our verification process. We check licenses, insurance, and customer reviews. Look for the verified badge on business profiles for extra peace of mind."
-              },
-              {
-                question: "Can I cancel or reschedule my booking?",
-                answer: "Yes, you can cancel or reschedule up to 24 hours before your appointment without any fees. Check the specific cancellation policy for each business as some may vary."
-              },
-              {
-                question: "What payment methods do you accept?",
-                answer: "We accept all major credit cards, debit cards, and digital wallets. Payment is secure and processed through Stripe, and you're only charged after your service is completed."
-              },
-              {
-                question: "How do reviews work?",
-                answer: "Only verified customers who have completed a booking can leave reviews. This ensures all feedback is genuine and helps maintain the quality of our platform."
-              }
-            ].map((faq, index) => (
-              <div key={index} className="bg-gray-50 rounded-2xl p-8 hover:bg-gray-100 transition-colors">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-start">
-                  <svg className="w-6 h-6 text-indigo-600 mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  {faq.question}
-                </h3>
-                <p className="text-gray-600 leading-relaxed ml-9">
-                  {faq.answer}
-                </p>
-              </div>
-            ))}
-          </div>
-          
-          <div className="mt-12 text-center">
-            <p className="text-gray-600 mb-4">Still have questions?</p>
-            <Link href="/contact">
-              <Button variant="outline" size="lg">
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                Contact Support
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
       
       <Footer />
     </div>

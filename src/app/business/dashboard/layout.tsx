@@ -100,11 +100,6 @@ export default async function BusinessDashboardLayout({
       href: "/business/dashboard/notifications",
     },
     {
-      title: "Profile",
-      icon: User,
-      href: "/business/profile",
-    },
-    {
       title: "Settings",
       icon: Settings,
       href: "/business/dashboard/settings",
@@ -113,26 +108,31 @@ export default async function BusinessDashboardLayout({
 
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className="flex min-h-screen w-full bg-background">
-        <Sidebar className="border-r">
-          <SidebarHeader className="border-b px-6 py-4 bg-sidebar">
-            <Link href="/" className="flex items-center space-x-2">
-              <span className="text-xl font-bold text-primary">BeautyPortal</span>
-              <span className="text-sm text-muted-foreground">Business</span>
+      <div className="flex min-h-screen w-full bg-gray-50">
+        <Sidebar className="border-r bg-white">
+          <SidebarHeader className="border-b px-6 py-4 bg-gray-50">
+            <Link href="/" className="flex items-center space-x-3 group">
+              <div className="w-10 h-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg group-hover:scale-105 transition-transform">
+                B
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xl font-bold text-indigo-600">BeautyPortal</span>
+                <span className="text-xs text-gray-600">Business Dashboard</span>
+              </div>
             </Link>
           </SidebarHeader>
           
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel>Menu</SidebarGroupLabel>
+              <SidebarGroupLabel className="text-gray-500 font-medium">Menu</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
                   {menuItems.map((item) => (
                     <SidebarMenuItem key={item.href}>
-                      <SidebarMenuButton asChild>
-                        <Link href={item.href}>
-                          <item.icon className="h-4 w-4" />
-                          <span>{item.title}</span>
+                      <SidebarMenuButton asChild className="hover:bg-gray-100 transition-colors">
+                        <Link href={item.href} className="group">
+                          <item.icon className="h-4 w-4 text-gray-600 group-hover:text-indigo-600 transition-colors" />
+                          <span className="text-gray-700 group-hover:text-gray-900 transition-colors">{item.title}</span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -142,29 +142,29 @@ export default async function BusinessDashboardLayout({
             </SidebarGroup>
           </SidebarContent>
 
-          <SidebarFooter className="border-t px-6 py-4">
+          <SidebarFooter className="border-t px-6 py-4 bg-gray-50">
             <div className="flex items-center justify-between">
               <div className="flex flex-col">
-                <span className="text-sm font-medium">{session.user.name}</span>
-                <span className="text-xs text-muted-foreground">{session.user.email}</span>
+                <span className="text-sm font-semibold text-gray-900">{session.user.name}</span>
+                <span className="text-xs text-gray-600">{session.user.email}</span>
               </div>
             </div>
             <Link
               href="/api/auth/signout"
-              className="mt-4 flex items-center space-x-2 text-sm text-muted-foreground hover:text-foreground"
+              className="mt-4 flex items-center space-x-2 text-sm text-gray-600 hover:text-red-600 transition-colors group"
             >
-              <LogOut className="h-4 w-4" />
+              <LogOut className="h-4 w-4 group-hover:scale-110 transition-transform" />
               <span>Sign out</span>
             </Link>
           </SidebarFooter>
         </Sidebar>
 
         <main className="flex-1 overflow-hidden">
-          <div className="sticky top-0 z-10 flex h-16 items-center border-b bg-background px-6">
-            <SidebarTrigger className="mr-4" />
-            <h2 className="text-lg font-semibold">Business Portal</h2>
+          <div className="sticky top-0 z-10 flex h-16 items-center border-b bg-white px-6">
+            <SidebarTrigger className="mr-4 hover:bg-gray-100 rounded-lg transition-colors" />
+            <h2 className="text-lg font-semibold text-indigo-600">Business Portal</h2>
           </div>
-          <div className="overflow-auto p-6">
+          <div className="overflow-auto p-6 bg-gray-50">
             {children}
           </div>
         </main>

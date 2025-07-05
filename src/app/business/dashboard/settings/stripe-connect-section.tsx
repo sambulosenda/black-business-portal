@@ -2,14 +2,12 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import type { Decimal } from '@prisma/client/runtime/library'
-
 interface StripeConnectSectionProps {
   businessId: string
   businessName: string
   stripeAccountId: string | null
   stripeOnboarded: boolean
-  commissionRate: Decimal
+  commissionRate: number
 }
 
 export default function StripeConnectSection({
