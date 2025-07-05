@@ -112,7 +112,7 @@ export default function Home() {
                     </Button>
                   </Link>
                   <div className="hidden sm:block ml-2">
-                    <Link href="/signup/business">
+                    <Link href="/business/join">
                       <Button variant="outline" className="border-2 font-medium">
                         <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -379,9 +379,9 @@ export default function Home() {
             </p>
             
             <div className="mb-8 space-y-4">
-              <Link href="/signup/business">
+              <Link href="/business/join">
                 <Button size="xl" className="bg-white text-indigo-600 hover:bg-gray-50 font-bold transform hover:-translate-y-0.5 transition-all shadow-xl hover:shadow-2xl px-10 py-6 text-lg">
-                  Start Your Free Trial
+                  Learn More
                   <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
