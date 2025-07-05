@@ -37,10 +37,10 @@ export default async function BusinessSettingsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Business Settings</h1>
-        <p className="mt-2 text-gray-600">
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Business Settings</h1>
+        <p className="text-gray-600 mt-1">
           Manage your business profile and payment information
         </p>
       </div>

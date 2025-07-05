@@ -123,15 +123,15 @@ export default function BusinessBookingsPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'CONFIRMED':
-        return <Badge className="bg-green-100 text-green-800">Confirmed</Badge>
+        return <Badge variant="outline" className="border-green-200 bg-green-50 text-green-700">Confirmed</Badge>
       case 'PENDING':
-        return <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>
+        return <Badge variant="outline" className="border-yellow-200 bg-yellow-50 text-yellow-700">Pending</Badge>
       case 'COMPLETED':
-        return <Badge className="bg-blue-100 text-blue-800">Completed</Badge>
+        return <Badge variant="outline" className="border-blue-200 bg-blue-50 text-blue-700">Completed</Badge>
       case 'CANCELLED':
-        return <Badge className="bg-red-100 text-red-800">Cancelled</Badge>
+        return <Badge variant="outline" className="border-red-200 bg-red-50 text-red-700">Cancelled</Badge>
       case 'NO_SHOW':
-        return <Badge className="bg-gray-100 text-gray-800">No Show</Badge>
+        return <Badge variant="outline" className="border-gray-200 bg-gray-50 text-gray-700">No Show</Badge>
       default:
         return <Badge>{status}</Badge>
     }
@@ -139,21 +139,18 @@ export default function BusinessBookingsPage() {
 
   if (loading) {
     return (
-      <div className="p-8">
-        <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-gray-200 rounded w-1/4"></div>
-          <div className="h-64 bg-gray-200 rounded"></div>
-        </div>
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
       </div>
     )
   }
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
-      <div className="flex justify-between items-center mb-8">
+    <div className="space-y-8">
+      <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Bookings</h1>
-          <p className="text-gray-600 mt-2">Manage your customer appointments</p>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Bookings</h1>
+          <p className="text-gray-600 mt-1">Manage your customer appointments</p>
         </div>
         <div className="flex gap-4">
           <div className="relative">
@@ -162,31 +159,31 @@ export default function BusinessBookingsPage() {
               placeholder="Search bookings..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 w-64"
+              className="pl-10 w-64 border-gray-300"
             />
           </div>
         </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="mb-6">
-          <TabsTrigger value="upcoming">
+        <TabsList className="grid w-full grid-cols-4 bg-gray-100">
+          <TabsTrigger value="upcoming" className="data-[state=active]:bg-white data-[state=active]:text-indigo-600">
             Upcoming ({bookings.filter(b => new Date(b.date) >= new Date() && !['CANCELLED', 'COMPLETED'].includes(b.status)).length})
           </TabsTrigger>
-          <TabsTrigger value="today">
+          <TabsTrigger value="today" className="data-[state=active]:bg-white data-[state=active]:text-indigo-600">
             Today ({bookings.filter(b => new Date(b.date).toDateString() === new Date().toDateString() && b.status !== 'CANCELLED').length})
           </TabsTrigger>
-          <TabsTrigger value="past">
+          <TabsTrigger value="past" className="data-[state=active]:bg-white data-[state=active]:text-indigo-600">
             Past ({bookings.filter(b => new Date(b.date) < new Date() || b.status === 'COMPLETED').length})
           </TabsTrigger>
-          <TabsTrigger value="cancelled">
+          <TabsTrigger value="cancelled" className="data-[state=active]:bg-white data-[state=active]:text-indigo-600">
             Cancelled ({bookings.filter(b => b.status === 'CANCELLED').length})
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value={activeTab}>
           {filteredBookings.length === 0 ? (
-            <Card>
+            <Card className="border-2 border-dashed border-gray-300">
               <CardContent className="py-12">
                 <EmptyState
                   icon="calendar"
@@ -198,12 +195,12 @@ export default function BusinessBookingsPage() {
           ) : (
             <div className="space-y-4">
               {filteredBookings.map((booking) => (
-                <Card key={booking.id}>
+                <Card key={booking.id} className="border border-gray-200 shadow-sm hover:shadow-md transition-all">
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <div className="flex items-center gap-4 mb-3">
-                          <h3 className="text-lg font-semibold">{booking.service?.name || 'Unknown Service'}</h3>
+                        <div className="flex items-center gap-4 mb-4">
+                          <h3 className="text-lg font-semibold text-gray-900">{booking.service?.name || 'Unknown Service'}</h3>
                           {getStatusBadge(booking.status)}
                         </div>
                         
@@ -245,9 +242,9 @@ export default function BusinessBookingsPage() {
                         </div>
                         
                         {booking.notes && (
-                          <div className="mt-3 p-3 bg-gray-50 rounded text-sm text-gray-600">
-                            <p className="font-medium mb-1">Notes:</p>
-                            <p>{booking.notes}</p>
+                          <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Notes</p>
+                            <p className="text-sm text-gray-700">{booking.notes}</p>
                           </div>
                         )}
                       </div>
@@ -256,9 +253,8 @@ export default function BusinessBookingsPage() {
                         <div className="flex gap-2 ml-4">
                           <Button
                             size="sm"
-                            variant="outline"
                             onClick={() => updateBookingStatus(booking.id, 'CONFIRMED')}
-                            className="text-green-600 hover:text-green-700"
+                            className="bg-green-600 hover:bg-green-700 text-white"
                           >
                             <CheckCircle className="h-4 w-4 mr-1" />
                             Confirm
@@ -267,7 +263,7 @@ export default function BusinessBookingsPage() {
                             size="sm"
                             variant="outline"
                             onClick={() => updateBookingStatus(booking.id, 'CANCELLED')}
-                            className="text-red-600 hover:text-red-700"
+                            className="border-red-300 text-red-600 hover:bg-red-50"
                           >
                             <XCircle className="h-4 w-4 mr-1" />
                             Cancel
@@ -278,8 +274,8 @@ export default function BusinessBookingsPage() {
                       {booking.status === 'CONFIRMED' && new Date(booking.date) < new Date() && (
                         <Button
                           size="sm"
-                          variant="outline"
                           onClick={() => updateBookingStatus(booking.id, 'COMPLETED')}
+                          className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white"
                         >
                           <CheckCircle className="h-4 w-4 mr-1" />
                           Mark Complete
