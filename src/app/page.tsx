@@ -383,7 +383,7 @@ export default function Home() {
                 We&apos;ll help you build your business (and client base) with Treatwell, our easy-to-use salon software.
               </p>
               
-              <div className="space-y-4">
+              <div>
                 <Link href="/business/join">
                   <Button size="xl" className="bg-white text-indigo-600 hover:bg-gray-50 font-semibold transform hover:-translate-y-0.5 transition-all shadow-xl hover:shadow-2xl px-12 py-7 text-lg border border-white/20">
                     Partner with us
@@ -392,7 +392,7 @@ export default function Home() {
                     </svg>
                   </Button>
                 </Link>
-                <p className="text-white/70 text-base">No credit card required • Set up in 5 minutes</p>
+                <p className="text-white/70 text-base mt-8">No credit card required • Set up in 5 minutes</p>
               </div>
             </div>
             
