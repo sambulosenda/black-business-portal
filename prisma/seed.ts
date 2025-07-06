@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, BookingStatus } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
@@ -713,6 +713,187 @@ async function main() {
   // Create some bookings
   const services = await prisma.service.findMany()
   
+  // Get services for Curls & Coils Beauty Bar
+  const curlsServices = services.filter(s => s.businessId === business1.id)
+  const washAndGo = curlsServices.find(s => s.name === 'Wash & Go')!
+  const protectiveStyle = curlsServices.find(s => s.name === 'Protective Style Installation')!
+  const deepCondition = curlsServices.find(s => s.name === 'Deep Conditioning Treatment')!
+
+  // Create July 2025 bookings for Curls & Coils Beauty Bar
+  const julyBookings = [
+    // Week 1
+    {
+      userId: customer1.id,
+      businessId: business1.id,
+      serviceId: washAndGo.id,
+      date: new Date('2025-07-01'),
+      startTime: new Date('2025-07-01T10:00:00'),
+      endTime: new Date('2025-07-01T11:30:00'),
+      status: BookingStatus.CONFIRMED,
+      totalPrice: 65,
+      notes: 'First time client, needs consultation for curl pattern'
+    },
+    {
+      userId: customer2.id,
+      businessId: business1.id,
+      serviceId: protectiveStyle.id,
+      date: new Date('2025-07-02'),
+      startTime: new Date('2025-07-02T09:00:00'),
+      endTime: new Date('2025-07-02T13:00:00'),
+      status: BookingStatus.CONFIRMED,
+      totalPrice: 150,
+      notes: 'Box braids - medium length'
+    },
+    {
+      userId: customer3.id,
+      businessId: business1.id,
+      serviceId: deepCondition.id,
+      date: new Date('2025-07-03'),
+      startTime: new Date('2025-07-03T14:00:00'),
+      endTime: new Date('2025-07-03T15:00:00'),
+      status: BookingStatus.CONFIRMED,
+      totalPrice: 45,
+    },
+    // Week 2
+    {
+      userId: customer1.id,
+      businessId: business1.id,
+      serviceId: protectiveStyle.id,
+      date: new Date('2025-07-08'),
+      startTime: new Date('2025-07-08T11:00:00'),
+      endTime: new Date('2025-07-08T15:00:00'),
+      status: BookingStatus.CONFIRMED,
+      totalPrice: 150,
+      notes: 'Senegalese twists'
+    },
+    {
+      userId: customer2.id,
+      businessId: business1.id,
+      serviceId: washAndGo.id,
+      date: new Date('2025-07-09'),
+      startTime: new Date('2025-07-09T15:00:00'),
+      endTime: new Date('2025-07-09T16:30:00'),
+      status: BookingStatus.PENDING,
+      totalPrice: 65,
+    },
+    {
+      userId: customer3.id,
+      businessId: business1.id,
+      serviceId: washAndGo.id,
+      date: new Date('2025-07-10'),
+      startTime: new Date('2025-07-10T12:00:00'),
+      endTime: new Date('2025-07-10T13:30:00'),
+      status: BookingStatus.CONFIRMED,
+      totalPrice: 65,
+      notes: 'Regular client - prefers light products'
+    },
+    // Week 3
+    {
+      userId: customer1.id,
+      businessId: business1.id,
+      serviceId: deepCondition.id,
+      date: new Date('2025-07-15'),
+      startTime: new Date('2025-07-15T16:00:00'),
+      endTime: new Date('2025-07-15T17:00:00'),
+      status: BookingStatus.CONFIRMED,
+      totalPrice: 45,
+    },
+    {
+      userId: customer2.id,
+      businessId: business1.id,
+      serviceId: washAndGo.id,
+      date: new Date('2025-07-16'),
+      startTime: new Date('2025-07-16T10:00:00'),
+      endTime: new Date('2025-07-16T11:30:00'),
+      status: BookingStatus.CONFIRMED,
+      totalPrice: 65,
+    },
+    {
+      userId: customer3.id,
+      businessId: business1.id,
+      serviceId: protectiveStyle.id,
+      date: new Date('2025-07-17'),
+      startTime: new Date('2025-07-17T09:00:00'),
+      endTime: new Date('2025-07-17T13:00:00'),
+      status: BookingStatus.CONFIRMED,
+      totalPrice: 150,
+      notes: 'Knotless braids - waist length'
+    },
+    // Week 4
+    {
+      userId: customer1.id,
+      businessId: business1.id,
+      serviceId: washAndGo.id,
+      date: new Date('2025-07-22'),
+      startTime: new Date('2025-07-22T14:00:00'),
+      endTime: new Date('2025-07-22T15:30:00'),
+      status: BookingStatus.PENDING,
+      totalPrice: 65,
+    },
+    {
+      userId: customer2.id,
+      businessId: business1.id,
+      serviceId: deepCondition.id,
+      date: new Date('2025-07-23'),
+      startTime: new Date('2025-07-23T11:00:00'),
+      endTime: new Date('2025-07-23T12:00:00'),
+      status: BookingStatus.CONFIRMED,
+      totalPrice: 45,
+      notes: 'Protein treatment needed'
+    },
+    {
+      userId: customer3.id,
+      businessId: business1.id,
+      serviceId: washAndGo.id,
+      date: new Date('2025-07-24'),
+      startTime: new Date('2025-07-24T15:00:00'),
+      endTime: new Date('2025-07-24T16:30:00'),
+      status: BookingStatus.CONFIRMED,
+      totalPrice: 65,
+    },
+    // Last week of July
+    {
+      userId: customer1.id,
+      businessId: business1.id,
+      serviceId: protectiveStyle.id,
+      date: new Date('2025-07-29'),
+      startTime: new Date('2025-07-29T10:00:00'),
+      endTime: new Date('2025-07-29T14:00:00'),
+      status: BookingStatus.PENDING,
+      totalPrice: 150,
+      notes: 'Faux locs installation'
+    },
+    {
+      userId: customer2.id,
+      businessId: business1.id,
+      serviceId: washAndGo.id,
+      date: new Date('2025-07-30'),
+      startTime: new Date('2025-07-30T13:00:00'),
+      endTime: new Date('2025-07-30T14:30:00'),
+      status: BookingStatus.CONFIRMED,
+      totalPrice: 65,
+    },
+    {
+      userId: customer3.id,
+      businessId: business1.id,
+      serviceId: deepCondition.id,
+      date: new Date('2025-07-31'),
+      startTime: new Date('2025-07-31T16:00:00'),
+      endTime: new Date('2025-07-31T17:00:00'),
+      status: BookingStatus.CONFIRMED,
+      totalPrice: 45,
+      notes: 'Monthly deep treatment'
+    },
+  ]
+
+  // Create all July bookings
+  for (const bookingData of julyBookings) {
+    await prisma.booking.create({ data: bookingData })
+  }
+
+  console.log(`✅ Created ${julyBookings.length} bookings for Curls & Coils Beauty Bar in July 2025`)
+
+  // Create original booking (January)
   const booking1 = await prisma.booking.create({
     data: {
       userId: customer1.id,
@@ -721,7 +902,7 @@ async function main() {
       date: new Date('2025-01-20'),
       startTime: new Date('2025-01-20T14:00:00'),
       endTime: new Date('2025-01-20T15:30:00'),
-      status: 'COMPLETED',
+      status: BookingStatus.COMPLETED,
       totalPrice: 65,
     },
   })
@@ -734,7 +915,7 @@ async function main() {
       date: new Date('2025-01-22'),
       startTime: new Date('2025-01-22T15:00:00'),
       endTime: new Date('2025-01-22T15:45:00'),
-      status: 'CONFIRMED',
+      status: BookingStatus.CONFIRMED,
       totalPrice: 35,
     },
   })
@@ -747,7 +928,7 @@ async function main() {
       date: new Date('2025-01-18'),
       startTime: new Date('2025-01-18T11:00:00'),
       endTime: new Date('2025-01-18T12:00:00'),
-      status: 'COMPLETED',
+      status: BookingStatus.COMPLETED,
       totalPrice: 120,
     },
   })
@@ -782,7 +963,7 @@ async function main() {
       date: new Date('2025-01-15'),
       startTime: new Date('2025-01-15T10:00:00'),
       endTime: new Date('2025-01-15T11:30:00'),
-      status: 'COMPLETED',
+      status: BookingStatus.COMPLETED,
       totalPrice: 65,
     },
   })
@@ -795,7 +976,7 @@ async function main() {
       date: new Date('2025-01-10'),
       startTime: new Date('2025-01-10T16:00:00'),
       endTime: new Date('2025-01-10T16:45:00'),
-      status: 'COMPLETED',
+      status: BookingStatus.COMPLETED,
       totalPrice: 35,
     },
   })
