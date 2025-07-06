@@ -63,8 +63,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <Link href="/" className="flex items-center space-x-2 group transition-transform hover:scale-105">
-                <div className="w-10 h-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg">
+              <Link href="/" className="flex items-center space-x-3 group transition-transform hover:scale-105">
+                <div className="w-10 h-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg group-hover:shadow-xl transition-shadow">
                   B
                 </div>
                 <span className="text-xl font-bold text-gray-900">BeautyPortal</span>
@@ -104,7 +104,7 @@ export default function Home() {
                     </Button>
                   </Link>
                   <Link href="/login">
-                    <Button variant="ghost" className="font-medium">Sign in</Button>
+                    <Button variant="ghost" className="font-medium hover:bg-gray-50">Sign in</Button>
                   </Link>
                   <Link href="/signup/customer">
                     <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-md hover:shadow-lg transition-all">
@@ -113,7 +113,7 @@ export default function Home() {
                   </Link>
                   <div className="hidden sm:block ml-2">
                     <Link href="/business/join">
-                      <Button variant="outline" className="border-2 font-medium">
+                      <Button variant="outline" className="border-gray-300 font-medium hover:bg-gray-50">
                         <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                         </svg>
@@ -159,7 +159,7 @@ export default function Home() {
               </div>
               
               {/* Search Bar */}
-              <div className="bg-white rounded-2xl shadow-xl p-6 max-w-2xl border border-gray-100">
+              <div className="bg-white rounded-2xl shadow-lg p-6 max-w-2xl border border-gray-200">
                 <form onSubmit={handleSearch} className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="relative">
@@ -171,7 +171,7 @@ export default function Home() {
                         placeholder='Try "braids", "nails", or "spa"'
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 bg-gray-50 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-xl transition-all text-base"
+                        className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 bg-gray-50 hover:bg-gray-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent rounded-xl transition-all text-base border border-gray-200"
                       />
                     </div>
                     <div className="relative">
@@ -184,7 +184,7 @@ export default function Home() {
                         placeholder="City or neighborhood"
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}
-                        className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 bg-gray-50 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-xl transition-all text-base"
+                        className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 bg-gray-50 hover:bg-gray-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent rounded-xl transition-all text-base border border-gray-200"
                       />
                     </div>
                   </div>
@@ -194,8 +194,8 @@ export default function Home() {
                 </form>
                 
                 {/* Popular Searches */}
-                <div className="mt-6 pt-6 border-t border-gray-100">
-                  <p className="text-sm text-gray-500 mb-3">Popular:</p>
+                <div className="mt-6 pt-6 border-t border-gray-200">
+                  <p className="text-sm text-gray-600 mb-3 font-medium">Popular searches:</p>
                   <div className="flex flex-wrap gap-2">
                     {['Hair Braiding', 'Nail Art', 'Spa Day', 'Lash Extensions', 'Makeup'].map((term) => (
                       <button
@@ -204,7 +204,7 @@ export default function Home() {
                           setSearchQuery(term.toLowerCase())
                           router.push(`/search?q=${encodeURIComponent(term.toLowerCase())}`)
                         }}
-                        className="text-sm px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-medium"
+                        className="text-sm px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg transition-colors font-medium border border-gray-200 hover:border-gray-300"
                       >
                         {term}
                       </button>
@@ -227,30 +227,30 @@ export default function Home() {
                     className="object-cover rounded-3xl"
                   />
                   {/* Floating elements */}
-                  <div className="absolute -top-4 -right-4 bg-white rounded-lg border border-gray-200 p-3 animate-bounce shadow-lg">
-                    <div className="flex items-center gap-2">
+                  <div className="absolute -top-4 -right-4 bg-white rounded-xl border border-gray-200 p-4 animate-bounce shadow-lg">
+                    <div className="flex items-center gap-3">
                       <div className="flex items-center -space-x-2">
-                        <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-sm">
+                          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                           </svg>
                         </div>
                       </div>
                       <div>
-                        <p className="text-sm font-semibold">247 Available Today</p>
+                        <p className="text-sm font-semibold text-gray-900">247 Available Today</p>
                         <p className="text-xs text-gray-600">Book instantly</p>
                       </div>
                     </div>
                   </div>
-                  <div className="absolute -bottom-4 -left-4 bg-white rounded-lg border border-gray-200 p-4 shadow-lg">
+                  <div className="absolute -bottom-4 -left-4 bg-white rounded-xl border border-gray-200 p-4 shadow-lg">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-full flex items-center justify-center">
+                      <div className="w-12 h-12 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center">
                         <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                       </div>
                       <div>
-                        <p className="text-sm font-semibold">Average booking time</p>
+                        <p className="text-sm font-semibold text-gray-900">Average booking time</p>
                         <p className="text-lg font-bold text-indigo-600">28 seconds</p>
                       </div>
                     </div>
@@ -309,7 +309,7 @@ export default function Home() {
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-100 transition duration-300 blur"></div>
                   
                   {/* Main card */}
-                  <div className="relative bg-white rounded-3xl p-8 lg:p-10 h-full flex flex-col border border-gray-100 hover:border-transparent transition-all duration-300 transform group-hover:-translate-y-2 group-hover:shadow-2xl">
+                  <div className="relative bg-white rounded-3xl p-8 lg:p-10 h-full flex flex-col border border-gray-200 hover:border-transparent transition-all duration-300 transform group-hover:-translate-y-2 group-hover:shadow-2xl">
                     {/* Icon container with animation */}
                     <div className="relative mb-8">
                       <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all"></div>
@@ -380,14 +380,14 @@ export default function Home() {
             
             <div className="mb-8 space-y-4">
               <Link href="/business/join">
-                <Button size="xl" className="bg-white text-indigo-600 hover:bg-gray-50 font-bold transform hover:-translate-y-0.5 transition-all shadow-xl hover:shadow-2xl px-10 py-6 text-lg">
+                <Button size="xl" className="bg-white text-indigo-600 hover:bg-gray-50 font-bold transform hover:-translate-y-0.5 transition-all shadow-xl hover:shadow-2xl px-10 py-6 text-lg border border-white/20">
                   Learn More
                   <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </Button>
               </Link>
-              <p className="text-white/70 text-sm">No credit card required • Set up in 5 minutes</p>
+              <p className="text-white/80 text-sm">No credit card required • Set up in 5 minutes</p>
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto mt-12">
@@ -453,15 +453,15 @@ export default function Home() {
                 rating: 5
               }
             ].map((testimonial, index) => (
-              <div key={index} className="bg-white rounded-2xl p-8 border border-gray-200">
+              <div key={index} className="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm hover:shadow-md transition-all">
                 <div className="flex mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <svg key={i} className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
                   ))}
                 </div>
-                <p className="text-gray-700 mb-6 leading-relaxed">&ldquo;{testimonial.content}&rdquo;</p>
+                <p className="text-gray-700 mb-6 leading-relaxed italic">&ldquo;{testimonial.content}&rdquo;</p>
                 <div>
                   <p className="font-semibold text-gray-900">{testimonial.name}</p>
                   <p className="text-sm text-gray-600">{testimonial.role}</p>

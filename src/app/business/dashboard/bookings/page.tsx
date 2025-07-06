@@ -165,7 +165,7 @@ export default function BusinessBookingsPage() {
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
+      <Tabs defaultValue="upcoming" value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-4 bg-gray-100">
           <TabsTrigger value="upcoming" className="data-[state=active]:bg-white data-[state=active]:text-indigo-600">
             Upcoming ({bookings.filter(b => new Date(b.date) >= new Date() && !['CANCELLED', 'COMPLETED'].includes(b.status)).length})
@@ -181,14 +181,14 @@ export default function BusinessBookingsPage() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value={activeTab}>
+        <TabsContent value="upcoming">
           {filteredBookings.length === 0 ? (
             <Card className="border-2 border-dashed border-gray-300">
               <CardContent className="py-12">
                 <EmptyState
                   icon="calendar"
-                  title={`No ${activeTab} bookings`}
-                  description={`You don't have any ${activeTab} bookings at the moment`}
+                  title="No upcoming bookings"
+                  description="You don't have any upcoming bookings at the moment"
                 />
               </CardContent>
             </Card>
@@ -281,6 +281,264 @@ export default function BusinessBookingsPage() {
                           Mark Complete
                         </Button>
                       )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="today">
+          {filteredBookings.length === 0 ? (
+            <Card className="border-2 border-dashed border-gray-300">
+              <CardContent className="py-12">
+                <EmptyState
+                  icon="calendar"
+                  title="No bookings today"
+                  description="You don't have any bookings scheduled for today"
+                />
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="space-y-4">
+              {filteredBookings.map((booking) => (
+                <Card key={booking.id} className="border border-gray-200 shadow-sm hover:shadow-md transition-all">
+                  <CardContent className="p-6">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-4 mb-4">
+                          <h3 className="text-lg font-semibold text-gray-900">{booking.service?.name || 'Unknown Service'}</h3>
+                          {getStatusBadge(booking.status)}
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-gray-600">
+                              <User className="h-4 w-4" />
+                              <span>{booking.user?.name || 'Unknown Customer'}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-gray-600">
+                              <Mail className="h-4 w-4" />
+                              <span>{booking.user?.email || 'No email'}</span>
+                            </div>
+                            {booking.user?.phone && (
+                              <div className="flex items-center gap-2 text-gray-600">
+                                <Phone className="h-4 w-4" />
+                                <span>{booking.user.phone}</span>
+                              </div>
+                            )}
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-gray-600">
+                              <Calendar className="h-4 w-4" />
+                              <span>{format(new Date(booking.date), 'EEEE, MMMM d, yyyy')}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-gray-600">
+                              <Clock className="h-4 w-4" />
+                              <span>
+                                {format(new Date(booking.startTime), 'h:mm a')} - 
+                                {format(new Date(booking.endTime), 'h:mm a')}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2 text-gray-600">
+                              <DollarSign className="h-4 w-4" />
+                              <span className="font-medium">${booking.totalPrice}</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {booking.notes && (
+                          <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Notes</p>
+                            <p className="text-sm text-gray-700">{booking.notes}</p>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {booking.status === 'PENDING' && (
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            onClick={() => updateBookingStatus(booking.id, 'CONFIRMED')}
+                            className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white"
+                          >
+                            <CheckCircle className="h-4 w-4 mr-1" />
+                            Confirm
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => updateBookingStatus(booking.id, 'CANCELLED')}
+                            className="border-red-300 text-red-600 hover:bg-red-50"
+                          >
+                            <XCircle className="h-4 w-4 mr-1" />
+                            Cancel
+                          </Button>
+                        </div>
+                      )}
+                      
+                      {booking.status === 'CONFIRMED' && new Date(booking.date) < new Date() && (
+                        <Button
+                          size="sm"
+                          onClick={() => updateBookingStatus(booking.id, 'COMPLETED')}
+                          className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white"
+                        >
+                          <CheckCircle className="h-4 w-4 mr-1" />
+                          Mark Complete
+                        </Button>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="past">
+          {filteredBookings.length === 0 ? (
+            <Card className="border-2 border-dashed border-gray-300">
+              <CardContent className="py-12">
+                <EmptyState
+                  icon="calendar"
+                  title="No past bookings"
+                  description="Past bookings will appear here"
+                />
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="space-y-4">
+              {filteredBookings.map((booking) => (
+                <Card key={booking.id} className="border border-gray-200 shadow-sm hover:shadow-md transition-all">
+                  <CardContent className="p-6">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-4 mb-4">
+                          <h3 className="text-lg font-semibold text-gray-900">{booking.service?.name || 'Unknown Service'}</h3>
+                          {getStatusBadge(booking.status)}
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-gray-600">
+                              <User className="h-4 w-4" />
+                              <span>{booking.user?.name || 'Unknown Customer'}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-gray-600">
+                              <Mail className="h-4 w-4" />
+                              <span>{booking.user?.email || 'No email'}</span>
+                            </div>
+                            {booking.user?.phone && (
+                              <div className="flex items-center gap-2 text-gray-600">
+                                <Phone className="h-4 w-4" />
+                                <span>{booking.user.phone}</span>
+                              </div>
+                            )}
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-gray-600">
+                              <Calendar className="h-4 w-4" />
+                              <span>{format(new Date(booking.date), 'EEEE, MMMM d, yyyy')}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-gray-600">
+                              <Clock className="h-4 w-4" />
+                              <span>
+                                {format(new Date(booking.startTime), 'h:mm a')} - 
+                                {format(new Date(booking.endTime), 'h:mm a')}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2 text-gray-600">
+                              <DollarSign className="h-4 w-4" />
+                              <span className="font-medium">${booking.totalPrice}</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {booking.notes && (
+                          <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Notes</p>
+                            <p className="text-sm text-gray-700">{booking.notes}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="cancelled">
+          {filteredBookings.length === 0 ? (
+            <Card className="border-2 border-dashed border-gray-300">
+              <CardContent className="py-12">
+                <EmptyState
+                  icon="calendar"
+                  title="No cancelled bookings"
+                  description="Cancelled bookings will appear here"
+                />
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="space-y-4">
+              {filteredBookings.map((booking) => (
+                <Card key={booking.id} className="border border-gray-200 shadow-sm hover:shadow-md transition-all">
+                  <CardContent className="p-6">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-4 mb-4">
+                          <h3 className="text-lg font-semibold text-gray-900">{booking.service?.name || 'Unknown Service'}</h3>
+                          {getStatusBadge(booking.status)}
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-gray-600">
+                              <User className="h-4 w-4" />
+                              <span>{booking.user?.name || 'Unknown Customer'}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-gray-600">
+                              <Mail className="h-4 w-4" />
+                              <span>{booking.user?.email || 'No email'}</span>
+                            </div>
+                            {booking.user?.phone && (
+                              <div className="flex items-center gap-2 text-gray-600">
+                                <Phone className="h-4 w-4" />
+                                <span>{booking.user.phone}</span>
+                              </div>
+                            )}
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-gray-600">
+                              <Calendar className="h-4 w-4" />
+                              <span>{format(new Date(booking.date), 'EEEE, MMMM d, yyyy')}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-gray-600">
+                              <Clock className="h-4 w-4" />
+                              <span>
+                                {format(new Date(booking.startTime), 'h:mm a')} - 
+                                {format(new Date(booking.endTime), 'h:mm a')}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2 text-gray-600">
+                              <DollarSign className="h-4 w-4" />
+                              <span className="font-medium">${booking.totalPrice}</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {booking.notes && (
+                          <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Notes</p>
+                            <p className="text-sm text-gray-700">{booking.notes}</p>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
