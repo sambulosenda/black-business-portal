@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -45,9 +45,10 @@ export default function CalendarPage() {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null)
   const [showCancelDialog, setShowCancelDialog] = useState(false)
   const [actionLoading, setActionLoading] = useState(false)
+  const [viewChanging, setViewChanging] = useState(false)
 
   // Calculate date ranges based on view mode
-  const getDateRange = () => {
+  const getDateRange = React.useCallback(() => {
     switch (viewMode) {
       case 'day':
         return {
@@ -68,16 +69,18 @@ export default function CalendarPage() {
           end: endOfWeek(monthEnd)
         }
     }
-  }
+  }, [viewMode, currentDate])
 
   // Fetch bookings for the current view
   useEffect(() => {
     const fetchBookings = async () => {
+      console.log('Fetching bookings for view:', viewMode, 'date:', currentDate);
       setLoading(true)
       setError(null)
       
       try {
         const { start, end } = getDateRange()
+        console.log('Date range:', start, 'to', end);
         const response = await fetch(`/api/business/bookings?startDate=${start.toISOString()}&endDate=${end.toISOString()}`)
         
         if (!response.ok) {
@@ -85,7 +88,8 @@ export default function CalendarPage() {
         }
         
         const data = await response.json()
-        setBookings(data.bookings)
+        console.log('Fetched bookings:', data.bookings.length);
+        setBookings(data.bookings || [])
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred')
         console.error('Error fetching bookings:', err)
@@ -95,7 +99,7 @@ export default function CalendarPage() {
     }
 
     fetchBookings()
-  }, [currentDate, viewMode])
+  }, [currentDate, viewMode, getDateRange])
 
   // Navigation handlers
   const goToPrevious = () => {
@@ -455,13 +459,8 @@ export default function CalendarPage() {
     )
   }
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    )
-  }
+  // Remove the early return for loading state to allow the page to render
+  // We'll handle loading state within the calendar card instead
 
   if (error) {
     return (
@@ -477,14 +476,14 @@ export default function CalendarPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Calendar</h1>
-        <p className="text-muted-foreground">View and manage your appointments</p>
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Calendar</h1>
+        <p className="text-gray-600 mt-1">View and manage your appointments</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Calendar View - Takes up 2 columns */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
+        <Card className="lg:col-span-2 border border-gray-200 shadow-sm hover:shadow-md transition-all">
+          <CardHeader className="border-b border-gray-100">
             <div className="flex items-center justify-between">
               <CardTitle className="text-xl">
                 {viewMode === 'month' && format(currentDate, 'MMMM yyyy')}
@@ -492,11 +491,14 @@ export default function CalendarPage() {
                 {viewMode === 'day' && format(currentDate, 'EEEE, MMMM d, yyyy')}
               </CardTitle>
               <div className="flex items-center gap-2">
-                <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as ViewMode)}>
-                  <TabsList>
-                    <TabsTrigger value="day">Day</TabsTrigger>
-                    <TabsTrigger value="week">Week</TabsTrigger>
-                    <TabsTrigger value="month">Month</TabsTrigger>
+                <Tabs value={viewMode} onValueChange={(v) => {
+                  console.log('View mode changing from', viewMode, 'to', v);
+                  setViewMode(v as ViewMode);
+                }}>
+                  <TabsList className="bg-gray-100">
+                    <TabsTrigger value="day" className="data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-sm">Day</TabsTrigger>
+                    <TabsTrigger value="week" className="data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-sm">Week</TabsTrigger>
+                    <TabsTrigger value="month" className="data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-sm">Month</TabsTrigger>
                   </TabsList>
                 </Tabs>
                 <Button 
@@ -504,6 +506,7 @@ export default function CalendarPage() {
                   size="icon"
                   onClick={goToPrevious}
                   title="Previous"
+                  className="border-gray-300 hover:bg-gray-50"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
@@ -511,6 +514,7 @@ export default function CalendarPage() {
                   variant="outline" 
                   size="sm"
                   onClick={goToToday}
+                  className="border-gray-300 hover:bg-gray-50"
                 >
                   Today
                 </Button>
@@ -519,6 +523,7 @@ export default function CalendarPage() {
                   size="icon"
                   onClick={goToNext}
                   title="Next"
+                  className="border-gray-300 hover:bg-gray-50"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
@@ -526,15 +531,24 @@ export default function CalendarPage() {
             </div>
           </CardHeader>
           <CardContent className="p-0">
-            {viewMode === 'month' && renderMonthView()}
-            {viewMode === 'week' && renderWeekView()}
-            {viewMode === 'day' && renderDayView()}
+            {loading ? (
+              <div className="flex items-center justify-center h-[600px]">
+                <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+              </div>
+            ) : (
+              <>
+                <div className="text-xs text-gray-500 p-2 text-center">Current view: {viewMode}</div>
+                {viewMode === 'month' && renderMonthView()}
+                {viewMode === 'week' && renderWeekView()}
+                {viewMode === 'day' && renderDayView()}
+              </>
+            )}
           </CardContent>
         </Card>
 
         {/* Selected Booking Details - Takes up 1 column */}
-        <Card>
-          <CardHeader>
+        <Card className="border border-gray-200 shadow-sm">
+          <CardHeader className="border-b border-gray-100">
             <CardTitle className="text-lg">
               {selectedBooking ? 'Booking Details' : format(selectedDate, 'EEEE, MMMM d')}
             </CardTitle>
@@ -712,9 +726,9 @@ export default function CalendarPage() {
       </div>
 
       {/* Calendar Legend */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-sm">Legend</CardTitle>
+      <Card className="border border-gray-200 shadow-sm">
+        <CardHeader className="border-b border-gray-100">
+          <CardTitle className="text-sm font-semibold text-gray-900">Legend</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-4 text-sm">

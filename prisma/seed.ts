@@ -6,11 +6,17 @@ const prisma = new PrismaClient()
 async function main() {
   console.log('🌱 Starting seed...')
 
-  // Clean existing data
+  // Clean existing data in the correct order
   await prisma.review.deleteMany()
+  await prisma.orderItem.deleteMany()
+  await prisma.order.deleteMany()
   await prisma.booking.deleteMany()
+  await prisma.product.deleteMany()
+  await prisma.productCategory.deleteMany()
   await prisma.service.deleteMany()
+  await prisma.promotion.deleteMany()
   await prisma.availability.deleteMany()
+  await prisma.staff.deleteMany()
   await prisma.business.deleteMany()
   await prisma.user.deleteMany()
 
