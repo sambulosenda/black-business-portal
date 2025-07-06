@@ -18,15 +18,15 @@ export default function Navigation({ session }: NavigationProps) {
   const isActive = (path: string) => pathname === path
 
   return (
-    <nav className="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-200">
+    <nav className="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2 group hover-scale-sm transition-transform">
-              <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold group-hover:bg-indigo-700 transition-colors">
+              <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold group-hover:shadow-lg transition-all">
                 B
               </div>
-              <span className="text-xl font-bold text-gray-900">BeautyPortal</span>
+              <span className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">BeautyPortal</span>
             </Link>
             
             {/* Desktop Navigation Links */}
@@ -34,7 +34,7 @@ export default function Navigation({ session }: NavigationProps) {
               <Link href="/search">
                 <Button 
                   variant="ghost" 
-                  className={isActive('/search') ? 'bg-gray-100' : ''}
+                  className={isActive('/search') ? 'bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700' : 'hover:bg-gray-50'}
                 >
                   Find Services
                 </Button>
@@ -43,7 +43,7 @@ export default function Navigation({ session }: NavigationProps) {
                 <Link href="/bookings">
                   <Button 
                     variant="ghost"
-                    className={isActive('/bookings') ? 'bg-gray-100' : ''}
+                    className={isActive('/bookings') ? 'bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700' : 'hover:bg-gray-50'}
                   >
                     My Bookings
                   </Button>
@@ -58,7 +58,7 @@ export default function Navigation({ session }: NavigationProps) {
             {session ? (
               <>
                 <Link href={session.user.role === 'BUSINESS_OWNER' ? '/business/dashboard' : '/dashboard'}>
-                  <Button variant="ghost" className={isActive('/dashboard') || isActive('/business/dashboard') ? 'bg-gray-100' : ''}>
+                  <Button variant="ghost" className={isActive('/dashboard') || isActive('/business/dashboard') ? 'bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700' : 'hover:bg-gray-50'}>
                     Dashboard
                   </Button>
                 </Link>
@@ -72,10 +72,10 @@ export default function Navigation({ session }: NavigationProps) {
                   <Button variant="ghost">Sign in</Button>
                 </Link>
                 <Link href="/signup/customer">
-                  <Button>Sign up</Button>
+                  <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-sm hover:shadow-md transition-all">Sign up</Button>
                 </Link>
                 <Link href="/signup/business">
-                  <Button variant="outline">
+                  <Button variant="outline" className="border-indigo-200 text-indigo-700 hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 hover:border-indigo-300 transition-all">
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
@@ -91,7 +91,7 @@ export default function Navigation({ session }: NavigationProps) {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-indigo-600 hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 transition-all"
             >
               <span className="sr-only">Open main menu</span>
               {isMobileMenuOpen ? (
@@ -145,7 +145,7 @@ export default function Navigation({ session }: NavigationProps) {
                   </Button>
                 </Link>
                 <Link href="/signup/customer" className="block">
-                  <Button fullWidth>Sign up</Button>
+                  <Button fullWidth className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-sm hover:shadow-md transition-all">Sign up</Button>
                 </Link>
                 <Link href="/signup/business" className="block">
                   <Button variant="outline" fullWidth>
