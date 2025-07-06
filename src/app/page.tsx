@@ -383,7 +383,7 @@ export default function Home() {
                 We&apos;ll help you build your business (and client base) with Treatwell, our easy-to-use salon software.
               </p>
               
-              <div className="mb-16 space-y-4">
+              <div className="space-y-4">
                 <Link href="/business/join">
                   <Button size="xl" className="bg-white text-indigo-600 hover:bg-gray-50 font-semibold transform hover:-translate-y-0.5 transition-all shadow-xl hover:shadow-2xl px-12 py-7 text-lg border border-white/20">
                     Partner with us
@@ -393,32 +393,6 @@ export default function Home() {
                   </Button>
                 </Link>
                 <p className="text-white/70 text-base">No credit card required • Set up in 5 minutes</p>
-              </div>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/15 transition-colors">
-                  <svg className="w-8 h-8 text-white mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <h3 className="text-white font-semibold text-base mb-2">Zero listing fees</h3>
-                  <p className="text-white/70 text-sm leading-relaxed">Only pay when you get bookings</p>
-                </div>
-                
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/15 transition-colors">
-                  <svg className="w-8 h-8 text-white mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                  </svg>
-                  <h3 className="text-white font-semibold text-base mb-2">Increase revenue 40%</h3>
-                  <p className="text-white/70 text-sm leading-relaxed">Average growth in first 3 months</p>
-                </div>
-                
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/15 transition-colors">
-                  <svg className="w-8 h-8 text-white mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                  </svg>
-                  <h3 className="text-white font-semibold text-base mb-2">24/7 Support</h3>
-                  <p className="text-white/70 text-sm leading-relaxed">We&apos;re here to help you succeed</p>
-                </div>
               </div>
             </div>
             
