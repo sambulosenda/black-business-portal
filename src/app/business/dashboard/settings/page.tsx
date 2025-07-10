@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { prisma } from "@/lib/prisma"
 import StripeConnectSection from "./stripe-connect-section"
 import BusinessProfileForm from "./business-profile-form"
+import PhotoManager from "@/components/business/photo-manager"
 
 export default async function BusinessSettingsPage() {
   const session = await requireAuth()
@@ -48,6 +49,9 @@ export default async function BusinessSettingsPage() {
       <div className="space-y-8">
         {/* Business Profile Section */}
         <BusinessProfileForm business={business} />
+
+        {/* Business Photos Section */}
+        <PhotoManager businessId={business.id} />
 
         {/* Stripe Connect Section */}
         <StripeConnectSection 

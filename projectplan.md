@@ -64,11 +64,11 @@ This plan outlines the steps to complete the business portal application, focusi
 ## Phase 4: Customer Experience Improvements
 
 ### TODO List
-- [ ] Implement business photo upload (hero image, gallery photos)
-  - [ ] Add image upload to business profile form
-  - [ ] Create hero image display on business pages
-  - [ ] Build photo gallery management
-  - [ ] Implement image optimization and storage
+- [x] Implement business photo upload (hero image, gallery photos)
+  - [x] Add image upload to business profile form
+  - [x] Create hero image display on business pages
+  - [x] Build photo gallery management
+  - [x] Implement image optimization and storage
 - [ ] Implement advanced search filters (location, price, availability)
 - [ ] Add favorites/saved businesses feature
 - [ ] Enhance booking history with rebooking option
