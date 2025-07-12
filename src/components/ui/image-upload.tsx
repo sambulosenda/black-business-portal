@@ -66,16 +66,23 @@ export function ImageUpload({
       const { uploadUrl, publicUrl } = await presignedResponse.json()
 
       // Step 2: Upload to S3
+      console.log('Uploading to S3 with URL:', uploadUrl)
       const uploadResponse = await fetch(uploadUrl, {
         method: 'PUT',
         body: file,
         headers: {
           'Content-Type': file.type,
         },
+        mode: 'cors',
       })
 
+      console.log('S3 upload response status:', uploadResponse.status)
+      console.log('S3 upload response headers:', uploadResponse.headers)
+
       if (!uploadResponse.ok) {
-        throw new Error('Failed to upload file to S3')
+        const responseText = await uploadResponse.text()
+        console.error('S3 upload failed:', responseText)
+        throw new Error(`Failed to upload file to S3: ${uploadResponse.status} ${uploadResponse.statusText}`)
       }
 
       // Step 3: Save to database

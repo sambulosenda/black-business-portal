@@ -37,6 +37,9 @@ export default async function BusinessSettingsPage() {
     redirect('/business/dashboard')
   }
 
+  // Separate commissionRate from the rest of the business data
+  const { commissionRate, stripeAccountId, stripeOnboarded, ...businessProfile } = business
+
   return (
     <div className="space-y-8">
       <div>
@@ -48,7 +51,7 @@ export default async function BusinessSettingsPage() {
 
       <div className="space-y-8">
         {/* Business Profile Section */}
-        <BusinessProfileForm business={business} />
+        <BusinessProfileForm business={businessProfile} />
 
         {/* Business Photos Section */}
         <PhotoManager businessId={business.id} />
@@ -57,9 +60,9 @@ export default async function BusinessSettingsPage() {
         <StripeConnectSection 
           businessId={business.id}
           businessName={business.businessName}
-          stripeAccountId={business.stripeAccountId}
-          stripeOnboarded={business.stripeOnboarded}
-          commissionRate={Number(business.commissionRate)}
+          stripeAccountId={stripeAccountId}
+          stripeOnboarded={stripeOnboarded}
+          commissionRate={Number(commissionRate)}
         />
       </div>
     </div>

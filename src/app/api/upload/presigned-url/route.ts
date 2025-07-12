@@ -56,8 +56,25 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error('Error generating presigned URL:', error)
+    
+    // Provide more specific error messages
+    if (error instanceof Error) {
+      if (error.message.includes('credentials')) {
+        return NextResponse.json(
+          { error: 'AWS credentials not configured properly. Please check environment variables.' },
+          { status: 500 }
+        )
+      }
+      if (error.message.includes('bucket')) {
+        return NextResponse.json(
+          { error: 'S3 bucket configuration error. Please check AWS_S3_BUCKET_NAME.' },
+          { status: 500 }
+        )
+      }
+    }
+    
     return NextResponse.json(
-      { error: 'Failed to generate upload URL' },
+      { error: 'Failed to generate upload URL. Please check server logs.' },
       { status: 500 }
     )
   }

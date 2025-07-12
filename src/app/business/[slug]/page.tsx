@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
+import { S3Image } from '@/components/ui/s3-image'
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/session'
 import Navigation from '@/components/navigation'
@@ -101,7 +101,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
       {/* Hero Image */}
       {business.photos.some(p => p.type === 'HERO') && (
         <div className="relative h-[400px] w-full">
-          <Image
+          <S3Image
             src={business.photos.find(p => p.type === 'HERO')!.url}
             alt={`${business.businessName} hero image`}
             fill

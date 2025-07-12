@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Image from 'next/image'
 import { PhotoType } from '@prisma/client'
+import { S3Image } from '@/components/ui/s3-image'
 import { ImageUpload } from '@/components/ui/image-upload'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -22,7 +22,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
-import { deleteS3Object } from '@/lib/s3'
 
 interface Photo {
   id: string
@@ -42,9 +41,12 @@ interface PhotoManagerProps {
 export default function PhotoManager({ businessId }: PhotoManagerProps) {
   const [photos, setPhotos] = useState<Photo[]>([])
   const [loading, setLoading] = useState(true)
-  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null)
   const [editingPhoto, setEditingPhoto] = useState<Photo | null>(null)
-  const [editForm, setEditForm] = useState({
+  const [editForm, setEditForm] = useState<{
+    type: PhotoType;
+    caption: string;
+    order: number;
+  }>({
     type: PhotoType.GALLERY,
     caption: '',
     order: 0,
@@ -67,7 +69,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
     }
   }
 
-  const handleUploadComplete = (url: string) => {
+  const handleUploadComplete = () => {
     fetchPhotos()
   }
 
@@ -118,10 +120,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
     if (!confirm('Are you sure you want to delete this photo?')) return
 
     try {
-      // Delete from S3 first
-      await deleteS3Object(photo.url)
-      
-      // Then delete from database
+      // Delete photo (API will handle S3 deletion)
       const response = await fetch(`/api/business/photos?photoId=${photo.id}`, {
         method: 'DELETE',
       })
@@ -169,7 +168,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
               {heroPhoto ? (
                 <div className="relative group">
                   <div className="aspect-[16/9] relative rounded-lg overflow-hidden border border-gray-200">
-                    <Image
+                    <S3Image
                       src={heroPhoto.url}
                       alt="Hero image"
                       fill
@@ -225,7 +224,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
                         className="relative aspect-square rounded-lg overflow-hidden border-2 border-gray-200 hover:border-indigo-500 cursor-pointer transition-colors group"
                         onClick={() => handleSetAsHero(photo)}
                       >
-                        <Image
+                        <S3Image
                           src={photo.url}
                           alt="Gallery image"
                           fill
@@ -257,7 +256,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
                   {galleryPhotos.map(photo => (
                     <div key={photo.id} className="relative group">
                       <div className="aspect-square relative rounded-lg overflow-hidden border border-gray-200">
-                        <Image
+                        <S3Image
                           src={photo.url}
                           alt="Gallery image"
                           fill
@@ -317,7 +316,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
               {logoPhoto ? (
                 <div className="flex items-center gap-6">
                   <div className="relative w-32 h-32 rounded-lg overflow-hidden border border-gray-200 group">
-                    <Image
+                    <S3Image
                       src={logoPhoto.url}
                       alt="Business logo"
                       fill
@@ -371,8 +370,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
                   <SelectItem value={PhotoType.HERO}>Hero Image</SelectItem>
                   <SelectItem value={PhotoType.GALLERY}>Gallery</SelectItem>
                   <SelectItem value={PhotoType.LOGO}>Logo</SelectItem>
-                  <SelectItem value={PhotoType.STAFF}>Staff</SelectItem>
-                  <SelectItem value={PhotoType.SERVICE}>Service</SelectItem>
+                  <SelectItem value={PhotoType.BANNER}>Banner</SelectItem>
                 </SelectContent>
               </Select>
             </div>

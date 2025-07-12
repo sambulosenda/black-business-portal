@@ -9,7 +9,7 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { Session } from 'next-auth'
 import { useCart } from '@/contexts/cart-context'
 import { ShoppingCart, ImageIcon } from 'lucide-react'
-import Image from 'next/image'
+import { S3Image } from '@/components/ui/s3-image'
 
 interface Business {
   id: string
@@ -249,10 +249,11 @@ export default function BusinessProfileTabs({ business, averageRating, session }
                           >
                             <div className="aspect-square bg-gray-100 relative">
                               {product.images.length > 0 ? (
-                                <img
+                                <S3Image
                                   src={product.images[0]}
                                   alt={product.name}
-                                  className="w-full h-full object-cover"
+                                  fill
+                                  className="object-cover"
                                 />
                               ) : (
                                 <div className="w-full h-full flex items-center justify-center">
@@ -330,10 +331,11 @@ export default function BusinessProfileTabs({ business, averageRating, session }
                           >
                             <div className="aspect-square bg-gray-100 relative">
                               {product.images.length > 0 ? (
-                                <img
+                                <S3Image
                                   src={product.images[0]}
                                   alt={product.name}
-                                  className="w-full h-full object-cover"
+                                  fill
+                                  className="object-cover"
                                 />
                               ) : (
                                 <div className="w-full h-full flex items-center justify-center">
@@ -402,10 +404,11 @@ export default function BusinessProfileTabs({ business, averageRating, session }
                           >
                             <div className="aspect-square bg-gray-100 relative">
                               {product.images.length > 0 ? (
-                                <img
+                                <S3Image
                                   src={product.images[0]}
                                   alt={product.name}
-                                  className="w-full h-full object-cover"
+                                  fill
+                                  className="object-cover"
                                 />
                               ) : (
                                 <div className="w-full h-full flex items-center justify-center">
@@ -695,7 +698,7 @@ export default function BusinessProfileTabs({ business, averageRating, session }
                   .sort((a, b) => a.order - b.order)
                   .map((photo) => (
                     <div key={photo.id} className="group relative aspect-square rounded-lg overflow-hidden bg-gray-100">
-                      <Image
+                      <S3Image
                         src={photo.url}
                         alt={photo.caption || 'Gallery image'}
                         fill

@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma as db } from '@/lib/prisma'
 import { PhotoType } from '@prisma/client'
+import { deleteS3Object } from '@/lib/s3'
 
 export async function GET(request: NextRequest) {
   try {
@@ -143,6 +144,14 @@ export async function DELETE(request: NextRequest) {
 
     if (!photo) {
       return NextResponse.json({ error: 'Photo not found' }, { status: 404 })
+    }
+
+    // Delete from S3
+    try {
+      await deleteS3Object(photo.url)
+    } catch (s3Error) {
+      console.error('Failed to delete from S3:', s3Error)
+      // Continue with database deletion even if S3 fails
     }
 
     // Soft delete by setting isActive to false
