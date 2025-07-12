@@ -4,6 +4,7 @@ import { getSession } from '@/lib/session'
 import Navigation from '@/components/navigation'
 import Footer from '@/components/footer'
 import BusinessHero from './components/business-hero'
+import StickyHeader from './components/sticky-header'
 import FloatingActions from './components/floating-actions'
 import ServicesSection from './components/services-section'
 import ProductsSection from './components/products-section'
@@ -121,6 +122,11 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
         averageRating={averageRating}
         totalReviews={totalReviews}
         isOpenNow={isOpenNow}
+      />
+
+      <StickyHeader 
+        business={serializedBusiness}
+        session={session}
       />
 
       <FloatingActions 

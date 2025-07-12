@@ -24,7 +24,7 @@ export default function ServicesSection({ services, businessSlug, session, revie
   const popularServices = servicePopularity.slice(0, 3).filter(s => s.mentions > 0)
   
   return (
-    <section>
+    <section id="services">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Services</h2>

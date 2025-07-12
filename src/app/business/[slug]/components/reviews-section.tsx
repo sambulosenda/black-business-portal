@@ -19,7 +19,7 @@ export default function ReviewsSection({ reviews, averageRating, totalReviews, b
   })
   
   return (
-    <section className="bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/50 rounded-2xl p-8 border border-indigo-100/50">
+    <section id="reviews" className="bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/50 rounded-2xl p-8 border border-indigo-100/50">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Customer Reviews</h2>
