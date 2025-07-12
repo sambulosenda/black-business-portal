@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
+import crypto from 'crypto'
+import { sendVerificationEmail } from '@/lib/email'
 
 const signupSchema = z.object({
   ownerName: z.string().min(2),
@@ -91,10 +93,27 @@ export async function POST(req: Request) {
       return { user, business }
     })
 
+    // Generate verification token
+    const token = crypto.randomUUID()
+    const expires = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+
+    // Create verification token
+    await prisma.verificationToken.create({
+      data: {
+        identifier: validatedData.email,
+        token,
+        expires
+      }
+    })
+
+    // Send verification email
+    await sendVerificationEmail(validatedData.email, validatedData.ownerName, token)
+
     return NextResponse.json({
-      message: 'Business account created successfully',
+      message: 'Business account created successfully. Please check your email to verify your account.',
       userId: result.user.id,
       businessId: result.business.id,
+      requiresVerification: true
     })
   } catch (error) {
     if (error instanceof z.ZodError) {
