@@ -8,7 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Session } from 'next-auth'
 import { useCart } from '@/contexts/cart-context'
-import { ShoppingCart } from 'lucide-react'
+import { ShoppingCart, ImageIcon } from 'lucide-react'
+import { S3Image } from '@/components/ui/s3-image'
 
 interface Business {
   id: string
@@ -67,6 +68,13 @@ interface Business {
     startTime: string
     endTime: string
   }[]
+  photos: {
+    id: string
+    url: string
+    type: string
+    caption: string | null
+    order: number
+  }[]
 }
 
 interface BusinessProfileTabsProps {
@@ -95,7 +103,7 @@ export default function BusinessProfileTabs({ business, averageRating, session }
 
   return (
     <Tabs defaultValue="services" className="w-full">
-      <TabsList className="grid w-full grid-cols-5 mb-8">
+      <TabsList className="grid w-full grid-cols-6 mb-8">
         <TabsTrigger value="services" className="gap-2">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
@@ -123,6 +131,13 @@ export default function BusinessProfileTabs({ business, averageRating, session }
           </svg>
           <span className="hidden sm:inline">Reviews</span>
           <span className="sm:hidden">{business.reviews.length}</span>
+        </TabsTrigger>
+        <TabsTrigger value="gallery" className="gap-2">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <span className="hidden sm:inline">Gallery</span>
+          <span className="sm:hidden">{business.photos.filter(p => p.type === 'GALLERY').length}</span>
         </TabsTrigger>
         <TabsTrigger value="hours" className="gap-2">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -234,10 +249,11 @@ export default function BusinessProfileTabs({ business, averageRating, session }
                           >
                             <div className="aspect-square bg-gray-100 relative">
                               {product.images.length > 0 ? (
-                                <img
+                                <S3Image
                                   src={product.images[0]}
                                   alt={product.name}
-                                  className="w-full h-full object-cover"
+                                  fill
+                                  className="object-cover"
                                 />
                               ) : (
                                 <div className="w-full h-full flex items-center justify-center">
@@ -315,10 +331,11 @@ export default function BusinessProfileTabs({ business, averageRating, session }
                           >
                             <div className="aspect-square bg-gray-100 relative">
                               {product.images.length > 0 ? (
-                                <img
+                                <S3Image
                                   src={product.images[0]}
                                   alt={product.name}
-                                  className="w-full h-full object-cover"
+                                  fill
+                                  className="object-cover"
                                 />
                               ) : (
                                 <div className="w-full h-full flex items-center justify-center">
@@ -387,10 +404,11 @@ export default function BusinessProfileTabs({ business, averageRating, session }
                           >
                             <div className="aspect-square bg-gray-100 relative">
                               {product.images.length > 0 ? (
-                                <img
+                                <S3Image
                                   src={product.images[0]}
                                   alt={product.name}
-                                  className="w-full h-full object-cover"
+                                  fill
+                                  className="object-cover"
                                 />
                               ) : (
                                 <div className="w-full h-full flex items-center justify-center">
@@ -664,6 +682,45 @@ export default function BusinessProfileTabs({ business, averageRating, session }
             </CardContent>
           </Card>
         </div>
+      </TabsContent>
+
+      <TabsContent value="gallery" className="space-y-4">
+        <Card className="shadow-sm hover:shadow-md transition-shadow duration-200">
+          <CardHeader>
+            <CardTitle>Photo Gallery</CardTitle>
+            <CardDescription>Take a visual tour of our business</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {business.photos.filter(p => p.type === 'GALLERY').length > 0 ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {business.photos
+                  .filter(p => p.type === 'GALLERY')
+                  .sort((a, b) => a.order - b.order)
+                  .map((photo) => (
+                    <div key={photo.id} className="group relative aspect-square rounded-lg overflow-hidden bg-gray-100">
+                      <S3Image
+                        src={photo.url}
+                        alt={photo.caption || 'Gallery image'}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      {photo.caption && (
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                          <p className="text-white text-sm">{photo.caption}</p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+              </div>
+            ) : (
+              <EmptyState
+                icon="gallery"
+                title="No photos yet"
+                description="The business hasn't added any gallery photos"
+              />
+            )}
+          </CardContent>
+        </Card>
       </TabsContent>
     </Tabs>
   )

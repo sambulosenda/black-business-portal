@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { S3Image } from '@/components/ui/s3-image'
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/session'
 import Navigation from '@/components/navigation'
@@ -53,6 +54,15 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
         where: { isActive: true },
         orderBy: { dayOfWeek: 'asc' },
       },
+      photos: {
+        where: { 
+          isActive: true,
+        },
+        orderBy: [
+          { type: 'asc' },
+          { order: 'asc' },
+        ],
+      },
     },
   })
 
@@ -80,16 +90,31 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
       price: Number(product.price),
       compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
       cost: product.cost ? Number(product.cost) : null
-    }))
+    })),
+    photos: business.photos
   }
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white">
       <Navigation session={session} />
 
+      {/* Hero Image */}
+      {business.photos.some(p => p.type === 'HERO') && (
+        <div className="relative h-[400px] w-full">
+          <S3Image
+            src={business.photos.find(p => p.type === 'HERO')!.url}
+            alt={`${business.businessName} hero image`}
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+        </div>
+      )}
+
       {/* Business Header */}
-      <div className="bg-indigo-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className={`${business.photos.some(p => p.type === 'HERO') ? 'relative -mt-32 z-10' : 'bg-indigo-600'} text-white`}>
+        <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 ${business.photos.some(p => p.type === 'HERO') ? 'bg-gradient-to-r from-indigo-600/95 to-purple-600/95 backdrop-blur-sm rounded-t-3xl' : ''}`}>
           <div className="lg:flex lg:items-center lg:justify-between">
             <div className="flex-1 min-w-0">
               <div className="flex items-center flex-wrap gap-3">

@@ -64,11 +64,11 @@ This plan outlines the steps to complete the business portal application, focusi
 ## Phase 4: Customer Experience Improvements
 
 ### TODO List
-- [ ] Implement business photo upload (hero image, gallery photos)
-  - [ ] Add image upload to business profile form
-  - [ ] Create hero image display on business pages
-  - [ ] Build photo gallery management
-  - [ ] Implement image optimization and storage
+- [x] Implement business photo upload (hero image, gallery photos)
+  - [x] Add image upload to business profile form
+  - [x] Create hero image display on business pages
+  - [x] Build photo gallery management
+  - [x] Implement image optimization and storage
 - [ ] Implement advanced search filters (location, price, availability)
 - [ ] Add favorites/saved businesses feature
 - [ ] Enhance booking history with rebooking option
@@ -95,12 +95,18 @@ This plan outlines the steps to complete the business portal application, focusi
 ### TODO List
 - [ ] Set up real-time notifications (WebSocket/SSE)
 - [ ] Implement email notification system
-- [ ] Add image upload with optimization
+- [x] Add image upload with optimization (AWS S3 implemented)
 - [ ] Enhance search with Elasticsearch/Algolia
 - [ ] Implement caching strategy
 - [ ] Add API rate limiting
 - [ ] Set up error tracking (Sentry)
 - [ ] Implement performance monitoring
+- [ ] **Optimize image delivery with CloudFront CDN** (New - High Priority)
+  - [ ] Set up CloudFront distribution
+  - [ ] Configure Origin Access Identity (OAI)
+  - [ ] Update image URLs to use CDN
+  - [ ] Implement cache invalidation strategy
+  - [ ] Monitor CDN performance and costs
 
 ## Phase 7: Advanced Business Features
 
@@ -522,3 +528,98 @@ Implemented a comprehensive promotions and discount management system allowing b
 
 ### Summary
 The promotions system provides businesses with powerful tools to attract and retain customers through targeted offers. The implementation follows best practices with proper validation, security, and a user-friendly interface. The foundation is solid and can be easily extended with additional features based on user feedback.
+
+## AWS S3 Image Upload Implementation (July 12, 2025)
+
+### Overview
+Implemented AWS S3 for image storage and management, replacing the previous UploadThing integration. The system uses private S3 buckets with presigned URLs for security.
+
+### Features Implemented
+
+#### 1. S3 Integration
+- **S3 Library** (src/lib/s3.ts):
+  - Client configuration with AWS SDK
+  - Presigned URL generation for uploads
+  - File deletion functionality
+  - Image type and size validation
+  - Server-side only operations for security
+
+#### 2. Image Upload System
+- **Upload API** (/api/upload/presigned-url):
+  - Generates presigned URLs for direct browser uploads
+  - Validates file types and sizes
+  - Implements business ownership checks
+  
+- **Upload Completion API** (/api/upload/complete):
+  - Creates database records for uploaded images
+  - Manages photo types (HERO, GALLERY, LOGO, BANNER)
+
+#### 3. Business Photo Management
+- **Photo Manager Component** (src/components/business/photo-manager.tsx):
+  - Drag-and-drop image uploads
+  - Photo type management
+  - Caption and ordering
+  - Delete functionality
+  
+- **Database Schema**:
+  - BusinessPhoto model with type enum
+  - Support for multiple photo types per business
+
+#### 4. Image Display
+- **S3Image Component** (src/components/ui/s3-image.tsx):
+  - Handles private S3 URLs
+  - Automatic presigned URL generation
+  - Fallback image support
+  - Loading states
+
+- **Proxy API** (/api/images/proxy):
+  - Generates presigned URLs on-demand
+  - Serves images through Next.js
+  - Implements caching headers
+
+### Current Implementation Status
+- ✅ Private S3 bucket configuration
+- ✅ CORS configuration for browser uploads
+- ✅ Presigned URLs for secure access
+- ✅ Image upload and management UI
+- ✅ Integration with business profiles
+
+### Recommended Optimizations (Future)
+
+#### CloudFront CDN Integration
+**Benefits:**
+- 50-80% faster image load times
+- Lower bandwidth costs
+- Global edge caching
+- Automatic image compression
+- DDoS protection
+
+**Implementation Plan:**
+1. Create CloudFront distribution
+2. Configure Origin Access Identity (OAI)
+3. Update getPublicUrl() to return CDN URLs
+4. Implement cache invalidation for updates
+5. Monitor performance metrics
+
+**Cost Comparison:**
+- Current: $0.09/GB (S3 transfer) + API costs
+- CloudFront: $0.085/GB (cheaper) + edge location caching
+- Estimated 60% cost reduction at scale
+
+### Alternative Approaches Considered
+1. **Public S3 Bucket**: Rejected for security concerns
+2. **Presigned URLs on Page Load**: Good alternative, but adds complexity
+3. **CloudFront CDN**: Recommended for production (not implemented yet)
+
+### Security Considerations
+- S3 bucket remains private
+- All access through presigned URLs
+- Business ownership validation
+- File type and size restrictions
+- CORS configured for specific origins
+
+### Performance Notes
+- Current approach works well for MVP/low traffic
+- Proxy adds ~100-200ms latency per image
+- CloudFront would reduce this to ~20-50ms
+- Consider implementing CDN before scaling

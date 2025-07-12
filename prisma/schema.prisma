@@ -78,6 +78,7 @@ model Business {
   productCategories ProductCategory[]
   orders           Order[]
   promotions       Promotion[]
+  photos           BusinessPhoto[]
 }
 
 model Service {
@@ -784,4 +785,31 @@ enum PromotionScope {
   ALL_PRODUCTS
   SPECIFIC_PRODUCTS
   ENTIRE_PURCHASE // Applies to total (services + products)
+}
+
+// Business Photo Management
+model BusinessPhoto {
+  id          String    @id @default(cuid())
+  businessId  String
+  url         String
+  type        PhotoType
+  caption     String?
+  order       Int       @default(0)
+  isActive    Boolean   @default(true)
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  business    Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  
+  @@index([businessId, type])
+  @@index([businessId, isActive])
+}
+
+enum PhotoType {
+  HERO
+  GALLERY
+  LOGO
+  BANNER
 }
