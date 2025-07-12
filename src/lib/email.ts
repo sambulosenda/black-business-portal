@@ -1,5 +1,14 @@
-// Email service - currently using console.log for development
-// In production, replace with actual email service (Resend, SendGrid, etc.)
+// Email service with AWS SES support
+import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses'
+
+// Initialize SES client only if credentials are provided
+const sesClient = process.env.AWS_SES_REGION ? new SESClient({
+  region: process.env.AWS_SES_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  },
+}) : null
 
 interface EmailOptions {
   to: string;
@@ -9,16 +18,51 @@ interface EmailOptions {
 }
 
 export async function sendEmail(options: EmailOptions): Promise<void> {
-  // TODO: Replace with actual email service
-  console.log('📧 Email would be sent:', {
-    to: options.to,
-    subject: options.subject,
-    preview: options.text || options.html.substring(0, 100) + '...'
-  });
-  
-  // In development, you can view emails in console
-  if (process.env.NODE_ENV === 'development') {
-    console.log('Full email content:', options.html);
+  // Use console.log if SES is not configured or in development without ENABLE_EMAIL_SENDING
+  if (!sesClient || (process.env.NODE_ENV === 'development' && process.env.ENABLE_EMAIL_SENDING !== 'true')) {
+    console.log('📧 Email would be sent:', {
+      to: options.to,
+      subject: options.subject,
+      preview: options.text || options.html.substring(0, 100) + '...'
+    });
+    
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Full email content:', options.html);
+    }
+    return
+  }
+
+  // Send email via AWS SES
+  try {
+    const command = new SendEmailCommand({
+      Source: process.env.EMAIL_FROM || 'BeautyPortal <noreply@beautyportal.com>',
+      Destination: {
+        ToAddresses: [options.to],
+      },
+      Message: {
+        Subject: {
+          Data: options.subject,
+          Charset: 'UTF-8',
+        },
+        Body: {
+          Html: {
+            Data: options.html,
+            Charset: 'UTF-8',
+          },
+          Text: {
+            Data: options.text || options.html.replace(/<[^>]*>?/gm, ''),
+            Charset: 'UTF-8',
+          },
+        },
+      },
+    })
+
+    const response = await sesClient.send(command)
+    console.log('✅ Email sent via AWS SES:', response.MessageId)
+  } catch (error) {
+    console.error('❌ Failed to send email via AWS SES:', error)
+    // In production, you might want to retry or queue the email
+    throw error
   }
 }
 
