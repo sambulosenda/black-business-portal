@@ -44,7 +44,7 @@ export function CartButton() {
         variant="ghost" 
         size="sm" 
         className={cn(
-          "relative hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 transition-all",
+          "relative hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 transition-colors",
           isOpen && "bg-gradient-to-r from-indigo-50 to-purple-50"
         )}
         onClick={() => setIsOpen(!isOpen)}

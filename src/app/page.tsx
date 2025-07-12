@@ -63,7 +63,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <Link href="/" className="flex items-center space-x-3 group transition-transform hover:scale-105">
+              <Link href="/" className="flex items-center space-x-3 group">
                 <div className="w-10 h-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg group-hover:shadow-xl transition-shadow">
                   B
                 </div>
@@ -107,7 +107,7 @@ export default function Home() {
                     <Button variant="ghost" className="font-medium hover:bg-gray-50">Sign in</Button>
                   </Link>
                   <Link href="/signup/customer">
-                    <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-md hover:shadow-lg transition-all">
+                    <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-md hover:shadow-lg">
                       Get Started
                     </Button>
                   </Link>
@@ -131,9 +131,9 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-indigo-50 via-white to-purple-50 overflow-hidden">
         {/* Decorative elements */}
-        <div className="absolute top-0 left-0 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-        <div className="absolute top-0 right-0 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+        <div className="absolute top-0 left-0 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20"></div>
+        <div className="absolute top-0 right-0 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-20"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[600px] lg:min-h-[700px] py-16 lg:py-24">
@@ -171,7 +171,7 @@ export default function Home() {
                         placeholder='Try "braids", "nails", or "spa"'
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 bg-gray-50 hover:bg-gray-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent rounded-xl transition-all text-base border border-gray-200"
+                        className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 bg-gray-50 hover:bg-gray-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent rounded-xl transition-colors text-base border border-gray-200"
                       />
                     </div>
                     <div className="relative">
@@ -184,11 +184,11 @@ export default function Home() {
                         placeholder="City or neighborhood"
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}
-                        className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 bg-gray-50 hover:bg-gray-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent rounded-xl transition-all text-base border border-gray-200"
+                        className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 bg-gray-50 hover:bg-gray-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent rounded-xl transition-colors text-base border border-gray-200"
                       />
                     </div>
                   </div>
-                  <Button type="submit" size="lg" className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl transform hover:-translate-y-0.5 transition-all shadow-lg hover:shadow-xl py-4 text-lg font-semibold">
+                  <Button type="submit" size="lg" className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl shadow-lg hover:shadow-xl py-4 text-lg font-semibold">
                     Find Services
                   </Button>
                 </form>
@@ -309,17 +309,17 @@ export default function Home() {
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-100 transition duration-300 blur"></div>
                   
                   {/* Main card */}
-                  <div className="relative bg-white rounded-3xl p-8 lg:p-10 h-full flex flex-col border border-gray-200 hover:border-transparent transition-all duration-300 transform group-hover:-translate-y-2 group-hover:shadow-2xl">
+                  <div className="relative bg-white rounded-3xl p-8 lg:p-10 h-full flex flex-col border border-gray-200 hover:border-transparent transition-colors duration-300 group-hover:shadow-2xl">
                     {/* Icon container with animation */}
                     <div className="relative mb-8">
-                      <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all"></div>
-                      <div className={`relative inline-flex items-center justify-center w-20 h-20 rounded-2xl ${prop.color} group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                      <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 rounded-2xl blur-xl"></div>
+                      <div className={`relative inline-flex items-center justify-center w-20 h-20 rounded-2xl ${prop.color} shadow-lg`}>
                         {prop.icon}
                       </div>
                     </div>
                     
                     {/* Content */}
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-indigo-600 group-hover:to-purple-600 group-hover:bg-clip-text transition-all">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-indigo-600 group-hover:to-purple-600 group-hover:bg-clip-text transition-colors">
                       {prop.title}
                     </h3>
                     <p className="text-gray-600 leading-relaxed flex-grow">
@@ -329,7 +329,7 @@ export default function Home() {
                     {/* Learn more link */}
                     <div className="mt-6 flex items-center text-indigo-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <span className="text-sm">Learn more</span>
-                      <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
                     </div>
@@ -342,7 +342,7 @@ export default function Home() {
           {/* Bottom CTA */}
           <div className="mt-16 text-center">
             <Link href="/search">
-              <Button size="lg" className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all">
+              <Button size="lg" className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl">
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
@@ -385,7 +385,7 @@ export default function Home() {
               
               <div>
                 <Link href="/business/join">
-                  <Button size="xl" className="bg-white text-indigo-600 hover:bg-gray-50 font-semibold transform hover:-translate-y-0.5 transition-all shadow-xl hover:shadow-2xl px-12 py-7 text-lg border border-white/20">
+                  <Button size="xl" className="bg-white text-indigo-600 hover:bg-gray-50 font-semibold shadow-xl hover:shadow-2xl px-12 py-7 text-lg border border-white/20">
                     Partner with us
                     <svg className="w-5 h-5 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -545,7 +545,7 @@ export default function Home() {
                 rating: 5
               }
             ].map((testimonial, index) => (
-              <div key={index} className="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm hover:shadow-md transition-all">
+              <div key={index} className="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <svg key={i} className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">

@@ -2,7 +2,23 @@
 
 @layer base {
   html {
-    scroll-behavior: smooth;
+    /* Prevent overscroll bounce */
+    overscroll-behavior: none;
+    overflow-x: hidden;
+  }
+  
+  body {
+    overscroll-behavior: none;
+    position: relative;
+    overflow-x: hidden;
+    /* Prevent iOS bounce effect */
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Fix for sticky elements on iOS */
+  nav {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
   
   :root {
@@ -172,9 +188,9 @@
   }
 }
 
-.animate-blob {
+/* .animate-blob {
   animation: blob 7s infinite;
-}
+} */
 
 .animation-delay-2000 {
   animation-delay: 2s;
@@ -190,7 +206,7 @@
 }
 
 .hover-lift:hover {
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
@@ -290,7 +306,7 @@
   }
 }
 
-@theme inline {
+/* @theme inline {
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -299,5 +315,5 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-}
+} */
 

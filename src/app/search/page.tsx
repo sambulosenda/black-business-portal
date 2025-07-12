@@ -172,7 +172,7 @@ function SearchContent() {
                     value={filters.query}
                     onChange={(e) => handleFilterChange('query', e.target.value)}
                     placeholder='Search services, salons, or treatments'
-                    className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 bg-transparent hover:bg-gray-50 focus:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 rounded-xl transition-all text-base border-0"
+                    className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 bg-transparent hover:bg-gray-50 focus:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 rounded-xl transition-colors text-base border-0"
                   />
                 </div>
                 
@@ -186,14 +186,14 @@ function SearchContent() {
                     value={filters.city}
                     onChange={(e) => handleFilterChange('city', e.target.value)}
                     placeholder="Location"
-                    className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 bg-transparent hover:bg-gray-50 focus:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 rounded-xl transition-all text-base border-0"
+                    className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 bg-transparent hover:bg-gray-50 focus:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 rounded-xl transition-colors text-base border-0"
                   />
                 </div>
                 
                 {/* Search Button */}
                 <Button 
                   size="lg"
-                  className="sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl transition-all shadow-sm hover:shadow-md px-8 py-4 text-base font-medium"
+                  className="sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl transition-colors shadow-sm hover:shadow-md px-8 py-4 text-base font-medium"
                 >
                   Search
                 </Button>
@@ -209,7 +209,7 @@ function SearchContent() {
                     key={cat.value}
                     onClick={() => handleFilterChange('category', filters.category === cat.value ? '' : cat.value)}
                     className={cn(
-                      "px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-200",
+                      "px-5 py-2.5 rounded-full text-sm font-medium transition-colors duration-200",
                       filters.category === cat.value
                         ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-sm"
                         : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -261,7 +261,7 @@ function SearchContent() {
                 <button
                   onClick={() => setViewMode('grid')}
                   className={cn(
-                    "px-3 py-1.5 rounded-md text-sm font-medium transition-all",
+                    "px-3 py-1.5 rounded-md text-sm font-medium transition-colors",
                     viewMode === 'grid' 
                       ? "bg-white text-gray-900 shadow-sm" 
                       : "text-gray-600 hover:text-gray-900"
@@ -272,7 +272,7 @@ function SearchContent() {
                 <button
                   onClick={() => setViewMode('list')}
                   className={cn(
-                    "px-3 py-1.5 rounded-md text-sm font-medium transition-all",
+                    "px-3 py-1.5 rounded-md text-sm font-medium transition-colors",
                     viewMode === 'list' 
                       ? "bg-white text-gray-900 shadow-sm" 
                       : "text-gray-600 hover:text-gray-900"
@@ -293,7 +293,7 @@ function SearchContent() {
               <button
                 onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
                 className={cn(
-                  "inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap",
+                  "inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap",
                   filters.category 
                     ? "bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-700 border border-indigo-200"
                     : "bg-white text-gray-700 border border-gray-200 hover:border-gray-300"
@@ -333,7 +333,7 @@ function SearchContent() {
               value={filters.minRating}
               onChange={(e) => handleFilterChange('minRating', e.target.value)}
               className={cn(
-                "px-4 py-2 rounded-lg text-sm font-medium appearance-none cursor-pointer transition-all",
+                "px-4 py-2 rounded-lg text-sm font-medium appearance-none cursor-pointer transition-colors",
                 filters.minRating
                   ? "bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-700 border border-indigo-200"
                   : "bg-white text-gray-700 border border-gray-200 hover:border-gray-300"
@@ -403,7 +403,7 @@ function SearchContent() {
                     href={`/business/${business.slug}`}
                     className="group block"
                   >
-                    <div className="bg-white rounded-xl overflow-hidden border border-gray-200 hover:border-indigo-200 hover:shadow-xl transition-all duration-200 h-full">
+                    <div className="bg-white rounded-xl overflow-hidden border border-gray-200 hover:border-indigo-200 hover:shadow-xl transition-shadow duration-200 h-full">
                       {/* Image */}
                       <div className="relative h-56 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 overflow-hidden">
                         {/* Placeholder pattern */}
@@ -417,7 +417,7 @@ function SearchContent() {
                             e.preventDefault()
                             toggleSaved(business.id)
                           }}
-                          className="absolute top-4 right-4 p-2.5 bg-white rounded-full hover:bg-gray-50 transition-all shadow-sm border border-gray-200"
+                          className="absolute top-4 right-4 p-2.5 bg-white rounded-full hover:bg-gray-50 transition-colors shadow-sm border border-gray-200"
                         >
                           <Heart className={cn(
                             "h-4 w-4 transition-colors",
@@ -440,7 +440,7 @@ function SearchContent() {
                       <div className="p-5">
                         {/* Name & Category */}
                         <div className="mb-4">
-                          <h3 className="font-semibold text-lg text-gray-900 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-indigo-600 group-hover:to-purple-600 transition-all line-clamp-1 mb-1">
+                          <h3 className="font-semibold text-lg text-gray-900 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-indigo-600 group-hover:to-purple-600 transition-colors line-clamp-1 mb-1">
                             {business.businessName}
                           </h3>
                           <p className="text-sm text-gray-500">
@@ -487,7 +487,7 @@ function SearchContent() {
                     href={`/business/${business.slug}`}
                     className="block group"
                   >
-                    <div className="bg-white rounded-xl overflow-hidden border border-gray-200 hover:border-indigo-200 hover:shadow-xl transition-all duration-200">
+                    <div className="bg-white rounded-xl overflow-hidden border border-gray-200 hover:border-indigo-200 hover:shadow-xl transition-shadow duration-200">
                       <div className="flex">
                         {/* Image */}
                         <div className="w-48 sm:w-64 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 relative flex-shrink-0">
@@ -502,7 +502,7 @@ function SearchContent() {
                               e.preventDefault()
                               toggleSaved(business.id)
                             }}
-                            className="absolute top-4 right-4 p-2.5 bg-white rounded-full hover:bg-gray-50 transition-all shadow-sm border border-gray-200"
+                            className="absolute top-4 right-4 p-2.5 bg-white rounded-full hover:bg-gray-50 transition-colors shadow-sm border border-gray-200"
                           >
                             <Heart className={cn(
                               "h-4 w-4 transition-colors",
@@ -523,7 +523,7 @@ function SearchContent() {
                         <div className="flex-1 p-6">
                           <div className="flex items-start justify-between mb-4">
                             <div>
-                              <h3 className="font-semibold text-xl text-gray-900 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-indigo-600 group-hover:to-purple-600 transition-all mb-1">
+                              <h3 className="font-semibold text-xl text-gray-900 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-indigo-600 group-hover:to-purple-600 transition-colors mb-1">
                                 {business.businessName}
                               </h3>
                               <p className="text-sm text-gray-500">
@@ -577,7 +577,7 @@ function SearchContent() {
                                 </span>
                               ))}
                               {business.services.length > 3 && (
-                                <button className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 rounded-lg text-sm font-medium hover:from-indigo-100 hover:to-purple-100 transition-all">
+                                <button className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 rounded-lg text-sm font-medium hover:from-indigo-100 hover:to-purple-100 transition-colors">
                                   View all {business.services.length} services
                                   <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -617,7 +617,7 @@ function SearchContent() {
               {activeFiltersCount > 0 && (
                 <button
                   onClick={() => setFilters({ query: '', category: '', city: '', minRating: '' })}
-                  className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg font-medium transition-all shadow-lg"
+                  className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg font-medium transition-colors shadow-lg"
                 >
                   Clear all filters
                 </button>
