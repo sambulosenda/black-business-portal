@@ -225,19 +225,19 @@ export default function StaffPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Staff Management</h1>
-          <p className="text-muted-foreground">Manage your team members and their permissions</p>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Staff Management</h1>
+          <p className="text-gray-600 mt-1">Manage your team members and their permissions</p>
         </div>
-        <Button onClick={() => setShowAddDialog(true)}>
+        <Button onClick={() => setShowAddDialog(true)} className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800">
           <Plus className="h-4 w-4 mr-2" />
           Add Staff Member
         </Button>
@@ -246,7 +246,7 @@ export default function StaffPage() {
       {/* Staff List */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {staff.map((member) => (
-          <Card key={member.id} className={!member.isActive ? 'opacity-60' : ''}>
+          <Card key={member.id} className={`border border-gray-200 shadow-sm hover:shadow-md transition-all ${!member.isActive ? 'opacity-60' : ''}`}>
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div className="flex items-center space-x-3">
@@ -257,8 +257,15 @@ export default function StaffPage() {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <h3 className="font-semibold">{member.name}</h3>
-                    <Badge variant={getRoleBadgeVariant(member.role)} className="mt-1">
+                    <h3 className="font-semibold text-gray-900">{member.name}</h3>
+                    <Badge 
+                      variant="outline" 
+                      className={`mt-1 ${
+                        member.role === 'OWNER' ? 'border-red-200 bg-red-50 text-red-700' :
+                        member.role === 'MANAGER' ? 'border-indigo-200 bg-indigo-50 text-indigo-700' :
+                        'border-gray-200 bg-gray-50 text-gray-700'
+                      }`}
+                    >
                       {member.role}
                     </Badge>
                   </div>
@@ -267,6 +274,7 @@ export default function StaffPage() {
                   variant="ghost"
                   size="sm"
                   onClick={() => setSelectedStaff(member)}
+                  className="hover:bg-gray-100"
                 >
                   View
                 </Button>
@@ -274,27 +282,27 @@ export default function StaffPage() {
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="space-y-2 text-sm">
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Mail className="h-3 w-3" />
-                  <span className="truncate">{member.email}</span>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Mail className="h-3 w-3 text-gray-400" />
+                  <span className="truncate text-sm">{member.email}</span>
                 </div>
                 {member.phone && (
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Phone className="h-3 w-3" />
-                    <span>{member.phone}</span>
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <Phone className="h-3 w-3 text-gray-400" />
+                    <span className="text-sm">{member.phone}</span>
                   </div>
                 )}
               </div>
 
               <div className="flex flex-wrap gap-2">
                 {member.canManageBookings && (
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="outline" className="text-xs border-blue-200 bg-blue-50 text-blue-700">
                     <Calendar className="h-3 w-3 mr-1" />
                     Manage Bookings
                   </Badge>
                 )}
                 {member.canManageStaff && (
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="outline" className="text-xs border-purple-200 bg-purple-50 text-purple-700">
                     <Shield className="h-3 w-3 mr-1" />
                     Manage Staff
                   </Badge>
@@ -304,12 +312,12 @@ export default function StaffPage() {
               <div className="flex items-center justify-between pt-2">
                 <div className="flex items-center gap-2">
                   {member.isActive ? (
-                    <Badge variant="success" className="text-xs">
+                    <Badge variant="outline" className="text-xs border-green-200 bg-green-50 text-green-700">
                       <CheckCircle className="h-3 w-3 mr-1" />
                       Active
                     </Badge>
                   ) : (
-                    <Badge variant="destructive" className="text-xs">
+                    <Badge variant="outline" className="text-xs border-red-200 bg-red-50 text-red-700">
                       <XCircle className="h-3 w-3 mr-1" />
                       Inactive
                     </Badge>
@@ -338,14 +346,14 @@ export default function StaffPage() {
       </div>
 
       {staff.length === 0 && (
-        <Card>
+        <Card className="border-2 border-dashed border-gray-300">
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <User className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No staff members yet</h3>
-            <p className="text-muted-foreground text-center mb-4">
+            <User className="h-12 w-12 text-gray-400 mb-4" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">No staff members yet</h3>
+            <p className="text-gray-600 text-center mb-4">
               Add your first team member to get started
             </p>
-            <Button onClick={() => setShowAddDialog(true)}>
+            <Button onClick={() => setShowAddDialog(true)} className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800">
               <Plus className="h-4 w-4 mr-2" />
               Add Staff Member
             </Button>
@@ -383,7 +391,7 @@ export default function StaffPage() {
                     placeholder="John Doe"
                   />
                   {errors.name && (
-                    <p className="text-sm text-destructive">{errors.name.message}</p>
+                    <p className="text-sm text-red-600">{errors.name.message}</p>
                   )}
                 </div>
 
@@ -396,7 +404,7 @@ export default function StaffPage() {
                     placeholder="john@example.com"
                   />
                   {errors.email && (
-                    <p className="text-sm text-destructive">{errors.email.message}</p>
+                    <p className="text-sm text-red-600">{errors.email.message}</p>
                   )}
                 </div>
 
@@ -465,8 +473,8 @@ export default function StaffPage() {
 
               {services.length > 0 && (
                 <div className="space-y-3">
-                  <Label>Services</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <Label className="text-gray-900">Services</Label>
+                  <p className="text-sm text-gray-600">
                     Select which services this staff member can perform
                   </p>
                   <div className="grid grid-cols-2 gap-2">
@@ -501,10 +509,11 @@ export default function StaffPage() {
                 type="button"
                 variant="outline"
                 onClick={() => setShowAddDialog(false)}
+                className="hover:bg-gray-50"
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isSubmitting}>
+              <Button type="submit" disabled={isSubmitting} className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800">
                 {isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                 {editingStaff ? 'Update' : 'Add'} Staff Member
               </Button>
@@ -522,10 +531,10 @@ export default function StaffPage() {
             </DialogHeader>
 
             <Tabs defaultValue="info" className="mt-4">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="info">Information</TabsTrigger>
-                <TabsTrigger value="services">Services</TabsTrigger>
-                <TabsTrigger value="schedule">Schedule</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-3 bg-gray-100">
+                <TabsTrigger value="info" className="data-[state=active]:bg-white data-[state=active]:text-indigo-600">Information</TabsTrigger>
+                <TabsTrigger value="services" className="data-[state=active]:bg-white data-[state=active]:text-indigo-600">Services</TabsTrigger>
+                <TabsTrigger value="schedule" className="data-[state=active]:bg-white data-[state=active]:text-indigo-600">Schedule</TabsTrigger>
               </TabsList>
 
               <TabsContent value="info" className="space-y-4">
@@ -537,8 +546,15 @@ export default function StaffPage() {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <h3 className="text-lg font-semibold">{selectedStaff.name}</h3>
-                    <Badge variant={getRoleBadgeVariant(selectedStaff.role)}>
+                    <h3 className="text-lg font-semibold text-gray-900">{selectedStaff.name}</h3>
+                    <Badge 
+                      variant="outline"
+                      className={`${
+                        selectedStaff.role === 'OWNER' ? 'border-red-200 bg-red-50 text-red-700' :
+                        selectedStaff.role === 'MANAGER' ? 'border-indigo-200 bg-indigo-50 text-indigo-700' :
+                        'border-gray-200 bg-gray-50 text-gray-700'
+                      }`}
+                    >
                       {selectedStaff.role}
                     </Badge>
                   </div>
@@ -546,25 +562,25 @@ export default function StaffPage() {
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <Label className="text-sm text-muted-foreground">Email</Label>
-                    <p className="font-medium">{selectedStaff.email}</p>
+                    <Label className="text-sm text-gray-500">Email</Label>
+                    <p className="font-medium text-gray-900">{selectedStaff.email}</p>
                   </div>
                   {selectedStaff.phone && (
                     <div>
-                      <Label className="text-sm text-muted-foreground">Phone</Label>
-                      <p className="font-medium">{selectedStaff.phone}</p>
+                      <Label className="text-sm text-gray-500">Phone</Label>
+                      <p className="font-medium text-gray-900">{selectedStaff.phone}</p>
                     </div>
                   )}
                   <div>
-                    <Label className="text-sm text-muted-foreground">Status</Label>
+                    <Label className="text-sm text-gray-500">Status</Label>
                     <div className="flex items-center gap-2 mt-1">
                       {selectedStaff.isActive ? (
-                        <Badge variant="success">
+                        <Badge variant="outline" className="border-green-200 bg-green-50 text-green-700">
                           <CheckCircle className="h-3 w-3 mr-1" />
                           Active
                         </Badge>
                       ) : (
-                        <Badge variant="destructive">
+                        <Badge variant="outline" className="border-red-200 bg-red-50 text-red-700">
                           <XCircle className="h-3 w-3 mr-1" />
                           Inactive
                         </Badge>
@@ -572,24 +588,24 @@ export default function StaffPage() {
                     </div>
                   </div>
                   <div>
-                    <Label className="text-sm text-muted-foreground">Joined</Label>
-                    <p className="font-medium">
+                    <Label className="text-sm text-gray-500">Joined</Label>
+                    <p className="font-medium text-gray-900">
                       {new Date(selectedStaff.createdAt).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
 
                 <div>
-                  <Label className="text-sm text-muted-foreground">Permissions</Label>
+                  <Label className="text-sm text-gray-500">Permissions</Label>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {selectedStaff.canManageBookings && (
-                      <Badge variant="outline">
+                      <Badge variant="outline" className="border-blue-200 bg-blue-50 text-blue-700">
                         <Calendar className="h-3 w-3 mr-1" />
                         Manage Bookings
                       </Badge>
                     )}
                     {selectedStaff.canManageStaff && (
-                      <Badge variant="outline">
+                      <Badge variant="outline" className="border-purple-200 bg-purple-50 text-purple-700">
                         <Shield className="h-3 w-3 mr-1" />
                         Manage Staff
                       </Badge>
@@ -600,7 +616,7 @@ export default function StaffPage() {
 
               <TabsContent value="services">
                 <div className="space-y-4">
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-gray-600">
                     Services this staff member can perform
                   </p>
                   {selectedStaff.services && selectedStaff.services.length > 0 ? (
@@ -608,14 +624,14 @@ export default function StaffPage() {
                       {selectedStaff.services.map((item) => (
                         <div
                           key={item.service.id}
-                          className="flex items-center justify-between p-3 rounded-lg border"
+                          className="flex items-center justify-between p-3 rounded-lg border border-gray-200 bg-gray-50"
                         >
-                          <span className="font-medium">{item.service.name}</span>
+                          <span className="font-medium text-gray-900">{item.service.name}</span>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-center py-8 text-muted-foreground">
+                    <p className="text-center py-8 text-gray-500">
                       No services assigned yet
                     </p>
                   )}
@@ -624,7 +640,7 @@ export default function StaffPage() {
 
               <TabsContent value="schedule">
                 <div className="space-y-4">
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-gray-600">
                     Working hours for this staff member
                   </p>
                   {selectedStaff.schedules && selectedStaff.schedules.length > 0 ? (
@@ -634,23 +650,23 @@ export default function StaffPage() {
                         return (
                           <div
                             key={index}
-                            className="flex items-center justify-between p-3 rounded-lg border"
+                            className="flex items-center justify-between p-3 rounded-lg border border-gray-200 bg-gray-50"
                           >
-                            <span className="font-medium">{day}</span>
+                            <span className="font-medium text-gray-900">{day}</span>
                             {schedule && schedule.isActive ? (
                               <div className="flex items-center gap-2 text-sm">
                                 <Clock className="h-3 w-3" />
                                 {schedule.startTime} - {schedule.endTime}
                               </div>
                             ) : (
-                              <span className="text-sm text-muted-foreground">Off</span>
+                              <span className="text-sm text-gray-500">Off</span>
                             )}
                           </div>
                         )
                       })}
                     </div>
                   ) : (
-                    <p className="text-center py-8 text-muted-foreground">
+                    <p className="text-center py-8 text-gray-500">
                       No schedule set yet
                     </p>
                   )}
@@ -659,13 +675,13 @@ export default function StaffPage() {
             </Tabs>
 
             <DialogFooter>
-              <Button variant="outline" onClick={() => setSelectedStaff(null)}>
+              <Button variant="outline" onClick={() => setSelectedStaff(null)} className="hover:bg-gray-50">
                 Close
               </Button>
               <Button onClick={() => {
                 startEdit(selectedStaff)
                 setSelectedStaff(null)
-              }}>
+              }} className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800">
                 <Edit className="h-4 w-4 mr-2" />
                 Edit Staff Member
               </Button>

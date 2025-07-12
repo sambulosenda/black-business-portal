@@ -24,6 +24,11 @@ export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart()
   const [loading, setLoading] = useState(false)
   const [orderType, setOrderType] = useState<'pickup' | 'delivery'>('pickup')
+  const [promoCode, setPromoCode] = useState('')
+  const [promoDiscount, setPromoDiscount] = useState<number>(0)
+  const [promoValidating, setPromoValidating] = useState(false)
+  const [promoError, setPromoError] = useState('')
+  const [appliedPromotion, setAppliedPromotion] = useState<any>(null)
 
   // Form state
   const [formData, setFormData] = useState({
@@ -56,6 +61,52 @@ export default function CheckoutPage() {
       return
     }
   }, [items, session, router])
+
+  const validatePromoCode = async () => {
+    if (!promoCode || items.length === 0) return
+
+    setPromoValidating(true)
+    setPromoError('')
+    
+    try {
+      const businessId = items[0]?.businessId
+      const productIds = items.filter(item => item.type === 'product').map(item => item.id)
+      
+      const response = await fetch('/api/promotions/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: promoCode,
+          businessId,
+          subtotal,
+          serviceIds: [],
+          productIds,
+          itemCount: items.reduce((acc, item) => acc + (item.quantity || 1), 0)
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        setPromoError(data.error || 'Invalid promo code')
+        setPromoDiscount(0)
+        setAppliedPromotion(null)
+        return
+      }
+
+      setPromoDiscount(data.discount)
+      setAppliedPromotion(data.promotion)
+      setPromoError('')
+      toast.success('Promo code applied!')
+    } catch (error) {
+      console.error('Error validating promo code:', error)
+      setPromoError('Failed to validate promo code')
+      setPromoDiscount(0)
+      setAppliedPromotion(null)
+    } finally {
+      setPromoValidating(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -93,9 +144,11 @@ export default function CheckoutPage() {
           deliveryNotes: formData.deliveryNotes,
         }),
         subtotal,
+        discount: promoDiscount,
+        promotionId: appliedPromotion?.id,
         // In a real app, you'd calculate tax and total
-        tax: subtotal * 0.08, // 8% tax
-        total: subtotal * 1.08,
+        tax: (subtotal - promoDiscount) * 0.08, // 8% tax after discount
+        total: (subtotal - promoDiscount) * 1.08,
       }
 
       const response = await fetch('/api/orders', {
@@ -134,9 +187,10 @@ export default function CheckoutPage() {
     }
   }
 
-  const tax = subtotal * 0.08
+  const discountedSubtotal = subtotal - promoDiscount
+  const tax = discountedSubtotal * 0.08
   const deliveryFee = orderType === 'delivery' ? 10 : 0
-  const total = subtotal + tax + deliveryFee
+  const total = discountedSubtotal + tax + deliveryFee
 
   if (!session || items.length === 0) {
     return null // Will redirect
@@ -319,12 +373,56 @@ export default function CheckoutPage() {
 
                     <Separator />
 
+                    {/* Promo Code */}
+                    <div>
+                      <Label htmlFor="checkoutPromoCode" className="text-sm font-medium">
+                        Promo Code
+                      </Label>
+                      <div className="flex gap-2 mt-1">
+                        <Input
+                          id="checkoutPromoCode"
+                          type="text"
+                          value={promoCode}
+                          onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                          placeholder="Enter code"
+                          className="text-sm"
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={validatePromoCode}
+                          disabled={promoValidating || !promoCode}
+                        >
+                          {promoValidating ? 'Applying...' : 'Apply'}
+                        </Button>
+                      </div>
+                      {promoError && (
+                        <p className="text-xs text-red-600 mt-1">{promoError}</p>
+                      )}
+                      {appliedPromotion && (
+                        <div className="mt-2 p-2 bg-green-50 rounded text-xs">
+                          <p className="text-green-800">
+                            {appliedPromotion.name} applied!
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    <Separator />
+
                     {/* Totals */}
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span>Subtotal</span>
                         <span>${subtotal.toFixed(2)}</span>
                       </div>
+                      {promoDiscount > 0 && (
+                        <div className="flex justify-between text-sm text-green-600">
+                          <span>Discount</span>
+                          <span>-${promoDiscount.toFixed(2)}</span>
+                        </div>
+                      )}
                       <div className="flex justify-between text-sm">
                         <span>Tax</span>
                         <span>${tax.toFixed(2)}</span>

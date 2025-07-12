@@ -49,6 +49,11 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
   const [bookingLoading, setBookingLoading] = useState(false)
   const [error, setError] = useState('')
   const [timeOffDates, setTimeOffDates] = useState<Date[]>([])
+  const [promoCode, setPromoCode] = useState('')
+  const [promoDiscount, setPromoDiscount] = useState<number>(0)
+  const [promoValidating, setPromoValidating] = useState(false)
+  const [promoError, setPromoError] = useState('')
+  const [appliedPromotion, setAppliedPromotion] = useState<any>(null)
 
   useEffect(() => {
     params.then(p => setSlug(p.slug))
@@ -90,6 +95,51 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
       setError('Failed to load business information')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const validatePromoCode = async () => {
+    if (!promoCode || !business || !selectedService) return
+
+    setPromoValidating(true)
+    setPromoError('')
+    
+    try {
+      const service = services.find(s => s.id === selectedService)
+      if (!service) return
+
+      const response = await fetch('/api/promotions/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: promoCode,
+          businessId: business.id,
+          subtotal: parseFloat(service.price),
+          serviceIds: [selectedService],
+          productIds: [],
+          itemCount: 1
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        setPromoError(data.error || 'Invalid promo code')
+        setPromoDiscount(0)
+        setAppliedPromotion(null)
+        return
+      }
+
+      setPromoDiscount(data.discount)
+      setAppliedPromotion(data.promotion)
+      setPromoError('')
+    } catch (error) {
+      console.error('Error validating promo code:', error)
+      setPromoError('Failed to validate promo code')
+      setPromoDiscount(0)
+      setAppliedPromotion(null)
+    } finally {
+      setPromoValidating(false)
     }
   }
 
@@ -169,6 +219,8 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
           serviceId: selectedService,
           date: format(selectedDate, 'yyyy-MM-dd'),
           time: selectedTime,
+          promotionId: appliedPromotion?.id,
+          promoDiscount: promoDiscount
         }),
       })
 
@@ -391,6 +443,64 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
                       </dd>
                     </div>
                   </>
+                )}
+                
+                {/* Promo Code Section */}
+                {selectedServiceData && (
+                  <div className="pt-4 border-t">
+                    <label htmlFor="promoCode" className="block text-sm font-medium text-gray-700 mb-2">
+                      Promo Code
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        id="promoCode"
+                        value={promoCode}
+                        onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                        placeholder="Enter code"
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                      />
+                      <button
+                        type="button"
+                        onClick={validatePromoCode}
+                        disabled={promoValidating || !promoCode}
+                        className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {promoValidating ? 'Validating...' : 'Apply'}
+                      </button>
+                    </div>
+                    {promoError && (
+                      <p className="mt-2 text-sm text-red-600">{promoError}</p>
+                    )}
+                    {appliedPromotion && (
+                      <div className="mt-2 p-2 bg-green-50 rounded-md">
+                        <p className="text-sm text-green-800">
+                          {appliedPromotion.name} applied! 
+                          <span className="font-medium"> -${promoDiscount.toFixed(2)}</span>
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Total with discount */}
+                {selectedServiceData && promoDiscount > 0 && (
+                  <div className="pt-4 border-t">
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">Subtotal</span>
+                        <span className="text-gray-900">${selectedServiceData.price}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">Discount</span>
+                        <span className="text-green-600">-${promoDiscount.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between text-base font-semibold pt-2 border-t">
+                        <span>Total</span>
+                        <span>${(parseFloat(selectedServiceData.price) - promoDiscount).toFixed(2)}</span>
+                      </div>
+                    </div>
+                  </div>
                 )}
                 {selectedDate && (
                   <div>
