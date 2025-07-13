@@ -92,7 +92,7 @@ export default function CustomerDetailPage() {
     if (customerId) {
       fetchCustomerDetails()
     }
-  }, [customerId])
+  }, [customerId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchCustomerDetails = async () => {
     try {

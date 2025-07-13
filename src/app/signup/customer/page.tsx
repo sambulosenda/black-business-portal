@@ -57,7 +57,8 @@ export default function CustomerSignupPage() {
       if (!response.ok) {
         setError(result.error || 'Something went wrong')
       } else {
-        router.push('/login?registered=true')
+        // Redirect to verify email page
+        router.push(`/auth/verify-email?email=${encodeURIComponent(data.email)}`)
       }
     } catch {
       setError('Something went wrong. Please try again.')

@@ -11,7 +11,12 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { businessId, availabilities } = await request.json()
+    const { businessId, availabilities }: { businessId: string; availabilities: Array<{
+      dayOfWeek: number;
+      startTime: string;
+      endTime: string;
+      isActive: boolean;
+    }> } = await request.json()
 
     // Verify business ownership
     const business = await prisma.business.findUnique({
@@ -32,12 +37,7 @@ export async function PUT(request: Request) {
 
     // Create new availabilities
     const created = await prisma.availability.createMany({
-      data: availabilities.map((availability: {
-        dayOfWeek: number;
-        startTime: string;
-        endTime: string;
-        isActive: boolean;
-      }) => ({
+      data: availabilities.map((availability) => ({
         businessId,
         dayOfWeek: availability.dayOfWeek,
         startTime: availability.startTime,

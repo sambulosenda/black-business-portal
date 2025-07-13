@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 
 export async function GET(request: Request) {
   try {
@@ -28,10 +29,7 @@ export async function GET(request: Request) {
     const endDate = searchParams.get('endDate')
 
     // Build where clause
-    const where: {
-      businessId: string;
-      date?: { gte: Date; lte: Date };
-    } = {
+    const where: Prisma.BookingWhereInput = {
       businessId: business.id,
     }
 
