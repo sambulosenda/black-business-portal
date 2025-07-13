@@ -14,10 +14,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
 import { 
   Package, Plus, Search, Filter, Download, Upload, Edit, 
-  Trash, Image, DollarSign, Barcode, Tag, AlertTriangle,
+  Trash, Image as ImageIcon, DollarSign, Barcode, Tag, AlertTriangle,
   TrendingUp, Package2, ShoppingCart, Loader2
 } from 'lucide-react'
 import { toast } from 'sonner'
+import Image from 'next/image'
 
 interface ProductCategory {
   id: string
@@ -454,9 +455,11 @@ export default function ProductsPage() {
                       <div className="flex items-center gap-3">
                         <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
                           {product.images.length > 0 ? (
-                            <img
+                            <Image
                               src={product.images[0]}
                               alt={product.name}
+                              width={48}
+                              height={48}
                               className="w-full h-full object-cover rounded-lg"
                             />
                           ) : (
@@ -764,7 +767,7 @@ export default function ProductsPage() {
               <div className="space-y-2">
                 <Label>Product Images</Label>
                 <div className="border-2 border-dashed rounded-lg p-6 text-center">
-                  <Image className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                  <ImageIcon className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
                   <p className="text-sm text-muted-foreground">
                     Drag and drop images or click to browse
                   </p>
