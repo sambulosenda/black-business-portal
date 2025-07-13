@@ -122,7 +122,7 @@ export default async function OrderConfirmationPage({ params }: OrderConfirmatio
                       <p className="text-sm text-gray-600">Delivery Address</p>
                       <p className="font-medium">
                         {order.deliveryAddress && typeof order.deliveryAddress === 'object' && 
-                          `${(order.deliveryAddress as any).address}, ${(order.deliveryAddress as any).city}, ${(order.deliveryAddress as any).state} ${(order.deliveryAddress as any).zipCode}`
+                          `${(order.deliveryAddress as { address: string; city: string; state: string; zipCode: string }).address}, ${(order.deliveryAddress as { address: string; city: string; state: string; zipCode: string }).city}, ${(order.deliveryAddress as { address: string; city: string; state: string; zipCode: string }).state} ${(order.deliveryAddress as { address: string; city: string; state: string; zipCode: string }).zipCode}`
                         }
                       </p>
                     </div>
@@ -141,7 +141,7 @@ export default async function OrderConfirmationPage({ params }: OrderConfirmatio
                     </p>
                     <p className="text-sm text-gray-600 mt-2">
                       <Clock className="h-4 w-4 inline mr-1" />
-                      You'll receive a notification when your order is ready for pickup
+                      You&apos;ll receive a notification when your order is ready for pickup
                     </p>
                   </div>
                 )}

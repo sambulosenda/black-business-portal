@@ -32,7 +32,12 @@ export async function PUT(request: Request) {
 
     // Create new availabilities
     const created = await prisma.availability.createMany({
-      data: availabilities.map((availability: any) => ({
+      data: availabilities.map((availability: {
+        dayOfWeek: number;
+        startTime: string;
+        endTime: string;
+        isActive: boolean;
+      }) => ({
         businessId,
         dayOfWeek: availability.dayOfWeek,
         startTime: availability.startTime,

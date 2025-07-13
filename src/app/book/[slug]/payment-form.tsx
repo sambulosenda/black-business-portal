@@ -148,7 +148,6 @@ export default function PaymentForm({
   date,
   time,
   amount,
-  fees,
 }: PaymentFormProps) {
   const stripePromise = getStripe()
 

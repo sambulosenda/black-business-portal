@@ -73,17 +73,17 @@ export async function POST(request: Request) {
     })
 
     return NextResponse.json({ url: accountLink.url })
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error creating Stripe Connect account:', error)
     
     // Return more specific error message
-    const errorMessage = error.message || 'Failed to create Stripe account'
-    const isStripeError = error.type === 'StripeError'
+    const errorMessage = error instanceof Error ? error.message : 'Failed to create Stripe account'
+    const isStripeError = error instanceof Error && 'type' in error && error.type === 'StripeError'
     
     return NextResponse.json(
       { 
         error: errorMessage,
-        details: isStripeError ? error.raw?.message : undefined 
+        details: isStripeError && 'raw' in error ? (error.raw as Record<string, unknown>)?.message : undefined 
       },
       { status: 500 }
     )

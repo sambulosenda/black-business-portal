@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button'
 import { Phone, Calendar, MapPin, ShoppingCart } from 'lucide-react'
 import { Session } from 'next-auth'
 import { useCart } from '@/contexts/cart-context'
+import type { BusinessWithRelations } from '@/types'
 
 interface FloatingActionsProps {
-  business: any
+  business: BusinessWithRelations
   session: Session | null
 }
 

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const session = await getSession()
     
@@ -49,7 +49,17 @@ export async function GET(request: Request) {
       })
 
       // Group bookings by user
-      const customerMap = new Map<string, any>()
+      const customerMap = new Map<string, {
+        userId: string;
+        customerName: string | null;
+        customerEmail: string | null;
+        customerPhone: string | null;
+        firstVisit: Date;
+        lastVisit: Date;
+        totalVisits: number;
+        totalSpent: number;
+        services: Map<string, number>;
+      }>()
       
       for (const booking of bookings) {
         const userId = booking.userId

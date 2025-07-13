@@ -3,16 +3,17 @@
 import { Badge } from '@/components/ui/badge'
 import { S3Image } from '@/components/ui/s3-image'
 import { MapPin, Phone, Globe, Instagram, Star, Clock, Shield, Sparkles } from 'lucide-react'
+import type { BusinessWithRelations, BusinessPhoto } from '@/types'
 
 interface BusinessHeroProps {
-  business: any
+  business: BusinessWithRelations
   averageRating: number
   totalReviews: number
   isOpenNow: boolean
 }
 
 export default function BusinessHero({ business, averageRating, totalReviews, isOpenNow }: BusinessHeroProps) {
-  const heroImage = business.photos.find((p: any) => p.type === 'HERO')
+  const heroImage = business.photos?.find((p: BusinessPhoto) => p.type === 'HERO')
   
   return (
     <div className="relative">

@@ -10,7 +10,12 @@ export async function GET(request: NextRequest) {
     const minRating = searchParams.get('minRating') ? parseInt(searchParams.get('minRating')!) : 0
 
     // Build where clause
-    const where: any = {
+    const where: {
+      isActive: boolean;
+      OR?: Array<Record<string, unknown>>;
+      category?: string;
+      city?: Record<string, unknown>;
+    } = {
       isActive: true,
     }
 

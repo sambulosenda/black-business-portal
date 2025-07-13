@@ -7,6 +7,7 @@ import CancelButton from './cancel-button'
 import RefundButton from './refund-button'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import type { BookingWithRelations, ReviewWithRelations } from '@/types'
 
 interface Booking {
   id: string
@@ -15,7 +16,7 @@ interface Booking {
   endTime: Date
   status: string
   paymentStatus: string | null
-  totalPrice: any
+  totalPrice: number
   business: {
     businessName: string
     slug: string
@@ -26,7 +27,7 @@ interface Booking {
   service: {
     name: string
   }
-  review: any
+  review: ReviewWithRelations | null
 }
 
 interface BookingsTableProps {
@@ -41,7 +42,6 @@ export default function BookingsTable({
   title, 
   bookings, 
   emptyState, 
-  showActions = false, 
   isPast = false 
 }: BookingsTableProps) {
   const columns: Column<Booking>[] = [

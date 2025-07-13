@@ -3,10 +3,11 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { DayPicker } from 'react-day-picker'
-import { format, addDays, setHours, setMinutes, isBefore, isAfter, startOfDay } from 'date-fns'
+import { format, setHours, setMinutes, isBefore } from 'date-fns'
 import Link from 'next/link'
 import 'react-day-picker/style.css'
 import { Breadcrumb, BreadcrumbWrapper } from '@/components/ui/breadcrumb'
+import type { BusinessWithRelations, ServiceWithRelations, PromotionWithRelations } from '@/types'
 
 interface Service {
   id: string
@@ -53,7 +54,7 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
   const [promoDiscount, setPromoDiscount] = useState<number>(0)
   const [promoValidating, setPromoValidating] = useState(false)
   const [promoError, setPromoError] = useState('')
-  const [appliedPromotion, setAppliedPromotion] = useState<any>(null)
+  const [appliedPromotion, setAppliedPromotion] = useState<PromotionWithRelations | null>(null)
 
   useEffect(() => {
     params.then(p => setSlug(p.slug))
@@ -63,12 +64,14 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
     if (slug) {
       fetchBusinessData()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug])
 
   useEffect(() => {
     if (selectedDate && selectedService && business) {
       generateTimeSlots()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate, selectedService, business])
 
   const fetchBusinessData = async () => {
@@ -241,8 +244,8 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
       }))
       
       router.push(`/book/${slug}/payment`)
-    } catch (error: any) {
-      setError(error.message || 'Failed to create booking')
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Failed to create booking')
     } finally {
       setBookingLoading(false)
     }

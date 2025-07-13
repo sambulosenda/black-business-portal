@@ -15,7 +15,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
-import { Clock, Calendar, Trash2, Plus, Loader2, AlertCircle, CheckCircle } from 'lucide-react'
+import { Clock, Calendar, Trash2, Plus, Loader2, CheckCircle } from 'lucide-react'
 
 const DAYS_OF_WEEK = [
   { value: 0, label: 'Sunday' },
@@ -166,7 +166,7 @@ export default function AvailabilityForm({
 
   return (
     <div className="space-y-6">
-      <Tabs defaultValue="hours" value={selectedTab} onValueChange={(value: any) => setSelectedTab(value)}>
+      <Tabs defaultValue="hours" value={selectedTab} onValueChange={(value) => setSelectedTab(value as 'hours' | 'timeoff')}>
         <TabsList className="grid w-full grid-cols-2 bg-gray-100">
           <TabsTrigger value="hours" className="data-[state=active]:bg-white data-[state=active]:text-indigo-600">
             <Clock className="h-4 w-4 mr-2" />
@@ -290,7 +290,7 @@ export default function AvailabilityForm({
             <CardHeader>
               <CardTitle className="text-lg font-semibold">Add Time Off</CardTitle>
               <CardDescription className="text-gray-600">
-                Block dates when you're not available for bookings
+                Block dates when you&apos;re not available for bookings
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">

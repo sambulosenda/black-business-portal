@@ -28,7 +28,10 @@ export async function GET(request: Request) {
     const endDate = searchParams.get('endDate')
 
     // Build where clause
-    const where: any = {
+    const where: {
+      businessId: string;
+      date?: { gte: Date; lte: Date };
+    } = {
       businessId: business.id,
     }
 

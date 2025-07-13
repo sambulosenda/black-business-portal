@@ -8,11 +8,9 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   TrendingUp, 
-  TrendingDown, 
   DollarSign, 
   Calendar, 
   Users, 
-  Package,
   ArrowUpRight,
   ArrowDownRight,
   RefreshCw
@@ -52,7 +50,7 @@ interface AnalyticsData {
   }>;
 }
 
-export default function AnalyticsDashboard({ businessId }: { businessId: string }) {
+export default function AnalyticsDashboard() {
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');

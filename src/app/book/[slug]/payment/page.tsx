@@ -5,9 +5,20 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import PaymentForm from '../payment-form'
 
-export default function PaymentPage({ params }: { params: Promise<{ slug: string }> }) {
+interface PaymentData {
+  paymentIntentId: string
+  clientSecret: string
+  amount: number
+  bookingId: string
+  businessName: string
+  serviceName: string
+  date: string
+  time: string
+}
+
+export default function PaymentPage() {
   const router = useRouter()
-  const [paymentData, setPaymentData] = useState<any>(null)
+  const [paymentData, setPaymentData] = useState<PaymentData | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {

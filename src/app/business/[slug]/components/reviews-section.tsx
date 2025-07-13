@@ -3,9 +3,10 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Star, ThumbsUp, MoreHorizontal } from 'lucide-react'
+import type { ReviewWithRelations } from '@/types'
 
 interface ReviewsSectionProps {
-  reviews: any[]
+  reviews: ReviewWithRelations[]
   averageRating: number
   totalReviews: number
   businessSlug: string

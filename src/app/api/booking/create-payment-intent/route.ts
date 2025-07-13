@@ -163,24 +163,26 @@ export async function POST(request: Request) {
         business: fees.businessPayoutDollars,
       },
     })
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error creating payment intent:', error)
     
     // Provide specific error messages
     let errorMessage = 'Failed to create payment'
     let statusCode = 500
     
-    if (error.type === 'StripeInvalidRequestError') {
-      if (error.code === 'account_invalid') {
-        errorMessage = 'Business payment account is not properly configured'
-      } else if (error.code === 'parameter_invalid_integer') {
-        errorMessage = 'Invalid price amount'
+    if (error instanceof Error) {
+      if ('type' in error && error.type === 'StripeInvalidRequestError') {
+        if ('code' in error && error.code === 'account_invalid') {
+          errorMessage = 'Business payment account is not properly configured'
+        } else if ('code' in error && error.code === 'parameter_invalid_integer') {
+          errorMessage = 'Invalid price amount'
+        }
+        statusCode = 400
+      } else if (error.message?.includes('Customer')) {
+        errorMessage = 'Failed to create customer profile'
+      } else if (error.message?.includes('connected account')) {
+        errorMessage = 'Business is not set up to receive payments'
       }
-      statusCode = 400
-    } else if (error.message?.includes('Customer')) {
-      errorMessage = 'Failed to create customer profile'
-    } else if (error.message?.includes('connected account')) {
-      errorMessage = 'Business is not set up to receive payments'
     }
     
     return NextResponse.json(

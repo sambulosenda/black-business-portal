@@ -5,9 +5,10 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Phone, Calendar } from 'lucide-react'
 import { Session } from 'next-auth'
+import type { BusinessWithRelations } from '@/types'
 
 interface StickyHeaderProps {
-  business: any
+  business: BusinessWithRelations
   session: Session | null
 }
 

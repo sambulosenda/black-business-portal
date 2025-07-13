@@ -106,7 +106,27 @@ export async function POST(request: NextRequest) {
 }
 
 async function validatePromotion(
-  promotion: any,
+  promotion: {
+    id: string;
+    businessId: string;
+    name: string;
+    description: string | null;
+    code: string | null;
+    type: string;
+    value: number;
+    scope: string;
+    serviceIds: string[];
+    productIds: string[];
+    startDate: Date;
+    endDate: Date;
+    isActive: boolean;
+    usageLimit: number | null;
+    usageCount: number;
+    perCustomerLimit: number | null;
+    minimumAmount: number | null;
+    minimumItems: number | null;
+    firstTimeOnly: boolean;
+  },
   userId: string,
   subtotal: number,
   serviceIds: string[],
@@ -213,7 +233,10 @@ async function validatePromotion(
 }
 
 function calculateDiscount(
-  promotion: any,
+  promotion: {
+    type: string;
+    value: number;
+  },
   subtotal: number,
   itemCount: number
 ): number {

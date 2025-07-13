@@ -6,10 +6,11 @@ import { Badge } from '@/components/ui/badge'
 import { S3Image } from '@/components/ui/s3-image'
 import { ShoppingCart, Sparkles } from 'lucide-react'
 import { useCart } from '@/contexts/cart-context'
+import type { ProductWithRelations, ProductCategory } from '@/types'
 
 interface ProductsSectionProps {
-  products: any[]
-  productCategories: any[]
+  products: ProductWithRelations[]
+  productCategories: ProductCategory[]
   businessId: string
   businessName: string
   businessSlug: string
@@ -30,7 +31,7 @@ export default function ProductsSection({
     ? products.filter(p => p.category?.id === selectedCategory)
     : products
     
-  const handleAddToCart = (product: any) => {
+  const handleAddToCart = (product: ProductWithRelations) => {
     addProduct({
       id: product.id,
       businessId,
@@ -64,7 +65,7 @@ export default function ProductsSection({
           >
             All Products
           </button>
-          {productCategories.map((category: any) => (
+          {productCategories.map((category: ProductCategory) => (
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
@@ -120,7 +121,13 @@ export default function ProductsSection({
   )
 }
 
-function ProductCard({ product, onAddToCart, featured = false }: any) {
+interface ProductCardProps {
+  product: ProductWithRelations
+  onAddToCart: (product: ProductWithRelations) => void
+  featured?: boolean
+}
+
+function ProductCard({ product, onAddToCart, featured = false }: ProductCardProps) {
   const discountPercentage = product.compareAtPrice 
     ? Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)
     : 0

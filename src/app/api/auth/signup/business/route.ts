@@ -44,7 +44,7 @@ export async function POST(req: Request) {
     }
 
     // Generate unique slug
-    let slug = createSlug(validatedData.businessName)
+    const slug = createSlug(validatedData.businessName)
     let slugSuffix = 0
     let uniqueSlug = slug
 
@@ -74,7 +74,7 @@ export async function POST(req: Request) {
           userId: user.id,
           businessName: validatedData.businessName,
           slug: uniqueSlug,
-          category: validatedData.category as any,
+          category: validatedData.category as 'HAIR_SALON' | 'BARBER_SHOP' | 'NAIL_SALON' | 'SPA' | 'MASSAGE' | 'MAKEUP' | 'SKINCARE' | 'WELLNESS' | 'OTHER',
           phone: validatedData.businessPhone,
           email: validatedData.businessEmail || null,
           address: validatedData.address,

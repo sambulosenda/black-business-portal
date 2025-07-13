@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
-import { parse, format, addMinutes } from 'date-fns'
+import { parse, addMinutes } from 'date-fns'
 
 const bookingSchema = z.object({
   businessId: z.string(),
