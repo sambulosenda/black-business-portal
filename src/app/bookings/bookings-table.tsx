@@ -7,7 +7,7 @@ import CancelButton from './cancel-button'
 import RefundButton from './refund-button'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import type { BookingWithRelations, ReviewWithRelations } from '@/types'
+import type { ReviewWithRelations } from '@/types'
 
 interface Booking {
   id: string

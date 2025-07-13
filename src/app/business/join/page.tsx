@@ -412,7 +412,7 @@ export default function BusinessLandingPage() {
                         <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                       ))}
                     </div>
-                    <p className="text-gray-700 mb-6 italic">"{testimonial.quote}"</p>
+                    <p className="text-gray-700 mb-6 italic">&quot;{testimonial.quote}&quot;</p>
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 bg-gray-300 rounded-full" />
                       <div>
@@ -439,7 +439,7 @@ export default function BusinessLandingPage() {
               Choose the perfect plan for your business
             </h2>
             <p className="text-xl text-gray-600">
-              Start free, upgrade when you're ready. No hidden fees.
+              Start free, upgrade when you&apos;re ready. No hidden fees.
             </p>
           </div>
 

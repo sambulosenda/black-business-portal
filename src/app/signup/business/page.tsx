@@ -95,7 +95,7 @@ export default function BusinessSignupPage() {
       } else {
         router.push('/login?registered=business')
       }
-    } catch (error) {
+    } catch {
       setError('Something went wrong. Please try again.')
     } finally {
       setIsLoading(false)

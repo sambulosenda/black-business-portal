@@ -459,7 +459,7 @@ export default function CustomerDetailPage() {
                   <div className="text-sm">
                     <p className="font-medium text-yellow-900">At Risk Customer</p>
                     <p className="text-yellow-700">
-                      Hasn't visited in {daysSinceLastVisit} days. Consider reaching out.
+                      Hasn&apos;t visited in {daysSinceLastVisit} days. Consider reaching out.
                     </p>
                   </div>
                 </div>

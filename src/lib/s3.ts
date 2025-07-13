@@ -48,8 +48,7 @@ export function getPublicUrl(key: string): string {
 // Generate a presigned URL for uploading
 export async function generateUploadUrl(
   key: string,
-  contentType: string,
-  maxSizeInBytes: number = 4 * 1024 * 1024 // 4MB default
+  contentType: string
 ): Promise<{ uploadUrl: string; publicUrl: string }> {
   if (!s3Client || !BUCKET_NAME) {
     throw new Error('S3 client not initialized. This function must be called on the server.')

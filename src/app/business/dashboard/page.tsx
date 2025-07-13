@@ -126,7 +126,7 @@ export default async function BusinessDashboardPage() {
           Welcome back, {business.businessName}!
         </h1>
         <p className="text-gray-600">
-          Here's an overview of your business performance
+          Here&apos;s an overview of your business performance
         </p>
       </div>
 

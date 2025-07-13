@@ -278,7 +278,7 @@ export default function NotificationSettingsPage() {
                       }
                     />
                     <p className="text-sm text-muted-foreground">
-                      The name that appears in the "From" field
+                      The name that appears in the &quot;From&quot; field
                     </p>
                   </div>
 

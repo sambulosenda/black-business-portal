@@ -5,14 +5,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { 
-  Search, User, Calendar, DollarSign, Star, MessageSquare, 
-  Phone, Mail, Loader2, Filter, Download, TrendingUp, Clock,
-  ChevronRight, Users, Crown, AlertCircle
+  Search, 
+  Phone, Mail, Loader2, Filter, Download, TrendingUp,
+  ChevronRight, Users, Crown, AlertCircle, DollarSign
 } from "lucide-react"
 import { format } from "date-fns"
 import { toast } from "sonner"
@@ -275,7 +274,7 @@ export default function CustomersPage() {
             <CardContent>
               <div className="text-2xl font-bold text-gray-900">{metrics.atRiskCustomers.length}</div>
               <p className="text-xs text-gray-500 mt-1">
-                Haven't visited in 90+ days
+                Haven&apos;t visited in 90+ days
               </p>
             </CardContent>
           </Card>

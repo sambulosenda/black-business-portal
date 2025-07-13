@@ -62,7 +62,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
       if (!response.ok) throw new Error('Failed to fetch photos')
       const data = await response.json()
       setPhotos(data.photos)
-    } catch (error) {
+    } catch {
       toast.error('Failed to load photos')
     } finally {
       setLoading(false)
@@ -88,7 +88,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
       
       await fetchPhotos()
       toast.success('Hero image updated')
-    } catch (error) {
+    } catch {
       toast.error('Failed to update photo')
     }
   }
@@ -111,7 +111,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
       await fetchPhotos()
       setEditingPhoto(null)
       toast.success('Photo updated')
-    } catch (error) {
+    } catch {
       toast.error('Failed to update photo')
     }
   }
@@ -129,7 +129,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
       
       await fetchPhotos()
       toast.success('Photo deleted')
-    } catch (error) {
+    } catch {
       toast.error('Failed to delete photo')
     }
   }

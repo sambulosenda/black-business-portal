@@ -27,7 +27,7 @@ export interface BusinessWithRelations {
   isVerified: boolean
   isActive: boolean
   images: string[]
-  openingHours: any // JSON field
+  openingHours: Record<string, unknown> // JSON field
   stripeAccountId: string | null
   stripeOnboarded: boolean
   commissionRate: number
@@ -199,7 +199,7 @@ export interface CustomerProfileWithRelations {
   visitCount: number
   lastVisit: Date | null
   segment: string
-  preferences: any // JSON field
+  preferences: Record<string, unknown> // JSON field
   createdAt: Date
   updatedAt: Date
   user?: {
@@ -223,7 +223,7 @@ export interface Communication {
   status: string
   scheduledFor: Date | null
   sentAt: Date | null
-  metadata: any // JSON field
+  metadata: Record<string, unknown> // JSON field
   createdAt: Date
 }
 
@@ -252,7 +252,7 @@ export interface OrderWithRelations {
   customerPhone: string | null
   deliveryAddress: string | null
   notes: string | null
-  metadata: any // JSON field
+  metadata: Record<string, unknown> // JSON field
   createdAt: Date
   updatedAt: Date
   items?: OrderItem[]
@@ -272,7 +272,7 @@ export interface OrderItem {
   price: number
   quantity: number
   total: number
-  metadata: any // JSON field
+  metadata: Record<string, unknown> // JSON field
   product?: ProductWithRelations
 }
 
@@ -307,8 +307,8 @@ export interface PromotionWithRelations {
 export interface ColumnDef<T> {
   accessorKey?: keyof T | string
   id?: string
-  header?: string | ((props: any) => React.ReactNode)
-  cell?: (props: { row: { original: T; getValue: (key: string) => any } }) => React.ReactNode
+  header?: string | ((props: { column: { getIsSorted: () => false | 'asc' | 'desc' } }) => React.ReactNode)
+  cell?: (props: { row: { original: T; getValue: (key: string) => unknown } }) => React.ReactNode
   enableSorting?: boolean
   enableHiding?: boolean
 }

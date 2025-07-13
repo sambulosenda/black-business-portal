@@ -59,7 +59,7 @@ export default function CustomerSignupPage() {
       } else {
         router.push('/login?registered=true')
       }
-    } catch (error) {
+    } catch {
       setError('Something went wrong. Please try again.')
     } finally {
       setIsLoading(false)

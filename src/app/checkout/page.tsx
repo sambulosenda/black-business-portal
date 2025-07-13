@@ -17,6 +17,7 @@ import {
   Phone, Mail, Loader2, AlertCircle, Check 
 } from 'lucide-react'
 import { toast } from 'sonner'
+import type { PromotionWithRelations } from '@/types'
 
 export default function CheckoutPage() {
   const router = useRouter()
@@ -28,7 +29,7 @@ export default function CheckoutPage() {
   const [promoDiscount, setPromoDiscount] = useState<number>(0)
   const [promoValidating, setPromoValidating] = useState(false)
   const [promoError, setPromoError] = useState('')
-  const [appliedPromotion, setAppliedPromotion] = useState<any>(null)
+  const [appliedPromotion, setAppliedPromotion] = useState<PromotionWithRelations | null>(null)
 
   // Form state
   const [formData, setFormData] = useState({
@@ -213,7 +214,7 @@ export default function CheckoutPage() {
                     <CardTitle>Order Type</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <RadioGroup value={orderType} onValueChange={(value: any) => setOrderType(value)}>
+                    <RadioGroup value={orderType} onValueChange={(value) => setOrderType(value as 'pickup' | 'delivery')}>
                       <div className="flex items-center space-x-2 p-4 border rounded-lg hover:bg-gray-50">
                         <RadioGroupItem value="pickup" id="pickup" />
                         <Label htmlFor="pickup" className="flex-1 cursor-pointer">

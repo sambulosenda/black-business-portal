@@ -7,7 +7,7 @@ import { format, setHours, setMinutes, isBefore } from 'date-fns'
 import Link from 'next/link'
 import 'react-day-picker/style.css'
 import { Breadcrumb, BreadcrumbWrapper } from '@/components/ui/breadcrumb'
-import type { BusinessWithRelations, ServiceWithRelations, PromotionWithRelations } from '@/types'
+import type { PromotionWithRelations } from '@/types'
 
 interface Service {
   id: string
