@@ -5,8 +5,8 @@ import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+// import { Card, CardContent } from '@/components/ui/card' // Commented out - may be used later
+// import { Badge } from '@/components/ui/badge' // Commented out - may be used later
 import { SkeletonGrid } from '@/components/ui/skeleton-card'
 import Navigation from '@/components/navigation'
 import Footer from '@/components/footer'

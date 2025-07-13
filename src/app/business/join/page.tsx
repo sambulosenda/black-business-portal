@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+// import { useState } from 'react' // Commented out - may be used later
 import Link from 'next/link'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation' // Commented out - may be used later
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -11,8 +11,8 @@ import { CheckCircle, TrendingUp, Calendar, Users, DollarSign, Star, Clock, Shie
 import { motion } from 'framer-motion'
 
 export default function BusinessLandingPage() {
-  const router = useRouter()
-  const [videoPlaying, setVideoPlaying] = useState(false)
+  // const router = useRouter() // Commented out - may be used later
+  // const [videoPlaying, setVideoPlaying] = useState(false) // Commented out - may be used later
 
   const features = [
     {

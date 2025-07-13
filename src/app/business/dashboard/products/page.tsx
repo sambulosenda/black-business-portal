@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -13,9 +13,9 @@ import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
 import { 
-  Package, Plus, Search, Filter, Download, Upload, Edit, 
-  Trash, Image as ImageIcon, DollarSign, Barcode, Tag, AlertTriangle,
-  TrendingUp, Package2, ShoppingCart, Loader2
+  Package, Plus, Search, Edit, 
+  Trash, Image as ImageIcon, DollarSign, Tag, AlertTriangle,
+  Package2, Loader2
 } from 'lucide-react'
 import { toast } from 'sonner'
 import Image from 'next/image'
@@ -114,7 +114,7 @@ export default function ProductsPage() {
       const response = await fetch('/api/business/products')
       if (response.ok) {
         const data = await response.json()
-        setProducts(data.products.map((p: any) => ({
+        setProducts(data.products.map((p: Product) => ({
           ...p,
           price: Number(p.price),
           compareAtPrice: p.compareAtPrice ? Number(p.compareAtPrice) : null,
@@ -151,7 +151,7 @@ export default function ProductsPage() {
         setMetrics({
           ...data,
           totalValue: Number(data.totalValue),
-          topSellingProducts: data.topSellingProducts.map((p: any) => ({
+          topSellingProducts: data.topSellingProducts.map((p: Product) => ({
             ...p,
             price: Number(p.price),
           })),

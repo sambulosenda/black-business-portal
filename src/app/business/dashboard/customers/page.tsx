@@ -54,7 +54,7 @@ export default function CustomersPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [filterType, setFilterType] = useState<'all' | 'vip' | 'new' | 'at-risk'>('all')
   const [sortBy, setSortBy] = useState<'recent' | 'spent' | 'visits'>('recent')
-  const [selectedCustomer, setSelectedCustomer] = useState<CustomerProfile | null>(null)
+  // const [selectedCustomer, setSelectedCustomer] = useState<CustomerProfile | null>(null) // Commented out - may be used later
 
   useEffect(() => {
     fetchCustomers()
@@ -296,7 +296,7 @@ export default function CustomersPage() {
                   className="pl-8 border-gray-300"
                 />
               </div>
-              <Select value={filterType} onValueChange={(value: any) => setFilterType(value)}>
+              <Select value={filterType} onValueChange={(value) => setFilterType(value as 'all' | 'vip' | 'new' | 'at-risk')}>
                 <SelectTrigger className="w-32">
                   <Filter className="h-4 w-4 mr-2" />
                   <SelectValue />
@@ -308,7 +308,7 @@ export default function CustomersPage() {
                   <SelectItem value="at-risk">At Risk</SelectItem>
                 </SelectContent>
               </Select>
-              <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
+              <Select value={sortBy} onValueChange={(value) => setSortBy(value as 'recent' | 'spent' | 'visits')}>
                 <SelectTrigger className="w-32">
                   <SelectValue />
                 </SelectTrigger>

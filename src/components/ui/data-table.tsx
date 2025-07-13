@@ -98,7 +98,7 @@ export function DataTable<T extends Record<string, unknown>>({
     
     // Handle nested keys like 'user.name'
     const keys = String(column.key).split('.')
-    let value: any = item
+    let value: unknown = item
     for (const key of keys) {
       value = value?.[key]
     }

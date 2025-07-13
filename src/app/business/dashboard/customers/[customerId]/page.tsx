@@ -13,9 +13,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { 
-  ArrowLeft, User, Calendar, DollarSign, Star, MessageSquare, 
+  ArrowLeft, User, Calendar, DollarSign, MessageSquare, 
   Phone, Mail, Loader2, Edit, Save, X, Plus, Crown, Ban,
-  Clock, TrendingUp, Gift, AlertCircle, Send
+  Clock, AlertCircle, Send
 } from "lucide-react"
 import { format } from "date-fns"
 import { toast } from "sonner"
@@ -413,7 +413,7 @@ export default function CustomerDetailPage() {
             <CardContent>
               <div className="flex flex-wrap gap-2 mb-4">
                 {customer.tags.map((tag) => (
-                  <Badge key={tag} variant="secondary" className="pl-3 pr-1">
+                  <Badge key={tag} variant="outline" className="pl-3 pr-1">
                     {tag}
                     <button
                       onClick={() => removeTag(tag)}
@@ -511,7 +511,7 @@ export default function CustomerDetailPage() {
                               booking.status === 'COMPLETED' ? 'success' :
                               booking.status === 'CONFIRMED' ? 'default' :
                               booking.status === 'CANCELLED' ? 'destructive' :
-                              'secondary'
+                              'outline'
                             }
                           >
                             {booking.status}

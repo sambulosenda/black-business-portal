@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { PhotoType } from '@prisma/client'
 import { S3Image } from '@/components/ui/s3-image'
 import { ImageUpload } from '@/components/ui/image-upload'
@@ -10,9 +10,9 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Badge } from '@/components/ui/badge'
+// import { Badge } from '@/components/ui/badge' // Commented out - may be used later
 import { toast } from 'sonner'
-import { Trash2, Star, Edit2, Loader2, ImageIcon, Plus } from 'lucide-react'
+import { Trash2, Star, Edit2, Loader2, ImageIcon } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -21,7 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { cn } from '@/lib/utils'
+// import { cn } from '@/lib/utils' // Commented out - may be used later
 
 interface Photo {
   id: string
@@ -52,11 +52,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
     order: 0,
   })
 
-  useEffect(() => {
-    fetchPhotos()
-  }, [businessId])
-
-  const fetchPhotos = async () => {
+  const fetchPhotos = useCallback(async () => {
     try {
       const response = await fetch(`/api/business/photos?businessId=${businessId}`)
       if (!response.ok) throw new Error('Failed to fetch photos')
@@ -67,7 +63,11 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [businessId])
+
+  useEffect(() => {
+    fetchPhotos()
+  }, [fetchPhotos])
 
   const handleUploadComplete = () => {
     fetchPhotos()

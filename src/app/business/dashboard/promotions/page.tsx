@@ -11,8 +11,6 @@ import { toast } from 'sonner'
 import { 
   Plus, 
   Calendar, 
-  Percent, 
-  DollarSign, 
   Tag, 
   Users, 
   TrendingUp,
@@ -123,34 +121,34 @@ export default function PromotionsPage() {
     toast.success('Promo code copied to clipboard')
   }
 
-  const getPromotionTypeIcon = (type: string) => {
-    switch (type) {
-      case 'PERCENTAGE':
-        return <Percent className="w-4 h-4" />
-      case 'FIXED_AMOUNT':
-        return <DollarSign className="w-4 h-4" />
-      case 'BOGO':
-      case 'BUNDLE':
-        return <Tag className="w-4 h-4" />
-      default:
-        return <Tag className="w-4 h-4" />
-    }
-  }
+  // const getPromotionTypeIcon = (type: string) => {
+  //   switch (type) {
+  //     case 'PERCENTAGE':
+  //       return <Percent className="w-4 h-4" />
+  //     case 'FIXED_AMOUNT':
+  //       return <DollarSign className="w-4 h-4" />
+  //     case 'BOGO':
+  //     case 'BUNDLE':
+  //       return <Tag className="w-4 h-4" />
+  //     default:
+  //       return <Tag className="w-4 h-4" />
+  //   }
+  // }
 
-  const getPromotionTypeLabel = (type: string, value: number) => {
-    switch (type) {
-      case 'PERCENTAGE':
-        return `${value}% off`
-      case 'FIXED_AMOUNT':
-        return `$${value} off`
-      case 'BOGO':
-        return 'Buy One Get One'
-      case 'BUNDLE':
-        return 'Bundle Deal'
-      default:
-        return type
-    }
-  }
+  // const getPromotionTypeLabel = (type: string, value: number) => {
+  //   switch (type) {
+  //     case 'PERCENTAGE':
+  //       return `${value}% off`
+  //     case 'FIXED_AMOUNT':
+  //       return `$${value} off`
+  //     case 'BOGO':
+  //       return 'Buy One Get One'
+  //     case 'BUNDLE':
+  //       return 'Bundle Deal'
+  //     default:
+  //       return type
+  //   }
+  // }
 
   const activePromotions = promotions.filter(p => p.isActive && new Date(p.endDate) > new Date())
   const scheduledPromotions = promotions.filter(p => p.isActive && new Date(p.startDate) > new Date())

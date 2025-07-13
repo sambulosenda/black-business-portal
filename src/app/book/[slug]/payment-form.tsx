@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation' // Commented out - may be used later
 import {
   PaymentElement,
   Elements,
@@ -36,7 +36,7 @@ function CheckoutForm({
 }: Omit<PaymentFormProps, 'clientSecret' | 'fees'>) {
   const stripe = useStripe()
   const elements = useElements()
-  const router = useRouter()
+  // const router = useRouter() // Commented out - may be used later
   const [error, setError] = useState<string | null>(null)
   const [processing, setProcessing] = useState(false)
 

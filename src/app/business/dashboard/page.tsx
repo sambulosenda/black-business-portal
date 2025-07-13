@@ -7,10 +7,8 @@ import {
   DollarSign, 
   Star, 
   Package, 
-  TrendingUp,
   Clock,
   ChevronRight,
-  Settings,
   BarChart3
 } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -71,9 +69,9 @@ export default async function BusinessDashboardPage() {
   }
 
   // Calculate stats
-  const totalBookings = await prisma.booking.count({
-    where: { businessId: business.id },
-  })
+  // const totalBookings = await prisma.booking.count({
+  //   where: { businessId: business.id },
+  // }) // Commented out - may be used later
 
   const upcomingBookings = await prisma.booking.count({
     where: {

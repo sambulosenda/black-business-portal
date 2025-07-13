@@ -44,7 +44,7 @@ export default function CalendarPage() {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null)
   const [showCancelDialog, setShowCancelDialog] = useState(false)
   const [actionLoading, setActionLoading] = useState(false)
-  const [viewChanging, setViewChanging] = useState(false)
+  // const [viewChanging, setViewChanging] = useState(false) // Commented out - may be used later
 
   // Calculate date ranges based on view mode
   const getDateRange = React.useCallback(() => {

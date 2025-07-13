@@ -24,7 +24,7 @@ export default function CartPage() {
     updateQuantity, 
     removeItem, 
     clearCart,
-    getBusinessItems 
+    // getBusinessItems // Commented out - may be used later 
   } = useCart()
 
   // Group items by business

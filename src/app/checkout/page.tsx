@@ -13,8 +13,8 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { 
-  ShoppingCart, CreditCard, Truck, MapPin, 
-  Phone, Mail, Loader2, AlertCircle, Check 
+  CreditCard, Truck, MapPin, 
+  Loader2 
 } from 'lucide-react'
 import { toast } from 'sonner'
 import type { PromotionWithRelations } from '@/types'

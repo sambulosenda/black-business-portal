@@ -7,7 +7,7 @@ import OrderPaymentForm from './order-payment-form'
 
 export default function OrderPaymentPage() {
   const router = useRouter()
-  const [paymentData, setPaymentData] = useState<any>(null)
+  const [paymentData, setPaymentData] = useState<unknown>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {

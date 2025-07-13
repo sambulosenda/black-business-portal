@@ -8,9 +8,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
+// import { Badge } from '@/components/ui/badge' // Commented out - may be used later
 import { toast } from 'sonner'
-import { Loader2, Save, Upload, X, Globe, Phone, Mail, MapPin, Store, CheckCircle, Sparkles, AlertCircle } from 'lucide-react'
+import { Loader2, Save, Globe, Phone, Mail, MapPin, Store, CheckCircle } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface BusinessProfileFormProps {

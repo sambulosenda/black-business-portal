@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 
 export async function POST(
   request: Request,
-  { params }: { params: { bookingId: string } }
+  context: { params: Promise<{ bookingId: string }> }
 ) {
   try {
     const session = await getSession()
@@ -26,6 +26,7 @@ export async function POST(
     }
 
     // Verify the booking belongs to this business
+    const params = await context.params
     const booking = await prisma.booking.findFirst({
       where: {
         id: params.bookingId,

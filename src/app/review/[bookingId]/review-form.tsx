@@ -46,8 +46,8 @@ export default function ReviewForm({ bookingId, businessId, businessName }: Revi
       }
 
       router.push('/bookings')
-    } catch (err: any) {
-      setError(err.message || 'Failed to submit review')
+    } catch (err: unknown) {
+      setError((err as Error).message || 'Failed to submit review')
     } finally {
       setLoading(false)
     }

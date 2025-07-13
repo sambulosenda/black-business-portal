@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
-import { AlertCircle, Bell, Mail, MessageSquare, Clock, Send, Loader2, Save, TestTube } from 'lucide-react'
+import { AlertCircle, Mail, MessageSquare, Clock, Loader2, Save } from 'lucide-react'
 import { toast } from 'sonner'
 
 interface NotificationSettings {
@@ -150,26 +150,26 @@ export default function NotificationSettingsPage() {
     }
   }
 
-  const updateTemplate = async (type: string, channel: string, updates: Partial<NotificationTemplate>) => {
-    try {
-      const response = await fetch(`/api/business/notifications/templates`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type, channel, ...updates }),
-      })
-
-      if (response.ok) {
-        await fetchSettings()
-        toast.success('Template updated')
-        setEditingTemplate(null)
-      } else {
-        toast.error('Failed to update template')
-      }
-    } catch (error) {
-      console.error('Error updating template:', error)
-      toast.error('Something went wrong')
-    }
-  }
+  // const updateTemplate = async (type: string, channel: string, updates: Partial<NotificationTemplate>) => {
+  //   try {
+  //     const response = await fetch(`/api/business/notifications/templates`, {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ type, channel, ...updates }),
+  //     })
+  //
+  //     if (response.ok) {
+  //       await fetchSettings()
+  //       toast.success('Template updated')
+  //       setEditingTemplate(null)
+  //     } else {
+  //       toast.error('Failed to update template')
+  //     }
+  //   } catch (error) {
+  //     console.error('Error updating template:', error)
+  //     toast.error('Something went wrong')
+  //   }
+  // }
 
   const updateTrigger = async (event: string, channel: string, updates: Partial<NotificationTrigger>) => {
     try {

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation' // Commented out - may be used later
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -35,7 +35,7 @@ interface Service {
 }
 
 export default function ServicesPage() {
-  const router = useRouter()
+  // const router = useRouter() // Commented out - may be used later
   const [services, setServices] = useState<Service[]>([])
   const [loading, setLoading] = useState(true)
   const [showAddForm, setShowAddForm] = useState(false)
