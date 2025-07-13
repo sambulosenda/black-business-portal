@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import Image from 'next/image'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -13,9 +14,9 @@ import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
 import { 
-  Package, Plus, Search, Filter, Download, Upload, Edit, 
-  Trash, Image, DollarSign, Barcode, Tag, AlertTriangle,
-  TrendingUp, Package2, ShoppingCart, Loader2
+  Package, Plus, Search, Edit, 
+  Trash, Image, DollarSign, Tag, AlertTriangle,
+  Package2, Loader2
 } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -113,7 +114,7 @@ export default function ProductsPage() {
       const response = await fetch('/api/business/products')
       if (response.ok) {
         const data = await response.json()
-        setProducts(data.products.map((p: any) => ({
+        setProducts(data.products.map((p: Product) => ({
           ...p,
           price: Number(p.price),
           compareAtPrice: p.compareAtPrice ? Number(p.compareAtPrice) : null,
@@ -150,7 +151,7 @@ export default function ProductsPage() {
         setMetrics({
           ...data,
           totalValue: Number(data.totalValue),
-          topSellingProducts: data.topSellingProducts.map((p: any) => ({
+          topSellingProducts: data.topSellingProducts.map((p: Product) => ({
             ...p,
             price: Number(p.price),
           })),
@@ -454,9 +455,11 @@ export default function ProductsPage() {
                       <div className="flex items-center gap-3">
                         <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
                           {product.images.length > 0 ? (
-                            <img
+                            <Image
                               src={product.images[0]}
                               alt={product.name}
+                              width={48}
+                              height={48}
                               className="w-full h-full object-cover rounded-lg"
                             />
                           ) : (

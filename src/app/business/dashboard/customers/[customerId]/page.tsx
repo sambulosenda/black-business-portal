@@ -13,9 +13,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { 
-  ArrowLeft, User, Calendar, DollarSign, Star, MessageSquare, 
+  ArrowLeft, User, Calendar, DollarSign, MessageSquare, 
   Phone, Mail, Loader2, Edit, Save, X, Plus, Crown, Ban,
-  Clock, TrendingUp, Gift, AlertCircle, Send
+  Clock, AlertCircle, Send
 } from "lucide-react"
 import { format } from "date-fns"
 import { toast } from "sonner"
@@ -92,7 +92,7 @@ export default function CustomerDetailPage() {
     if (customerId) {
       fetchCustomerDetails()
     }
-  }, [customerId])
+  }, [customerId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchCustomerDetails = async () => {
     try {
@@ -459,7 +459,7 @@ export default function CustomerDetailPage() {
                   <div className="text-sm">
                     <p className="font-medium text-yellow-900">At Risk Customer</p>
                     <p className="text-yellow-700">
-                      Hasn't visited in {daysSinceLastVisit} days. Consider reaching out.
+                      Hasn&apos;t visited in {daysSinceLastVisit} days. Consider reaching out.
                     </p>
                   </div>
                 </div>

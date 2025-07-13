@@ -6,10 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, startOfWeek, endOfWeek, isSameMonth, addMonths, subMonths, startOfDay, endOfDay, addDays, isToday, parseISO } from "date-fns"
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, User, DollarSign, Phone, Loader2, CheckCircle, XCircle, AlertCircle, TrendingUp, Users, Calendar, Scissors, Palette, Sparkles, Heart, Activity } from "lucide-react"
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, startOfWeek, endOfWeek, isSameMonth, addMonths, subMonths, startOfDay, endOfDay, addDays, isToday } from "date-fns"
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, User, DollarSign, Phone, Loader2, CheckCircle, XCircle, AlertCircle, TrendingUp, Calendar, Scissors, Palette, Sparkles, Heart, Activity } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
@@ -154,7 +154,7 @@ export default function ImprovedCalendarPage() {
     }
 
     fetchBookings()
-  }, [currentDate, viewMode])
+  }, [currentDate, viewMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Navigation handlers
   const goToPrevious = () => {
@@ -681,7 +681,7 @@ export default function ImprovedCalendarPage() {
           <div className="bg-white/10 backdrop-blur rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-indigo-100 text-sm">Today's Revenue</p>
+                <p className="text-indigo-100 text-sm">Today&apos;s Revenue</p>
                 <p className="text-2xl font-bold">${stats.revenue.toFixed(0)}</p>
               </div>
               <TrendingUp className="h-8 w-8 text-indigo-200" />

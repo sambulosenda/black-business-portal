@@ -5,7 +5,11 @@ import { S3Image } from '@/components/ui/s3-image'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface GallerySectionProps {
-  photos: any[]
+  photos: Array<{
+    id: string;
+    imageUrl: string;
+    caption: string | null;
+  }>
 }
 
 export default function GallerySection({ photos }: GallerySectionProps) {

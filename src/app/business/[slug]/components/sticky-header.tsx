@@ -7,7 +7,11 @@ import { Phone, Calendar } from 'lucide-react'
 import { Session } from 'next-auth'
 
 interface StickyHeaderProps {
-  business: any
+  business: {
+    businessName: string;
+    slug: string;
+    phone: string;
+  }
   session: Session | null
 }
 

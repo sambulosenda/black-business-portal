@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { DayPicker } from 'react-day-picker'
-import { format, addDays, setHours, setMinutes, isBefore, isAfter, startOfDay } from 'date-fns'
+import { format, setHours, setMinutes, isBefore } from 'date-fns'
 import Link from 'next/link'
 import 'react-day-picker/style.css'
 import { Breadcrumb, BreadcrumbWrapper } from '@/components/ui/breadcrumb'
@@ -53,7 +53,13 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
   const [promoDiscount, setPromoDiscount] = useState<number>(0)
   const [promoValidating, setPromoValidating] = useState(false)
   const [promoError, setPromoError] = useState('')
-  const [appliedPromotion, setAppliedPromotion] = useState<any>(null)
+  const [appliedPromotion, setAppliedPromotion] = useState<{
+    id: string;
+    code: string | null;
+    type: string;
+    value: number;
+    description: string | null;
+  } | null>(null)
 
   useEffect(() => {
     params.then(p => setSlug(p.slug))
@@ -63,13 +69,13 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
     if (slug) {
       fetchBusinessData()
     }
-  }, [slug])
+  }, [slug]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (selectedDate && selectedService && business) {
       generateTimeSlots()
     }
-  }, [selectedDate, selectedService, business])
+  }, [selectedDate, selectedService, business]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchBusinessData = async () => {
     try {
