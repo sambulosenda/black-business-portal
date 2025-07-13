@@ -134,7 +134,7 @@ export async function PUT(
     }
 
     // Update the staff member
-    const updatedStaff = await prisma.staff.update({
+    await prisma.staff.update({
       where: { id: params.staffId },
       data: {
         name,

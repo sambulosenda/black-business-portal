@@ -19,11 +19,6 @@ interface PaymentFormProps {
   date: Date
   time: string
   amount: number
-  fees: {
-    platform: number
-    stripe: number
-    business: number
-  }
 }
 
 function CheckoutForm({
@@ -33,10 +28,9 @@ function CheckoutForm({
   date,
   time,
   amount,
-}: Omit<PaymentFormProps, 'clientSecret' | 'fees'>) {
+}: Omit<PaymentFormProps, 'clientSecret'>) {
   const stripe = useStripe()
   const elements = useElements()
-  const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [processing, setProcessing] = useState(false)
 
@@ -148,7 +142,6 @@ export default function PaymentForm({
   date,
   time,
   amount,
-  fees,
 }: PaymentFormProps) {
   const stripePromise = getStripe()
 

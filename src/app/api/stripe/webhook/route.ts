@@ -30,14 +30,14 @@ export async function POST(request: NextRequest) {
       // In production, signature is required
       throw new Error('Webhook signature verification is required in production')
     }
-  } catch (err: any) {
+  } catch (err) {
     console.error('Webhook error:', err)
     
-    if (err.type === 'StripeSignatureVerificationError') {
+    if (err instanceof Error && 'type' in err && err.type === 'StripeSignatureVerificationError') {
       return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
     }
     
-    return NextResponse.json({ error: err.message || 'Invalid request' }, { status: 400 })
+    return NextResponse.json({ error: err instanceof Error ? err.message : 'Invalid request' }, { status: 400 })
   }
 
   try {

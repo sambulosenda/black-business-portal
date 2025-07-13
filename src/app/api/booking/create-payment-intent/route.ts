@@ -13,7 +13,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { businessId, serviceId, date, time } = await request.json()
+    const { businessId, serviceId, date, time, promotionId, promoDiscount } = await request.json()
 
     // Get business with Stripe account
     const business = await prisma.business.findUnique({
@@ -106,7 +106,9 @@ export async function POST(request: Request) {
     }
 
     // Calculate fees
-    const amount = Number(service.price)
+    const originalAmount = Number(service.price)
+    const discount = promoDiscount || 0
+    const amount = Math.max(0, originalAmount - discount)
     const fees = calculateFees(amount)
 
     // Create payment intent with automatic transfer
@@ -127,6 +129,8 @@ export async function POST(request: Request) {
         time: time,
         serviceName: service.name,
         businessName: business.businessName,
+        promotionId: promotionId || '',
+        discountAmount: discount.toString(),
       },
     })
 
@@ -142,7 +146,7 @@ export async function POST(request: Request) {
         status: 'PENDING',
         paymentStatus: 'PENDING',
         stripePaymentIntentId: paymentIntent.id,
-        totalPrice: service.price,
+        totalPrice: amount,
         stripeFee: fees.stripeFeeDollars,
         platformFee: fees.platformFeeDollars,
         businessPayout: fees.businessPayoutDollars,
@@ -159,24 +163,26 @@ export async function POST(request: Request) {
         business: fees.businessPayoutDollars,
       },
     })
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error creating payment intent:', error)
     
     // Provide specific error messages
     let errorMessage = 'Failed to create payment'
     let statusCode = 500
     
-    if (error.type === 'StripeInvalidRequestError') {
-      if (error.code === 'account_invalid') {
-        errorMessage = 'Business payment account is not properly configured'
-      } else if (error.code === 'parameter_invalid_integer') {
-        errorMessage = 'Invalid price amount'
+    if (error instanceof Error) {
+      if ('type' in error && error.type === 'StripeInvalidRequestError') {
+        if ('code' in error && error.code === 'account_invalid') {
+          errorMessage = 'Business payment account is not properly configured'
+        } else if ('code' in error && error.code === 'parameter_invalid_integer') {
+          errorMessage = 'Invalid price amount'
+        }
+        statusCode = 400
+      } else if (error.message?.includes('Customer')) {
+        errorMessage = 'Failed to create customer profile'
+      } else if (error.message?.includes('connected account')) {
+        errorMessage = 'Business is not set up to receive payments'
       }
-      statusCode = 400
-    } else if (error.message?.includes('Customer')) {
-      errorMessage = 'Failed to create customer profile'
-    } else if (error.message?.includes('connected account')) {
-      errorMessage = 'Business is not set up to receive payments'
     }
     
     return NextResponse.json(

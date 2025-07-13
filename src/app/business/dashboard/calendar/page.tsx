@@ -1,16 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, startOfWeek, endOfWeek, isSameMonth, addMonths, subMonths, startOfDay, endOfDay, addDays, isWithinInterval } from "date-fns"
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, User, DollarSign, Phone, Loader2, MoreHorizontal, CheckCircle, XCircle, AlertCircle } from "lucide-react"
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, startOfWeek, endOfWeek, isSameMonth, addMonths, subMonths, startOfDay, endOfDay, addDays } from "date-fns"
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, User, DollarSign, Phone, Loader2, CheckCircle, XCircle } from "lucide-react"
 import Link from "next/link"
 
 interface Booking {
@@ -37,8 +35,9 @@ type ViewMode = 'month' | 'week' | 'day'
 export default function CalendarPage() {
   const router = useRouter()
   const [viewMode, setViewMode] = useState<ViewMode>('month')
-  const [currentDate, setCurrentDate] = useState(new Date())
-  const [selectedDate, setSelectedDate] = useState(new Date())
+  // Set to July 2025 to see the seeded bookings
+  const [currentDate, setCurrentDate] = useState(new Date('2025-07-01'))
+  const [selectedDate, setSelectedDate] = useState(new Date('2025-07-01'))
   const [bookings, setBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -47,7 +46,7 @@ export default function CalendarPage() {
   const [actionLoading, setActionLoading] = useState(false)
 
   // Calculate date ranges based on view mode
-  const getDateRange = () => {
+  const getDateRange = React.useCallback(() => {
     switch (viewMode) {
       case 'day':
         return {
@@ -68,7 +67,7 @@ export default function CalendarPage() {
           end: endOfWeek(monthEnd)
         }
     }
-  }
+  }, [viewMode, currentDate])
 
   // Fetch bookings for the current view
   useEffect(() => {
@@ -85,7 +84,7 @@ export default function CalendarPage() {
         }
         
         const data = await response.json()
-        setBookings(data.bookings)
+        setBookings(data.bookings || [])
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred')
         console.error('Error fetching bookings:', err)
@@ -95,7 +94,7 @@ export default function CalendarPage() {
     }
 
     fetchBookings()
-  }, [currentDate, viewMode])
+  }, [currentDate, viewMode, getDateRange])
 
   // Navigation handlers
   const goToPrevious = () => {
@@ -256,10 +255,10 @@ export default function CalendarPage() {
                 key={index}
                 onClick={() => setSelectedDate(day)}
                 className={`
-                  min-h-[120px] p-2 border-r border-b last:border-r-0
+                  min-h-[120px] p-2 border-r border-b border-gray-200 last:border-r-0
                   ${!isCurrentMonth ? 'bg-gray-50/50' : ''}
-                  ${isToday ? 'bg-blue-50/50' : ''}
-                  ${isSelected ? 'ring-2 ring-primary ring-inset' : ''}
+                  ${isToday ? 'bg-indigo-50/50' : ''}
+                  ${isSelected ? 'ring-2 ring-indigo-600 ring-inset' : ''}
                   hover:bg-gray-50 cursor-pointer transition-colors
                 `}
               >
@@ -321,10 +320,10 @@ export default function CalendarPage() {
     const hours = Array.from({ length: 24 }, (_, i) => i)
 
     return (
-      <div className="border-t">
+      <div className="border-t border-gray-200">
         {/* Day headers */}
-        <div className="grid grid-cols-8 border-b sticky top-0 bg-white z-10">
-          <div className="p-2 text-center text-sm font-medium text-muted-foreground border-r">
+        <div className="grid grid-cols-8 border-b border-gray-200 sticky top-0 bg-white z-10">
+          <div className="p-2 text-center text-sm font-semibold text-gray-700 border-r border-gray-200 bg-gray-50">
             Time
           </div>
           {weekDays.map((day) => {
@@ -335,9 +334,9 @@ export default function CalendarPage() {
                 key={day.toISOString()}
                 onClick={() => setSelectedDate(day)}
                 className={`
-                  p-2 text-center text-sm font-medium border-r last:border-r-0 cursor-pointer
-                  ${isToday ? 'bg-blue-50 text-primary' : 'text-muted-foreground'}
-                  ${isSelected ? 'ring-2 ring-primary ring-inset' : ''}
+                  p-2 text-center text-sm font-medium border-r border-gray-200 last:border-r-0 cursor-pointer
+                  ${isToday ? 'bg-indigo-50 text-indigo-600' : 'text-gray-700'}
+                  ${isSelected ? 'ring-2 ring-indigo-600 ring-inset' : ''}
                   hover:bg-gray-50
                 `}
               >
@@ -352,8 +351,8 @@ export default function CalendarPage() {
         <ScrollArea className="h-[600px]">
           <div>
             {hours.map((hour) => (
-              <div key={hour} className="grid grid-cols-8 border-b">
-                <div className="p-2 text-xs text-muted-foreground border-r">
+              <div key={hour} className="grid grid-cols-8 border-b border-gray-200">
+                <div className="p-2 text-xs text-gray-500 border-r border-gray-200 bg-gray-50">
                   {format(new Date().setHours(hour, 0), 'h a')}
                 </div>
                 {weekDays.map((day) => {
@@ -367,18 +366,18 @@ export default function CalendarPage() {
                   return (
                     <div
                       key={`${day.toISOString()}-${hour}`}
-                      className="min-h-[60px] p-1 border-r last:border-r-0 relative"
+                      className="min-h-[60px] p-1 border-r border-gray-200 last:border-r-0 relative"
                     >
                       {hourBookings.map((booking) => (
                         <div
                           key={booking.id}
                           onClick={() => setSelectedBooking(booking)}
                           className={`
-                            absolute left-1 right-1 p-1 rounded text-xs cursor-pointer
-                            ${booking.status === 'CONFIRMED' ? 'bg-blue-100 text-blue-700 hover:bg-blue-200' : ''}
-                            ${booking.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200' : ''}
-                            ${booking.status === 'CANCELLED' ? 'bg-gray-100 text-gray-500 line-through' : ''}
-                            ${booking.status === 'COMPLETED' ? 'bg-green-100 text-green-700 hover:bg-green-200' : ''}
+                            absolute left-1 right-1 p-1 rounded text-xs cursor-pointer shadow-sm border
+                            ${booking.status === 'CONFIRMED' ? 'bg-blue-50 text-blue-700 hover:bg-blue-100 border-blue-200' : ''}
+                            ${booking.status === 'PENDING' ? 'bg-yellow-50 text-yellow-700 hover:bg-yellow-100 border-yellow-200' : ''}
+                            ${booking.status === 'CANCELLED' ? 'bg-gray-50 text-gray-500 line-through border-gray-200' : ''}
+                            ${booking.status === 'COMPLETED' ? 'bg-green-50 text-green-700 hover:bg-green-100 border-green-200' : ''}
                           `}
                           style={{
                             top: `${(new Date(booking.startTime).getMinutes() / 60) * 100}%`,
@@ -407,7 +406,7 @@ export default function CalendarPage() {
     const dayBookings = bookingsByDate[dateKey] || []
 
     return (
-      <div className="border-t">
+      <div className="border-t border-gray-200">
         <ScrollArea className="h-[700px]">
           <div className="min-w-[600px]">
             {hours.map((hour) => {
@@ -417,8 +416,8 @@ export default function CalendarPage() {
               })
 
               return (
-                <div key={hour} className="flex border-b">
-                  <div className="w-20 p-3 text-sm text-muted-foreground border-r flex-shrink-0">
+                <div key={hour} className="flex border-b border-gray-200">
+                  <div className="w-20 p-3 text-sm text-gray-500 border-r border-gray-200 bg-gray-50 flex-shrink-0">
                     {format(new Date().setHours(hour, 0), 'h a')}
                   </div>
                   <div className="flex-1 min-h-[80px] p-2 relative">
@@ -427,11 +426,11 @@ export default function CalendarPage() {
                         key={booking.id}
                         onClick={() => setSelectedBooking(booking)}
                         className={`
-                          absolute left-2 right-2 p-3 rounded cursor-pointer
-                          ${booking.status === 'CONFIRMED' ? 'bg-blue-100 text-blue-700 hover:bg-blue-200' : ''}
-                          ${booking.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200' : ''}
-                          ${booking.status === 'CANCELLED' ? 'bg-gray-100 text-gray-500 line-through' : ''}
-                          ${booking.status === 'COMPLETED' ? 'bg-green-100 text-green-700 hover:bg-green-200' : ''}
+                          absolute left-2 right-2 p-3 rounded cursor-pointer shadow-sm border
+                          ${booking.status === 'CONFIRMED' ? 'bg-blue-50 text-blue-700 hover:bg-blue-100 border-blue-200' : ''}
+                          ${booking.status === 'PENDING' ? 'bg-yellow-50 text-yellow-700 hover:bg-yellow-100 border-yellow-200' : ''}
+                          ${booking.status === 'CANCELLED' ? 'bg-gray-50 text-gray-500 line-through border-gray-200' : ''}
+                          ${booking.status === 'COMPLETED' ? 'bg-green-50 text-green-700 hover:bg-green-100 border-green-200' : ''}
                         `}
                         style={{
                           top: `${(new Date(booking.startTime).getMinutes() / 60) * 80}px`,
@@ -455,13 +454,8 @@ export default function CalendarPage() {
     )
   }
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    )
-  }
+  // Remove the early return for loading state to allow the page to render
+  // We'll handle loading state within the calendar card instead
 
   if (error) {
     return (
@@ -477,64 +471,108 @@ export default function CalendarPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Calendar</h1>
-        <p className="text-muted-foreground">View and manage your appointments</p>
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Calendar</h1>
+        <p className="text-gray-600 mt-1">View and manage your appointments</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Calendar View - Takes up 2 columns */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-xl">
+        <Card className="lg:col-span-2 border border-gray-200 shadow-sm hover:shadow-md transition-all">
+          <CardHeader className="px-6 py-4 border-b border-gray-100">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+              <CardTitle className="text-2xl font-semibold text-gray-900">
                 {viewMode === 'month' && format(currentDate, 'MMMM yyyy')}
                 {viewMode === 'week' && `Week of ${format(startOfWeek(currentDate), 'MMM d, yyyy')}`}
                 {viewMode === 'day' && format(currentDate, 'EEEE, MMMM d, yyyy')}
               </CardTitle>
-              <div className="flex items-center gap-2">
-                <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as ViewMode)}>
-                  <TabsList>
-                    <TabsTrigger value="day">Day</TabsTrigger>
-                    <TabsTrigger value="week">Week</TabsTrigger>
-                    <TabsTrigger value="month">Month</TabsTrigger>
-                  </TabsList>
-                </Tabs>
-                <Button 
-                  variant="outline" 
-                  size="icon"
-                  onClick={goToPrevious}
-                  title="Previous"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={goToToday}
-                >
-                  Today
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="icon"
-                  onClick={goToNext}
-                  title="Next"
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
+              <div className="flex items-center gap-4">
+                {/* View mode toggle */}
+                <div className="inline-flex rounded-lg border border-gray-200 bg-gray-50 p-1">
+                  <Button
+                    variant={viewMode === 'day' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setViewMode('day')}
+                    className={viewMode === 'day' ? 
+                      'bg-white text-indigo-600 shadow-sm border border-gray-200 px-4 py-1.5' : 
+                      'hover:bg-gray-100 text-gray-600 px-4 py-1.5 border-transparent'
+                    }
+                  >
+                    Day
+                  </Button>
+                  <Button
+                    variant={viewMode === 'week' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setViewMode('week')}
+                    className={viewMode === 'week' ? 
+                      'bg-white text-indigo-600 shadow-sm border border-gray-200 px-4 py-1.5 mx-1' : 
+                      'hover:bg-gray-100 text-gray-600 px-4 py-1.5 mx-1 border-transparent'
+                    }
+                  >
+                    Week
+                  </Button>
+                  <Button
+                    variant={viewMode === 'month' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setViewMode('month')}
+                    className={viewMode === 'month' ? 
+                      'bg-white text-indigo-600 shadow-sm border border-gray-200 px-4 py-1.5' : 
+                      'hover:bg-gray-100 text-gray-600 px-4 py-1.5 border-transparent'
+                    }
+                  >
+                    Month
+                  </Button>
+                </div>
+                
+                {/* Navigation controls */}
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="icon"
+                    onClick={goToPrevious}
+                    title="Previous"
+                    className="border-gray-200 hover:bg-gray-50 hover:border-gray-300 h-9 w-9 transition-colors"
+                  >
+                    <ChevronLeft className="h-4 w-4 text-gray-600" />
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={goToToday}
+                    className="border-gray-200 hover:bg-gray-50 hover:border-gray-300 px-4 h-9 font-medium text-gray-700 transition-colors"
+                  >
+                    Today
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="icon"
+                    onClick={goToNext}
+                    title="Next"
+                    className="border-gray-200 hover:bg-gray-50 hover:border-gray-300 h-9 w-9 transition-colors"
+                  >
+                    <ChevronRight className="h-4 w-4 text-gray-600" />
+                  </Button>
+                </div>
               </div>
             </div>
           </CardHeader>
           <CardContent className="p-0">
-            {viewMode === 'month' && renderMonthView()}
-            {viewMode === 'week' && renderWeekView()}
-            {viewMode === 'day' && renderDayView()}
+            {loading ? (
+              <div className="flex items-center justify-center h-[600px]">
+                <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+              </div>
+            ) : (
+              <>
+                {viewMode === 'month' && renderMonthView()}
+                {viewMode === 'week' && renderWeekView()}
+                {viewMode === 'day' && renderDayView()}
+              </>
+            )}
           </CardContent>
         </Card>
 
         {/* Selected Booking Details - Takes up 1 column */}
-        <Card>
-          <CardHeader>
+        <Card className="border border-gray-200 shadow-sm">
+          <CardHeader className="border-b border-gray-100">
             <CardTitle className="text-lg">
               {selectedBooking ? 'Booking Details' : format(selectedDate, 'EEEE, MMMM d')}
             </CardTitle>
@@ -644,7 +682,7 @@ export default function CalendarPage() {
                           </Button>
                         </>
                       )}
-                      <Link href={`/business/bookings/${selectedBooking.id}`} className="w-full">
+                      <Link href={`/business/dashboard/bookings`} className="w-full">
                         <Button variant="outline" className="w-full">
                           View Full Details
                         </Button>
@@ -712,9 +750,9 @@ export default function CalendarPage() {
       </div>
 
       {/* Calendar Legend */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-sm">Legend</CardTitle>
+      <Card className="border border-gray-200 shadow-sm">
+        <CardHeader className="border-b border-gray-100">
+          <CardTitle className="text-sm font-semibold text-gray-900">Legend</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-4 text-sm">

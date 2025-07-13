@@ -5,6 +5,14 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Badge } from '@/components/ui/badge'
+import { Loader2, Plus, Clock, DollarSign, Package, MoreHorizontal, Edit, Trash2, Power } from 'lucide-react'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 
 const serviceSchema = z.object({
   name: z.string().min(2, 'Service name must be at least 2 characters'),
@@ -27,7 +35,6 @@ interface Service {
 }
 
 export default function ServicesPage() {
-  const router = useRouter()
   const [services, setServices] = useState<Service[]>([])
   const [loading, setLoading] = useState(true)
   const [showAddForm, setShowAddForm] = useState(false)
@@ -38,7 +45,7 @@ export default function ServicesPage() {
     handleSubmit,
     reset,
     setValue,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<ServiceFormData>({
     resolver: zodResolver(serviceSchema),
   })
@@ -133,218 +140,233 @@ export default function ServicesPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Manage Services</h1>
-          <p className="mt-2 text-gray-600">
-            Add and manage the services you offer to customers
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Services</h1>
+          <p className="text-gray-600 mt-1">
+            Manage the services you offer to customers
           </p>
         </div>
+        {!showAddForm && (
+          <Button
+            onClick={() => setShowAddForm(true)}
+            className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Service
+          </Button>
+        )}
+      </div>
 
-        {/* Add/Edit Service Form */}
-        {showAddForm && (
-          <div className="bg-white shadow rounded-lg p-6 mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+      {/* Add/Edit Service Form */}
+      {showAddForm && (
+        <Card className="border border-gray-200 shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold">
               {editingService ? 'Edit Service' : 'Add New Service'}
-            </h2>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Service Name
-                  </label>
-                  <input
+            </CardTitle>
+            <CardDescription>
+              Fill in the details for your service
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <div className="grid gap-6 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Service Name</Label>
+                  <Input
                     {...register('name')}
-                    type="text"
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    id="name"
+                    placeholder="e.g., Classic Haircut"
+                    className="border-gray-300"
                   />
                   {errors.name && (
-                    <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+                    <p className="text-sm text-red-600">{errors.name.message}</p>
                   )}
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Category
-                  </label>
-                  <input
+                <div className="space-y-2">
+                  <Label htmlFor="category">Category</Label>
+                  <Input
                     {...register('category')}
-                    type="text"
-                    placeholder="e.g., Haircut, Manicure, Massage"
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    id="category"
+                    placeholder="e.g., Hair, Nails, Spa"
+                    className="border-gray-300"
                   />
                   {errors.category && (
-                    <p className="mt-1 text-sm text-red-600">{errors.category.message}</p>
+                    <p className="text-sm text-red-600">{errors.category.message}</p>
                   )}
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Price ($)
-                  </label>
-                  <input
-                    {...register('price')}
-                    type="text"
-                    placeholder="50.00"
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  />
+                <div className="space-y-2">
+                  <Label htmlFor="price">Price ($)</Label>
+                  <div className="relative">
+                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                    <Input
+                      {...register('price')}
+                      id="price"
+                      placeholder="50.00"
+                      className="pl-10 border-gray-300"
+                    />
+                  </div>
                   {errors.price && (
-                    <p className="mt-1 text-sm text-red-600">{errors.price.message}</p>
+                    <p className="text-sm text-red-600">{errors.price.message}</p>
                   )}
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Duration (minutes)
-                  </label>
-                  <input
-                    {...register('duration')}
-                    type="text"
-                    placeholder="60"
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  />
+                <div className="space-y-2">
+                  <Label htmlFor="duration">Duration (minutes)</Label>
+                  <div className="relative">
+                    <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                    <Input
+                      {...register('duration')}
+                      id="duration"
+                      placeholder="60"
+                      className="pl-10 border-gray-300"
+                    />
+                  </div>
                   {errors.duration && (
-                    <p className="mt-1 text-sm text-red-600">{errors.duration.message}</p>
+                    <p className="text-sm text-red-600">{errors.duration.message}</p>
                   )}
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Description (optional)
-                </label>
-                <textarea
+              <div className="space-y-2">
+                <Label htmlFor="description">Description (optional)</Label>
+                <Textarea
                   {...register('description')}
+                  id="description"
+                  placeholder="Describe what this service includes..."
                   rows={3}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  className="border-gray-300 resize-none"
                 />
               </div>
 
-              <div className="flex justify-end space-x-3">
-                <button
+              <div className="flex items-center justify-end gap-3">
+                <Button
                   type="button"
+                  variant="outline"
                   onClick={() => {
                     setShowAddForm(false)
                     setEditingService(null)
                     reset()
                   }}
-                  className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                 >
                   Cancel
-                </button>
-                <button
+                </Button>
+                <Button
                   type="submit"
-                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+                  disabled={isSubmitting}
+                  className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800"
                 >
+                  {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   {editingService ? 'Update Service' : 'Add Service'}
-                </button>
+                </Button>
               </div>
             </form>
-          </div>
-        )}
+          </CardContent>
+        </Card>
+      )}
 
-        {/* Add Service Button */}
-        {!showAddForm && (
-          <div className="mb-6">
-            <button
-              onClick={() => setShowAddForm(true)}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
-            >
-              <svg className="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              Add New Service
-            </button>
-          </div>
-        )}
-
-        {/* Services List */}
-        <div className="bg-white shadow overflow-hidden sm:rounded-md">
-          <ul className="divide-y divide-gray-200">
-            {services.length > 0 ? (
-              services.map((service) => (
-                <li key={service.id}>
-                  <div className="px-4 py-4 sm:px-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center">
-                          <p className="text-lg font-medium text-gray-900">
-                            {service.name}
-                          </p>
-                          <span className={`ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            service.isActive
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-gray-100 text-gray-800'
-                          }`}>
-                            {service.isActive ? 'Active' : 'Inactive'}
-                          </span>
-                        </div>
-                        {service.description && (
-                          <p className="mt-1 text-sm text-gray-600">
-                            {service.description}
-                          </p>
-                        )}
-                        <div className="mt-2 sm:flex sm:justify-between">
-                          <div className="sm:flex sm:space-x-6">
-                            <p className="flex items-center text-sm text-gray-500">
-                              <span className="font-medium">${service.price}</span>
-                            </p>
-                            <p className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                              <svg className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-                              </svg>
-                              {service.duration} minutes
-                            </p>
-                            <p className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                              <span className="px-2 py-1 text-xs bg-gray-100 rounded">
-                                {service.category}
-                              </span>
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="ml-4 flex items-center space-x-2">
-                        <button
-                          onClick={() => toggleServiceStatus(service.id, service.isActive)}
-                          className="text-sm text-indigo-600 hover:text-indigo-900"
-                        >
-                          {service.isActive ? 'Deactivate' : 'Activate'}
-                        </button>
-                        <button
-                          onClick={() => startEdit(service)}
-                          className="text-sm text-gray-600 hover:text-gray-900"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => deleteService(service.id)}
-                          className="text-sm text-red-600 hover:text-red-900"
-                        >
-                          Delete
-                        </button>
-                      </div>
+      {/* Services Grid */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {services.length > 0 ? (
+          services.map((service) => (
+            <Card key={service.id} className="border border-gray-200 shadow-sm hover:shadow-md transition-all">
+              <CardHeader className="pb-4">
+                <div className="flex items-start justify-between">
+                  <div className="space-y-1">
+                    <CardTitle className="text-lg font-semibold text-gray-900">
+                      {service.name}
+                    </CardTitle>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className="text-xs">
+                        {service.category}
+                      </Badge>
+                      <Badge
+                        variant="outline"
+                        className={
+                          service.isActive
+                            ? 'border-green-200 bg-green-50 text-green-700'
+                            : 'border-gray-200 bg-gray-50 text-gray-700'
+                        }
+                      >
+                        {service.isActive ? 'Active' : 'Inactive'}
+                      </Badge>
                     </div>
                   </div>
-                </li>
-              ))
-            ) : (
-              <li className="px-4 py-8 text-center">
-                <p className="text-gray-500">No services added yet</p>
-                <p className="mt-1 text-sm text-gray-400">
-                  Add your first service to start receiving bookings
-                </p>
-              </li>
-            )}
-          </ul>
-        </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => startEdit(service)}>
+                        <Edit className="mr-2 h-4 w-4" />
+                        Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => toggleServiceStatus(service.id, service.isActive)}
+                      >
+                        <Power className="mr-2 h-4 w-4" />
+                        {service.isActive ? 'Deactivate' : 'Activate'}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => deleteService(service.id)}
+                        className="text-red-600"
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {service.description && (
+                  <p className="text-sm text-gray-600 mb-4">{service.description}</p>
+                )}
+                <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center gap-1 text-gray-900 font-medium">
+                    <DollarSign className="h-4 w-4 text-gray-400" />
+                    <span>{service.price}</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-gray-600">
+                    <Clock className="h-4 w-4 text-gray-400" />
+                    <span>{service.duration} min</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <Card className="col-span-full border-2 border-dashed border-gray-300">
+            <CardContent className="flex flex-col items-center justify-center py-12">
+              <Package className="h-12 w-12 text-gray-400 mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-1">No services added yet</h3>
+              <p className="text-sm text-gray-500 mb-4">
+                Add your first service to start receiving bookings
+              </p>
+              <Button
+                onClick={() => setShowAddForm(true)}
+                className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Your First Service
+              </Button>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   )

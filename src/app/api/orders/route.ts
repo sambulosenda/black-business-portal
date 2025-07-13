@@ -22,6 +22,8 @@ export async function POST(request: Request) {
       subtotal,
       tax,
       total,
+      discount,
+      promotionId,
     } = data
 
     // Verify business exists
@@ -50,7 +52,7 @@ export async function POST(request: Request) {
         deliveryAddress: deliveryAddress || null,
         deliveryNotes: deliveryNotes || null,
         orderItems: {
-          create: items.map((item: any) => ({
+          create: items.map((item: { productId: string; quantity: number; price: number }) => ({
             productId: item.productId,
             quantity: item.quantity,
             price: item.price,
@@ -147,6 +149,8 @@ export async function POST(request: Request) {
         userId: session.user.id,
         orderType: 'PRODUCT_ONLY',
         fulfillmentType: orderType,
+        promotionId: promotionId || '',
+        discountAmount: (discount || 0).toString(),
       },
     })
 

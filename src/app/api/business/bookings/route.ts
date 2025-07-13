@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 
 export async function GET(request: Request) {
   try {
@@ -28,7 +29,7 @@ export async function GET(request: Request) {
     const endDate = searchParams.get('endDate')
 
     // Build where clause
-    const where: any = {
+    const where: Prisma.BookingWhereInput = {
       businessId: business.id,
     }
 
@@ -51,7 +52,20 @@ export async function GET(request: Request) {
       },
     })
 
-    return NextResponse.json({ bookings })
+    // Convert Decimal fields to numbers for JSON serialization
+    const serializedBookings = bookings.map(booking => ({
+      ...booking,
+      totalPrice: Number(booking.totalPrice),
+      stripeFee: booking.stripeFee ? Number(booking.stripeFee) : null,
+      platformFee: booking.platformFee ? Number(booking.platformFee) : null,
+      businessPayout: booking.businessPayout ? Number(booking.businessPayout) : null,
+      service: {
+        ...booking.service,
+        price: Number(booking.service.price)
+      }
+    }))
+
+    return NextResponse.json({ bookings: serializedBookings })
   } catch (error) {
     console.error('Error fetching bookings:', error)
     return NextResponse.json(

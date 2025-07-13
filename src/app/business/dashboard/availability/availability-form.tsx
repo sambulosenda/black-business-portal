@@ -4,6 +4,18 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Availability, TimeOff } from '@prisma/client'
 import { format } from 'date-fns'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { Switch } from "@/components/ui/switch"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Badge } from "@/components/ui/badge"
+import { Separator } from "@/components/ui/separator"
+import { toast } from "sonner"
+import { Clock, Calendar, Trash2, Plus, Loader2, CheckCircle } from 'lucide-react'
 
 const DAYS_OF_WEEK = [
   { value: 0, label: 'Sunday' },
@@ -82,10 +94,11 @@ export default function AvailabilityForm({
 
       if (!response.ok) throw new Error('Failed to update availability')
       
+      toast.success('Business hours updated successfully')
       router.refresh()
     } catch (error) {
       console.error('Error saving availability:', error)
-      alert('Failed to save availability settings')
+      toast.error('Failed to save availability settings')
     } finally {
       setLoading(false)
     }
@@ -93,7 +106,7 @@ export default function AvailabilityForm({
 
   const handleAddTimeOff = async () => {
     if (!newTimeOff.date) {
-      alert('Please select a date')
+      toast.error('Please select a date')
       return
     }
 
@@ -120,10 +133,11 @@ export default function AvailabilityForm({
         endTime: '18:00',
         reason: ''
       })
+      toast.success('Time off added successfully')
       router.refresh()
     } catch (error) {
       console.error('Error adding time off:', error)
-      alert('Failed to add time off')
+      toast.error('Failed to add time off')
     } finally {
       setLoading(false)
     }
@@ -140,260 +154,304 @@ export default function AvailabilityForm({
 
       if (!response.ok) throw new Error('Failed to delete time off')
       
+      toast.success('Time off deleted successfully')
       router.refresh()
     } catch (error) {
       console.error('Error deleting time off:', error)
-      alert('Failed to delete time off')
+      toast.error('Failed to delete time off')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="bg-white shadow rounded-lg">
-      {/* Tabs */}
-      <div className="border-b border-gray-200">
-        <nav className="-mb-px flex">
-          <button
-            onClick={() => setSelectedTab('hours')}
-            className={`py-4 px-6 text-sm font-medium ${
-              selectedTab === 'hours'
-                ? 'border-b-2 border-indigo-500 text-indigo-600'
-                : 'text-gray-500 hover:text-gray-700'
-            }`}
-          >
+    <div className="space-y-6">
+      <Tabs defaultValue="hours" value={selectedTab} onValueChange={(value) => setSelectedTab(value)}>
+        <TabsList className="grid w-full grid-cols-2 bg-gray-100">
+          <TabsTrigger value="hours" className="data-[state=active]:bg-white data-[state=active]:text-indigo-600">
+            <Clock className="h-4 w-4 mr-2" />
             Business Hours
-          </button>
-          <button
-            onClick={() => setSelectedTab('timeoff')}
-            className={`py-4 px-6 text-sm font-medium ${
-              selectedTab === 'timeoff'
-                ? 'border-b-2 border-indigo-500 text-indigo-600'
-                : 'text-gray-500 hover:text-gray-700'
-            }`}
-          >
+          </TabsTrigger>
+          <TabsTrigger value="timeoff" className="data-[state=active]:bg-white data-[state=active]:text-indigo-600">
+            <Calendar className="h-4 w-4 mr-2" />
             Time Off
-          </button>
-        </nav>
-      </div>
+          </TabsTrigger>
+        </TabsList>
 
-      <div className="p-6">
-        {selectedTab === 'hours' ? (
-          <div className="space-y-4">
-            <p className="text-sm text-gray-600 mb-4">
-              Set your regular business hours. Customers will only be able to book appointments during these times.
-            </p>
-            
-            <div className="space-y-4">
-              {DAYS_OF_WEEK.map(day => (
-                <div key={day.value} className="grid grid-cols-1 sm:grid-cols-4 gap-4 items-center py-3 border-b border-gray-100 last:border-0">
-                  <div className="sm:col-span-1">
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={businessHours[day.value].isActive}
-                        onChange={(e) => setBusinessHours(prev => ({
-                          ...prev,
-                          [day.value]: { ...prev[day.value], isActive: e.target.checked }
-                        }))}
-                        className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4"
-                      />
-                      <span className="ml-3 text-sm font-medium text-gray-900">
-                        {day.label}
-                      </span>
-                    </label>
-                  </div>
-                  
-                  {businessHours[day.value].isActive ? (
-                    <div className="sm:col-span-3 flex items-center space-x-3">
-                      <select
-                        value={businessHours[day.value].startTime}
-                        onChange={(e) => setBusinessHours(prev => ({
-                          ...prev,
-                          [day.value]: { ...prev[day.value], startTime: e.target.value }
-                        }))}
-                        className="block w-full sm:w-auto rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      >
-                        {TIME_SLOTS.map(slot => (
-                          <option key={slot.value} value={slot.value}>
-                            {slot.label}
-                          </option>
-                        ))}
-                      </select>
-                      
-                      <span className="text-gray-500 px-2">to</span>
-                      
-                      <select
-                        value={businessHours[day.value].endTime}
-                        onChange={(e) => setBusinessHours(prev => ({
-                          ...prev,
-                          [day.value]: { ...prev[day.value], endTime: e.target.value }
-                        }))}
-                        className="block w-full sm:w-auto rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      >
-                        {TIME_SLOTS.map(slot => (
-                          <option key={slot.value} value={slot.value}>
-                            {slot.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  ) : (
-                    <div className="sm:col-span-3">
-                      <span className="text-sm text-gray-500">Closed</span>
-                    </div>
-                  )}
+        <TabsContent value="hours" className="mt-6 space-y-4">
+          <Card className="border border-gray-200 shadow-sm">
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold">Business Hours</CardTitle>
+              <CardDescription className="text-gray-600">
+                Set your regular business hours. Customers will only be able to book appointments during these times.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-[500px] pr-4">
+                <div className="space-y-4">
+                  {DAYS_OF_WEEK.map(day => (
+                    <Card key={day.value} className={`border ${businessHours[day.value].isActive ? 'border-gray-200' : 'border-gray-100 bg-gray-50/50'}`}>
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <Switch
+                              checked={businessHours[day.value].isActive}
+                              onCheckedChange={(checked) => setBusinessHours(prev => ({
+                                ...prev,
+                                [day.value]: { ...prev[day.value], isActive: checked }
+                              }))}
+                              className="data-[state=checked]:bg-indigo-600"
+                            />
+                            <Label className={`font-semibold ${businessHours[day.value].isActive ? 'text-gray-900' : 'text-gray-500'}`}>
+                              {day.label}
+                            </Label>
+                          </div>
+                          
+                          {businessHours[day.value].isActive ? (
+                            <div className="flex items-center gap-3">
+                              <Select
+                                value={businessHours[day.value].startTime}
+                                onValueChange={(value) => setBusinessHours(prev => ({
+                                  ...prev,
+                                  [day.value]: { ...prev[day.value], startTime: value }
+                                }))}
+                              >
+                                <SelectTrigger className="w-32 border-gray-300">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {TIME_SLOTS.map(slot => (
+                                    <SelectItem key={slot.value} value={slot.value}>
+                                      {slot.label}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              
+                              <span className="text-gray-500">to</span>
+                              
+                              <Select
+                                value={businessHours[day.value].endTime}
+                                onValueChange={(value) => setBusinessHours(prev => ({
+                                  ...prev,
+                                  [day.value]: { ...prev[day.value], endTime: value }
+                                }))}
+                              >
+                                <SelectTrigger className="w-32 border-gray-300">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {TIME_SLOTS.map(slot => (
+                                    <SelectItem key={slot.value} value={slot.value}>
+                                      {slot.label}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          ) : (
+                            <Badge variant="outline" className="border-gray-300 text-gray-500">
+                              Closed
+                            </Badge>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
-              ))}
-            </div>
-            
-            <div className="pt-6 border-t border-gray-200">
-              <button
-                onClick={handleSaveHours}
-                disabled={loading}
-                className="w-full sm:w-auto bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 disabled:opacity-50 font-medium transition-colors"
-              >
-                {loading ? 'Saving...' : 'Save Business Hours'}
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {/* Add Time Off Form */}
-            <div className="bg-gray-50 p-6 rounded-lg">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Add Time Off</h3>
+              </ScrollArea>
               
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Date
-                  </label>
-                  <input
+              <Separator className="my-6" />
+              
+              <div className="flex justify-end">
+                <Button
+                  onClick={handleSaveHours}
+                  disabled={loading}
+                  className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      Save Business Hours
+                    </>
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="timeoff" className="mt-6 space-y-6">
+          <Card className="border border-gray-200 shadow-sm">
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold">Add Time Off</CardTitle>
+              <CardDescription className="text-gray-600">
+                Block dates when you&apos;re not available for bookings
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="date" className="text-gray-900">Date</Label>
+                  <Input
+                    id="date"
                     type="date"
                     value={newTimeOff.date}
                     onChange={(e) => setNewTimeOff(prev => ({ ...prev, date: e.target.value }))}
                     min={format(new Date(), 'yyyy-MM-dd')}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    className="border-gray-300"
                   />
                 </div>
                 
-                <div>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={newTimeOff.allDay}
-                      onChange={(e) => setNewTimeOff(prev => ({ ...prev, allDay: e.target.checked }))}
-                      className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                    />
-                    <span className="ml-2 text-sm text-gray-700">All day</span>
-                  </label>
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="allDay"
+                    checked={newTimeOff.allDay}
+                    onCheckedChange={(checked) => setNewTimeOff(prev => ({ ...prev, allDay: checked }))}
+                    className="data-[state=checked]:bg-indigo-600"
+                  />
+                  <Label htmlFor="allDay" className="text-gray-700">All day</Label>
                 </div>
                 
                 {!newTimeOff.allDay && (
-                  <div className="flex items-center space-x-4">
-                    <div className="flex-1">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Start Time
-                      </label>
-                      <select
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="startTime" className="text-gray-900">Start Time</Label>
+                      <Select
                         value={newTimeOff.startTime}
-                        onChange={(e) => setNewTimeOff(prev => ({ ...prev, startTime: e.target.value }))}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        onValueChange={(value) => setNewTimeOff(prev => ({ ...prev, startTime: value }))}
                       >
-                        {TIME_SLOTS.map(slot => (
-                          <option key={slot.value} value={slot.value}>
-                            {slot.label}
-                          </option>
-                        ))}
-                      </select>
+                        <SelectTrigger id="startTime" className="border-gray-300">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {TIME_SLOTS.map(slot => (
+                            <SelectItem key={slot.value} value={slot.value}>
+                              {slot.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                     
-                    <div className="flex-1">
-                      <label className="block text-sm font-medium text-gray-700">
-                        End Time
-                      </label>
-                      <select
+                    <div className="grid gap-2">
+                      <Label htmlFor="endTime" className="text-gray-900">End Time</Label>
+                      <Select
                         value={newTimeOff.endTime}
-                        onChange={(e) => setNewTimeOff(prev => ({ ...prev, endTime: e.target.value }))}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        onValueChange={(value) => setNewTimeOff(prev => ({ ...prev, endTime: value }))}
                       >
-                        {TIME_SLOTS.map(slot => (
-                          <option key={slot.value} value={slot.value}>
-                            {slot.label}
-                          </option>
-                        ))}
-                      </select>
+                        <SelectTrigger id="endTime" className="border-gray-300">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {TIME_SLOTS.map(slot => (
+                            <SelectItem key={slot.value} value={slot.value}>
+                              {slot.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
                 )}
                 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Reason (optional)
-                  </label>
-                  <input
+                <div className="grid gap-2">
+                  <Label htmlFor="reason" className="text-gray-900">Reason (optional)</Label>
+                  <Input
+                    id="reason"
                     type="text"
                     value={newTimeOff.reason}
                     onChange={(e) => setNewTimeOff(prev => ({ ...prev, reason: e.target.value }))}
                     placeholder="e.g., Holiday, Training, Personal"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    className="border-gray-300"
                   />
                 </div>
                 
-                <div className="pt-2">
-                  <button
-                    onClick={handleAddTimeOff}
-                    disabled={loading}
-                    className="w-full sm:w-auto bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 disabled:opacity-50 font-medium transition-colors"
-                  >
-                    {loading ? 'Adding...' : 'Add Time Off'}
-                  </button>
-                </div>
+                <Button
+                  onClick={handleAddTimeOff}
+                  disabled={loading}
+                  className="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Adding...
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Time Off
+                    </>
+                  )}
+                </Button>
               </div>
-            </div>
-            
-            {/* Time Off List */}
-            <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Scheduled Time Off</h3>
-              
+            </CardContent>
+          </Card>
+          
+          <Card className="border border-gray-200 shadow-sm">
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold">Scheduled Time Off</CardTitle>
+              <CardDescription className="text-gray-600">
+                Manage your upcoming time off and holidays
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
               {timeOffs.length > 0 ? (
-                <div className="space-y-3">
-                  {timeOffs.map((timeOff) => (
-                    <div
-                      key={timeOff.id}
-                      className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:shadow-sm transition-shadow"
-                    >
-                      <div>
-                        <p className="font-medium text-gray-900">
-                          {format(new Date(timeOff.date), 'EEEE, MMMM d, yyyy')}
-                        </p>
-                        <p className="text-sm text-gray-600 mt-1">
-                          {timeOff.startTime && timeOff.endTime
-                            ? `${timeOff.startTime} - ${timeOff.endTime}`
-                            : 'All day'}
-                          {timeOff.reason && ` • ${timeOff.reason}`}
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => handleDeleteTimeOff(timeOff.id)}
-                        disabled={loading}
-                        className="text-red-600 hover:text-red-800 text-sm font-medium transition-colors"
+                <ScrollArea className="h-[400px] pr-4">
+                  <div className="space-y-3">
+                    {timeOffs.map((timeOff) => (
+                      <div
+                        key={timeOff.id}
+                        className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:shadow-sm transition-all"
                       >
-                        Delete
-                      </button>
-                    </div>
-                  ))}
-                </div>
+                        <div className="flex items-center gap-3">
+                          <div className="h-10 w-10 rounded-full bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center">
+                            <Calendar className="h-5 w-5 text-red-600" />
+                          </div>
+                          <div>
+                            <p className="font-medium text-gray-900">
+                              {format(new Date(timeOff.date), 'EEEE, MMMM d, yyyy')}
+                            </p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <Badge variant="outline" className="text-xs border-gray-300">
+                                {timeOff.startTime && timeOff.endTime
+                                  ? `${timeOff.startTime} - ${timeOff.endTime}`
+                                  : 'All day'}
+                              </Badge>
+                              {timeOff.reason && (
+                                <span className="text-sm text-gray-600">{timeOff.reason}</span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDeleteTimeOff(timeOff.id)}
+                          disabled={loading}
+                          className="hover:bg-red-50 hover:text-red-600"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
               ) : (
-                <div className="text-center py-8 bg-gray-50 rounded-lg">
-                  <p className="text-gray-500">No time off scheduled</p>
-                  <p className="text-sm text-gray-400 mt-1">Add time off above to block booking availability</p>
+                <div className="text-center py-12">
+                  <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                  <p className="text-gray-600">No time off scheduled</p>
+                  <p className="text-sm text-gray-500 mt-1">Add time off above to block booking availability</p>
                 </div>
               )}
-            </div>
-          </div>
-        )}
-      </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

@@ -40,7 +40,7 @@ export async function GET() {
     })
 
     // Calculate metrics
-    let totalProducts = products.length
+    const totalProducts = products.length
     let totalValue = 0
     let lowStockCount = 0
     let outOfStockCount = 0

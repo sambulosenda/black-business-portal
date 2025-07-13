@@ -65,3 +65,6 @@ bunx prisma migrate dev
 
 ## Workflow Memories
 - Everytime you finish a task create a commit 
+
+## Design Memories
+- I like the color theme on home page keep using it 

@@ -1,6 +1,26 @@
 @import "./app.css";
 
 @layer base {
+  html {
+    /* Prevent overscroll bounce */
+    overscroll-behavior: none;
+    overflow-x: hidden;
+  }
+  
+  body {
+    overscroll-behavior: none;
+    position: relative;
+    overflow-x: hidden;
+    /* Prevent iOS bounce effect */
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Fix for sticky elements on iOS */
+  nav {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
@@ -152,13 +172,41 @@
   animation: scale-in 0.3s ease-out;
 }
 
+/* Blob animation */
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+/* .animate-blob {
+  animation: blob 7s infinite;
+} */
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
 /* Hover effects */
 .hover-lift {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .hover-lift:hover {
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
@@ -175,6 +223,17 @@
   }
   100% {
     background-position: -200% 0;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -224,6 +283,17 @@
   padding: 0 1rem;
 }
 
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 @media (min-width: 640px) {
   .container-max {
     padding: 0 1.5rem;
@@ -236,7 +306,7 @@
   }
 }
 
-@theme inline {
+/* @theme inline {
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -245,5 +315,5 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-}
+} */
 
