@@ -8,7 +8,14 @@ import { Session } from 'next-auth'
 import { useCart } from '@/contexts/cart-context'
 
 interface FloatingActionsProps {
-  business: any
+  business: {
+    slug: string;
+    phone: string;
+    address: string;
+    city: string;
+    state: string;
+    zipCode: string;
+  }
   session: Session | null
 }
 

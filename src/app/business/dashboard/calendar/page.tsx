@@ -6,11 +6,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, startOfWeek, endOfWeek, isSameMonth, addMonths, subMonths, startOfDay, endOfDay, addDays, isWithinInterval } from "date-fns"
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, User, DollarSign, Phone, Loader2, MoreHorizontal, CheckCircle, XCircle, AlertCircle } from "lucide-react"
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, startOfWeek, endOfWeek, isSameMonth, addMonths, subMonths, startOfDay, endOfDay, addDays } from "date-fns"
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, User, DollarSign, Phone, Loader2, CheckCircle, XCircle } from "lucide-react"
 import Link from "next/link"
 
 interface Booking {
@@ -46,7 +44,6 @@ export default function CalendarPage() {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null)
   const [showCancelDialog, setShowCancelDialog] = useState(false)
   const [actionLoading, setActionLoading] = useState(false)
-  const [viewChanging, setViewChanging] = useState(false)
 
   // Calculate date ranges based on view mode
   const getDateRange = React.useCallback(() => {

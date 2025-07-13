@@ -2,14 +2,22 @@
 
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Clock, DollarSign, Star, TrendingUp } from 'lucide-react'
+import { Clock, TrendingUp } from 'lucide-react'
 import { Session } from 'next-auth'
 
 interface ServicesSectionProps {
-  services: any[]
+  services: Array<{
+    id: string;
+    name: string;
+    description: string | null;
+    price: number;
+    duration: number;
+  }>
   businessSlug: string
   session: Session | null
-  reviews: any[]
+  reviews: Array<{
+    comment: string | null;
+  }>
 }
 
 export default function ServicesSection({ services, businessSlug, session, reviews }: ServicesSectionProps) {

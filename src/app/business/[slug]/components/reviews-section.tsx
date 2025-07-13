@@ -5,7 +5,15 @@ import { Button } from '@/components/ui/button'
 import { Star, ThumbsUp, MoreHorizontal } from 'lucide-react'
 
 interface ReviewsSectionProps {
-  reviews: any[]
+  reviews: Array<{
+    id: string;
+    rating: number;
+    comment: string | null;
+    createdAt: Date;
+    user: {
+      name: string | null;
+    };
+  }>
   averageRating: number
   totalReviews: number
   businessSlug: string

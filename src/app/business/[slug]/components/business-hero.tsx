@@ -5,14 +5,30 @@ import { S3Image } from '@/components/ui/s3-image'
 import { MapPin, Phone, Globe, Instagram, Star, Clock, Shield, Sparkles } from 'lucide-react'
 
 interface BusinessHeroProps {
-  business: any
+  business: {
+    businessName: string;
+    category: string;
+    address: string;
+    city: string;
+    state: string;
+    instagram: string | null;
+    website: string | null;
+    phone: string;
+    verifiedAt: Date | null;
+    featured: boolean;
+    photos: Array<{
+      id: string;
+      type: string;
+      imageUrl: string;
+    }>;
+  }
   averageRating: number
   totalReviews: number
   isOpenNow: boolean
 }
 
 export default function BusinessHero({ business, averageRating, totalReviews, isOpenNow }: BusinessHeroProps) {
-  const heroImage = business.photos.find((p: any) => p.type === 'HERO')
+  const heroImage = business.photos.find((p) => p.type === 'HERO')
   
   return (
     <div className="relative">
