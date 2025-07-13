@@ -15,7 +15,7 @@ interface Booking {
   endTime: Date
   status: string
   paymentStatus: string | null
-  totalPrice: any
+  totalPrice: number
   business: {
     businessName: string
     slug: string
@@ -26,7 +26,7 @@ interface Booking {
   service: {
     name: string
   }
-  review: any
+  review: { id: string; rating: number } | null
 }
 
 interface BookingsTableProps {
@@ -41,7 +41,6 @@ export default function BookingsTable({
   title, 
   bookings, 
   emptyState, 
-  showActions = false, 
   isPast = false 
 }: BookingsTableProps) {
   const columns: Column<Booking>[] = [

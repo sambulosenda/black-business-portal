@@ -5,9 +5,34 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import PaymentForm from '../payment-form'
 
-export default function PaymentPage({ params }: { params: Promise<{ slug: string }> }) {
+export default function PaymentPage() {
   const router = useRouter()
-  const [paymentData, setPaymentData] = useState<any>(null)
+  const [paymentData, setPaymentData] = useState<{
+    date: string;
+    time: string;
+    service: {
+      id: string;
+      name: string;
+      price: string;
+      duration: number;
+    };
+    business: {
+      id: string;
+      businessName: string;
+      stripeAccountId: string | null;
+    };
+    customerInfo: {
+      name: string;
+      email: string;
+      phone: string;
+    };
+    subtotal: number;
+    tax: number;
+    discount: number;
+    total: number;
+    promoCodeApplied?: string;
+    promotionId?: string;
+  } | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {

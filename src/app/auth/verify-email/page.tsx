@@ -35,8 +35,8 @@ export default function VerifyEmailPage() {
       }
 
       setResendSuccess(true)
-    } catch (error: any) {
-      setResendError(error.message)
+    } catch (error) {
+      setResendError(error instanceof Error ? error.message : 'Failed to send email')
     } finally {
       setIsResending(false)
     }
@@ -60,7 +60,7 @@ export default function VerifyEmailPage() {
             </h1>
             
             <p className="text-gray-600">
-              We've sent a verification link to{' '}
+              We&apos;ve sent a verification link to{' '}
               {email && (
                 <span className="font-semibold text-gray-900">{email}</span>
               )}
@@ -73,7 +73,7 @@ export default function VerifyEmailPage() {
             {/* Resend Section */}
             <div className="pt-4">
               <p className="text-sm text-gray-600 mb-3">
-                Didn't receive the email?
+                Didn&apos;t receive the email?
               </p>
               
               {resendSuccess ? (
@@ -106,7 +106,7 @@ export default function VerifyEmailPage() {
             {/* Tips */}
             <div className="bg-gray-50 rounded-lg p-4 text-left mt-6">
               <p className="text-sm font-medium text-gray-900 mb-2">
-                Can't find the email?
+                Can&apos;t find the email?
               </p>
               <ul className="text-sm text-gray-600 space-y-1">
                 <li>• Check your spam or junk folder</li>

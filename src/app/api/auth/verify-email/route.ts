@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Update user's email verification status
-    const user = await prisma.user.update({
+    await prisma.user.update({
       where: { email: verificationToken.identifier },
       data: { emailVerified: new Date() }
     })
