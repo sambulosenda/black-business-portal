@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
-import { AlertCircle, Bell, Mail, MessageSquare, Clock, Send, Loader2, Save, TestTube } from 'lucide-react'
+import { AlertCircle, Mail, MessageSquare, Clock, Loader2, Save } from 'lucide-react'
 import { toast } from 'sonner'
 
 interface NotificationSettings {
@@ -90,7 +90,7 @@ export default function NotificationSettingsPage() {
 
   useEffect(() => {
     fetchSettings()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchSettings = async () => {
     try {
@@ -278,7 +278,7 @@ export default function NotificationSettingsPage() {
                       }
                     />
                     <p className="text-sm text-muted-foreground">
-                      The name that appears in the "From" field
+                      The name that appears in the &quot;From&quot; field
                     </p>
                   </div>
 

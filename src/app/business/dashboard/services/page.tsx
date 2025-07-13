@@ -35,7 +35,6 @@ interface Service {
 }
 
 export default function ServicesPage() {
-  const router = useRouter()
   const [services, setServices] = useState<Service[]>([])
   const [loading, setLoading] = useState(true)
   const [showAddForm, setShowAddForm] = useState(false)

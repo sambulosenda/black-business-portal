@@ -24,7 +24,6 @@ import {
   Star,
   Settings,
   LogOut,
-  User,
   Users,
   Bell,
   ShoppingCart,

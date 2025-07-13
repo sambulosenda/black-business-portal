@@ -5,13 +5,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { 
-  Search, User, Calendar, DollarSign, Star, MessageSquare, 
-  Phone, Mail, Loader2, Filter, Download, TrendingUp, Clock,
+  Search, DollarSign, 
+  Phone, Mail, Loader2, Filter, Download, TrendingUp,
   ChevronRight, Users, Crown, AlertCircle
 } from "lucide-react"
 import { format } from "date-fns"
@@ -55,7 +54,6 @@ export default function CustomersPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [filterType, setFilterType] = useState<'all' | 'vip' | 'new' | 'at-risk'>('all')
   const [sortBy, setSortBy] = useState<'recent' | 'spent' | 'visits'>('recent')
-  const [selectedCustomer, setSelectedCustomer] = useState<CustomerProfile | null>(null)
 
   useEffect(() => {
     fetchCustomers()
@@ -64,7 +62,7 @@ export default function CustomersPage() {
 
   useEffect(() => {
     filterAndSortCustomers()
-  }, [customers, searchQuery, filterType, sortBy])
+  }, [customers, searchQuery, filterType, sortBy]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchCustomers = async () => {
     try {
@@ -275,7 +273,7 @@ export default function CustomersPage() {
             <CardContent>
               <div className="text-2xl font-bold text-gray-900">{metrics.atRiskCustomers.length}</div>
               <p className="text-xs text-gray-500 mt-1">
-                Haven't visited in 90+ days
+                Haven&apos;t visited in 90+ days
               </p>
             </CardContent>
           </Card>
@@ -297,7 +295,7 @@ export default function CustomersPage() {
                   className="pl-8 border-gray-300"
                 />
               </div>
-              <Select value={filterType} onValueChange={(value: any) => setFilterType(value)}>
+              <Select value={filterType} onValueChange={(value) => setFilterType(value as 'all' | 'vip' | 'new' | 'at-risk')}>
                 <SelectTrigger className="w-32">
                   <Filter className="h-4 w-4 mr-2" />
                   <SelectValue />
@@ -309,7 +307,7 @@ export default function CustomersPage() {
                   <SelectItem value="at-risk">At Risk</SelectItem>
                 </SelectContent>
               </Select>
-              <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
+              <Select value={sortBy} onValueChange={(value) => setSortBy(value as 'recent' | 'spent' | 'visits')}>
                 <SelectTrigger className="w-32">
                   <SelectValue />
                 </SelectTrigger>
