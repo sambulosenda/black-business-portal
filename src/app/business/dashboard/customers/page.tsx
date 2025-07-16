@@ -63,6 +63,7 @@ export default function CustomersPage() {
 
   useEffect(() => {
     filterAndSortCustomers()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customers, searchQuery, filterType, sortBy])
 
   const fetchCustomers = async () => {

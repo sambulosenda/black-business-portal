@@ -76,6 +76,7 @@ export default function EditPromotionPage({ params }: { params: Promise<{ promot
     if (promotionId) {
       fetchPromotionAndData()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, status, router, promotionId])
 
   const fetchPromotionAndData = async () => {

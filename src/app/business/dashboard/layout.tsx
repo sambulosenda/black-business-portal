@@ -13,7 +13,7 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar-minimal"
+} from "@/components/ui/sidebar"
 import {
   LayoutDashboard,
   Package,
