@@ -34,7 +34,7 @@ export function SidebarMenu({ children, ...props }: React.ComponentProps<"ul">) 
   return <ul {...props}>{children}</ul>
 }
 
-export function SidebarMenuButton({ children, ...props }: React.ComponentProps<"button">) {
+export function SidebarMenuButton({ children, asChild, ...props }: React.ComponentProps<"button"> & { asChild?: boolean }) {
   return <button {...props}>{children}</button>
 }
 
@@ -42,7 +42,7 @@ export function SidebarMenuItem({ children, ...props }: React.ComponentProps<"li
   return <li {...props}>{children}</li>
 }
 
-export function SidebarProvider({ children, ...props }: React.ComponentProps<"div">) {
+export function SidebarProvider({ children, defaultOpen, ...props }: React.ComponentProps<"div"> & { defaultOpen?: boolean }) {
   return <div {...props}>{children}</div>
 }
 
