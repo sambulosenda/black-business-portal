@@ -5,9 +5,10 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { promotionId: string } }
+  { params }: { params: Promise<{ promotionId: string }> }
 ) {
   try {
+    const { promotionId } = await params
     const session = await getServerSession(authOptions)
     
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
@@ -24,7 +25,7 @@ export async function GET(
 
     const promotion = await prisma.promotion.findFirst({
       where: {
-        id: params.promotionId,
+        id: promotionId,
         businessId: business.id
       }
     })
@@ -49,9 +50,10 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { promotionId: string } }
+  { params }: { params: Promise<{ promotionId: string }> }
 ) {
   try {
+    const { promotionId } = await params
     const session = await getServerSession(authOptions)
     
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
@@ -71,7 +73,7 @@ export async function PATCH(
     // Check if promotion belongs to this business
     const existingPromotion = await prisma.promotion.findFirst({
       where: {
-        id: params.promotionId,
+        id: promotionId,
         businessId: business.id
       }
     })
@@ -86,7 +88,7 @@ export async function PATCH(
         where: {
           businessId: business.id,
           code: data.code,
-          NOT: { id: params.promotionId }
+          NOT: { id: promotionId }
         }
       })
 
@@ -97,7 +99,7 @@ export async function PATCH(
 
     // Update the promotion
     const updatedPromotion = await prisma.promotion.update({
-      where: { id: params.promotionId },
+      where: { id: promotionId },
       data: {
         ...(data.name !== undefined && { name: data.name }),
         ...(data.description !== undefined && { description: data.description }),
@@ -135,9 +137,10 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { promotionId: string } }
+  { params }: { params: Promise<{ promotionId: string }> }
 ) {
   try {
+    const { promotionId } = await params
     const session = await getServerSession(authOptions)
     
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
@@ -155,7 +158,7 @@ export async function DELETE(
     // Check if promotion belongs to this business
     const promotion = await prisma.promotion.findFirst({
       where: {
-        id: params.promotionId,
+        id: promotionId,
         businessId: business.id
       }
     })
@@ -166,7 +169,7 @@ export async function DELETE(
 
     // Delete the promotion (this will cascade delete usage records)
     await prisma.promotion.delete({
-      where: { id: params.promotionId }
+      where: { id: promotionId }
     })
 
     return NextResponse.json({ message: 'Promotion deleted successfully' })

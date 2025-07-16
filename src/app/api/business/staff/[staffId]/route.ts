@@ -4,9 +4,10 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
   request: Request,
-  { params }: { params: { staffId: string } }
+  { params }: { params: Promise<{ staffId: string }> }
 ) {
   try {
+    const { staffId } = await params
     const session = await getSession()
     
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
@@ -28,7 +29,7 @@ export async function GET(
     // Get the staff member
     const staff = await prisma.staff.findFirst({
       where: {
-        id: params.staffId,
+        id: staffId,
         businessId: business.id,
       },
       include: {
@@ -77,9 +78,10 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { staffId: string } }
+  { params }: { params: Promise<{ staffId: string }> }
 ) {
   try {
+    const { staffId } = await params
     const session = await getSession()
     
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
@@ -101,7 +103,7 @@ export async function PUT(
     // Verify staff belongs to this business
     const existingStaff = await prisma.staff.findFirst({
       where: {
-        id: params.staffId,
+        id: staffId,
         businessId: business.id,
       },
     })
@@ -120,7 +122,7 @@ export async function PUT(
           businessId: business.id,
           email: email,
           id: {
-            not: params.staffId,
+            not: staffId,
           },
         },
       })
@@ -135,7 +137,7 @@ export async function PUT(
 
     // Update the staff member
     await prisma.staff.update({
-      where: { id: params.staffId },
+      where: { id: staffId },
       data: {
         name,
         email,
@@ -150,14 +152,14 @@ export async function PUT(
     if (services !== undefined) {
       // Delete existing assignments
       await prisma.staffService.deleteMany({
-        where: { staffId: params.staffId },
+        where: { staffId: staffId },
       })
 
       // Create new assignments
       if (services.length > 0) {
         await prisma.staffService.createMany({
           data: services.map((serviceId: string) => ({
-            staffId: params.staffId,
+            staffId: staffId,
             serviceId,
           })),
         })
@@ -166,7 +168,7 @@ export async function PUT(
 
     // Fetch the updated staff with relations
     const staff = await prisma.staff.findUnique({
-      where: { id: params.staffId },
+      where: { id: staffId },
       include: {
         services: {
           include: {
@@ -194,9 +196,10 @@ export async function PUT(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { staffId: string } }
+  { params }: { params: Promise<{ staffId: string }> }
 ) {
   try {
+    const { staffId } = await params
     const session = await getSession()
     
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
@@ -218,7 +221,7 @@ export async function PATCH(
     // Verify staff belongs to this business
     const existingStaff = await prisma.staff.findFirst({
       where: {
-        id: params.staffId,
+        id: staffId,
         businessId: business.id,
       },
     })
@@ -231,7 +234,7 @@ export async function PATCH(
 
     // Update the staff member's active status
     const updatedStaff = await prisma.staff.update({
-      where: { id: params.staffId },
+      where: { id: staffId },
       data: { isActive },
     })
 
@@ -247,9 +250,10 @@ export async function PATCH(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { staffId: string } }
+  { params }: { params: Promise<{ staffId: string }> }
 ) {
   try {
+    const { staffId } = await params
     const session = await getSession()
     
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
@@ -271,7 +275,7 @@ export async function DELETE(
     // Verify staff belongs to this business
     const existingStaff = await prisma.staff.findFirst({
       where: {
-        id: params.staffId,
+        id: staffId,
         businessId: business.id,
       },
     })
@@ -283,7 +287,7 @@ export async function DELETE(
     // Check if staff has any upcoming bookings
     const upcomingBookings = await prisma.booking.count({
       where: {
-        staffId: params.staffId,
+        staffId: staffId,
         date: {
           gte: new Date(),
         },
@@ -302,7 +306,7 @@ export async function DELETE(
 
     // Delete the staff member (cascade will handle related records)
     await prisma.staff.delete({
-      where: { id: params.staffId },
+      where: { id: staffId },
     })
 
     return NextResponse.json({ success: true })

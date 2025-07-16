@@ -3,10 +3,11 @@ import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
 
 export async function POST(
-  request: Request,
-  context: { params: Promise<{ bookingId: string }> }
+  _request: Request,
+  { params }: { params: Promise<{ bookingId: string }> }
 ) {
   try {
+    const { bookingId } = await params
     const session = await getSession()
     
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
@@ -26,10 +27,9 @@ export async function POST(
     }
 
     // Verify the booking belongs to this business
-    const params = await context.params
     const booking = await prisma.booking.findFirst({
       where: {
-        id: params.bookingId,
+        id: bookingId,
         businessId: business.id,
       },
     })
@@ -41,7 +41,7 @@ export async function POST(
     // Update booking status
     const updatedBooking = await prisma.booking.update({
       where: {
-        id: params.bookingId,
+        id: bookingId,
       },
       data: {
         status: 'CANCELLED',

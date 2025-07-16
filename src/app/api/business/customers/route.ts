@@ -79,19 +79,21 @@ export async function GET() {
         }
         
         const customer = customerMap.get(userId)
-        customer.totalVisits++
-        customer.totalSpent += Number(booking.totalPrice)
-        
-        // Track service frequency
-        const serviceCount = customer.services.get(booking.service.name) || 0
-        customer.services.set(booking.service.name, serviceCount + 1)
-        
-        // Update first/last visit
-        if (booking.date < customer.firstVisit) {
-          customer.firstVisit = booking.date
-        }
-        if (booking.date > customer.lastVisit) {
-          customer.lastVisit = booking.date
+        if (customer) {
+          customer.totalVisits++
+          customer.totalSpent += Number(booking.totalPrice)
+          
+          // Track service frequency
+          const serviceCount = customer.services.get(booking.service.name) || 0
+          customer.services.set(booking.service.name, serviceCount + 1)
+          
+          // Update first/last visit
+          if (booking.date < customer.firstVisit) {
+            customer.firstVisit = booking.date
+          }
+          if (booking.date > customer.lastVisit) {
+            customer.lastVisit = booking.date
+          }
         }
       }
 
@@ -111,9 +113,9 @@ export async function GET() {
           data: {
             businessId: business.id,
             userId,
-            customerName: customerData.customerName,
-            customerEmail: customerData.customerEmail,
-            customerPhone: customerData.customerPhone,
+            customerName: customerData.customerName || 'Unknown',
+            customerEmail: customerData.customerEmail || '',
+            customerPhone: customerData.customerPhone || '',
             firstVisit: customerData.firstVisit,
             lastVisit: customerData.lastVisit,
             totalVisits: customerData.totalVisits,

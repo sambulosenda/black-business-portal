@@ -14,6 +14,11 @@ interface PaymentData {
   serviceName: string
   date: string
   time: string
+  fees: {
+    platform: number
+    stripe: number
+    business: number
+  }
 }
 
 export default function PaymentPage() {

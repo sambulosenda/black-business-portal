@@ -16,9 +16,11 @@ const BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME!
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { key: string } }
+  { params }: { params: Promise<{ key: string }> }
 ) {
   try {
+    const { key: paramKey } = await params
+    
     // Get the full URL from query params if provided
     const { searchParams } = new URL(request.url)
     const url = searchParams.get('url')
@@ -37,7 +39,7 @@ export async function GET(
       key = urlParts[1]
     } else {
       // Use the key from params
-      key = decodeURIComponent(params.key)
+      key = decodeURIComponent(paramKey)
     }
     
     // Generate a presigned URL for the image

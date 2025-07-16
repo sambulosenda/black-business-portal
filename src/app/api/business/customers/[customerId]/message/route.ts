@@ -4,9 +4,10 @@ import { prisma } from '@/lib/prisma'
 
 export async function POST(
   request: Request,
-  { params }: { params: { customerId: string } }
+  { params }: { params: Promise<{ customerId: string }> }
 ) {
   try {
+    const { customerId } = await params
     const session = await getSession()
     
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
@@ -28,7 +29,7 @@ export async function POST(
     // Verify customer belongs to this business
     const customer = await prisma.customerProfile.findFirst({
       where: {
-        id: params.customerId,
+        id: customerId,
         businessId: business.id,
       },
     })
@@ -43,7 +44,7 @@ export async function POST(
     const communication = await prisma.communication.create({
       data: {
         businessId: business.id,
-        customerId: params.customerId,
+        customerId: customerId,
         type: type || 'NOTE',
         subject,
         content,

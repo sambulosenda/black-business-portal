@@ -51,7 +51,11 @@ export async function POST(request: NextRequest) {
       
       // Find the best applicable promotion
       for (const promo of promotions) {
-        const validation = await validatePromotion(promo, session.user.id, subtotal, serviceIds, productIds, itemCount)
+        const validation = await validatePromotion({
+          ...promo,
+          value: Number(promo.value),
+          minimumAmount: promo.minimumAmount ? Number(promo.minimumAmount) : null,
+        }, session.user.id, subtotal, serviceIds, productIds, itemCount)
         if (validation.valid) {
           promotion = promo
           break
@@ -67,8 +71,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate the promotion
-    const validation = await validatePromotion(
-      promotion, 
+    const validation = await validatePromotion({
+      ...promotion,
+      value: Number(promotion.value),
+      minimumAmount: promotion.minimumAmount ? Number(promotion.minimumAmount) : null,
+    }, 
       session.user.id, 
       subtotal, 
       serviceIds, 
@@ -84,7 +91,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Calculate discount
-    const discount = calculateDiscount(promotion, subtotal, itemCount)
+    const discount = calculateDiscount({
+      type: promotion.type,
+      value: Number(promotion.value)
+    }, subtotal, itemCount)
 
     return NextResponse.json({
       valid: true,

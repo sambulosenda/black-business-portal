@@ -14,13 +14,14 @@ const updateSchema = z.object({
 })
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export async function PUT(req: Request, { params }: RouteParams) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -36,7 +37,7 @@ export async function PUT(req: Request, { params }: RouteParams) {
 
     const service = await prisma.service.findFirst({
       where: {
-        id: params.id,
+        id: id,
         businessId: business.id,
       },
     })
@@ -49,7 +50,7 @@ export async function PUT(req: Request, { params }: RouteParams) {
     const validatedData = updateSchema.parse(body)
 
     const updatedService = await prisma.service.update({
-      where: { id: params.id },
+      where: { id: id },
       data: validatedData,
     })
 
@@ -72,6 +73,7 @@ export async function PUT(req: Request, { params }: RouteParams) {
 
 export async function PATCH(req: Request, { params }: RouteParams) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -87,7 +89,7 @@ export async function PATCH(req: Request, { params }: RouteParams) {
 
     const service = await prisma.service.findFirst({
       where: {
-        id: params.id,
+        id: id,
         businessId: business.id,
       },
     })
@@ -100,7 +102,7 @@ export async function PATCH(req: Request, { params }: RouteParams) {
     const { isActive } = body
 
     const updatedService = await prisma.service.update({
-      where: { id: params.id },
+      where: { id: id },
       data: { isActive },
     })
 
@@ -116,6 +118,7 @@ export async function PATCH(req: Request, { params }: RouteParams) {
 
 export async function DELETE(req: Request, { params }: RouteParams) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -131,7 +134,7 @@ export async function DELETE(req: Request, { params }: RouteParams) {
 
     const service = await prisma.service.findFirst({
       where: {
-        id: params.id,
+        id: id,
         businessId: business.id,
       },
     })
@@ -142,19 +145,19 @@ export async function DELETE(req: Request, { params }: RouteParams) {
 
     // Check if there are any bookings for this service
     const bookingCount = await prisma.booking.count({
-      where: { serviceId: params.id },
+      where: { serviceId: id },
     })
 
     if (bookingCount > 0) {
       // Soft delete by marking as inactive
       await prisma.service.update({
-        where: { id: params.id },
+        where: { id: id },
         data: { isActive: false },
       })
     } else {
       // Hard delete if no bookings
       await prisma.service.delete({
-        where: { id: params.id },
+        where: { id: id },
       })
     }
 

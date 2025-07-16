@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { BusinessCategory } from '@prisma/client'
 
 export async function GET(request: NextRequest) {
   try {
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest) {
     const where: {
       isActive: boolean;
       OR?: Array<Record<string, unknown>>;
-      category?: string;
+      category?: BusinessCategory;
       city?: Record<string, unknown>;
     } = {
       isActive: true,
@@ -36,7 +37,7 @@ export async function GET(request: NextRequest) {
 
     // Category filter
     if (category) {
-      where.category = category
+      where.category = category as BusinessCategory
     }
 
     // City filter

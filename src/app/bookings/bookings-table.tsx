@@ -97,7 +97,7 @@ export default function BookingsTable({
               booking.status === 'COMPLETED' ? 'success' :
               booking.status === 'PENDING' ? 'warning' :
               booking.status === 'CANCELLED' ? 'destructive' :
-              'secondary'
+              'default'
             }
           >
             {booking.status}
@@ -106,7 +106,7 @@ export default function BookingsTable({
             <Badge
               variant={
                 booking.paymentStatus === 'SUCCEEDED' ? 'success' :
-                booking.paymentStatus === 'REFUNDED' ? 'secondary' :
+                booking.paymentStatus === 'REFUNDED' ? 'outline' :
                 booking.paymentStatus === 'FAILED' ? 'destructive' :
                 'warning'
               }

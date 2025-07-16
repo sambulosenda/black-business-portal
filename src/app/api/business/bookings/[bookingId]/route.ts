@@ -5,9 +5,10 @@ import { prisma } from '@/lib/prisma'
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { bookingId: string } }
+  { params }: { params: Promise<{ bookingId: string }> }
 ) {
   try {
+    const { bookingId } = await params
     const session = await getServerSession(authOptions)
     
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
@@ -34,7 +35,7 @@ export async function PATCH(
     // Check if the booking belongs to this business
     const booking = await prisma.booking.findFirst({
       where: {
-        id: params.bookingId,
+        id: bookingId,
         businessId: business.id
       }
     })
@@ -45,7 +46,7 @@ export async function PATCH(
 
     // Update the booking status
     const updatedBooking = await prisma.booking.update({
-      where: { id: params.bookingId },
+      where: { id: bookingId },
       data: { status }
     })
 
