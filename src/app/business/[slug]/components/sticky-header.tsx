@@ -46,7 +46,7 @@ export default function StickyHeader({ business, session }: StickyHeaderProps) {
                 Call
               </Button>
             </a>
-            {business.services.length > 0 && (
+            {business.services && business.services.length > 0 && (
               <Link href={session ? `/book/${business.slug}` : '/login'}>
                 <Button size="sm" className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white">
                   <Calendar className="h-4 w-4 mr-2" />

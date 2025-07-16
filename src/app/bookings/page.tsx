@@ -22,12 +22,18 @@ export default async function BookingsPage() {
     },
   })
 
-  const upcomingBookings = bookings.filter(
-    booking => new Date(booking.date) >= new Date() && booking.status !== 'CANCELLED'
-  )
-  const pastBookings = bookings.filter(
-    booking => new Date(booking.date) < new Date() || booking.status === 'CANCELLED'
-  )
+  const upcomingBookings = bookings
+    .filter(booking => new Date(booking.date) >= new Date() && booking.status !== 'CANCELLED')
+    .map(booking => ({
+      ...booking,
+      totalPrice: Number(booking.totalPrice)
+    }))
+  const pastBookings = bookings
+    .filter(booking => new Date(booking.date) < new Date() || booking.status === 'CANCELLED')
+    .map(booking => ({
+      ...booking,
+      totalPrice: Number(booking.totalPrice)
+    }))
 
   return (
     <div className="min-h-screen bg-gray-50">

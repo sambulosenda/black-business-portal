@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import type { ReviewWithRelations } from '@/types'
 
-interface Booking {
+interface Booking extends Record<string, unknown> {
   id: string
   date: Date
   startTime: Date
@@ -156,7 +156,7 @@ export default function BookingsTable({
             <RefundButton
               bookingId={booking.id}
               bookingDate={booking.startTime}
-              paymentStatus={booking.paymentStatus}
+              paymentStatus={booking.paymentStatus || ''}
             />
           </div>
         )

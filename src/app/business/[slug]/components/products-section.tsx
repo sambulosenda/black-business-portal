@@ -163,9 +163,6 @@ function ProductCard({ product, onAddToCart, featured = false }: ProductCardProp
         <h4 className="font-semibold text-gray-900 group-hover:text-purple-600 transition-colors line-clamp-1">
           {product.name}
         </h4>
-        {product.brand && (
-          <p className="text-sm text-gray-500 mt-1">{product.brand}</p>
-        )}
         {product.description && (
           <p className="text-sm text-gray-600 mt-2 line-clamp-2">
             {product.description}

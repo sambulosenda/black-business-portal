@@ -100,6 +100,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
   const serializedBusiness = {
     ...business,
     commissionRate: Number(business.commissionRate),
+    openingHours: (business.openingHours as Record<string, unknown>) || {},
     services: business.services.map(service => ({
       ...service,
       price: Number(service.price)
@@ -110,7 +111,11 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
       compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
       cost: product.cost ? Number(product.cost) : null
     })),
-    photos: business.photos
+    photos: business.photos.map(photo => ({
+      ...photo,
+      key: photo.url, // Using URL as key since key field is missing
+      type: photo.type as 'HERO' | 'GALLERY' | 'LOGO' | 'BANNER'
+    }))
   }
 
   return (
