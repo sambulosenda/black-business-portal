@@ -69,9 +69,7 @@
     "typescript": "^5"
   },
   "optionalDependencies": {
-    "lightningcss": "^1.22.0",
-    "lightningcss-linux-x64-gnu": "^1.22.0",
-    "lightningcss-linux-x64-musl": "^1.22.0"
+    "lightningcss": "^1.22.0"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

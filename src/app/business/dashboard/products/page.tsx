@@ -14,8 +14,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
 import { 
   Package, Plus, Search, Edit, 
-  Trash, Image as ImageIcon, DollarSign, Tag, AlertTriangle,
-  Package2, Loader2
+  Trash, DollarSign, Tag, AlertTriangle,
+  Package2, Loader2, ImageIcon
 } from 'lucide-react'
 import { toast } from 'sonner'
 import Image from 'next/image'
