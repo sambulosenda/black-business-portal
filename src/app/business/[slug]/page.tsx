@@ -111,7 +111,8 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
       compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
       cost: product.cost ? Number(product.cost) : null,
       inventoryCount: product.quantity || 0,
-      lowStockAlert: product.lowStockAlert || 0
+      lowStockAlert: product.lowStockAlert || 0,
+      category: product.category || undefined
     })),
     photos: business.photos.map(photo => ({
       ...photo,
@@ -177,13 +178,13 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
           )}
 
           <AboutSection 
-            business={business}
+            business={serializedBusiness}
             availabilities={business.availabilities}
           />
 
-          {business.photos.filter(p => p.type === 'GALLERY').length > 0 && (
+          {serializedBusiness.photos.filter(p => p.type === 'GALLERY').length > 0 && (
             <GallerySection 
-              photos={business.photos.filter(p => p.type === 'GALLERY')}
+              photos={serializedBusiness.photos.filter(p => p.type === 'GALLERY')}
             />
           )}
         </div>

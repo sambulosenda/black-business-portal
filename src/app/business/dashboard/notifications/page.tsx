@@ -84,7 +84,6 @@ export default function NotificationSettingsPage() {
   const [settings, setSettings] = useState<NotificationSettings | null>(null)
   const [templates, setTemplates] = useState<NotificationTemplate[]>([])
   const [triggers, setTriggers] = useState<NotificationTrigger[]>([])
-  const [activeTab, setActiveTab] = useState('general')
   const [editingTemplate, setEditingTemplate] = useState<string | null>(null)
   const [testingNotification, setTestingNotification] = useState(false)
 
@@ -231,7 +230,7 @@ export default function NotificationSettingsPage() {
         </p>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
+      <Tabs defaultValue="general">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="general">General</TabsTrigger>
           <TabsTrigger value="templates">Templates</TabsTrigger>

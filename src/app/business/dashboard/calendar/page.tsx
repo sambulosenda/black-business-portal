@@ -272,7 +272,7 @@ export default function CalendarPage() {
                     {format(day, 'd')}
                   </span>
                   {dayBookings.length > 0 && (
-                    <Badge variant="secondary" className="text-xs px-1.5 py-0">
+                    <Badge variant="default" className="text-xs px-1.5 py-0">
                       {dayBookings.length}
                     </Badge>
                   )}
@@ -594,7 +594,7 @@ export default function CalendarPage() {
                         selectedBooking.status === 'PENDING' ? 'warning' :
                         selectedBooking.status === 'CANCELLED' ? 'destructive' :
                         selectedBooking.status === 'COMPLETED' ? 'success' :
-                        'secondary'
+                        'default'
                       }
                       className="text-sm"
                     >
@@ -715,7 +715,7 @@ export default function CalendarPage() {
                                 booking.status === 'PENDING' ? 'warning' :
                                 booking.status === 'CANCELLED' ? 'destructive' :
                                 booking.status === 'COMPLETED' ? 'success' :
-                                'secondary'
+                                'default'
                               }
                             >
                               {booking.status}

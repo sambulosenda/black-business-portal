@@ -52,7 +52,6 @@ export default function AvailabilityForm({
 }: AvailabilityFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const [selectedTab, setSelectedTab] = useState<'hours' | 'timeoff'>('hours')
   const [businessHours, setBusinessHours] = useState(() => {
     const hours: Record<number, { isActive: boolean; startTime: string; endTime: string }> = {}
     
@@ -166,7 +165,7 @@ export default function AvailabilityForm({
 
   return (
     <div className="space-y-6">
-      <Tabs defaultValue="hours" value={selectedTab} onValueChange={(value) => setSelectedTab(value as 'hours' | 'timeoff')}>
+      <Tabs defaultValue="hours">
         <TabsList className="grid w-full grid-cols-2 bg-gray-100">
           <TabsTrigger value="hours" className="data-[state=active]:bg-white data-[state=active]:text-indigo-600">
             <Clock className="h-4 w-4 mr-2" />

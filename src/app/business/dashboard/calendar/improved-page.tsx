@@ -80,7 +80,7 @@ const statusStyles = {
 
 export default function ImprovedCalendarPage() {
   const router = useRouter()
-  const [viewMode, setViewMode] = useState<ViewMode>('month')
+  const [viewMode] = useState<ViewMode>('month')
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [bookings, setBookings] = useState<Booking[]>([])
@@ -452,7 +452,7 @@ export default function ImprovedCalendarPage() {
                     {format(day, 'd')}
                   </span>
                   {dayBookings.length > 0 && (
-                    <Badge variant="secondary" className="text-xs h-5 px-1.5">
+                    <Badge variant="default" className="text-xs h-5 px-1.5">
                       {dayBookings.length}
                     </Badge>
                   )}
@@ -729,7 +729,7 @@ export default function ImprovedCalendarPage() {
                 >
                   Today
                 </Button>
-                <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as ViewMode)}>
+                <Tabs defaultValue="month">
                   <TabsList className="bg-white">
                     <TabsTrigger value="day">Day</TabsTrigger>
                     <TabsTrigger value="week">Week</TabsTrigger>

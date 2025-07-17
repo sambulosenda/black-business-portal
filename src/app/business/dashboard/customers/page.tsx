@@ -333,7 +333,6 @@ export default function CustomersPage() {
                       <Card 
                         key={customer.id}
                         className="cursor-pointer hover:shadow-md transition-all border border-gray-200"
-                        onClick={() => setSelectedCustomer(customer)}
                       >
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between">
