@@ -138,7 +138,7 @@ export default function BusinessLandingPage() {
                   B
                 </div>
                 <span className="text-xl font-bold text-gray-900">BeautyPortal</span>
-                <Badge variant="secondary" className="ml-2">For Business</Badge>
+                <Badge variant="outline" className="ml-2">For Business</Badge>
               </Link>
             </div>
             
@@ -191,7 +191,6 @@ export default function BusinessLandingPage() {
                 <Button 
                   size="lg" 
                   variant="outline"
-                  onClick={() => setVideoPlaying(true)}
                   className="border-2"
                 >
                   <Play className="mr-2 h-5 w-5" />

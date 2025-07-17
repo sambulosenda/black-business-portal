@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, ReactNode } from 'react'
 import {
   Table,
   TableBody,
@@ -91,18 +91,23 @@ export function DataTable<T extends Record<string, unknown>>({
     })
   }
 
-  const getCellValue = (item: T, column: Column<T>) => {
+  const getCellValue = (item: T, column: Column<T>): ReactNode => {
     if (column.cell) {
       return column.cell(item)
     }
     
     // Handle nested keys like 'user.name'
     const keys = String(column.key).split('.')
-    let value: unknown = item
+    const value = item as Record<string, unknown>
+    let result: unknown = value
     for (const key of keys) {
-      value = value?.[key]
+      if (result && typeof result === 'object' && key in result) {
+        result = (result as Record<string, unknown>)[key]
+      } else {
+        return null
+      }
     }
-    return value
+    return result as ReactNode
   }
 
   // Pagination

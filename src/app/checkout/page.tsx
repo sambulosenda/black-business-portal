@@ -50,11 +50,8 @@ export default function CheckoutPage() {
       return
     }
 
-    const hasServices = items.some(item => item.type === 'service')
-    if (hasServices) {
-      router.push('/cart')
-      return
-    }
+    // Cart only supports products, not services
+    // Services require booking through the booking flow
 
     // Redirect if not logged in
     if (!session) {
@@ -71,7 +68,7 @@ export default function CheckoutPage() {
     
     try {
       const businessId = items[0]?.businessId
-      const productIds = items.filter(item => item.type === 'product').map(item => item.id)
+      const productIds = items.map(item => item.id)
       
       const response = await fetch('/api/promotions/validate', {
         method: 'POST',
@@ -127,7 +124,7 @@ export default function CheckoutPage() {
         businessId,
         items: items.map(item => ({
           productId: item.id,
-          quantity: item.type === 'product' ? item.quantity : 1,
+          quantity: item.quantity || 1,
           price: item.price,
         })),
         orderType,
@@ -365,9 +362,9 @@ export default function CheckoutPage() {
                       {items.map((item) => (
                         <div key={item.id} className="flex justify-between text-sm">
                           <span className="flex-1">
-                            {item.name} {item.type === 'product' && `x${item.quantity}`}
+                            {item.name} x{item.quantity || 1}
                           </span>
-                          <span>${(item.price * (item.type === 'product' ? item.quantity : 1)).toFixed(2)}</span>
+                          <span>${(item.price * (item.quantity || 1)).toFixed(2)}</span>
                         </div>
                       ))}
                     </div>

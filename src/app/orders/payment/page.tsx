@@ -5,9 +5,22 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import OrderPaymentForm from './order-payment-form'
 
+interface PaymentData {
+  clientSecret: string
+  orderId: string
+  orderNumber: string
+  businessName: string
+  amount: number
+  fees: {
+    platform: number
+    stripe: number
+    business: number
+  }
+}
+
 export default function OrderPaymentPage() {
   const router = useRouter()
-  const [paymentData, setPaymentData] = useState<unknown>(null)
+  const [paymentData, setPaymentData] = useState<PaymentData | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {

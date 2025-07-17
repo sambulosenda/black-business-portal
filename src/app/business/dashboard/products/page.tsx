@@ -513,7 +513,7 @@ export default function ProductsPage() {
                     </td>
                     <td className="p-4 text-center">
                       <div className="flex items-center justify-center gap-1">
-                        <Badge variant={product.isActive ? 'default' : 'secondary'}>
+                        <Badge variant={product.isActive ? 'default' : 'outline'}>
                           {product.isActive ? 'Active' : 'Inactive'}
                         </Badge>
                         {product.isFeatured && (
@@ -856,7 +856,7 @@ export default function ProductsPage() {
                     {categories.map(category => (
                       <div key={category.id} className="flex items-center justify-between p-2 rounded-lg border">
                         <span className="text-sm">{category.name}</span>
-                        <Badge variant={category.isActive ? 'default' : 'secondary'}>
+                        <Badge variant={category.isActive ? 'default' : 'outline'}>
                           {category.isActive ? 'Active' : 'Inactive'}
                         </Badge>
                       </div>

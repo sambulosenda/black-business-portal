@@ -18,7 +18,11 @@ import {
   Edit,
   Trash2,
   ToggleLeft,
-  ToggleRight
+  ToggleRight,
+  Percent,
+  DollarSign,
+  Gift,
+  Package
 } from 'lucide-react'
 import { format } from 'date-fns'
 
@@ -46,12 +50,41 @@ interface Promotion {
   updatedAt: string
 }
 
+const getPromotionTypeLabel = (type: string, value: number) => {
+  switch (type) {
+    case 'PERCENTAGE':
+      return `${value}% off`
+    case 'FIXED_AMOUNT':
+      return `$${value} off`
+    case 'BOGO':
+      return 'Buy One Get One'
+    case 'BUNDLE':
+      return 'Bundle Deal'
+    default:
+      return type
+  }
+}
+
+const getPromotionTypeIcon = (type: string) => {
+  switch (type) {
+    case 'PERCENTAGE':
+      return <Percent className="h-4 w-4" />
+    case 'FIXED_AMOUNT':
+      return <DollarSign className="h-4 w-4" />
+    case 'BOGO':
+      return <Gift className="h-4 w-4" />
+    case 'BUNDLE':
+      return <Package className="h-4 w-4" />
+    default:
+      return <Tag className="h-4 w-4" />
+  }
+}
+
 export default function PromotionsPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [promotions, setPromotions] = useState<Promotion[]>([])
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState('active')
 
   useEffect(() => {
     if (status === 'loading') return
@@ -135,20 +168,6 @@ export default function PromotionsPage() {
   //   }
   // }
 
-  // const getPromotionTypeLabel = (type: string, value: number) => {
-  //   switch (type) {
-  //     case 'PERCENTAGE':
-  //       return `${value}% off`
-  //     case 'FIXED_AMOUNT':
-  //       return `$${value} off`
-  //     case 'BOGO':
-  //       return 'Buy One Get One'
-  //     case 'BUNDLE':
-  //       return 'Bundle Deal'
-  //     default:
-  //       return type
-  //   }
-  // }
 
   const activePromotions = promotions.filter(p => p.isActive && new Date(p.endDate) > new Date())
   const scheduledPromotions = promotions.filter(p => p.isActive && new Date(p.startDate) > new Date())
@@ -235,7 +254,7 @@ export default function PromotionsPage() {
       </div>
 
       {/* Promotions Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
+      <Tabs defaultValue="active">
         <TabsList className="mb-6">
           <TabsTrigger value="active">Active ({activePromotions.length})</TabsTrigger>
           <TabsTrigger value="scheduled">Scheduled ({scheduledPromotions.length})</TabsTrigger>
@@ -260,6 +279,7 @@ export default function PromotionsPage() {
                 onToggle={togglePromotion}
                 onDelete={deletePromotion}
                 onCopyCode={copyPromoCode}
+                router={router}
               />
             ))
           )}
@@ -273,6 +293,7 @@ export default function PromotionsPage() {
               onToggle={togglePromotion}
               onDelete={deletePromotion}
               onCopyCode={copyPromoCode}
+              router={router}
             />
           ))}
         </TabsContent>
@@ -285,6 +306,7 @@ export default function PromotionsPage() {
               onToggle={togglePromotion}
               onDelete={deletePromotion}
               onCopyCode={copyPromoCode}
+              router={router}
             />
           ))}
         </TabsContent>
@@ -298,9 +320,10 @@ interface PromotionCardProps {
   onToggle: (id: string, isActive: boolean) => void
   onDelete: (id: string) => void
   onCopyCode: (code: string) => void
+  router: ReturnType<typeof useRouter>
 }
 
-function PromotionCard({ promotion, onToggle, onDelete, onCopyCode }: PromotionCardProps) {
+function PromotionCard({ promotion, onToggle, onDelete, onCopyCode, router }: PromotionCardProps) {
   const isExpired = new Date(promotion.endDate) <= new Date()
   const isScheduled = new Date(promotion.startDate) > new Date()
 
@@ -319,7 +342,7 @@ function PromotionCard({ promotion, onToggle, onDelete, onCopyCode }: PromotionC
               <Badge variant="outline">First-time customers</Badge>
             )}
             {isExpired && (
-              <Badge variant="secondary">Expired</Badge>
+              <Badge variant="outline">Expired</Badge>
             )}
             {isScheduled && (
               <Badge variant="outline" className="border-purple-500 text-purple-700">

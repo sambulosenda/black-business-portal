@@ -253,7 +253,7 @@ export default async function BusinessDashboardPage() {
               <div className="flex justify-between items-center">
                 <dt className="text-sm font-medium text-gray-500">Status</dt>
                 <dd>
-                  <Badge variant={business.isVerified ? 'default' : 'secondary'} className={business.isVerified ? 'bg-green-50 text-green-700 border-green-200' : 'bg-yellow-50 text-yellow-700 border-yellow-200'}>
+                  <Badge variant={business.isVerified ? 'success' : 'warning'} className={business.isVerified ? 'bg-green-50 text-green-700 border-green-200' : 'bg-yellow-50 text-yellow-700 border-yellow-200'}>
                     {business.isVerified ? 'Verified' : 'Pending Verification'}
                   </Badge>
                 </dd>

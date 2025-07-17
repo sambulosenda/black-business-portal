@@ -177,7 +177,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                       <Button
                         size="sm"
-                        variant="secondary"
+                        variant="outline"
                         onClick={() => {
                           setEditingPhoto(heroPhoto)
                           setEditForm({
@@ -265,7 +265,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
                           <Button
                             size="icon"
-                            variant="secondary"
+                            variant="outline"
                             className="h-8 w-8"
                             onClick={() => handleSetAsHero(photo)}
                             title="Set as hero image"
@@ -274,7 +274,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
                           </Button>
                           <Button
                             size="icon"
-                            variant="secondary"
+                            variant="outline"
                             className="h-8 w-8"
                             onClick={() => {
                               setEditingPhoto(photo)
