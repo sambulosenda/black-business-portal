@@ -110,7 +110,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
       price: Number(product.price),
       compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
       cost: product.cost ? Number(product.cost) : null,
-      inventoryCount: product.inventoryCount || 0
+      inventoryCount: product.quantity || 0
     })),
     photos: business.photos.map(photo => ({
       ...photo,
