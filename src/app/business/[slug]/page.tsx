@@ -26,17 +26,22 @@ export async function generateMetadata({ params }: BusinessPageProps): Promise<M
   const business = await prisma.business.findUnique({
     where: { slug },
     select: {
-      name: true,
+      businessName: true,
       description: true,
       address: true,
       city: true,
+      zipCode: true,
+      phone: true,
+      email: true,
       services: {
         where: { isActive: true },
         select: { name: true },
         take: 5,
       },
-      averageRating: true,
-      totalReviews: true,
+      reviews: {
+        where: { rating: { gte: 1 } },
+        select: { rating: true },
+      },
     },
   })
 
@@ -47,33 +52,39 @@ export async function generateMetadata({ params }: BusinessPageProps): Promise<M
     }
   }
 
+  // Calculate average rating and total reviews
+  const totalReviews = business.reviews.length
+  const averageRating = totalReviews > 0
+    ? business.reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews
+    : 0
+
   const serviceNames = business.services.map(s => s.name).join(', ')
-  const ratingText = business.averageRating && business.totalReviews > 0 
-    ? `${business.averageRating}★ (${business.totalReviews} reviews)` 
+  const ratingText = averageRating && totalReviews > 0 
+    ? `${averageRating.toFixed(1)}★ (${totalReviews} reviews)` 
     : ''
 
   return {
-    title: `${business.name} - Beauty Services in ${business.city}`,
-    description: `${business.description || `Book appointments at ${business.name}`}. ${serviceNames ? `Services: ${serviceNames}.` : ''} ${ratingText}`,
-    keywords: [business.name, business.city, 'beauty salon', 'book appointment', ...business.services.map(s => s.name)],
+    title: `${business.businessName} - Beauty Services in ${business.city}`,
+    description: `${business.description || `Book appointments at ${business.businessName}`}. ${serviceNames ? `Services: ${serviceNames}.` : ''} ${ratingText}`,
+    keywords: [business.businessName, business.city, 'beauty salon', 'book appointment', ...business.services.map(s => s.name)],
     openGraph: {
-      title: `${business.name} | BeautyPortal`,
-      description: business.description || `Book appointments at ${business.name} in ${business.city}`,
+      title: `${business.businessName} | BeautyPortal`,
+      description: business.description || `Book appointments at ${business.businessName} in ${business.city}`,
       url: `/business/${slug}`,
-      type: 'business.business',
+      type: 'website',
       images: [
         {
           url: '/business-default-og.jpg',
           width: 1200,
           height: 630,
-          alt: business.name,
+          alt: business.businessName,
         },
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${business.name} | BeautyPortal`,
-      description: business.description || `Book appointments at ${business.name} in ${business.city}`,
+      title: `${business.businessName} | BeautyPortal`,
+      description: business.description || `Book appointments at ${business.businessName} in ${business.city}`,
     },
   }
 }
@@ -188,7 +199,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
         description={business.description}
         address={business.address}
         city={business.city}
-        postalCode={business.postalCode}
+        postalCode={business.zipCode}
         telephone={business.phone}
         email={business.email}
         priceRange="$$"
