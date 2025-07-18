@@ -106,7 +106,7 @@ export function WebsiteSchema() {
   )
 }
 
-export function BreadcrumbSchema(items: { name: string; url: string }[]) {
+export function BreadcrumbSchema({ items }: { items: { name: string; url: string }[] }) {
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
