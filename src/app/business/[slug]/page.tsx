@@ -11,11 +11,71 @@ import ProductsSection from './components/products-section'
 import ReviewsSection from './components/reviews-section'
 import AboutSection from './components/about-section'
 import GallerySection from './components/gallery-section'
+import { LocalBusinessSchema, BreadcrumbSchema } from '@/components/seo/structured-data'
+import type { Metadata } from 'next'
 
 interface BusinessPageProps {
   params: Promise<{
     slug: string
   }>
+}
+
+export async function generateMetadata({ params }: BusinessPageProps): Promise<Metadata> {
+  const { slug } = await params
+  
+  const business = await prisma.business.findUnique({
+    where: { slug },
+    select: {
+      name: true,
+      description: true,
+      address: true,
+      city: true,
+      services: {
+        where: { isActive: true },
+        select: { name: true },
+        take: 5,
+      },
+      averageRating: true,
+      totalReviews: true,
+    },
+  })
+
+  if (!business) {
+    return {
+      title: 'Business Not Found',
+      description: 'The business you are looking for does not exist.',
+    }
+  }
+
+  const serviceNames = business.services.map(s => s.name).join(', ')
+  const ratingText = business.averageRating && business.totalReviews > 0 
+    ? `${business.averageRating}★ (${business.totalReviews} reviews)` 
+    : ''
+
+  return {
+    title: `${business.name} - Beauty Services in ${business.city}`,
+    description: `${business.description || `Book appointments at ${business.name}`}. ${serviceNames ? `Services: ${serviceNames}.` : ''} ${ratingText}`,
+    keywords: [business.name, business.city, 'beauty salon', 'book appointment', ...business.services.map(s => s.name)],
+    openGraph: {
+      title: `${business.name} | BeautyPortal`,
+      description: business.description || `Book appointments at ${business.name} in ${business.city}`,
+      url: `/business/${slug}`,
+      type: 'business.business',
+      images: [
+        {
+          url: '/business-default-og.jpg',
+          width: 1200,
+          height: 630,
+          alt: business.name,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${business.name} | BeautyPortal`,
+      description: business.description || `Book appointments at ${business.name} in ${business.city}`,
+    },
+  }
 }
 
 export default async function BusinessProfilePage({ params }: BusinessPageProps) {
@@ -123,6 +183,27 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white">
+      <LocalBusinessSchema
+        name={business.businessName}
+        description={business.description}
+        address={business.address}
+        city={business.city}
+        postalCode={business.postalCode}
+        telephone={business.phone}
+        email={business.email}
+        priceRange="$$"
+        ratingValue={averageRating || undefined}
+        ratingCount={totalReviews || undefined}
+        url={`${process.env.NEXT_PUBLIC_URL || 'https://beautyportal.com'}/business/${business.slug}`}
+        services={business.services.map(s => s.name)}
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: process.env.NEXT_PUBLIC_URL || 'https://beautyportal.com' },
+          { name: 'Find Services', url: `${process.env.NEXT_PUBLIC_URL || 'https://beautyportal.com'}/search` },
+          { name: business.businessName, url: `${process.env.NEXT_PUBLIC_URL || 'https://beautyportal.com'}/business/${business.slug}` },
+        ]}
+      />
       <Navigation session={session} />
       
       <BusinessHero 

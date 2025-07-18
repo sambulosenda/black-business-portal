@@ -1,5 +1,6 @@
 import { requireRole } from "@/lib/session"
 import Link from "next/link"
+import type { Metadata } from "next"
 import {
   Sidebar,
   SidebarContent,
@@ -14,6 +15,15 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+
+export const metadata: Metadata = {
+  title: "Business Dashboard",
+  description: "Manage your beauty business on BeautyPortal. Track bookings, manage services, view analytics, and grow your customer base.",
+  robots: {
+    index: false,
+    follow: false,
+  },
+}
 import {
   LayoutDashboard,
   Package,

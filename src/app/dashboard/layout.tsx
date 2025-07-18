@@ -1,5 +1,15 @@
 import { requireAuth } from "@/lib/session"
 import Link from "next/link"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "My Dashboard",
+  description: "Manage your beauty appointments, view booking history, and discover new beauty services on BeautyPortal.",
+  robots: {
+    index: false,
+    follow: false,
+  },
+}
 
 export default async function DashboardLayout({
   children,

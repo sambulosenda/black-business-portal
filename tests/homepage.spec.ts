@@ -3,8 +3,8 @@ import { test, expect } from '@playwright/test';
 test('homepage has title', async ({ page }) => {
   await page.goto('/');
   
-  // The app currently uses "Create Next App" as title
-  await expect(page).toHaveTitle('Create Next App');
+  // Check for the new SEO-optimized title
+  await expect(page).toHaveTitle('BeautyPortal - Book Beauty Services in 30 Seconds');
 });
 
 test('homepage loads successfully', async ({ page }) => {
