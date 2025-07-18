@@ -111,10 +111,10 @@ export default function BusinessSignupPage() {
           <div className="text-center">
             <Link href="/" className="inline-flex items-center space-x-3 group">
               <div className="w-12 h-12 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg group-hover:shadow-xl transition-all">
-                B
+                G
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                BeautyPortal
+                Glamfric
               </span>
             </Link>
             <h2 className="mt-8 text-3xl font-bold text-gray-900">
@@ -495,7 +495,7 @@ export default function BusinessSignupPage() {
               Grow your beauty business
             </h1>
             <p className="text-xl text-white/90 mb-8">
-              Join thousands of successful beauty professionals who use BeautyPortal to manage their business and connect with new clients.
+              Join thousands of successful beauty professionals who use Glamfric to manage their business and connect with new clients.
             </p>
             
             <div className="space-y-6">

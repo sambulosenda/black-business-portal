@@ -99,7 +99,7 @@ export default function StripeConnectSection({
             <div className="flex-1">
               <h3 className="text-sm font-semibold text-gray-900 mb-2">Platform Fee Structure</h3>
               <p className="text-sm text-gray-700">
-                {process.env.NEXT_PUBLIC_PLATFORM_NAME || 'BeautyPortal'} charges a {commissionRate.toString()}% commission on all bookings.
+                {process.env.NEXT_PUBLIC_PLATFORM_NAME || 'Glamfric'} charges a {commissionRate.toString()}% commission on all bookings.
               </p>
               <p className="text-sm text-gray-700 mt-1">
                 You&apos;ll receive <span className="font-semibold text-green-700">{(100 - Number(commissionRate)).toFixed(0)}%</span> of each booking after platform fees.

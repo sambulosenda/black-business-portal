@@ -58,7 +58,7 @@ export default function OrderPaymentPage() {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <Link href="/" className="text-xl font-bold text-indigo-600">
-                BeautyPortal
+                Glamfric
               </Link>
             </div>
           </div>

@@ -82,14 +82,14 @@ export function WebsiteSchema() {
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'BeautyPortal',
+    name: 'Glamfric',
     description: 'Find and instantly book appointments at top-rated African beauty salons near you.',
-    url: process.env.NEXT_PUBLIC_URL || 'https://beautyportal.com',
+    url: process.env.NEXT_PUBLIC_URL || 'https://glamfric.com',
     potentialAction: {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: `${process.env.NEXT_PUBLIC_URL || 'https://beautyportal.com'}/search?q={search_term_string}`,
+        urlTemplate: `${process.env.NEXT_PUBLIC_URL || 'https://glamfric.com'}/search?q={search_term_string}`,
       },
       'query-input': 'required name=search_term_string',
     },

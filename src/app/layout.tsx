@@ -15,31 +15,31 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "BeautyPortal - Book Beauty Services in 30 Seconds",
-    template: "%s | BeautyPortal"
+    default: "Glamfric - Book Beauty Services in 30 Seconds",
+    template: "%s | Glamfric"
   },
   description: "Find and instantly book appointments at top-rated African beauty salons and professionals near you. Hair, nails, spa, and more. No calls, no waiting.",
   keywords: ["beauty salon", "hair salon", "nail salon", "spa", "African beauty", "book appointment", "beauty services", "hair braiding", "makeup", "lash extensions"],
-  authors: [{ name: "BeautyPortal" }],
-  creator: "BeautyPortal",
-  publisher: "BeautyPortal",
+  authors: [{ name: "Glamfric" }],
+  creator: "Glamfric",
+  publisher: "Glamfric",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_URL || "https://beautyportal.com"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_URL || "https://glamfric.com"),
   openGraph: {
-    title: "BeautyPortal - Book Beauty Services in 30 Seconds",
+    title: "Glamfric - Book Beauty Services in 30 Seconds",
     description: "Find and instantly book appointments at top-rated African beauty salons near you.",
     url: "/",
-    siteName: "BeautyPortal",
+    siteName: "Glamfric",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "BeautyPortal - Book Beauty Services",
+        alt: "Glamfric - Book Beauty Services",
       },
     ],
     locale: "en_US",
@@ -47,10 +47,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "BeautyPortal - Book Beauty Services in 30 Seconds",
+    title: "Glamfric - Book Beauty Services in 30 Seconds",
     description: "Find and instantly book appointments at top-rated African beauty salons near you.",
     images: ["/og-image.jpg"],
-    creator: "@beautyportal",
+    creator: "@glamfric",
   },
   robots: {
     index: true,

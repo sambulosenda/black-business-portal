@@ -10,9 +10,9 @@ export default function Footer() {
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold">
-                B
+                G
               </div>
-              <span className="text-xl font-bold text-white">BeautyPortal</span>
+              <span className="text-xl font-bold text-white">Glamfric</span>
             </div>
             <p className="mt-4 text-gray-400 max-w-md">
               Connecting customers with talented Black beauty and wellness professionals. 
@@ -69,7 +69,7 @@ export default function Footer() {
         
         <div className="mt-8 pt-8 border-t border-gray-800">
           <p className="text-center text-gray-400 text-sm">
-            © {currentYear} BeautyPortal. All rights reserved. Made with ❤️ for the Black community.
+            © {currentYear} Glamfric. All rights reserved. Made with ❤️ for the Black community.
           </p>
         </div>
       </div>

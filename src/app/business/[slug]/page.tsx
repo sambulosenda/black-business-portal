@@ -68,7 +68,7 @@ export async function generateMetadata({ params }: BusinessPageProps): Promise<M
     description: `${business.description || `Book appointments at ${business.businessName}`}. ${serviceNames ? `Services: ${serviceNames}.` : ''} ${ratingText}`,
     keywords: [business.businessName, business.city, 'beauty salon', 'book appointment', ...business.services.map(s => s.name)],
     openGraph: {
-      title: `${business.businessName} | BeautyPortal`,
+      title: `${business.businessName} | Glamfric`,
       description: business.description || `Book appointments at ${business.businessName} in ${business.city}`,
       url: `/business/${slug}`,
       type: 'website',
@@ -83,7 +83,7 @@ export async function generateMetadata({ params }: BusinessPageProps): Promise<M
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${business.businessName} | BeautyPortal`,
+      title: `${business.businessName} | Glamfric`,
       description: business.description || `Book appointments at ${business.businessName} in ${business.city}`,
     },
   }
@@ -205,14 +205,14 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
         priceRange="$$"
         ratingValue={averageRating || undefined}
         ratingCount={totalReviews || undefined}
-        url={`${process.env.NEXT_PUBLIC_URL || 'https://beautyportal.com'}/business/${business.slug}`}
+        url={`${process.env.NEXT_PUBLIC_URL || 'https://glamfric.com'}/business/${business.slug}`}
         services={business.services.map(s => s.name)}
       />
       <BreadcrumbSchema
         items={[
-          { name: 'Home', url: process.env.NEXT_PUBLIC_URL || 'https://beautyportal.com' },
-          { name: 'Find Services', url: `${process.env.NEXT_PUBLIC_URL || 'https://beautyportal.com'}/search` },
-          { name: business.businessName, url: `${process.env.NEXT_PUBLIC_URL || 'https://beautyportal.com'}/business/${business.slug}` },
+          { name: 'Home', url: process.env.NEXT_PUBLIC_URL || 'https://glamfric.com' },
+          { name: 'Find Services', url: `${process.env.NEXT_PUBLIC_URL || 'https://glamfric.com'}/search` },
+          { name: business.businessName, url: `${process.env.NEXT_PUBLIC_URL || 'https://glamfric.com'}/business/${business.slug}` },
         ]}
       />
       <Navigation session={session} />

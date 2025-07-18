@@ -52,7 +52,7 @@ export default function BusinessLandingPage() {
       name: 'Sarah Johnson',
       business: 'Glow Beauty Salon',
       image: '/images/testimonial-1.jpg',
-      quote: 'BeautyPortal transformed my business. I\'ve seen a 40% increase in bookings and my clients love the convenience.',
+      quote: 'Glamfric transformed my business. I\'ve seen a 40% increase in bookings and my clients love the convenience.',
       rating: 5
     },
     {
@@ -135,9 +135,9 @@ export default function BusinessLandingPage() {
             <div className="flex items-center">
               <Link href="/" className="flex items-center space-x-2">
                 <div className="w-10 h-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold">
-                  B
+                  G
                 </div>
-                <span className="text-xl font-bold text-gray-900">BeautyPortal</span>
+                <span className="text-xl font-bold text-gray-900">Glamfric</span>
                 <Badge variant="outline" className="ml-2">For Business</Badge>
               </Link>
             </div>
@@ -177,7 +177,7 @@ export default function BusinessLandingPage() {
                   <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> smart booking</span>
                 </h1>
                 <p className="text-xl text-gray-600 leading-relaxed">
-                  Join thousands of salons, spas, and beauty professionals who use BeautyPortal to manage bookings, payments, and grow their business.
+                  Join thousands of salons, spas, and beauty professionals who use Glamfric to manage bookings, payments, and grow their business.
                 </p>
               </div>
 
@@ -225,7 +225,7 @@ export default function BusinessLandingPage() {
                 <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl transform rotate-3 opacity-20"></div>
                 <Image
                   src="/images/business-dashboard.png"
-                  alt="BeautyPortal Dashboard"
+                  alt="Glamfric Dashboard"
                   width={600}
                   height={400}
                   className="relative rounded-2xl shadow-2xl"
@@ -501,7 +501,7 @@ export default function BusinessLandingPage() {
             Ready to transform your beauty business?
           </h2>
           <p className="text-xl text-white/90 mb-8">
-            Join 1,200+ businesses already growing with BeautyPortal. Start your free trial today.
+            Join 1,200+ businesses already growing with Glamfric. Start your free trial today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/signup/business">
@@ -527,9 +527,9 @@ export default function BusinessLandingPage() {
             <div>
               <div className="flex items-center space-x-2 mb-4">
                 <div className="w-10 h-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold">
-                  B
+                  G
                 </div>
-                <span className="text-xl font-bold text-white">BeautyPortal</span>
+                <span className="text-xl font-bold text-white">Glamfric</span>
               </div>
               <p className="text-sm">
                 The all-in-one platform for beauty professionals to manage and grow their business.
@@ -568,7 +568,7 @@ export default function BusinessLandingPage() {
           </div>
           
           <div className="mt-8 pt-8 border-t border-gray-800 text-center text-sm">
-            <p>&copy; 2025 BeautyPortal. All rights reserved.</p>
+            <p>&copy; 2025 Glamfric. All rights reserved.</p>
           </div>
         </div>
       </footer>

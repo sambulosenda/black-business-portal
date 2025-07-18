@@ -75,10 +75,10 @@ export default function CustomerSignupPage() {
           <div className="text-center">
             <Link href="/" className="inline-flex items-center space-x-3 group">
               <div className="w-12 h-12 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg group-hover:shadow-xl transition-all">
-                B
+                G
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                BeautyPortal
+                Glamfric
               </span>
             </Link>
             <h2 className="mt-8 text-3xl font-bold text-gray-900">

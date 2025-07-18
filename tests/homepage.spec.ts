@@ -4,7 +4,7 @@ test('homepage has title', async ({ page }) => {
   await page.goto('/');
   
   // Check for the new SEO-optimized title
-  await expect(page).toHaveTitle('BeautyPortal - Book Beauty Services in 30 Seconds');
+  await expect(page).toHaveTitle('Glamfric - Book Beauty Services in 30 Seconds');
 });
 
 test('homepage loads successfully', async ({ page }) => {
@@ -21,8 +21,8 @@ test('navigation bar is visible', async ({ page }) => {
   const navbar = page.locator('nav');
   await expect(navbar).toBeVisible();
   
-  // Check for BeautyPortal branding in the navbar specifically
-  await expect(navbar.locator('text=BeautyPortal')).toBeVisible();
+  // Check for Glamfric branding in the navbar specifically
+  await expect(navbar.locator('text=Glamfric')).toBeVisible();
 });
 
 test('hero section search form is visible', async ({ page }) => {

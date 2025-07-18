@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Shopping Cart",
-  description: "Review your selected beauty products and services before checkout on BeautyPortal.",
+  description: "Review your selected beauty products and services before checkout on Glamfric.",
   robots: {
     index: false,
     follow: false,

@@ -2,17 +2,17 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Sign In",
-  description: "Sign in to your BeautyPortal account to book appointments, manage your bookings, and discover beauty services near you.",
+  description: "Sign in to your Glamfric account to book appointments, manage your bookings, and discover beauty services near you.",
   openGraph: {
-    title: "Sign In | BeautyPortal",
-    description: "Sign in to your BeautyPortal account to book appointments and manage your beauty services.",
+    title: "Sign In | Glamfric",
+    description: "Sign in to your Glamfric account to book appointments and manage your beauty services.",
     url: "/login",
     type: "website",
   },
   twitter: {
     card: "summary",
-    title: "Sign In | BeautyPortal",
-    description: "Sign in to your BeautyPortal account to book appointments and manage your beauty services.",
+    title: "Sign In | Glamfric",
+    description: "Sign in to your Glamfric account to book appointments and manage your beauty services.",
   },
   robots: {
     index: false,
