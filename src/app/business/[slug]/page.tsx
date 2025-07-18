@@ -196,12 +196,12 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white">
       <LocalBusinessSchema
         name={business.businessName}
-        description={business.description}
+        description={business.description || undefined}
         address={business.address}
         city={business.city}
         postalCode={business.zipCode}
         telephone={business.phone}
-        email={business.email}
+        email={business.email || undefined}
         priceRange="$$"
         ratingValue={averageRating || undefined}
         ratingCount={totalReviews || undefined}
