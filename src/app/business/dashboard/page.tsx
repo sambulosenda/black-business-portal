@@ -57,7 +57,7 @@ export default async function BusinessDashboardPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="text-center">
-            <Link href="/business/setup">
+            <Link href="/business/dashboard/settings">
               <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
                 Complete Setup
               </Button>
