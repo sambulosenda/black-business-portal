@@ -221,7 +221,7 @@ function ResetPasswordForm() {
               Create a strong password
             </h1>
             <p className="text-xl text-white/90 mb-8">
-              Choose a password that's secure and unique to keep your account safe.
+              Choose a password that&apos;s secure and unique to keep your account safe.
             </p>
             
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
