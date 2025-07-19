@@ -10,8 +10,8 @@ test.describe('Authentication', () => {
       await expect(page.locator('h1')).toContainText('Sign in to your account');
       
       // Check form elements
-      await expect(page.locator('input[name="email"]')).toBeVisible();
-      await expect(page.locator('input[name="password"]')).toBeVisible();
+      await expect(page.locator('input[id="email"]')).toBeVisible();
+      await expect(page.locator('input[id="password"]')).toBeVisible();
       await expect(page.locator('button[type="submit"]')).toContainText('Sign in');
       
       // Check links
@@ -34,8 +34,8 @@ test.describe('Authentication', () => {
       await page.goto('/login');
       
       // Fill in invalid credentials
-      await page.fill('input[name="email"]', 'invalid@example.com');
-      await page.fill('input[name="password"]', 'wrongpassword');
+      await page.fill('input[id="email"]', 'invalid@example.com');
+      await page.fill('input[id="password"]', 'wrongpassword');
       await page.locator('button[type="submit"]').click();
       
       // Check for error message
@@ -84,9 +84,9 @@ test.describe('Authentication', () => {
       await expect(page.locator('h1')).toContainText('Create your account');
       
       // Check form elements
-      await expect(page.locator('input[name="name"]')).toBeVisible();
-      await expect(page.locator('input[name="email"]')).toBeVisible();
-      await expect(page.locator('input[name="password"]')).toBeVisible();
+      await expect(page.locator('input[id="name"]')).toBeVisible();
+      await expect(page.locator('input[id="email"]')).toBeVisible();
+      await expect(page.locator('input[id="password"]')).toBeVisible();
       await expect(page.locator('button[type="submit"]')).toContainText('Create account');
     });
 
@@ -106,7 +106,7 @@ test.describe('Authentication', () => {
       await page.goto('/signup/customer');
       
       // Enter weak password
-      await page.fill('input[name="password"]', 'weak');
+      await page.fill('input[id="password"]', 'weak');
       await page.locator('button[type="submit"]').click();
       
       // Check password validation
@@ -117,9 +117,9 @@ test.describe('Authentication', () => {
       await page.goto('/signup/customer');
       
       // Fill form with existing email
-      await page.fill('input[name="name"]', 'Test User');
-      await page.fill('input[name="email"]', 'customer@example.com');
-      await page.fill('input[name="password"]', 'password123');
+      await page.fill('input[id="name"]', 'Test User');
+      await page.fill('input[id="email"]', 'customer@example.com');
+      await page.fill('input[id="password"]', 'password123');
       await page.locator('button[type="submit"]').click();
       
       // Check for error
@@ -137,18 +137,18 @@ test.describe('Authentication', () => {
       
       // Check form steps
       await expect(page.locator('text=Personal Information')).toBeVisible();
-      await expect(page.locator('input[name="name"]')).toBeVisible();
-      await expect(page.locator('input[name="email"]')).toBeVisible();
-      await expect(page.locator('input[name="password"]')).toBeVisible();
+      await expect(page.locator('input[id="name"]')).toBeVisible();
+      await expect(page.locator('input[id="email"]')).toBeVisible();
+      await expect(page.locator('input[id="password"]')).toBeVisible();
     });
 
     test('should navigate through multi-step form', async ({ page }) => {
       await page.goto('/business/join');
       
       // Fill step 1
-      await page.fill('input[name="name"]', 'Business Owner');
-      await page.fill('input[name="email"]', 'newbusiness@example.com');
-      await page.fill('input[name="password"]', 'securepassword123');
+      await page.fill('input[id="name"]', 'Business Owner');
+      await page.fill('input[id="email"]', 'newbusiness@example.com');
+      await page.fill('input[id="password"]', 'securepassword123');
       await page.locator('button:has-text("Next")').click();
       
       // Check step 2 is visible
@@ -165,9 +165,9 @@ test.describe('Authentication', () => {
       await page.goto('/business/join');
       
       // Skip to step 2 by filling step 1
-      await page.fill('input[name="name"]', 'Business Owner');
-      await page.fill('input[name="email"]', 'test@business.com');
-      await page.fill('input[name="password"]', 'password123');
+      await page.fill('input[id="name"]', 'Business Owner');
+      await page.fill('input[id="email"]', 'test@business.com');
+      await page.fill('input[id="password"]', 'password123');
       await page.locator('button:has-text("Next")').click();
       
       // Try to submit without business info
