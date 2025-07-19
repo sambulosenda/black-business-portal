@@ -24,7 +24,7 @@ test.describe('Business Dashboard', () => {
       
       // Check stats cards
       await expect(page.locator('text=Total Revenue')).toBeVisible();
-      await expect(page.locator('text=Bookings')).toBeVisible();
+      await expect(page.locator('h3:has-text("Bookings")').first()).toBeVisible();
       await expect(page.locator('text=Average Rating')).toBeVisible();
       await expect(page.locator('text=Active Services')).toBeVisible();
     });
@@ -44,10 +44,10 @@ test.describe('Business Dashboard', () => {
       
       // Check business info section
       await expect(page.locator('text=Business Information')).toBeVisible();
-      await expect(page.locator('text=Status')).toBeVisible();
-      await expect(page.locator('text=Category')).toBeVisible();
-      await expect(page.locator('text=Location')).toBeVisible();
-      await expect(page.locator('text=Phone')).toBeVisible();
+      await expect(page.locator('dt:has-text("Status")').first()).toBeVisible();
+      await expect(page.locator('dt:has-text("Category")')).toBeVisible();
+      await expect(page.locator('dt:has-text("Location")')).toBeVisible();
+      await expect(page.locator('dt:has-text("Phone")')).toBeVisible();
     });
 
     test('should navigate to bookings page', async ({ page }) => {

@@ -7,7 +7,7 @@ export async function loginAs(page: Page, email: string, password: string) {
   await page.click('button[type="submit"]');
   
   // Wait for navigation after login
-  await page.waitForURL(url => !url.includes('/login'), { timeout: 10000 });
+  await page.waitForURL(url => !url.toString().includes('/login'), { timeout: 10000 });
 }
 
 export const testAccounts = {
