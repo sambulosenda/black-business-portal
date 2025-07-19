@@ -6,6 +6,7 @@ import crypto from 'crypto'
 export async function POST(request: NextRequest) {
   try {
     const { email } = await request.json()
+    console.log('Password reset requested for:', email)
 
     if (!email) {
       return NextResponse.json(
@@ -21,10 +22,13 @@ export async function POST(request: NextRequest) {
 
     // Always return success even if user doesn't exist (security best practice)
     if (!user) {
+      console.log('User not found for email:', email)
       return NextResponse.json({
         message: 'If an account exists with that email, we sent a password reset link.'
       })
     }
+    
+    console.log('User found:', user.name, user.id)
 
     // Generate reset token
     const resetToken = crypto.randomBytes(32).toString('hex')
@@ -52,6 +56,8 @@ export async function POST(request: NextRequest) {
 
     // Create reset URL
     const resetUrl = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`
+    
+    console.log('Reset URL generated:', resetUrl)
 
     // Send email
     await sendEmail({
