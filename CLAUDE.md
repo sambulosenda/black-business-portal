@@ -64,7 +64,8 @@ bunx prisma migrate dev
 7. Finally, add a review section to the projectplan.md file with a summary of the changes you made and any other relevant information.
 
 ## Workflow Memories
-- Everytime you finish a task create a commit 
+- Everytime you finish a task create a commit
+- Always test every feature after implementation - ask the user to test it 
 
 ## Design Memories
 - I like the color theme on home page keep using it 
