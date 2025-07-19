@@ -35,7 +35,7 @@ export async function sendEmail(options: EmailOptions): Promise<void> {
   // Send email via AWS SES
   try {
     const command = new SendEmailCommand({
-      Source: process.env.EMAIL_FROM || 'BeautyPortal <noreply@beautyportal.com>',
+      Source: process.env.EMAIL_FROM || 'Glamfric <noreply@glamfric.com>',
       Destination: {
         ToAddresses: [options.to],
       },
@@ -171,10 +171,10 @@ export const emailTemplates = {
     name: string;
     token: string;
   }) => ({
-    subject: 'Verify your email - BeautyPortal',
+    subject: 'Verify your email - Glamfric',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #6366f1;">Welcome to BeautyPortal!</h2>
+        <h2 style="color: #6366f1;">Welcome to Glamfric!</h2>
         <p>Hi ${verification.name},</p>
         <p>Thanks for signing up! Please verify your email address by clicking the button below:</p>
         <div style="text-align: center; margin: 30px 0;">
@@ -197,12 +197,12 @@ export const emailTemplates = {
         <p>If you didn't create an account, you can safely ignore this email.</p>
         <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
         <p style="color: #6b7280; font-size: 14px;">
-          BeautyPortal - Book beauty services in 30 seconds<br>
-          © ${new Date().getFullYear()} BeautyPortal. All rights reserved.
+          Glamfric - Book beauty services in 30 seconds<br>
+          © ${new Date().getFullYear()} Glamfric. All rights reserved.
         </p>
       </div>
     `,
-    text: `Welcome to BeautyPortal! Please verify your email by visiting: ${process.env.NEXTAUTH_URL}/api/auth/verify-email?token=${verification.token}. This link will expire in 24 hours.`
+    text: `Welcome to Glamfric! Please verify your email by visiting: ${process.env.NEXTAUTH_URL}/api/auth/verify-email?token=${verification.token}. This link will expire in 24 hours.`
   })
 };
 

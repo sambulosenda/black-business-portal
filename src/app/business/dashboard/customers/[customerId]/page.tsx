@@ -413,7 +413,7 @@ export default function CustomerDetailPage() {
             <CardContent>
               <div className="flex flex-wrap gap-2 mb-4">
                 {customer.tags.map((tag) => (
-                  <Badge key={tag} variant="secondary" className="pl-3 pr-1">
+                  <Badge key={tag} variant="outline" className="pl-3 pr-1">
                     {tag}
                     <button
                       onClick={() => removeTag(tag)}
@@ -511,7 +511,7 @@ export default function CustomerDetailPage() {
                               booking.status === 'COMPLETED' ? 'success' :
                               booking.status === 'CONFIRMED' ? 'default' :
                               booking.status === 'CANCELLED' ? 'destructive' :
-                              'secondary'
+                              'outline'
                             }
                           >
                             {booking.status}

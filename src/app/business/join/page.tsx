@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+// import { useState } from 'react' // Commented out - may be used later
 import Link from 'next/link'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation' // Commented out - may be used later
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -11,8 +11,8 @@ import { CheckCircle, TrendingUp, Calendar, Users, DollarSign, Star, Clock, Shie
 import { motion } from 'framer-motion'
 
 export default function BusinessLandingPage() {
-  const router = useRouter()
-  const [videoPlaying, setVideoPlaying] = useState(false)
+  // const router = useRouter() // Commented out - may be used later
+  // const [videoPlaying, setVideoPlaying] = useState(false) // Commented out - may be used later
 
   const features = [
     {
@@ -52,7 +52,7 @@ export default function BusinessLandingPage() {
       name: 'Sarah Johnson',
       business: 'Glow Beauty Salon',
       image: '/images/testimonial-1.jpg',
-      quote: 'BeautyPortal transformed my business. I\'ve seen a 40% increase in bookings and my clients love the convenience.',
+      quote: 'Glamfric transformed my business. I\'ve seen a 40% increase in bookings and my clients love the convenience.',
       rating: 5
     },
     {
@@ -135,10 +135,10 @@ export default function BusinessLandingPage() {
             <div className="flex items-center">
               <Link href="/" className="flex items-center space-x-2">
                 <div className="w-10 h-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold">
-                  B
+                  G
                 </div>
-                <span className="text-xl font-bold text-gray-900">BeautyPortal</span>
-                <Badge variant="secondary" className="ml-2">For Business</Badge>
+                <span className="text-xl font-bold text-gray-900">Glamfric</span>
+                <Badge variant="outline" className="ml-2">For Business</Badge>
               </Link>
             </div>
             
@@ -177,7 +177,7 @@ export default function BusinessLandingPage() {
                   <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> smart booking</span>
                 </h1>
                 <p className="text-xl text-gray-600 leading-relaxed">
-                  Join thousands of salons, spas, and beauty professionals who use BeautyPortal to manage bookings, payments, and grow their business.
+                  Join thousands of salons, spas, and beauty professionals who use Glamfric to manage bookings, payments, and grow their business.
                 </p>
               </div>
 
@@ -191,7 +191,6 @@ export default function BusinessLandingPage() {
                 <Button 
                   size="lg" 
                   variant="outline"
-                  onClick={() => setVideoPlaying(true)}
                   className="border-2"
                 >
                   <Play className="mr-2 h-5 w-5" />
@@ -226,7 +225,7 @@ export default function BusinessLandingPage() {
                 <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl transform rotate-3 opacity-20"></div>
                 <Image
                   src="/images/business-dashboard.png"
-                  alt="BeautyPortal Dashboard"
+                  alt="Glamfric Dashboard"
                   width={600}
                   height={400}
                   className="relative rounded-2xl shadow-2xl"
@@ -412,7 +411,7 @@ export default function BusinessLandingPage() {
                         <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                       ))}
                     </div>
-                    <p className="text-gray-700 mb-6 italic">"{testimonial.quote}"</p>
+                    <p className="text-gray-700 mb-6 italic">&quot;{testimonial.quote}&quot;</p>
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 bg-gray-300 rounded-full" />
                       <div>
@@ -439,7 +438,7 @@ export default function BusinessLandingPage() {
               Choose the perfect plan for your business
             </h2>
             <p className="text-xl text-gray-600">
-              Start free, upgrade when you're ready. No hidden fees.
+              Start free, upgrade when you&apos;re ready. No hidden fees.
             </p>
           </div>
 
@@ -502,7 +501,7 @@ export default function BusinessLandingPage() {
             Ready to transform your beauty business?
           </h2>
           <p className="text-xl text-white/90 mb-8">
-            Join 1,200+ businesses already growing with BeautyPortal. Start your free trial today.
+            Join 1,200+ businesses already growing with Glamfric. Start your free trial today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/signup/business">
@@ -528,9 +527,9 @@ export default function BusinessLandingPage() {
             <div>
               <div className="flex items-center space-x-2 mb-4">
                 <div className="w-10 h-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold">
-                  B
+                  G
                 </div>
-                <span className="text-xl font-bold text-white">BeautyPortal</span>
+                <span className="text-xl font-bold text-white">Glamfric</span>
               </div>
               <p className="text-sm">
                 The all-in-one platform for beauty professionals to manage and grow their business.
@@ -569,7 +568,7 @@ export default function BusinessLandingPage() {
           </div>
           
           <div className="mt-8 pt-8 border-t border-gray-800 text-center text-sm">
-            <p>&copy; 2025 BeautyPortal. All rights reserved.</p>
+            <p>&copy; 2025 Glamfric. All rights reserved.</p>
           </div>
         </div>
       </footer>

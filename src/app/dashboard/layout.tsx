@@ -1,5 +1,15 @@
 import { requireAuth } from "@/lib/session"
 import Link from "next/link"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "My Dashboard",
+  description: "Manage your beauty appointments, view booking history, and discover new beauty services on Glamfric.",
+  robots: {
+    index: false,
+    follow: false,
+  },
+}
 
 export default async function DashboardLayout({
   children,
@@ -16,7 +26,7 @@ export default async function DashboardLayout({
             <div className="flex">
               <div className="flex-shrink-0 flex items-center">
                 <Link href="/" className="text-xl font-bold text-indigo-600">
-                  BeautyPortal
+                  Glamfric
                 </Link>
               </div>
               <div className="hidden sm:ml-6 sm:flex sm:space-x-8">

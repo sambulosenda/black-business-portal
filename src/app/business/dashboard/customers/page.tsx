@@ -9,9 +9,9 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { 
-  Search, DollarSign, 
+  Search, 
   Phone, Mail, Loader2, Filter, Download, TrendingUp,
-  ChevronRight, Users, Crown, AlertCircle
+  ChevronRight, Users, Crown, AlertCircle, DollarSign
 } from "lucide-react"
 import { format } from "date-fns"
 import { toast } from "sonner"
@@ -54,6 +54,7 @@ export default function CustomersPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [filterType, setFilterType] = useState<'all' | 'vip' | 'new' | 'at-risk'>('all')
   const [sortBy, setSortBy] = useState<'recent' | 'spent' | 'visits'>('recent')
+  // const [selectedCustomer, setSelectedCustomer] = useState<CustomerProfile | null>(null) // Commented out - may be used later
 
   useEffect(() => {
     fetchCustomers()
@@ -62,7 +63,8 @@ export default function CustomersPage() {
 
   useEffect(() => {
     filterAndSortCustomers()
-  }, [customers, searchQuery, filterType, sortBy]) // eslint-disable-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customers, searchQuery, filterType, sortBy])
 
   const fetchCustomers = async () => {
     try {
@@ -331,7 +333,6 @@ export default function CustomersPage() {
                       <Card 
                         key={customer.id}
                         className="cursor-pointer hover:shadow-md transition-all border border-gray-200"
-                        onClick={() => setSelectedCustomer(customer)}
                       >
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between">

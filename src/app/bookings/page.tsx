@@ -22,12 +22,18 @@ export default async function BookingsPage() {
     },
   })
 
-  const upcomingBookings = bookings.filter(
-    booking => new Date(booking.date) >= new Date() && booking.status !== 'CANCELLED'
-  )
-  const pastBookings = bookings.filter(
-    booking => new Date(booking.date) < new Date() || booking.status === 'CANCELLED'
-  )
+  const upcomingBookings = bookings
+    .filter(booking => new Date(booking.date) >= new Date() && booking.status !== 'CANCELLED')
+    .map(booking => ({
+      ...booking,
+      totalPrice: Number(booking.totalPrice)
+    }))
+  const pastBookings = bookings
+    .filter(booking => new Date(booking.date) < new Date() || booking.status === 'CANCELLED')
+    .map(booking => ({
+      ...booking,
+      totalPrice: Number(booking.totalPrice)
+    }))
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -37,7 +43,7 @@ export default async function BookingsPage() {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <Link href="/" className="text-xl font-bold text-indigo-600">
-                BeautyPortal
+                Glamfric
               </Link>
             </div>
             <div className="flex items-center space-x-4">

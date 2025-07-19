@@ -51,16 +51,14 @@ export async function GET() {
       // Group bookings by user
       const customerMap = new Map<string, {
         userId: string;
-        name: string;
-        email: string;
-        phone?: string | null;
+        customerName: string | null;
+        customerEmail: string | null;
+        customerPhone: string | null;
         firstVisit: Date;
         lastVisit: Date;
-        totalBookings: number;
+        totalVisits: number;
         totalSpent: number;
-        notes?: string | null;
-        tags: string[];
-        status: string;
+        services: Map<string, number>;
       }>()
       
       for (const booking of bookings) {
@@ -81,19 +79,21 @@ export async function GET() {
         }
         
         const customer = customerMap.get(userId)
-        customer.totalVisits++
-        customer.totalSpent += Number(booking.totalPrice)
-        
-        // Track service frequency
-        const serviceCount = customer.services.get(booking.service.name) || 0
-        customer.services.set(booking.service.name, serviceCount + 1)
-        
-        // Update first/last visit
-        if (booking.date < customer.firstVisit) {
-          customer.firstVisit = booking.date
-        }
-        if (booking.date > customer.lastVisit) {
-          customer.lastVisit = booking.date
+        if (customer) {
+          customer.totalVisits++
+          customer.totalSpent += Number(booking.totalPrice)
+          
+          // Track service frequency
+          const serviceCount = customer.services.get(booking.service.name) || 0
+          customer.services.set(booking.service.name, serviceCount + 1)
+          
+          // Update first/last visit
+          if (booking.date < customer.firstVisit) {
+            customer.firstVisit = booking.date
+          }
+          if (booking.date > customer.lastVisit) {
+            customer.lastVisit = booking.date
+          }
         }
       }
 
@@ -113,9 +113,9 @@ export async function GET() {
           data: {
             businessId: business.id,
             userId,
-            customerName: customerData.customerName,
-            customerEmail: customerData.customerEmail,
-            customerPhone: customerData.customerPhone,
+            customerName: customerData.customerName || 'Unknown',
+            customerEmail: customerData.customerEmail || '',
+            customerPhone: customerData.customerPhone || '',
             firstVisit: customerData.firstVisit,
             lastVisit: customerData.lastVisit,
             totalVisits: customerData.totalVisits,

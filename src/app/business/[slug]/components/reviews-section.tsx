@@ -3,17 +3,10 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Star, ThumbsUp, MoreHorizontal } from 'lucide-react'
+import type { ReviewWithRelations } from '@/types'
 
 interface ReviewsSectionProps {
-  reviews: Array<{
-    id: string;
-    rating: number;
-    comment: string | null;
-    createdAt: Date;
-    user: {
-      name: string | null;
-    };
-  }>
+  reviews: ReviewWithRelations[]
   averageRating: number
   totalReviews: number
   businessSlug: string
@@ -85,11 +78,11 @@ export default function ReviewsSection({ reviews, averageRating, totalReviews, b
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center">
                     <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent font-semibold">
-                      {review.user.name?.charAt(0) || 'U'}
+                      {review.user?.name?.charAt(0) || 'U'}
                     </span>
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">{review.user.name || 'Anonymous'}</p>
+                    <p className="font-medium text-gray-900">{review.user?.name || 'Anonymous'}</p>
                     <div className="flex items-center gap-2 mt-1">
                       <div className="flex">
                         {[...Array(5)].map((_, i) => (

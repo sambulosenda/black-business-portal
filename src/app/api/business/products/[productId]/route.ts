@@ -4,9 +4,10 @@ import { prisma } from '@/lib/prisma'
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { productId: string } }
+  { params }: { params: Promise<{ productId: string }> }
 ) {
   try {
+    const { productId } = await params
     const session = await getSession()
     
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
@@ -28,7 +29,7 @@ export async function PATCH(
     // Verify product belongs to this business
     const existingProduct = await prisma.product.findFirst({
       where: {
-        id: params.productId,
+        id: productId,
         businessId: business.id,
       },
     })
@@ -45,7 +46,7 @@ export async function PATCH(
 
       await prisma.inventoryLog.create({
         data: {
-          productId: params.productId,
+          productId: productId,
           type: 'ADJUSTMENT',
           quantity: quantityDiff,
           previousQty: existingProduct.quantity,
@@ -58,7 +59,7 @@ export async function PATCH(
 
     // Update the product
     const product = await prisma.product.update({
-      where: { id: params.productId },
+      where: { id: productId },
       data: {
         name: data.name,
         description: data.description,
@@ -95,9 +96,10 @@ export async function PATCH(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { productId: string } }
+  { params }: { params: Promise<{ productId: string }> }
 ) {
   try {
+    const { productId } = await params
     const session = await getSession()
     
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
@@ -119,7 +121,7 @@ export async function DELETE(
     // Verify product belongs to this business
     const product = await prisma.product.findFirst({
       where: {
-        id: params.productId,
+        id: productId,
         businessId: business.id,
       },
     })
@@ -130,13 +132,13 @@ export async function DELETE(
 
     // Check if product has been used in bookings
     const bookingItemCount = await prisma.bookingItem.count({
-      where: { productId: params.productId },
+      where: { productId: productId },
     })
 
     if (bookingItemCount > 0) {
       // Soft delete by marking as inactive
       await prisma.product.update({
-        where: { id: params.productId },
+        where: { id: productId },
         data: { isActive: false },
       })
       
@@ -144,7 +146,7 @@ export async function DELETE(
     } else {
       // Hard delete if no booking history
       await prisma.product.delete({
-        where: { id: params.productId },
+        where: { id: productId },
       })
       
       return NextResponse.json({ message: 'Product deleted successfully' })

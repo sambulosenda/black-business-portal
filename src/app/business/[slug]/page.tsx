@@ -11,11 +11,82 @@ import ProductsSection from './components/products-section'
 import ReviewsSection from './components/reviews-section'
 import AboutSection from './components/about-section'
 import GallerySection from './components/gallery-section'
+import { LocalBusinessSchema, BreadcrumbSchema } from '@/components/seo/structured-data'
+import type { Metadata } from 'next'
 
 interface BusinessPageProps {
   params: Promise<{
     slug: string
   }>
+}
+
+export async function generateMetadata({ params }: BusinessPageProps): Promise<Metadata> {
+  const { slug } = await params
+  
+  const business = await prisma.business.findUnique({
+    where: { slug },
+    select: {
+      businessName: true,
+      description: true,
+      address: true,
+      city: true,
+      zipCode: true,
+      phone: true,
+      email: true,
+      services: {
+        where: { isActive: true },
+        select: { name: true },
+        take: 5,
+      },
+      reviews: {
+        where: { rating: { gte: 1 } },
+        select: { rating: true },
+      },
+    },
+  })
+
+  if (!business) {
+    return {
+      title: 'Business Not Found',
+      description: 'The business you are looking for does not exist.',
+    }
+  }
+
+  // Calculate average rating and total reviews
+  const totalReviews = business.reviews.length
+  const averageRating = totalReviews > 0
+    ? business.reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews
+    : 0
+
+  const serviceNames = business.services.map(s => s.name).join(', ')
+  const ratingText = averageRating && totalReviews > 0 
+    ? `${averageRating.toFixed(1)}★ (${totalReviews} reviews)` 
+    : ''
+
+  return {
+    title: `${business.businessName} - Beauty Services in ${business.city}`,
+    description: `${business.description || `Book appointments at ${business.businessName}`}. ${serviceNames ? `Services: ${serviceNames}.` : ''} ${ratingText}`,
+    keywords: [business.businessName, business.city, 'beauty salon', 'book appointment', ...business.services.map(s => s.name)],
+    openGraph: {
+      title: `${business.businessName} | Glamfric`,
+      description: business.description || `Book appointments at ${business.businessName} in ${business.city}`,
+      url: `/business/${slug}`,
+      type: 'website',
+      images: [
+        {
+          url: '/business-default-og.jpg',
+          width: 1200,
+          height: 630,
+          alt: business.businessName,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${business.businessName} | Glamfric`,
+      description: business.description || `Book appointments at ${business.businessName} in ${business.city}`,
+    },
+  }
 }
 
 export default async function BusinessProfilePage({ params }: BusinessPageProps) {
@@ -100,6 +171,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
   const serializedBusiness = {
     ...business,
     commissionRate: Number(business.commissionRate),
+    openingHours: (business.openingHours as Record<string, unknown>) || {},
     services: business.services.map(service => ({
       ...service,
       price: Number(service.price)
@@ -108,13 +180,41 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
       ...product,
       price: Number(product.price),
       compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
-      cost: product.cost ? Number(product.cost) : null
+      cost: product.cost ? Number(product.cost) : null,
+      inventoryCount: product.quantity || 0,
+      lowStockAlert: product.lowStockAlert || 0,
+      category: product.category || undefined
     })),
-    photos: business.photos
+    photos: business.photos.map(photo => ({
+      ...photo,
+      key: photo.url, // Using URL as key since key field is missing
+      type: photo.type as 'HERO' | 'GALLERY' | 'LOGO' | 'BANNER'
+    }))
   }
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white">
+      <LocalBusinessSchema
+        name={business.businessName}
+        description={business.description || undefined}
+        address={business.address}
+        city={business.city}
+        postalCode={business.zipCode}
+        telephone={business.phone}
+        email={business.email || undefined}
+        priceRange="$$"
+        ratingValue={averageRating || undefined}
+        ratingCount={totalReviews || undefined}
+        url={`${process.env.NEXT_PUBLIC_URL || 'https://glamfric.com'}/business/${business.slug}`}
+        services={business.services.map(s => s.name)}
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: process.env.NEXT_PUBLIC_URL || 'https://glamfric.com' },
+          { name: 'Find Services', url: `${process.env.NEXT_PUBLIC_URL || 'https://glamfric.com'}/search` },
+          { name: business.businessName, url: `${process.env.NEXT_PUBLIC_URL || 'https://glamfric.com'}/business/${business.slug}` },
+        ]}
+      />
       <Navigation session={session} />
       
       <BusinessHero 
@@ -170,13 +270,13 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
           )}
 
           <AboutSection 
-            business={business}
+            business={serializedBusiness}
             availabilities={business.availabilities}
           />
 
-          {business.photos.filter(p => p.type === 'GALLERY').length > 0 && (
+          {serializedBusiness.photos.filter(p => p.type === 'GALLERY').length > 0 && (
             <GallerySection 
-              photos={business.photos.filter(p => p.type === 'GALLERY')}
+              photos={serializedBusiness.photos.filter(p => p.type === 'GALLERY')}
             />
           )}
         </div>

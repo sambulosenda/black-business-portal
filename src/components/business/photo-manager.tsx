@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { PhotoType } from '@prisma/client'
 import { S3Image } from '@/components/ui/s3-image'
 import { ImageUpload } from '@/components/ui/image-upload'
@@ -10,9 +10,9 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Badge } from '@/components/ui/badge'
+// import { Badge } from '@/components/ui/badge' // Commented out - may be used later
 import { toast } from 'sonner'
-import { Trash2, Star, Edit2, Loader2, ImageIcon, Plus } from 'lucide-react'
+import { Trash2, Star, Edit2, Loader2, ImageIcon } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -21,7 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { cn } from '@/lib/utils'
+// import { cn } from '@/lib/utils' // Commented out - may be used later
 
 interface Photo {
   id: string
@@ -52,22 +52,22 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
     order: 0,
   })
 
-  useEffect(() => {
-    fetchPhotos()
-  }, [businessId])
-
-  const fetchPhotos = async () => {
+  const fetchPhotos = useCallback(async () => {
     try {
       const response = await fetch(`/api/business/photos?businessId=${businessId}`)
       if (!response.ok) throw new Error('Failed to fetch photos')
       const data = await response.json()
       setPhotos(data.photos)
-    } catch (error) {
+    } catch {
       toast.error('Failed to load photos')
     } finally {
       setLoading(false)
     }
-  }
+  }, [businessId])
+
+  useEffect(() => {
+    fetchPhotos()
+  }, [fetchPhotos])
 
   const handleUploadComplete = () => {
     fetchPhotos()
@@ -88,7 +88,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
       
       await fetchPhotos()
       toast.success('Hero image updated')
-    } catch (error) {
+    } catch {
       toast.error('Failed to update photo')
     }
   }
@@ -111,7 +111,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
       await fetchPhotos()
       setEditingPhoto(null)
       toast.success('Photo updated')
-    } catch (error) {
+    } catch {
       toast.error('Failed to update photo')
     }
   }
@@ -129,7 +129,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
       
       await fetchPhotos()
       toast.success('Photo deleted')
-    } catch (error) {
+    } catch {
       toast.error('Failed to delete photo')
     }
   }
@@ -177,7 +177,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                       <Button
                         size="sm"
-                        variant="secondary"
+                        variant="outline"
                         onClick={() => {
                           setEditingPhoto(heroPhoto)
                           setEditForm({
@@ -265,7 +265,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
                           <Button
                             size="icon"
-                            variant="secondary"
+                            variant="outline"
                             className="h-8 w-8"
                             onClick={() => handleSetAsHero(photo)}
                             title="Set as hero image"
@@ -274,7 +274,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
                           </Button>
                           <Button
                             size="icon"
-                            variant="secondary"
+                            variant="outline"
                             className="h-8 w-8"
                             onClick={() => {
                               setEditingPhoto(photo)

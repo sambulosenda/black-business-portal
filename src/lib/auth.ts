@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma"
 import bcrypt from "bcryptjs"
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma) as any,
+  adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt"
   },
@@ -55,7 +55,7 @@ export const authOptions: NextAuthOptions = {
         return {
           ...token,
           id: user.id,
-          role: (user as any).role
+          role: (user as unknown as { role: string }).role
         }
       }
       return token

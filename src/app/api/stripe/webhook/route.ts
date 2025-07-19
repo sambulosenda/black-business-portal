@@ -37,7 +37,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
     }
     
-    return NextResponse.json({ error: err instanceof Error ? err.message : 'Invalid request' }, { status: 400 })
+    const errorMessage = err instanceof Error ? err.message : 'Invalid request'
+    return NextResponse.json({ error: errorMessage }, { status: 400 })
   }
 
   try {

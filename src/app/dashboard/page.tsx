@@ -258,7 +258,7 @@ export default async function DashboardPage() {
             <div>
               <CardTitle>Your Reviews</CardTitle>
               <CardDescription>
-                Reviews you've written for businesses
+                Reviews you&apos;ve written for businesses
               </CardDescription>
             </div>
           </div>

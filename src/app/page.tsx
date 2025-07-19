@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import Footer from "@/components/footer"
 import { useSession } from "next-auth/react"
+import { WebsiteSchema } from "@/components/seo/structured-data"
 
 export default function Home() {
   const router = useRouter()
@@ -58,6 +59,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <WebsiteSchema />
       {/* Navigation */}
       <nav className="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -65,9 +67,9 @@ export default function Home() {
             <div className="flex items-center">
               <Link href="/" className="flex items-center space-x-3 group">
                 <div className="w-10 h-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg group-hover:shadow-xl transition-shadow">
-                  B
+                  G
                 </div>
-                <span className="text-xl font-bold text-gray-900">BeautyPortal</span>
+                <span className="text-xl font-bold text-gray-900">Glamfric</span>
               </Link>
             </div>
             
@@ -277,7 +279,7 @@ export default function Home() {
               <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clipRule="evenodd" />
               </svg>
-              Why choose BeautyPortal
+              Why choose Glamfric
             </div>
             <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
               The brighter way to
@@ -370,7 +372,7 @@ export default function Home() {
                 <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
                 </svg>
-                Join 1,200+ businesses already on BeautyPortal
+                Join 1,200+ businesses already on Glamfric
               </div>
               
               <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight">
@@ -407,7 +409,7 @@ export default function Home() {
                       <div className="w-3 h-3 rounded-full bg-green-500"></div>
                     </div>
                     <div className="bg-gray-200 rounded-md px-4 py-1.5 text-xs text-gray-600 font-medium">
-                      beautyportal.com/dashboard
+                      glamfric.com/dashboard
                     </div>
                   </div>
                   <div className="p-8 bg-gray-50">
@@ -529,13 +531,13 @@ export default function Home() {
               {
                 name: "Sarah Johnson",
                 role: "Regular Customer",
-                content: "BeautyPortal has made finding and supporting Black-owned salons so easy. I love the instant booking feature!",
+                content: "Glamfric has made finding and supporting Black-owned salons so easy. I love the instant booking feature!",
                 rating: 5
               },
               {
                 name: "Michelle Williams",
                 role: "Salon Owner",
-                content: "Since joining BeautyPortal, my bookings have increased by 40%. The platform is intuitive and my clients love it.",
+                content: "Since joining Glamfric, my bookings have increased by 40%. The platform is intuitive and my clients love it.",
                 rating: 5
               },
               {

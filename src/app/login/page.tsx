@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
@@ -18,13 +18,13 @@ const loginSchema = z.object({
 
 type LoginFormData = z.infer<typeof loginSchema>
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect')
+  const reset = searchParams.get('reset')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-
 
   const {
     register,
@@ -62,7 +62,7 @@ export default function LoginPage() {
         }
         router.refresh()
       }
-    } catch (error) {
+    } catch {
       setError('Something went wrong. Please try again.')
     } finally {
       setIsLoading(false)
@@ -77,10 +77,10 @@ export default function LoginPage() {
           <div className="text-center">
             <Link href="/" className="inline-flex items-center space-x-3 group">
               <div className="w-12 h-12 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg group-hover:shadow-xl transition-all">
-                B
+                G
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                BeautyPortal
+                Glamfric
               </span>
             </Link>
             <h2 className="mt-8 text-3xl font-bold text-gray-900">
@@ -92,6 +92,20 @@ export default function LoginPage() {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">
+            {reset === 'success' && (
+              <div className="rounded-lg bg-green-50 border border-green-200 p-4">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm text-green-800">Password reset successfully! You can now login with your new password.</p>
+                  </div>
+                </div>
+              </div>
+            )}
             <div className="space-y-5">
               <div>
                 <Label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -169,7 +183,7 @@ export default function LoginPage() {
                   <div className="w-full border-t border-gray-300"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-gray-500">New to BeautyPortal?</span>
+                  <span className="px-4 bg-white text-gray-500">New to Glamfric?</span>
                 </div>
               </div>
 
@@ -240,5 +254,17 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   )
 }

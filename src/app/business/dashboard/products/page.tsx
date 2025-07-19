@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Image from 'next/image'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -15,10 +14,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
 import { 
   Package, Plus, Search, Edit, 
-  Trash, Image, DollarSign, Tag, AlertTriangle,
-  Package2, Loader2
+  Trash, DollarSign, Tag, AlertTriangle,
+  Package2, Loader2, ImageIcon
 } from 'lucide-react'
 import { toast } from 'sonner'
+import Image from 'next/image'
 
 interface ProductCategory {
   id: string
@@ -513,7 +513,7 @@ export default function ProductsPage() {
                     </td>
                     <td className="p-4 text-center">
                       <div className="flex items-center justify-center gap-1">
-                        <Badge variant={product.isActive ? 'default' : 'secondary'}>
+                        <Badge variant={product.isActive ? 'default' : 'outline'}>
                           {product.isActive ? 'Active' : 'Inactive'}
                         </Badge>
                         {product.isFeatured && (
@@ -767,7 +767,7 @@ export default function ProductsPage() {
               <div className="space-y-2">
                 <Label>Product Images</Label>
                 <div className="border-2 border-dashed rounded-lg p-6 text-center">
-                  <Image className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                  <ImageIcon className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
                   <p className="text-sm text-muted-foreground">
                     Drag and drop images or click to browse
                   </p>
@@ -856,7 +856,7 @@ export default function ProductsPage() {
                     {categories.map(category => (
                       <div key={category.id} className="flex items-center justify-between p-2 rounded-lg border">
                         <span className="text-sm">{category.name}</span>
-                        <Badge variant={category.isActive ? 'default' : 'secondary'}>
+                        <Badge variant={category.isActive ? 'default' : 'outline'}>
                           {category.isActive ? 'Active' : 'Inactive'}
                         </Badge>
                       </div>

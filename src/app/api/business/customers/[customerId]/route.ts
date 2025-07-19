@@ -4,9 +4,10 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
   request: Request,
-  { params }: { params: { customerId: string } }
+  { params }: { params: Promise<{ customerId: string }> }
 ) {
   try {
+    const { customerId } = await params
     const session = await getSession()
     
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
@@ -28,7 +29,7 @@ export async function GET(
     // Get the customer profile with related data
     const customer = await prisma.customerProfile.findFirst({
       where: {
-        id: params.customerId,
+        id: customerId,
         businessId: business.id,
       },
       include: {
@@ -96,9 +97,10 @@ export async function GET(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { customerId: string } }
+  { params }: { params: Promise<{ customerId: string }> }
 ) {
   try {
+    const { customerId } = await params
     const session = await getSession()
     
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
@@ -120,7 +122,7 @@ export async function PATCH(
     // Verify customer belongs to this business
     const existingCustomer = await prisma.customerProfile.findFirst({
       where: {
-        id: params.customerId,
+        id: customerId,
         businessId: business.id,
       },
     })
@@ -133,7 +135,7 @@ export async function PATCH(
 
     // Update the customer profile
     const updatedCustomer = await prisma.customerProfile.update({
-      where: { id: params.customerId },
+      where: { id: customerId },
       data: updates,
       include: {
         communications: {

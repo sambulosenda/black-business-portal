@@ -29,7 +29,7 @@ export default async function AnalyticsPage() {
         </p>
       </div>
 
-      <AnalyticsDashboard businessId={business.id} />
+      <AnalyticsDashboard />
     </div>
   )
 }

@@ -57,7 +57,7 @@ export default async function BusinessDashboardPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="text-center">
-            <Link href="/business/setup">
+            <Link href="/business/dashboard/settings">
               <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
                 Complete Setup
               </Button>
@@ -69,9 +69,9 @@ export default async function BusinessDashboardPage() {
   }
 
   // Calculate stats
-  const totalBookings = await prisma.booking.count({
-    where: { businessId: business.id },
-  })
+  // const totalBookings = await prisma.booking.count({
+  //   where: { businessId: business.id },
+  // }) // Commented out - may be used later
 
   const upcomingBookings = await prisma.booking.count({
     where: {
@@ -253,7 +253,7 @@ export default async function BusinessDashboardPage() {
               <div className="flex justify-between items-center">
                 <dt className="text-sm font-medium text-gray-500">Status</dt>
                 <dd>
-                  <Badge variant={business.isVerified ? 'default' : 'secondary'} className={business.isVerified ? 'bg-green-50 text-green-700 border-green-200' : 'bg-yellow-50 text-yellow-700 border-yellow-200'}>
+                  <Badge variant={business.isVerified ? 'success' : 'warning'} className={business.isVerified ? 'bg-green-50 text-green-700 border-green-200' : 'bg-yellow-50 text-yellow-700 border-yellow-200'}>
                     {business.isVerified ? 'Verified' : 'Pending Verification'}
                   </Badge>
                 </dd>

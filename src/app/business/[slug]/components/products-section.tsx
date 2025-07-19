@@ -6,27 +6,11 @@ import { Badge } from '@/components/ui/badge'
 import { S3Image } from '@/components/ui/s3-image'
 import { ShoppingCart, Sparkles } from 'lucide-react'
 import { useCart } from '@/contexts/cart-context'
+import type { ProductWithRelations, ProductCategory } from '@/types'
 
 interface ProductsSectionProps {
-  products: Array<{
-    id: string;
-    name: string;
-    description: string | null;
-    price: number;
-    salePrice: number | null;
-    images: string[];
-    featured: boolean;
-    currentStock: number;
-    category?: {
-      id: string;
-      name: string;
-    } | null;
-  }>
-  productCategories: Array<{
-    id: string;
-    name: string;
-    productCount: number;
-  }>
+  products: ProductWithRelations[]
+  productCategories: ProductCategory[]
   businessId: string
   businessName: string
   businessSlug: string
@@ -42,17 +26,12 @@ export default function ProductsSection({
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const { addProduct } = useCart()
   
-  const featuredProducts = products.filter(p => p.featured)
+  const featuredProducts = products.filter(p => p.isFeatured)
   const displayProducts = selectedCategory 
     ? products.filter(p => p.category?.id === selectedCategory)
     : products
     
-  const handleAddToCart = (product: {
-    id: string;
-    name: string;
-    price: number;
-    images: string[];
-  }) => {
+  const handleAddToCart = (product: ProductWithRelations) => {
     addProduct({
       id: product.id,
       businessId,
@@ -86,7 +65,7 @@ export default function ProductsSection({
           >
             All Products
           </button>
-          {productCategories.map((category) => (
+          {productCategories.map((category: ProductCategory) => (
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
@@ -123,7 +102,7 @@ export default function ProductsSection({
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {displayProducts
-          .filter(p => !p.featured || selectedCategory)
+          .filter(p => !p.isFeatured || selectedCategory)
           .map((product) => (
             <ProductCard 
               key={product.id} 
@@ -142,20 +121,13 @@ export default function ProductsSection({
   )
 }
 
-function ProductCard({ product, onAddToCart, featured = false }: {
-  product: {
-    id: string;
-    name: string;
-    description: string | null;
-    price: number;
-    salePrice: number | null;
-    compareAtPrice?: number;
-    images: string[];
-    currentStock: number;
-  };
-  onAddToCart: (product: any) => void;
-  featured?: boolean;
-}) {
+interface ProductCardProps {
+  product: ProductWithRelations
+  onAddToCart: (product: ProductWithRelations) => void
+  featured?: boolean
+}
+
+function ProductCard({ product, onAddToCart, featured = false }: ProductCardProps) {
   const discountPercentage = product.compareAtPrice 
     ? Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)
     : 0
@@ -191,9 +163,6 @@ function ProductCard({ product, onAddToCart, featured = false }: {
         <h4 className="font-semibold text-gray-900 group-hover:text-purple-600 transition-colors line-clamp-1">
           {product.name}
         </h4>
-        {product.brand && (
-          <p className="text-sm text-gray-500 mt-1">{product.brand}</p>
-        )}
         {product.description && (
           <p className="text-sm text-gray-600 mt-2 line-clamp-2">
             {product.description}

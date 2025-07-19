@@ -83,7 +83,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { 
         error: errorMessage,
-        details: isStripeError ? error.raw?.message : undefined 
+        details: isStripeError && 'raw' in error ? (error.raw as Record<string, unknown>)?.message : undefined 
       },
       { status: 500 }
     )

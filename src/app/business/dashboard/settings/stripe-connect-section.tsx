@@ -16,7 +16,7 @@ interface StripeConnectSectionProps {
 
 export default function StripeConnectSection({
   businessId,
-  businessName,
+  // businessName, // Commented out - may be used later
   stripeAccountId,
   stripeOnboarded,
   commissionRate,
@@ -47,8 +47,8 @@ export default function StripeConnectSection({
       
       // Redirect to Stripe Connect onboarding
       window.location.href = url
-    } catch (err: any) {
-      setError(err.message || 'Failed to connect Stripe account')
+    } catch (err: unknown) {
+      setError((err as Error).message || 'Failed to connect Stripe account')
     } finally {
       setLoading(false)
     }
@@ -74,8 +74,8 @@ export default function StripeConnectSection({
       
       // Redirect to Stripe Express dashboard
       window.location.href = url
-    } catch (err: any) {
-      setError(err.message || 'Failed to access Stripe dashboard')
+    } catch (err: unknown) {
+      setError((err as Error).message || 'Failed to access Stripe dashboard')
     } finally {
       setLoading(false)
     }
@@ -99,10 +99,10 @@ export default function StripeConnectSection({
             <div className="flex-1">
               <h3 className="text-sm font-semibold text-gray-900 mb-2">Platform Fee Structure</h3>
               <p className="text-sm text-gray-700">
-                {process.env.NEXT_PUBLIC_PLATFORM_NAME || 'BeautyPortal'} charges a {commissionRate.toString()}% commission on all bookings.
+                {process.env.NEXT_PUBLIC_PLATFORM_NAME || 'Glamfric'} charges a {commissionRate.toString()}% commission on all bookings.
               </p>
               <p className="text-sm text-gray-700 mt-1">
-                You'll receive <span className="font-semibold text-green-700">{(100 - Number(commissionRate)).toFixed(0)}%</span> of each booking after platform fees.
+                You&apos;ll receive <span className="font-semibold text-green-700">{(100 - Number(commissionRate)).toFixed(0)}%</span> of each booking after platform fees.
               </p>
               <p className="text-xs text-gray-600 mt-2">
                 Note: Additional Stripe processing fees apply (2.9% + $0.30 per transaction)
@@ -120,7 +120,7 @@ export default function StripeConnectSection({
               <div className="flex items-center gap-2 p-4 bg-amber-50 border border-amber-200 rounded-lg">
                 <AlertCircle className="h-5 w-5 text-amber-600 flex-shrink-0" />
                 <p className="text-sm text-gray-700">
-                  Connect your Stripe account to start accepting payments. You'll be redirected to Stripe to complete the setup.
+                  Connect your Stripe account to start accepting payments. You&apos;ll be redirected to Stripe to complete the setup.
                 </p>
               </div>
               <Button

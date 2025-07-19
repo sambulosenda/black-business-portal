@@ -5,13 +5,10 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Phone, Calendar } from 'lucide-react'
 import { Session } from 'next-auth'
+import type { BusinessWithRelations } from '@/types'
 
 interface StickyHeaderProps {
-  business: {
-    businessName: string;
-    slug: string;
-    phone: string;
-  }
+  business: BusinessWithRelations
   session: Session | null
 }
 
@@ -49,7 +46,7 @@ export default function StickyHeader({ business, session }: StickyHeaderProps) {
                 Call
               </Button>
             </a>
-            {business.services.length > 0 && (
+            {business.services && business.services.length > 0 && (
               <Link href={session ? `/book/${business.slug}` : '/login'}>
                 <Button size="sm" className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white">
                   <Calendar className="h-4 w-4 mr-2" />

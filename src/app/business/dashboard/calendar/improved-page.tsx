@@ -80,7 +80,7 @@ const statusStyles = {
 
 export default function ImprovedCalendarPage() {
   const router = useRouter()
-  const [viewMode, setViewMode] = useState<ViewMode>('month')
+  const [viewMode] = useState<ViewMode>('month')
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [bookings, setBookings] = useState<Booking[]>([])
@@ -154,7 +154,8 @@ export default function ImprovedCalendarPage() {
     }
 
     fetchBookings()
-  }, [currentDate, viewMode]) // eslint-disable-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentDate, viewMode])
 
   // Navigation handlers
   const goToPrevious = () => {
@@ -451,7 +452,7 @@ export default function ImprovedCalendarPage() {
                     {format(day, 'd')}
                   </span>
                   {dayBookings.length > 0 && (
-                    <Badge variant="secondary" className="text-xs h-5 px-1.5">
+                    <Badge variant="default" className="text-xs h-5 px-1.5">
                       {dayBookings.length}
                     </Badge>
                   )}
@@ -654,7 +655,7 @@ export default function ImprovedCalendarPage() {
           <div className="bg-white/10 backdrop-blur rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-indigo-100 text-sm">Today's Bookings</p>
+                <p className="text-indigo-100 text-sm">Today&apos;s Bookings</p>
                 <p className="text-2xl font-bold">{stats.totalToday}</p>
               </div>
               <Calendar className="h-8 w-8 text-indigo-200" />
@@ -728,7 +729,7 @@ export default function ImprovedCalendarPage() {
                 >
                   Today
                 </Button>
-                <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as ViewMode)}>
+                <Tabs defaultValue="month">
                   <TabsList className="bg-white">
                     <TabsTrigger value="day">Day</TabsTrigger>
                     <TabsTrigger value="week">Week</TabsTrigger>

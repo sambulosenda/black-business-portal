@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -14,8 +14,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Loader2, Plus, User, Mail, Phone, Shield, Calendar, Clock, Edit, Trash2, CheckCircle, XCircle } from "lucide-react"
+// import { ScrollArea } from "@/components/ui/scroll-area" // Commented out - may be used later
+import { Loader2, Plus, User, Mail, Phone, Shield, Calendar, Clock, Edit, CheckCircle, XCircle } from "lucide-react"
 import { toast } from "sonner"
 
 const staffSchema = z.object({
@@ -179,25 +179,25 @@ export default function StaffPage() {
     }
   }
 
-  const deleteStaff = async (staffId: string) => {
-    if (!confirm('Are you sure you want to remove this staff member?')) return
-
-    try {
-      const response = await fetch(`/api/business/staff/${staffId}`, {
-        method: 'DELETE',
-      })
-
-      if (response.ok) {
-        await fetchStaff()
-        toast.success('Staff member removed')
-      } else {
-        toast.error('Failed to remove staff member')
-      }
-    } catch (error) {
-      console.error('Error deleting staff:', error)
-      toast.error('Something went wrong')
-    }
-  }
+  // const deleteStaff = async (staffId: string) => {
+  //   if (!confirm('Are you sure you want to remove this staff member?')) return
+  //
+  //   try {
+  //     const response = await fetch(`/api/business/staff/${staffId}`, {
+  //       method: 'DELETE',
+  //     })
+  //
+  //     if (response.ok) {
+  //       await fetchStaff()
+  //       toast.success('Staff member removed')
+  //     } else {
+  //       toast.error('Failed to remove staff member')
+  //     }
+  //   } catch (error) {
+  //     console.error('Error deleting staff:', error)
+  //     toast.error('Something went wrong')
+  //   }
+  // }
 
   const startEdit = (member: Staff) => {
     setEditingStaff(member)
@@ -211,16 +211,16 @@ export default function StaffPage() {
     setShowAddDialog(true)
   }
 
-  const getRoleBadgeVariant = (role: string) => {
-    switch (role) {
-      case 'OWNER':
-        return 'destructive'
-      case 'MANAGER':
-        return 'default'
-      default:
-        return 'secondary'
-    }
-  }
+  // const getRoleBadgeVariant = (role: string) => {
+  //   switch (role) {
+  //     case 'OWNER':
+  //       return 'destructive'
+  //     case 'MANAGER':
+  //       return 'default'
+  //     default:
+  //       return 'secondary'
+  //   }
+  // }
 
   if (loading) {
     return (

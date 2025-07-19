@@ -101,6 +101,12 @@ This plan outlines the steps to complete the business portal application, focusi
 - [ ] Add API rate limiting
 - [ ] Set up error tracking (Sentry)
 - [ ] Implement performance monitoring
+- [x] **Set up end-to-end testing with Playwright** (Completed July 18, 2025)
+  - [x] Install Playwright with browser engines
+  - [x] Create playwright.config.ts with multi-browser testing
+  - [x] Write initial homepage tests
+  - [x] Add test scripts to package.json
+  - [x] Configure .gitignore for test artifacts
 - [ ] **Optimize image delivery with CloudFront CDN** (New - High Priority)
   - [ ] Set up CloudFront distribution
   - [ ] Configure Origin Access Identity (OAI)
@@ -623,3 +629,68 @@ Implemented AWS S3 for image storage and management, replacing the previous Uplo
 - Proxy adds ~100-200ms latency per image
 - CloudFront would reduce this to ~20-50ms
 - Consider implementing CDN before scaling
+
+## Testing Infrastructure Implementation (July 18, 2025)
+
+### Overview
+Implemented end-to-end testing using Playwright to ensure application reliability and prevent regressions.
+
+### Features Implemented
+
+#### 1. Playwright Setup
+- **Configuration** (playwright.config.ts):
+  - Multi-browser testing (Chromium, Firefox, WebKit)
+  - Auto-start dev server before tests
+  - HTML reporter for test results
+  - Parallel test execution
+  - Retry logic for CI environments
+
+#### 2. Test Scripts
+- **Package.json Scripts**:
+  - `bun test` - Run all tests headless
+  - `bun test:ui` - Interactive UI mode for debugging
+  - `bun test:headed` - Watch tests run in browser
+  - `bun test:debug` - Step-through debugging
+
+#### 3. Initial Test Coverage
+- **Homepage Tests** (tests/homepage.spec.ts):
+  - Page title verification
+  - Navigation bar visibility
+  - Hero section search form
+  - Value propositions display
+  - Cross-browser compatibility
+
+### Testing Best Practices Implemented
+1. **Page Object Model**: Ready to implement for complex pages
+2. **Data Attributes**: Can add test-specific selectors
+3. **CI/CD Ready**: Configuration supports automated testing
+4. **Visual Testing**: Can add screenshot comparison
+5. **Accessibility**: Can integrate accessibility checks
+
+### Next Steps for Testing
+1. **Expand Test Coverage**:
+   - Authentication flows (login/signup)
+   - Business dashboard functionality
+   - Booking creation process
+   - Payment integration tests
+   - Search and filter functionality
+
+2. **Add Test Types**:
+   - API endpoint tests
+   - Component unit tests with Vitest
+   - Visual regression tests
+   - Performance tests
+   - Accessibility tests
+
+3. **CI/CD Integration**:
+   - GitHub Actions workflow
+   - Test on pull requests
+   - Deployment gates
+   - Test result reporting
+
+### Benefits
+- ✅ Catch bugs before production
+- ✅ Confident refactoring
+- ✅ Cross-browser compatibility
+- ✅ Documentation of expected behavior
+- ✅ Faster development cycles

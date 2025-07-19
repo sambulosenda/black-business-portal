@@ -1,36 +1,25 @@
 'use client'
 
 import { MapPin, Phone, Globe, Instagram, Clock, Mail } from 'lucide-react'
+import type { BusinessWithRelations } from '@/types'
+
+interface Availability {
+  dayOfWeek: number
+  startTime: string
+  endTime: string
+  isActive: boolean
+}
 
 interface AboutSectionProps {
-  business: {
-    address: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    phone: string;
-    email: string | null;
-    website: string | null;
-    instagram: string | null;
-    description: string | null;
-  }
-  availabilities: Array<{
-    dayOfWeek: number;
-    startTime: string;
-    endTime: string;
-    isActive: boolean;
-  }>
+  business: BusinessWithRelations
+  availabilities: Availability[]
 }
 
 export default function AboutSection({ business, availabilities }: AboutSectionProps) {
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
   
   // Group consecutive days with same hours
-  const groupedHours = availabilities.reduce((acc: Array<{
-    startDay: number;
-    endDay: number;
-    hours: string;
-  }>, curr) => {
+  const groupedHours = availabilities.reduce((acc: Array<{ startDay: number; endDay: number; hours: string }>, curr) => {
     const lastGroup = acc[acc.length - 1]
     const currentHours = `${curr.startTime} - ${curr.endTime}`
     

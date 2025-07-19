@@ -1,5 +1,6 @@
 import { requireRole } from "@/lib/session"
 import Link from "next/link"
+import type { Metadata } from "next"
 import {
   Sidebar,
   SidebarContent,
@@ -14,6 +15,15 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+
+export const metadata: Metadata = {
+  title: "Business Dashboard",
+  description: "Manage your beauty business on Glamfric. Track bookings, manage services, view analytics, and grow your customer base.",
+  robots: {
+    index: false,
+    follow: false,
+  },
+}
 import {
   LayoutDashboard,
   Package,
@@ -115,7 +125,7 @@ export default async function BusinessDashboardLayout({
                 B
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-bold text-indigo-600">BeautyPortal</span>
+                <span className="text-xl font-bold text-indigo-600">Glamfric</span>
                 <span className="text-xs text-gray-600">Business Dashboard</span>
               </div>
             </Link>

@@ -13,10 +13,11 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { 
-  ShoppingCart, CreditCard, Truck, MapPin, 
-  Phone, Mail, Loader2, AlertCircle, Check 
+  CreditCard, Truck, MapPin, 
+  Loader2 
 } from 'lucide-react'
 import { toast } from 'sonner'
+import type { PromotionWithRelations } from '@/types'
 
 export default function CheckoutPage() {
   const router = useRouter()
@@ -28,7 +29,7 @@ export default function CheckoutPage() {
   const [promoDiscount, setPromoDiscount] = useState<number>(0)
   const [promoValidating, setPromoValidating] = useState(false)
   const [promoError, setPromoError] = useState('')
-  const [appliedPromotion, setAppliedPromotion] = useState<any>(null)
+  const [appliedPromotion, setAppliedPromotion] = useState<PromotionWithRelations | null>(null)
 
   // Form state
   const [formData, setFormData] = useState({
@@ -49,11 +50,8 @@ export default function CheckoutPage() {
       return
     }
 
-    const hasServices = items.some(item => item.type === 'service')
-    if (hasServices) {
-      router.push('/cart')
-      return
-    }
+    // Cart only supports products, not services
+    // Services require booking through the booking flow
 
     // Redirect if not logged in
     if (!session) {
@@ -70,7 +68,7 @@ export default function CheckoutPage() {
     
     try {
       const businessId = items[0]?.businessId
-      const productIds = items.filter(item => item.type === 'product').map(item => item.id)
+      const productIds = items.map(item => item.id)
       
       const response = await fetch('/api/promotions/validate', {
         method: 'POST',
@@ -126,7 +124,7 @@ export default function CheckoutPage() {
         businessId,
         items: items.map(item => ({
           productId: item.id,
-          quantity: item.type === 'product' ? item.quantity : 1,
+          quantity: item.quantity || 1,
           price: item.price,
         })),
         orderType,
@@ -213,7 +211,7 @@ export default function CheckoutPage() {
                     <CardTitle>Order Type</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <RadioGroup value={orderType} onValueChange={(value: any) => setOrderType(value)}>
+                    <RadioGroup value={orderType} onValueChange={(value) => setOrderType(value as 'pickup' | 'delivery')}>
                       <div className="flex items-center space-x-2 p-4 border rounded-lg hover:bg-gray-50">
                         <RadioGroupItem value="pickup" id="pickup" />
                         <Label htmlFor="pickup" className="flex-1 cursor-pointer">
@@ -364,9 +362,9 @@ export default function CheckoutPage() {
                       {items.map((item) => (
                         <div key={item.id} className="flex justify-between text-sm">
                           <span className="flex-1">
-                            {item.name} {item.type === 'product' && `x${item.quantity}`}
+                            {item.name} x{item.quantity || 1}
                           </span>
-                          <span>${(item.price * (item.type === 'product' ? item.quantity : 1)).toFixed(2)}</span>
+                          <span>${(item.price * (item.quantity || 1)).toFixed(2)}</span>
                         </div>
                       ))}
                     </div>

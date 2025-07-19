@@ -7,8 +7,9 @@ import CancelButton from './cancel-button'
 import RefundButton from './refund-button'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import type { ReviewWithRelations } from '@/types'
 
-interface Booking {
+interface Booking extends Record<string, unknown> {
   id: string
   date: Date
   startTime: Date
@@ -26,7 +27,7 @@ interface Booking {
   service: {
     name: string
   }
-  review: { id: string; rating: number } | null
+  review: ReviewWithRelations | null
 }
 
 interface BookingsTableProps {
@@ -96,7 +97,7 @@ export default function BookingsTable({
               booking.status === 'COMPLETED' ? 'success' :
               booking.status === 'PENDING' ? 'warning' :
               booking.status === 'CANCELLED' ? 'destructive' :
-              'secondary'
+              'default'
             }
           >
             {booking.status}
@@ -105,7 +106,7 @@ export default function BookingsTable({
             <Badge
               variant={
                 booking.paymentStatus === 'SUCCEEDED' ? 'success' :
-                booking.paymentStatus === 'REFUNDED' ? 'secondary' :
+                booking.paymentStatus === 'REFUNDED' ? 'outline' :
                 booking.paymentStatus === 'FAILED' ? 'destructive' :
                 'warning'
               }
@@ -155,7 +156,7 @@ export default function BookingsTable({
             <RefundButton
               bookingId={booking.id}
               bookingDate={booking.startTime}
-              paymentStatus={booking.paymentStatus}
+              paymentStatus={booking.paymentStatus || ''}
             />
           </div>
         )

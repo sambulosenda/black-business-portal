@@ -5,34 +5,25 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import PaymentForm from '../payment-form'
 
+interface PaymentData {
+  paymentIntentId: string
+  clientSecret: string
+  amount: number
+  bookingId: string
+  businessName: string
+  serviceName: string
+  date: string
+  time: string
+  fees: {
+    platform: number
+    stripe: number
+    business: number
+  }
+}
+
 export default function PaymentPage() {
   const router = useRouter()
-  const [paymentData, setPaymentData] = useState<{
-    date: string;
-    time: string;
-    service: {
-      id: string;
-      name: string;
-      price: string;
-      duration: number;
-    };
-    business: {
-      id: string;
-      businessName: string;
-      stripeAccountId: string | null;
-    };
-    customerInfo: {
-      name: string;
-      email: string;
-      phone: string;
-    };
-    subtotal: number;
-    tax: number;
-    discount: number;
-    total: number;
-    promoCodeApplied?: string;
-    promotionId?: string;
-  } | null>(null)
+  const [paymentData, setPaymentData] = useState<PaymentData | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {

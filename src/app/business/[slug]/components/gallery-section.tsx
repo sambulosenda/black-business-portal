@@ -3,13 +3,10 @@
 import { useState } from 'react'
 import { S3Image } from '@/components/ui/s3-image'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
+import type { BusinessPhoto } from '@/types'
 
 interface GallerySectionProps {
-  photos: Array<{
-    id: string;
-    imageUrl: string;
-    caption: string | null;
-  }>
+  photos: BusinessPhoto[]
 }
 
 export default function GallerySection({ photos }: GallerySectionProps) {

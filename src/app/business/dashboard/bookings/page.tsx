@@ -48,7 +48,6 @@ export default function BusinessBookingsPage() {
   const [bookings, setBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
-  const [activeTab, setActiveTab] = useState('upcoming')
 
   useEffect(() => {
     if (status === 'loading') return
@@ -95,28 +94,30 @@ export default function BusinessBookingsPage() {
     }
   }
 
-  const filteredBookings = bookings.filter(booking => {
-    const matchesSearch = (booking.user?.name?.toLowerCase().includes(searchTerm.toLowerCase()) || false) ||
-                         (booking.service?.name?.toLowerCase().includes(searchTerm.toLowerCase()) || false)
-    
-    const bookingDate = new Date(booking.date)
-    const now = new Date()
-    
-    switch (activeTab) {
-      case 'upcoming':
-        return matchesSearch && bookingDate >= now && !['CANCELLED', 'COMPLETED'].includes(booking.status)
-      case 'today':
-        return matchesSearch && 
-               bookingDate.toDateString() === now.toDateString() && 
-               !['CANCELLED'].includes(booking.status)
-      case 'past':
-        return matchesSearch && (bookingDate < now || booking.status === 'COMPLETED')
-      case 'cancelled':
-        return matchesSearch && booking.status === 'CANCELLED'
-      default:
-        return matchesSearch
-    }
-  })
+  const filterBookings = (filterType: 'upcoming' | 'today' | 'past' | 'cancelled') => {
+    return bookings.filter(booking => {
+      const matchesSearch = (booking.user?.name?.toLowerCase().includes(searchTerm.toLowerCase()) || false) ||
+                           (booking.service?.name?.toLowerCase().includes(searchTerm.toLowerCase()) || false)
+      
+      const bookingDate = new Date(booking.date)
+      const now = new Date()
+      
+      switch (filterType) {
+        case 'upcoming':
+          return matchesSearch && bookingDate >= now && !['CANCELLED', 'COMPLETED'].includes(booking.status)
+        case 'today':
+          return matchesSearch && 
+                 bookingDate.toDateString() === now.toDateString() && 
+                 !['CANCELLED'].includes(booking.status)
+        case 'past':
+          return matchesSearch && (bookingDate < now || booking.status === 'COMPLETED')
+        case 'cancelled':
+          return matchesSearch && booking.status === 'CANCELLED'
+        default:
+          return matchesSearch
+      }
+    })
+  }
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -163,7 +164,7 @@ export default function BusinessBookingsPage() {
         </div>
       </div>
 
-      <Tabs defaultValue="upcoming" value={activeTab} onValueChange={setActiveTab}>
+      <Tabs defaultValue="upcoming">
         <TabsList className="grid w-full grid-cols-4 bg-gray-100">
           <TabsTrigger value="upcoming" className="data-[state=active]:bg-white data-[state=active]:text-indigo-600">
             Upcoming ({bookings.filter(b => new Date(b.date) >= new Date() && !['CANCELLED', 'COMPLETED'].includes(b.status)).length})
@@ -180,7 +181,7 @@ export default function BusinessBookingsPage() {
         </TabsList>
 
         <TabsContent value="upcoming">
-          {filteredBookings.length === 0 ? (
+          {filterBookings('upcoming').length === 0 ? (
             <Card className="border-2 border-dashed border-gray-300">
               <CardContent className="py-12">
                 <EmptyState
@@ -192,7 +193,7 @@ export default function BusinessBookingsPage() {
             </Card>
           ) : (
             <div className="space-y-4">
-              {filteredBookings.map((booking) => (
+              {filterBookings('upcoming').map((booking) => (
                 <Card key={booking.id} className="border border-gray-200 shadow-sm hover:shadow-md transition-all">
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between">
@@ -288,7 +289,7 @@ export default function BusinessBookingsPage() {
         </TabsContent>
 
         <TabsContent value="today">
-          {filteredBookings.length === 0 ? (
+          {filterBookings('today').length === 0 ? (
             <Card className="border-2 border-dashed border-gray-300">
               <CardContent className="py-12">
                 <EmptyState
@@ -300,7 +301,7 @@ export default function BusinessBookingsPage() {
             </Card>
           ) : (
             <div className="space-y-4">
-              {filteredBookings.map((booking) => (
+              {filterBookings('today').map((booking) => (
                 <Card key={booking.id} className="border border-gray-200 shadow-sm hover:shadow-md transition-all">
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between">
@@ -396,7 +397,7 @@ export default function BusinessBookingsPage() {
         </TabsContent>
 
         <TabsContent value="past">
-          {filteredBookings.length === 0 ? (
+          {filterBookings('past').length === 0 ? (
             <Card className="border-2 border-dashed border-gray-300">
               <CardContent className="py-12">
                 <EmptyState
@@ -408,7 +409,7 @@ export default function BusinessBookingsPage() {
             </Card>
           ) : (
             <div className="space-y-4">
-              {filteredBookings.map((booking) => (
+              {filterBookings('past').map((booking) => (
                 <Card key={booking.id} className="border border-gray-200 shadow-sm hover:shadow-md transition-all">
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between">
@@ -471,7 +472,7 @@ export default function BusinessBookingsPage() {
         </TabsContent>
 
         <TabsContent value="cancelled">
-          {filteredBookings.length === 0 ? (
+          {filterBookings('cancelled').length === 0 ? (
             <Card className="border-2 border-dashed border-gray-300">
               <CardContent className="py-12">
                 <EmptyState
@@ -483,7 +484,7 @@ export default function BusinessBookingsPage() {
             </Card>
           ) : (
             <div className="space-y-4">
-              {filteredBookings.map((booking) => (
+              {filterBookings('cancelled').map((booking) => (
                 <Card key={booking.id} className="border border-gray-200 shadow-sm hover:shadow-md transition-all">
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between">

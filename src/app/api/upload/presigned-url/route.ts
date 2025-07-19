@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
 
     // Generate S3 key and presigned URL
     const key = generateS3Key(businessId, photoType.toLowerCase(), filename)
-    const { uploadUrl, publicUrl } = await generateUploadUrl(key, contentType, fileSize)
+    const { uploadUrl, publicUrl } = await generateUploadUrl(key, contentType)
 
     return NextResponse.json({
       uploadUrl,

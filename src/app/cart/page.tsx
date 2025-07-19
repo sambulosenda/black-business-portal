@@ -24,7 +24,7 @@ export default function CartPage() {
     updateQuantity, 
     removeItem, 
     clearCart,
-    getBusinessItems 
+    // getBusinessItems // Commented out - may be used later 
   } = useCart()
 
   // Group items by business
@@ -107,6 +107,7 @@ export default function CartPage() {
                         {/* Product Image */}
                         <div className="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
                           {item.image ? (
+                            // eslint-disable-next-line @next/next/no-img-element
                             <img 
                               src={item.image} 
                               alt={item.name}

@@ -30,12 +30,13 @@ interface Product {
   price: number
 }
 
-export default function EditPromotionPage({ params }: { params: { promotionId: string } }) {
+export default function EditPromotionPage({ params }: { params: Promise<{ promotionId: string }> }) {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [services, setServices] = useState<Service[]>([])
   const [products, setProducts] = useState<Product[]>([])
+  const [promotionId, setPromotionId] = useState<string>('')
   
   // Form state
   const [formData, setFormData] = useState({
@@ -59,6 +60,10 @@ export default function EditPromotionPage({ params }: { params: { promotionId: s
   })
 
   useEffect(() => {
+    params.then(p => setPromotionId(p.promotionId))
+  }, [params])
+
+  useEffect(() => {
     if (status === 'loading') return
     if (!session) {
       router.push('/login')
@@ -68,13 +73,16 @@ export default function EditPromotionPage({ params }: { params: { promotionId: s
       router.push('/dashboard')
       return
     }
-    fetchPromotionAndData()
-  }, [session, status, router])
+    if (promotionId) {
+      fetchPromotionAndData()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session, status, router, promotionId])
 
   const fetchPromotionAndData = async () => {
     try {
       // Fetch promotion
-      const promotionRes = await fetch(`/api/business/promotions/${params.promotionId}`)
+      const promotionRes = await fetch(`/api/business/promotions/${promotionId}`)
       if (!promotionRes.ok) {
         throw new Error('Failed to fetch promotion')
       }
@@ -130,7 +138,7 @@ export default function EditPromotionPage({ params }: { params: { promotionId: s
     setLoading(true)
 
     try {
-      const response = await fetch(`/api/business/promotions/${params.promotionId}`, {
+      const response = await fetch(`/api/business/promotions/${promotionId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
