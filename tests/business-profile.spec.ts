@@ -1,8 +1,10 @@
 import { test, expect } from '@playwright/test';
 
+import { testAccounts } from './helpers/auth';
+
 test.describe('Business Profile Pages', () => {
-  // Use a test business ID - adjust based on your seed data
-  const testBusinessSlug = 'glamour-hair-salon';
+  // Use a test business slug from seeded data
+  const testBusinessSlug = testAccounts.businessOwner1.businessSlug;
   
   test('should display business profile page', async ({ page }) => {
     await page.goto(`/business/${testBusinessSlug}`);

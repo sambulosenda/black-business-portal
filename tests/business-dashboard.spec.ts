@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { loginAs, testAccounts } from './helpers/auth';
 
 test.describe('Business Dashboard', () => {
   test('should redirect to login if not authenticated', async ({ page }) => {
@@ -9,204 +10,124 @@ test.describe('Business Dashboard', () => {
   });
 
   test.describe('Authenticated Business Dashboard', () => {
-    // Note: These tests are marked as skip because they require authentication
-    // In a real scenario, you'd set up auth before running these
+    test.beforeEach(async ({ page }) => {
+      // Login as business owner before each test
+      await loginAs(page, testAccounts.businessOwner1.email, testAccounts.businessOwner1.password);
+    });
     
     test('should display business dashboard overview', async ({ page }) => {
-      test.skip(); // Skip if auth required
       
       await page.goto('/business/dashboard');
       
       // Check main dashboard elements
-      await expect(page.locator('h1:has-text("Dashboard"), h2:has-text("Welcome back")')).toBeVisible();
+      await expect(page.locator('h1')).toContainText(`Welcome back, ${testAccounts.businessOwner1.businessName}`);
       
       // Check stats cards
-      await expect(page.locator('text=/Today.*Bookings|Bookings.*Today/i')).toBeVisible();
-      await expect(page.locator('text=/Revenue/i')).toBeVisible();
-      await expect(page.locator('text=/Customers/i')).toBeVisible();
-      await expect(page.locator('text=/Rating/i')).toBeVisible();
-    });
-
-    test('should display navigation sidebar', async ({ page }) => {
-      test.skip(); // Skip if auth required
-      
-      await page.goto('/business/dashboard');
-      
-      // Check sidebar menu items
-      await expect(page.locator('text=Dashboard')).toBeVisible();
-      await expect(page.locator('text=Calendar')).toBeVisible();
+      await expect(page.locator('text=Total Revenue')).toBeVisible();
       await expect(page.locator('text=Bookings')).toBeVisible();
-      await expect(page.locator('text=Services')).toBeVisible();
-      await expect(page.locator('text=Customers')).toBeVisible();
-      await expect(page.locator('text=Analytics')).toBeVisible();
-      await expect(page.locator('text=Profile')).toBeVisible();
-      await expect(page.locator('text=Settings')).toBeVisible();
+      await expect(page.locator('text=Average Rating')).toBeVisible();
+      await expect(page.locator('text=Active Services')).toBeVisible();
     });
 
-    test('should navigate to calendar view', async ({ page }) => {
-      test.skip(); // Skip if auth required
-      
+    test('should display quick actions', async ({ page }) => {
       await page.goto('/business/dashboard');
-      await page.click('text=Calendar');
       
-      await expect(page).toHaveURL('/business/dashboard/calendar');
+      // Check quick action buttons
+      await expect(page.locator('text=Manage Services')).toBeVisible();
+      await expect(page.locator('text=View All Bookings')).toBeVisible();
+      await expect(page.locator('text=Set Availability')).toBeVisible();
+      await expect(page.locator('text=View Analytics')).toBeVisible();
+    });
+
+    test('should display business information', async ({ page }) => {
+      await page.goto('/business/dashboard');
       
-      // Check calendar elements
-      await expect(page.locator('text=/Monday|Tuesday|Wednesday/')).toBeVisible();
-      await expect(page.locator('button:has-text("Today")')).toBeVisible();
-      await expect(page.locator('button:has-text("Month"), button:has-text("Week"), button:has-text("Day")')).toBeVisible();
+      // Check business info section
+      await expect(page.locator('text=Business Information')).toBeVisible();
+      await expect(page.locator('text=Status')).toBeVisible();
+      await expect(page.locator('text=Category')).toBeVisible();
+      await expect(page.locator('text=Location')).toBeVisible();
+      await expect(page.locator('text=Phone')).toBeVisible();
     });
 
     test('should navigate to bookings page', async ({ page }) => {
-      test.skip(); // Skip if auth required
-      
       await page.goto('/business/dashboard');
-      await page.click('nav >> text=Bookings');
+      await page.click('text=View All Bookings');
       
       await expect(page).toHaveURL('/business/dashboard/bookings');
-      await expect(page.locator('h1:has-text("Bookings")')).toBeVisible();
-      
-      // Check for bookings table
-      await expect(page.locator('table, .bookings-list')).toBeVisible();
+      await expect(page.locator('h1')).toContainText('Bookings');
     });
 
     test('should navigate to services management', async ({ page }) => {
-      test.skip(); // Skip if auth required
-      
       await page.goto('/business/dashboard');
-      await page.click('text=Services');
+      await page.click('text=Manage Services');
       
       await expect(page).toHaveURL('/business/dashboard/services');
-      await expect(page.locator('h1:has-text("Services")')).toBeVisible();
-      
-      // Check for add service button
-      await expect(page.locator('button:has-text("Add Service"), a:has-text("Add Service")')).toBeVisible();
+      await expect(page.locator('h1')).toContainText('Services');
     });
 
-    test('should display services list', async ({ page }) => {
-      test.skip(); // Skip if auth required
-      
-      await page.goto('/business/dashboard/services');
-      
-      const hasServices = await page.locator('.service-item, [data-testid="service-row"], tbody tr').count() > 0;
-      
-      if (hasServices) {
-        const firstService = page.locator('.service-item, [data-testid="service-row"], tbody tr').first();
-        
-        // Check service has edit/delete actions
-        await expect(firstService.locator('button:has-text("Edit"), a:has-text("Edit")')).toBeVisible();
-        await expect(firstService.locator('button:has-text("Delete")')).toBeVisible();
-      } else {
-        await expect(page.locator('text=/No services|Add your first service/i')).toBeVisible();
-      }
-    });
-
-    test('should navigate to customers page', async ({ page }) => {
-      test.skip(); // Skip if auth required
-      
+    test('should navigate to availability settings', async ({ page }) => {
       await page.goto('/business/dashboard');
-      await page.click('text=Customers');
+      await page.click('text=Set Availability');
       
-      await expect(page).toHaveURL('/business/dashboard/customers');
-      await expect(page.locator('h1:has-text("Customers")')).toBeVisible();
-      
-      // Check for search functionality
-      await expect(page.locator('input[placeholder*="Search"]')).toBeVisible();
+      await expect(page).toHaveURL('/business/dashboard/availability');
+      await expect(page.locator('h1')).toContainText('Availability');
     });
 
     test('should navigate to analytics page', async ({ page }) => {
-      test.skip(); // Skip if auth required
-      
       await page.goto('/business/dashboard');
-      await page.click('text=Analytics');
+      await page.click('text=View Analytics');
       
       await expect(page).toHaveURL('/business/dashboard/analytics');
-      await expect(page.locator('h1:has-text("Analytics")')).toBeVisible();
-      
-      // Check for charts/metrics
-      await expect(page.locator('text=/Revenue|Bookings|Growth/i')).toBeVisible();
+      await expect(page.locator('h1')).toContainText('Analytics');
     });
 
-    test('should navigate to business profile settings', async ({ page }) => {
-      test.skip(); // Skip if auth required
-      
+    test('should navigate to business settings', async ({ page }) => {
       await page.goto('/business/dashboard');
-      await page.click('nav >> text=Profile');
-      
-      await expect(page).toHaveURL('/business/dashboard/profile');
-      await expect(page.locator('h1:has-text("Business Profile")')).toBeVisible();
-      
-      // Check form fields
-      await expect(page.locator('input[name="businessName"], input[placeholder*="Business name"]')).toBeVisible();
-      await expect(page.locator('textarea[name="description"], textarea[placeholder*="Description"]')).toBeVisible();
-    });
-
-    test('should navigate to settings page', async ({ page }) => {
-      test.skip(); // Skip if auth required
-      
-      await page.goto('/business/dashboard');
-      await page.click('nav >> text=Settings');
+      await page.click('text=Edit Business Profile');
       
       await expect(page).toHaveURL('/business/dashboard/settings');
-      await expect(page.locator('h1:has-text("Settings")')).toBeVisible();
-      
-      // Check settings sections
-      await expect(page.locator('text=/Notifications|Payment|Hours/i')).toBeVisible();
+      await expect(page.locator('h1')).toContainText('Business Settings');
     });
 
-    test('should have staff management', async ({ page }) => {
-      test.skip(); // Skip if auth required
-      
+    test('should show recent bookings section', async ({ page }) => {
       await page.goto('/business/dashboard');
       
-      // Check if staff link exists
-      const staffLink = page.locator('text=Staff');
-      if (await staffLink.count() > 0) {
-        await staffLink.click();
-        await expect(page).toHaveURL('/business/dashboard/staff');
-        await expect(page.locator('h1:has-text("Staff")')).toBeVisible();
-        await expect(page.locator('button:has-text("Add Staff"), a:has-text("Add Staff")')).toBeVisible();
+      // Check for recent bookings section
+      await expect(page.locator('text=Recent Bookings')).toBeVisible();
+      
+      // Should show either bookings or empty state
+      const hasBookings = await page.locator('p:has-text("Sarah Johnson"), p:has-text("Michael Brown")').count() > 0;
+      if (!hasBookings) {
+        await expect(page.locator('text=/No bookings yet|Share your business profile/i')).toBeVisible();
       }
     });
 
-    test('should have products management', async ({ page }) => {
-      test.skip(); // Skip if auth required
-      
+    test('should show recent reviews section', async ({ page }) => {
       await page.goto('/business/dashboard');
       
-      // Check if products link exists
-      const productsLink = page.locator('text=Products');
-      if (await productsLink.count() > 0) {
-        await productsLink.click();
-        await expect(page).toHaveURL('/business/dashboard/products');
-        await expect(page.locator('h1:has-text("Products")')).toBeVisible();
-        await expect(page.locator('button:has-text("Add Product"), a:has-text("Add Product")')).toBeVisible();
+      // Check for recent reviews section
+      await expect(page.locator('text=Recent Reviews')).toBeVisible();
+      
+      // Should show either reviews or empty state
+      const hasReviews = await page.locator('[class*="star"]').count() > 0;
+      if (!hasReviews) {
+        await expect(page.locator('text=/No reviews yet|Reviews will appear/i')).toBeVisible();
       }
     });
 
-    test('should have promotions management', async ({ page }) => {
-      test.skip(); // Skip if auth required
-      
-      await page.goto('/business/dashboard');
-      
-      // Check if promotions link exists
-      const promotionsLink = page.locator('text=Promotions');
-      if (await promotionsLink.count() > 0) {
-        await promotionsLink.click();
-        await expect(page).toHaveURL('/business/dashboard/promotions');
-        await expect(page.locator('h1:has-text("Promotions")')).toBeVisible();
-        await expect(page.locator('button:has-text("Create Promotion"), a:has-text("Create Promotion")')).toBeVisible();
-      }
-    });
+  });
 
-    test('should display recent activity', async ({ page }) => {
-      test.skip(); // Skip if auth required
+  test.describe('Business Dashboard - Non-Business Owner Access', () => {
+    test('should redirect customers to regular dashboard', async ({ page }) => {
+      // Login as customer
+      await loginAs(page, testAccounts.customer1.email, testAccounts.customer1.password);
       
+      // Try to access business dashboard
       await page.goto('/business/dashboard');
       
-      // Check for recent bookings or activity section
-      const activitySection = page.locator('text=/Recent|Today|Activity/i');
-      await expect(activitySection.first()).toBeVisible();
+      // Should be redirected to regular dashboard
+      await expect(page).toHaveURL('/dashboard');
     });
   });
 });

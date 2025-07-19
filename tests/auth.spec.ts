@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { loginAs, testAccounts } from './helpers/auth';
 
 test.describe('Authentication', () => {
   test.describe('Login Page', () => {
@@ -56,6 +57,22 @@ test.describe('Authentication', () => {
       await expect(businessSignupLink).toBeVisible();
       await businessSignupLink.click();
       await expect(page).toHaveURL('/business/join');
+    });
+
+    test('should login successfully as customer', async ({ page }) => {
+      await loginAs(page, testAccounts.customer1.email, testAccounts.customer1.password);
+      
+      // Should redirect to customer dashboard
+      await expect(page).toHaveURL('/dashboard');
+      await expect(page.locator('h1')).toContainText('Welcome back');
+    });
+
+    test('should login successfully as business owner', async ({ page }) => {
+      await loginAs(page, testAccounts.businessOwner1.email, testAccounts.businessOwner1.password);
+      
+      // Should redirect to business dashboard
+      await expect(page).toHaveURL('/business/dashboard');
+      await expect(page.locator('h1')).toContainText(`Welcome back, ${testAccounts.businessOwner1.businessName}`);
     });
   });
 
