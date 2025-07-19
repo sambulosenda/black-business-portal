@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -17,7 +16,6 @@ const forgotPasswordSchema = z.object({
 type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>
 
 export default function ForgotPasswordPage() {
-  const router = useRouter()
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -74,7 +72,7 @@ export default function ForgotPasswordPage() {
               Reset your password
             </h2>
             <p className="mt-2 text-gray-600">
-              Enter your email and we'll send you a link to reset your password
+              Enter your email and we&apos;ll send you a link to reset your password
             </p>
           </div>
 
@@ -90,7 +88,7 @@ export default function ForgotPasswordPage() {
                   <div className="ml-3">
                     <h3 className="text-sm font-medium text-green-800">Check your email</h3>
                     <p className="mt-1 text-sm text-green-700">
-                      We've sent you an email with instructions to reset your password.
+                      We&apos;ve sent you an email with instructions to reset your password.
                     </p>
                   </div>
                 </div>
@@ -176,7 +174,7 @@ export default function ForgotPasswordPage() {
               Forgot your password?
             </h1>
             <p className="text-xl text-white/90 mb-8">
-              No worries! We'll help you get back into your account. Just enter your email and we'll send you a reset link.
+              No worries! We&apos;ll help you get back into your account. Just enter your email and we&apos;ll send you a reset link.
             </p>
             
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
