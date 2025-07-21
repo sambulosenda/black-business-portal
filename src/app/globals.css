@@ -83,10 +83,88 @@
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
-    font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+    font-family: var(--font-plus-jakarta), system-ui, -apple-system, sans-serif;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Headings use Bricolage Grotesque */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-bricolage), system-ui, -apple-system, sans-serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+  
+  /* Font size hierarchy - Optimized for Bricolage Grotesque */
+  h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+  }
+  
+  h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+  
+  h3 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  
+  h4 {
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+    font-weight: 400;
+  }
+  
+  h5 {
+    font-size: clamp(1.125rem, 2vw, 1.25rem);
+    font-weight: 400;
+  }
+  
+  h6 {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  
+  /* Body text sizing */
+  .text-xs {
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
+  
+  .text-sm {
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+  
+  .text-base {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  
+  .text-lg {
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+  
+  .text-xl {
+    font-size: 1.25rem;
+    line-height: 1.5;
+  }
+  
+  /* Display font utility */
+  .font-display {
+    font-family: var(--font-bricolage), system-ui, -apple-system, sans-serif;
+  }
+  
+  /* Body font utility */
+  .font-body {
+    font-family: var(--font-plus-jakarta), system-ui, -apple-system, sans-serif;
   }
 }
 
