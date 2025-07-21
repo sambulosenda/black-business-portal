@@ -80,33 +80,34 @@ export default function BusinessLandingPage() {
 
   const pricingPlans = [
     {
-      name: 'Starter',
-      price: 'Free',
-      period: 'forever',
+      name: 'Free Forever',
+      price: '0%',
+      period: 'commission',
       features: [
-        'Up to 50 bookings/month',
-        'Basic scheduling',
-        'Customer management',
-        'Email notifications',
-        'Mobile app access'
+        'List your business for free',
+        'Manage your profile',
+        'Set services & pricing',
+        'Calendar availability',
+        'Client messaging',
+        'Basic analytics'
       ],
-      cta: 'Start Free',
+      cta: 'Join Free',
       popular: false
     },
     {
-      name: 'Professional',
-      price: '$29',
-      period: '/month',
+      name: 'Pay As You Earn',
+      price: '5%',
+      period: 'per booking',
       features: [
-        'Unlimited bookings',
-        'Advanced scheduling',
-        'Full CRM features',
-        'SMS & Email reminders',
-        'Analytics dashboard',
+        'Everything in Free',
+        'Accept online payments',
+        'Automated reminders',
+        'Advanced analytics',
         'Priority support',
-        'Custom branding'
+        'Marketing tools',
+        'Customer reviews'
       ],
-      cta: 'Start 14-Day Trial',
+      cta: 'Get Started',
       popular: true
     },
     {
@@ -114,12 +115,13 @@ export default function BusinessLandingPage() {
       price: 'Custom',
       period: 'pricing',
       features: [
-        'Everything in Pro',
+        'Everything in Pay As You Earn',
         'Multiple locations',
         'Team management',
         'API access',
         'Dedicated support',
-        'Custom integrations'
+        'Custom integrations',
+        'Reduced commission rates'
       ],
       cta: 'Contact Sales',
       popular: false
@@ -192,7 +194,7 @@ export default function BusinessLandingPage() {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/signup/business">
                   <Button size="lg" className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all">
-                    Start Free Trial
+                    Get Started Free
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
@@ -341,29 +343,32 @@ export default function BusinessLandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <Badge className="bg-purple-100 text-purple-700 border-purple-200 mb-4">
-              Simple setup
+              How we charge
             </Badge>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              Get started in 3 easy steps
+            <h2 className="text-3xl sm:text-4xl font-bold font-display text-gray-900 mb-4">
+              Simple, transparent pricing that grows with you
             </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              No monthly fees. We only make money when you do.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
                 step: '1',
-                title: 'Create Your Profile',
-                description: 'Sign up and add your business details, services, and pricing in minutes.'
+                title: 'Free to Join',
+                description: 'Sign up and list your business at no cost. Set up your profile, services, and availability for free.'
               },
               {
                 step: '2',
-                title: 'Customize Settings',
-                description: 'Set your availability, booking rules, and payment preferences.'
+                title: 'Pay Per Booking',
+                description: 'We charge a small 5% commission only when clients book and pay through Glamfric. No bookings = no fees.'
               },
               {
                 step: '3',
-                title: 'Start Taking Bookings',
-                description: 'Share your booking link and watch appointments roll in automatically.'
+                title: 'Get Paid Instantly',
+                description: 'Receive payments directly to your account within 24 hours. We handle all payment processing securely.'
               }
             ].map((item, index) => (
               <motion.div
@@ -509,15 +514,15 @@ export default function BusinessLandingPage() {
       <section className="py-20 bg-gradient-to-r from-indigo-600 to-purple-700">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
-            Ready to transform your beauty business?
+            Ready to grow your beauty business?
           </h2>
           <p className="text-xl text-white/90 mb-8">
-            Join 1,200+ businesses already growing with Glamfric. Start your free trial today.
+            Join 1,200+ businesses already earning more with Glamfric. Free to start, pay only when you earn.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/signup/business">
               <Button size="lg" className="bg-white text-indigo-600 hover:bg-gray-100">
-                Start Free Trial
+                Join Free Today
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
@@ -526,7 +531,7 @@ export default function BusinessLandingPage() {
             </Button>
           </div>
           <p className="text-white/70 text-sm mt-6">
-            No credit card required • Setup in 5 minutes • Cancel anytime
+            No monthly fees • 5% commission per booking • Get paid in 24 hours
           </p>
         </div>
       </section>
@@ -620,7 +625,7 @@ export default function BusinessLandingPage() {
                 </Button>
                 <Link href="/signup/business">
                   <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700">
-                    Start Free Trial Instead
+                    Join Free Today
                   </Button>
                 </Link>
               </div>
