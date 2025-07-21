@@ -235,7 +235,7 @@ export default function BusinessLandingPage() {
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl transform rotate-3 opacity-20"></div>
                 <Image
-                  src="/images/business-dashboard.png"
+                  src="/images/business-dashboard-hero.png"
                   alt="Glamfric Dashboard"
                   width={600}
                   height={400}
