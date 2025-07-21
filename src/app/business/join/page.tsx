@@ -379,16 +379,25 @@ export default function BusinessLandingPage() {
                 viewport={{ once: true }}
                 className="relative"
               >
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">
+                <div className="text-center relative z-10">
+                  <div className="w-16 h-16 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4 shadow-lg">
                     {item.step}
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h3>
+                  <h3 className="text-xl font-semibold font-display text-gray-900 mb-2">{item.title}</h3>
                   <p className="text-gray-600">{item.description}</p>
                 </div>
                 {index < 2 && (
-                  <div className="hidden md:block absolute top-8 left-1/2 w-full h-0.5 bg-gray-200">
-                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 w-1/2"></div>
+                  <div className="hidden md:block absolute top-8 left-[50%] w-[calc(100%+2rem)] h-[2px]">
+                    <div className="relative w-full h-full">
+                      <div className="absolute inset-0 bg-gray-200"></div>
+                      <motion.div 
+                        className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600"
+                        initial={{ width: "0%" }}
+                        whileInView={{ width: "100%" }}
+                        transition={{ delay: 0.5 + index * 0.2, duration: 0.8 }}
+                        viewport={{ once: true }}
+                      ></motion.div>
+                    </div>
                   </div>
                 )}
               </motion.div>
