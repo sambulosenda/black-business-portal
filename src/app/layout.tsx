@@ -1,21 +1,21 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Bricolage_Grotesque } from "next/font/google";
+import { Inter, Outfit } from "next/font/google";
 import { Providers } from "@/components/providers";
 import "./globals.css";
 
-// Plus Jakarta Sans - Modern, clean body font with excellent readability
-const plusJakarta = Plus_Jakarta_Sans({
+// Inter - Ultra-clean, highly readable body font used by many modern apps
+const inter = Inter({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-plus-jakarta",
+  variable: "--font-inter",
   display: "swap",
 });
 
-// Bricolage Grotesque - Distinctive yet clean display font for headings
-const bricolage = Bricolage_Grotesque({
+// Outfit - Modern, clean geometric font perfect for headings and beauty brands
+const outfit = Outfit({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-bricolage",
+  variable: "--font-outfit",
   display: "swap",
 });
 
@@ -85,7 +85,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${plusJakarta.variable} ${bricolage.variable} antialiased`}
+        className={`${inter.variable} ${outfit.variable} antialiased`}
       >
         <Providers>
           {children}
