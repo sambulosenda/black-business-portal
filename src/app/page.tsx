@@ -69,7 +69,7 @@ export default function Home() {
                 <div className="w-10 h-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg group-hover:shadow-xl transition-shadow">
                   G
                 </div>
-                <span className="text-xl font-medium text-gray-900">Glamfric</span>
+                <span className="text-xl font-medium font-display text-gray-900">Glamfric</span>
               </Link>
             </div>
             

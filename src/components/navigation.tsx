@@ -26,7 +26,7 @@ export default function Navigation({ session }: NavigationProps) {
               <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold group-hover:shadow-lg transition-shadow">
                 G
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Glamfric</span>
+              <span className="text-xl font-bold font-display bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Glamfric</span>
             </Link>
             
             {/* Desktop Navigation Links */}
