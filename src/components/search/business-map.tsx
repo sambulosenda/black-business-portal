@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import Map, { Marker, Popup, NavigationControl, GeolocateControl } from 'react-map-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import Map, { Marker, Popup, NavigationControl, GeolocateControl } from 'react-map-gl/mapbox';
 import { Card } from '@/components/ui/card';
 import { MapPin, Star, Clock } from 'lucide-react';
 import Link from 'next/link';

@@ -1,5 +1,8 @@
 @import "./app.css";
 
+/* Import Mapbox GL CSS */
+@import 'mapbox-gl/dist/mapbox-gl.css';
+
 @layer base {
   html {
     /* Prevent overscroll bounce */
@@ -394,4 +397,35 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 } */
+
+/* Mapbox popup styles */
+.mapboxgl-popup-content {
+  padding: 0 !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
+}
+
+.mapboxgl-popup-close-button {
+  right: 8px !important;
+  top: 8px !important;
+  color: #6b7280 !important;
+  font-size: 20px !important;
+  width: 24px !important;
+  height: 24px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.mapboxgl-popup-close-button:hover {
+  color: #374151 !important;
+  background-color: #f3f4f6 !important;
+}
+
+.mapboxgl-ctrl button {
+  width: 32px !important;
+  height: 32px !important;
+}
 
