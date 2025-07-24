@@ -27,7 +27,7 @@ This plan outlines the steps to complete the business portal application, focusi
 - [x] Add Command/Combobox for search functionality
 - [x] Implement Popover for contextual information
 
-## Phase 3: Business Dashboard Enhancements 🚧 IN PROGRESS
+## Phase 3: Business Dashboard Enhancements ✅ COMPLETED
 
 ### TODO List
 - [x] Create calendar view for appointments
@@ -61,7 +61,7 @@ This plan outlines the steps to complete the business portal application, focusi
 - [ ] Implement recurring appointments
 - [ ] Add calendar sync (Google, Outlook)
 
-## Phase 4: Customer Experience Improvements
+## Phase 4: Customer Experience Improvements 🚧 IN PROGRESS
 
 ### TODO List
 - [x] Implement business photo upload (hero image, gallery photos)
@@ -69,7 +69,21 @@ This plan outlines the steps to complete the business portal application, focusi
   - [x] Create hero image display on business pages
   - [x] Build photo gallery management
   - [x] Implement image optimization and storage
-- [ ] Implement advanced search filters (location, price, availability)
+- [ ] Implement Airbnb-style map view for search
+  - [ ] Integrate map library (Mapbox/Google Maps)
+  - [ ] Add business locations as map markers
+  - [ ] Create hover preview cards showing business info
+  - [ ] Implement map/list toggle view
+  - [ ] Add map bounds search on drag/zoom
+  - [ ] Show user's current location
+  - [ ] Cluster nearby businesses at zoom levels
+- [ ] Implement advanced search filters
+  - [ ] Location radius filter (1km, 5km, 10km, etc.)
+  - [ ] Price range slider
+  - [ ] Availability calendar filter
+  - [ ] Service type multi-select
+  - [ ] Rating filter (4+ stars, etc.)
+  - [ ] Sort options (distance, price, rating, availability)
 - [ ] Add favorites/saved businesses feature
 - [ ] Enhance booking history with rebooking option
 - [ ] Create loyalty/rewards program
@@ -694,3 +708,261 @@ Implemented end-to-end testing using Playwright to ensure application reliabilit
 - ✅ Cross-browser compatibility
 - ✅ Documentation of expected behavior
 - ✅ Faster development cycles
+
+## Future Feature Roadmap (July 22, 2025)
+
+### Overview
+This roadmap outlines the next major features to implement based on business value, user demand, and technical feasibility. Features are organized by priority and estimated implementation time.
+
+### High Priority Features (Next 2-4 weeks)
+
+#### 1. Waitlist & Cancellation Management
+**Business Value**: Directly impacts revenue by reducing no-shows and automatically filling cancelled slots
+**Features**:
+- [ ] Automated waitlist for fully booked time slots
+- [ ] Smart rebooking when cancellations occur
+- [ ] SMS/Email notifications to waitlist customers
+- [ ] No-show tracking and penalty system
+- [ ] Deposit management for high-value services
+- [ ] Cancellation policy enforcement
+- [ ] Analytics on cancellation patterns
+
+**Technical Requirements**:
+- Extend booking model with waitlist status
+- Background job for waitlist processing
+- Integration with notification system
+- Payment hold/refund logic for deposits
+
+#### 2. Progressive Web App (PWA)
+**Business Value**: Increases user engagement and retention with mobile-first experience
+**Features**:
+- [ ] Service worker implementation
+- [ ] Offline capability for viewing bookings
+- [ ] Push notifications for appointments
+- [ ] App-like experience with installability
+- [ ] Home screen shortcuts
+- [ ] Background sync for bookings
+- [ ] Optimized mobile booking flow
+
+**Technical Requirements**:
+- Next.js PWA plugin configuration
+- Service worker with caching strategy
+- Push notification service (Firebase/OneSignal)
+- Mobile-specific UI optimizations
+
+### Medium Priority Features (4-8 weeks)
+
+#### 3. Automated Marketing Tools
+**Business Value**: Helps businesses grow revenue through customer retention and acquisition
+**Features**:
+- [ ] Email campaign builder with templates
+- [ ] Automated appointment reminders
+- [ ] Birthday and special occasion campaigns
+- [ ] Win-back campaigns for inactive customers
+- [ ] Referral program management
+- [ ] Loyalty points system
+- [ ] SMS marketing integration
+- [ ] Social media post scheduler
+
+**Technical Requirements**:
+- Email service provider integration (SendGrid/Resend)
+- Campaign analytics tracking
+- Customer segmentation engine
+- Template builder with drag-and-drop
+
+#### 4. Advanced Analytics & Insights
+**Business Value**: Data-driven decision making for business growth
+**Features**:
+- [ ] Revenue forecasting with ML
+- [ ] Customer lifetime value calculation
+- [ ] Service demand prediction
+- [ ] Staff performance metrics
+- [ ] Competitor benchmarking
+- [ ] Custom report builder
+- [ ] Automated insights and recommendations
+- [ ] Export to Excel/PDF
+
+**Technical Requirements**:
+- Time-series data storage
+- ML model for predictions
+- Report generation service
+- Data visualization library upgrade
+
+#### 5. Integration Hub
+**Business Value**: Seamless workflow with existing business tools
+**Features**:
+- [ ] QuickBooks/Xero accounting sync
+- [ ] Google Calendar two-way sync
+- [ ] Instagram booking integration
+- [ ] WhatsApp Business API
+- [ ] Zoom integration for virtual consultations
+- [ ] Square/Clover POS integration
+- [ ] Mailchimp sync
+- [ ] Facebook Pixel integration
+
+**Technical Requirements**:
+- OAuth implementation for each service
+- Webhook handlers for real-time sync
+- Data mapping and transformation
+- Rate limiting and error handling
+
+### Lower Priority Features (8-12 weeks)
+
+#### 6. AI-Powered Features
+**Business Value**: Competitive advantage through automation and personalization
+**Features**:
+- [ ] Smart scheduling assistant
+- [ ] Automated review responses
+- [ ] Service recommendation engine
+- [ ] Dynamic pricing optimization
+- [ ] Chatbot for common questions
+- [ ] Image analysis for before/after photos
+- [ ] Sentiment analysis for reviews
+- [ ] Predictive no-show detection
+
+**Technical Requirements**:
+- OpenAI/Anthropic API integration
+- Vector database for recommendations
+- ML pipeline for predictions
+- Natural language processing
+
+#### 7. Multi-Location & Franchise Support
+**Business Value**: Scale to larger businesses and franchises
+**Features**:
+- [ ] Centralized management dashboard
+- [ ] Location-specific settings
+- [ ] Cross-location reporting
+- [ ] Franchise fee management
+- [ ] Territory management
+- [ ] Bulk location onboarding
+- [ ] Location transfer for customers
+- [ ] Regional pricing rules
+
+**Technical Requirements**:
+- Multi-tenant architecture updates
+- Location hierarchy in database
+- Permission system enhancement
+- Aggregated reporting system
+
+#### 8. Advanced Booking Features
+**Business Value**: Handle complex booking scenarios
+**Features**:
+- [ ] Package deals and memberships
+- [ ] Group booking management
+- [ ] Resource scheduling (rooms, equipment)
+- [ ] Double-booking for certain services
+- [ ] Booking dependencies
+- [ ] Seasonal pricing
+- [ ] Gift cards and vouchers
+- [ ] Booking insurance
+
+**Technical Requirements**:
+- Complex availability algorithm
+- Membership billing system
+- Resource conflict detection
+- Gift card payment processor
+
+### Implementation Strategy
+
+#### Phase 1 (Weeks 1-2): Waitlist System
+1. Design database schema for waitlist
+2. Build waitlist UI in booking flow
+3. Implement notification system
+4. Add business dashboard for management
+5. Test with pilot businesses
+
+#### Phase 2 (Weeks 3-4): PWA Foundation
+1. Configure Next.js PWA plugin
+2. Implement service worker
+3. Add push notification support
+4. Optimize mobile UI components
+5. Test on various devices
+
+#### Phase 3 (Weeks 5-8): Marketing & Analytics
+1. Design campaign system architecture
+2. Build email template editor
+3. Implement segmentation engine
+4. Create analytics dashboards
+5. Add ML forecasting models
+
+#### Phase 4 (Weeks 9-12): Integrations
+1. Prioritize based on user requests
+2. Build integration framework
+3. Implement top 3 integrations
+4. Create integration marketplace UI
+5. Document for developers
+
+### Success Metrics
+- **Waitlist**: 20% reduction in lost revenue from cancellations
+- **PWA**: 40% increase in mobile engagement
+- **Marketing**: 25% improvement in customer retention
+- **Analytics**: 30% better business decision accuracy
+- **Integrations**: 50% reduction in manual data entry
+
+### Resource Requirements
+- 2-3 Full-stack developers
+- 1 DevOps engineer for integrations
+- 1 Data scientist for ML features
+- 1 Product designer for UX
+- Budget for third-party services
+
+## Phase 4: Airbnb-Style Map Implementation (July 24, 2025)
+
+### Overview
+Implementing an interactive map view for the search page that allows customers to visually browse businesses by location, similar to Airbnb's property search experience.
+
+### Implementation Plan
+
+#### 1. Map Library Selection
+**Recommended: Mapbox GL JS**
+- Better performance than Google Maps
+- More customization options
+- Free tier includes 50k map loads/month
+- Beautiful default styles
+- Great React wrapper (react-map-gl)
+
+**Alternative: Google Maps**
+- More familiar to users
+- Better address search
+- Requires billing setup immediately
+- Less customization flexibility
+
+#### 2. Core Features to Implement
+- [ ] Interactive map with custom markers
+- [ ] Business location pins with pricing
+- [ ] Hover cards showing business preview
+- [ ] Click to view full business details
+- [ ] Map/List toggle view
+- [ ] Search as map moves (dynamic bounds)
+- [ ] Clustering for dense areas
+- [ ] User location with "Near me" option
+- [ ] Mobile-optimized touch interactions
+
+#### 3. Database Updates Needed
+- [ ] Add latitude/longitude to Business model
+- [ ] Create geocoding service for addresses
+- [ ] Index location fields for performance
+- [ ] Add spatial queries for radius search
+
+#### 4. UI/UX Considerations
+- Split-screen layout (map + results)
+- Synchronized selection between map and list
+- Smooth animations and transitions
+- Loading states for map data
+- Error handling for location permissions
+- Responsive design for mobile
+
+#### 5. Performance Optimizations
+- Lazy load map component
+- Debounce map movement events
+- Cache geocoded addresses
+- Limit search results to viewport
+- Progressive loading of business details
+
+### Next Steps
+Ready to proceed with implementing this feature. Would you like me to:
+1. Start by setting up Mapbox and creating the map component?
+2. First update the database schema to support location data?
+3. Create a detailed technical specification before coding?
+
+The map feature will significantly improve the search experience and make it easier for customers to find nearby businesses.

@@ -14,8 +14,18 @@ import { cn } from '@/lib/utils'
 import { 
   Search, MapPin, Star, X,
   Grid3X3, List, Shield, Sparkles, TrendingUp, DollarSign,
-  Heart
+  Heart, Map
 } from 'lucide-react'
+import dynamic from 'next/dynamic'
+
+// Dynamically import the map component to avoid SSR issues
+const BusinessMap = dynamic(
+  () => import('@/components/search/business-map').then(mod => mod.BusinessMap),
+  { 
+    ssr: false,
+    loading: () => <div className="h-full w-full bg-gray-100 animate-pulse flex items-center justify-center">Loading map...</div>
+  }
+)
 
 interface Business {
   id: string
@@ -25,6 +35,9 @@ interface Business {
   city: string
   state: string
   address: string
+  latitude?: number | null
+  longitude?: number | null
+  images?: string[]
   isVerified: boolean
   reviews: { rating: number }[]
   services: {
@@ -64,7 +77,7 @@ function SearchContent() {
   const searchParams = useSearchParams()
   const [businesses, setBusinesses] = useState<Business[]>([])
   const [loading, setLoading] = useState(true)
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid')
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
   const [sortBy, setSortBy] = useState('recommended')
   const [savedBusinesses, setSavedBusinesses] = useState<string[]>([])
@@ -280,6 +293,17 @@ function SearchContent() {
                 >
                   <List className="h-4 w-4" />
                 </button>
+                <button
+                  onClick={() => setViewMode('map')}
+                  className={cn(
+                    "px-3 py-1.5 rounded-md text-sm font-medium transition-colors",
+                    viewMode === 'map' 
+                      ? "bg-white text-gray-900 shadow-sm" 
+                      : "text-gray-600 hover:text-gray-900"
+                  )}
+                >
+                  <Map className="h-4 w-4" />
+                </button>
               </div>
             </div>
           </div>
@@ -383,15 +407,36 @@ function SearchContent() {
             )}
           </div>
 
-          {/* Results Grid */}
+          {/* Results */}
           {loading ? (
             <SkeletonGrid count={8} />
           ) : sortedBusinesses.length > 0 ? (
-            <div className={cn(
-              viewMode === 'grid' 
-                ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-                : "max-w-4xl mx-auto space-y-4"
-            )}>
+            viewMode === 'map' ? (
+              // Map View
+              <div className="h-[calc(100vh-16rem)] rounded-xl overflow-hidden border border-gray-200">
+                <BusinessMap
+                  businesses={sortedBusinesses.map(b => ({
+                    ...b,
+                    latitude: b.latitude ?? null,
+                    longitude: b.longitude ?? null,
+                    images: b.images || [],
+                    services: b.services.map(s => ({
+                      ...s,
+                      price: parseFloat(s.price)
+                    }))
+                  }))}
+                  onBoundsChange={(bounds) => {
+                    // TODO: Implement search within map bounds
+                    console.log('Map bounds changed:', bounds);
+                  }}
+                />
+              </div>
+            ) : (
+              <div className={cn(
+                viewMode === 'grid' 
+                  ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                  : "max-w-4xl mx-auto space-y-4"
+              )}>
               {sortedBusinesses.map((business) => {
                 const avgRating = calculateAvgRating(business.reviews)
                 const isSaved = savedBusinesses.includes(business.id)
@@ -605,6 +650,7 @@ function SearchContent() {
                 )
               })}
             </div>
+            )
           ) : (
             <div className="flex flex-col items-center justify-center py-24 px-4">
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-6">

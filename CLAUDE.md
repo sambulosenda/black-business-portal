@@ -69,3 +69,6 @@ bunx prisma migrate dev
 
 ## Design Memories
 - I like the color theme on home page keep using it 
+
+## Git Commit Memories
+- On git commit message dont add claude reference

@@ -45,6 +45,8 @@ model Business {
   city             String
   state            String
   zipCode          String
+  latitude         Float?         // Added for map functionality
+  longitude        Float?         // Added for map functionality
   phone            String
   email            String?
   website          String?
