@@ -8,8 +8,14 @@ import { Button } from "@/components/ui/button"
 import Footer from "@/components/footer"
 import { useSession } from "next-auth/react"
 import { WebsiteSchema } from "@/components/seo/structured-data"
+import { useTranslations } from 'next-intl'
+import { useParams } from 'next/navigation'
+import LanguageSwitcher from '@/components/language-switcher'
 
 export default function Home() {
+  const t = useTranslations()
+  const params = useParams()
+  const locale = params.locale as string
   const router = useRouter()
   const { data: session } = useSession()
   const [searchQuery, setSearchQuery] = useState("")
@@ -20,24 +26,24 @@ export default function Home() {
     const params = new URLSearchParams()
     if (searchQuery) params.append('q', searchQuery)
     if (location) params.append('city', location)
-    router.push(`/search?${params.toString()}`)
+    router.push(`/${locale}/search?${params.toString()}`)
   }
 
   const valueProps = [
     {
-      title: 'Save up to 30%',
-      description: 'Exclusive deals on last-minute bookings and off-peak appointments',
+      title: t('valueProps.saveUp.title'),
+      description: t('valueProps.saveUp.description'),
       icon: (
         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
       color: 'bg-purple-100 text-purple-700',
-      highlight: 'Most Popular'
+      highlight: t('valueProps.saveUp.highlight')
     },
     {
-      title: 'Skip the phone calls',
-      description: 'Book anytime from anywhere - no waiting on hold or playing phone tag',
+      title: t('valueProps.skipCalls.title'),
+      description: t('valueProps.skipCalls.description'),
       icon: (
         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -46,8 +52,8 @@ export default function Home() {
       color: 'bg-green-100 text-green-700'
     },
     {
-      title: 'Trusted by thousands',
-      description: 'Read real reviews from verified customers before you book',
+      title: t('valueProps.trusted.title'),
+      description: t('valueProps.trusted.description'),
       icon: (
         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -65,7 +71,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <Link href="/" className="flex items-center space-x-3 group">
+              <Link href={`/${locale}`} className="flex items-center space-x-3 group">
                 <div className="w-10 h-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg group-hover:shadow-xl transition-shadow">
                   G
                 </div>
@@ -74,52 +80,53 @@ export default function Home() {
             </div>
             
             <div className="flex items-center space-x-3">
+              <LanguageSwitcher />
               {session ? (
                 <>
-                  <Link href="/search">
+                  <Link href={`/${locale}/search`}>
                     <Button variant="ghost" className="text-gray-700 hover:text-gray-900 font-medium">
                       <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                       </svg>
-                      Search
+                      {t('navigation.search')}
                     </Button>
                   </Link>
-                  <Link href={session.user.role === 'BUSINESS_OWNER' ? '/business/dashboard' : '/dashboard'}>
+                  <Link href={session.user.role === 'BUSINESS_OWNER' ? `/${locale}/business/dashboard` : `/${locale}/dashboard`}>
                     <Button variant="ghost" className="text-gray-700 hover:text-gray-900 font-medium">
-                      Dashboard
+                      {t('navigation.dashboard')}
                     </Button>
                   </Link>
                   <Link href="/api/auth/signout">
                     <Button variant="ghost" className="text-gray-700 hover:text-gray-900">
-                      Sign out
+                      {t('navigation.signOut')}
                     </Button>
                   </Link>
                 </>
               ) : (
                 <>
-                  <Link href="/search" className="hidden sm:block">
+                  <Link href={`/${locale}/search`} className="hidden sm:block">
                     <Button variant="ghost" className="text-gray-700 hover:text-gray-900 font-medium">
                       <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                       </svg>
-                      Browse
+                      {t('navigation.browse')}
                     </Button>
                   </Link>
-                  <Link href="/login">
-                    <Button variant="ghost" className="font-medium hover:bg-gray-50">Sign in</Button>
+                  <Link href={`/${locale}/login`}>
+                    <Button variant="ghost" className="font-medium hover:bg-gray-50">{t('navigation.signIn')}</Button>
                   </Link>
-                  <Link href="/signup/customer">
+                  <Link href={`/${locale}/signup/customer`}>
                     <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-md hover:shadow-lg">
-                      Get Started
+                      {t('navigation.getStarted')}
                     </Button>
                   </Link>
                   <div className="hidden sm:block ml-2">
-                    <Link href="/business/join">
+                    <Link href={`/${locale}/business/join`}>
                       <Button variant="outline" className="border-gray-300 font-medium hover:bg-gray-50">
                         <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                         </svg>
-                        For Business
+                        {t('navigation.forBusiness')}
                       </Button>
                     </Link>
                   </div>
@@ -147,16 +154,16 @@ export default function Home() {
                   <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  Trusted by 10,000+ customers
+                  {t('hero.trustedBy')}
                 </div>
                 
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-                  Book beauty services in
-                  <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> 30 seconds</span>
+                  {t('hero.title')}
+                  <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> {t('hero.titleHighlight')}</span>
                 </h1>
                 
                 <p className="text-xl text-gray-600 leading-relaxed max-w-xl">
-                  Find and instantly book appointments at top-rated African beauty salons and professionals near you. No calls, no waiting.
+                  {t('hero.description')}
                 </p>
               </div>
               
@@ -170,7 +177,7 @@ export default function Home() {
                       </svg>
                       <input
                         type="text"
-                        placeholder='Try "braids", "nails", or "spa"'
+                        placeholder={t('hero.searchPlaceholder')}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 bg-gray-50 hover:bg-gray-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent rounded-xl transition-colors text-base border border-gray-200"
@@ -183,7 +190,7 @@ export default function Home() {
                       </svg>
                       <input
                         type="text"
-                        placeholder="City or neighborhood"
+                        placeholder={t('hero.locationPlaceholder')}
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}
                         className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 bg-gray-50 hover:bg-gray-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent rounded-xl transition-colors text-base border border-gray-200"
@@ -191,20 +198,26 @@ export default function Home() {
                     </div>
                   </div>
                   <Button type="submit" size="lg" className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl shadow-lg hover:shadow-xl py-4 text-lg font-semibold">
-                    Find Services
+                    {t('hero.findServices')}
                   </Button>
                 </form>
                 
                 {/* Popular Searches */}
                 <div className="mt-6 pt-6 border-t border-gray-200">
-                  <p className="text-sm text-gray-600 mb-3 font-medium">Popular searches:</p>
+                  <p className="text-sm text-gray-600 mb-3 font-medium">{t('hero.popularSearches')}</p>
                   <div className="flex flex-wrap gap-2">
-                    {['Hair Braiding', 'Nail Art', 'Spa Day', 'Lash Extensions', 'Makeup'].map((term) => (
+                    {[
+                      { key: 'hairBraiding', term: t('services.hairBraiding') },
+                      { key: 'nailArt', term: t('services.nailArt') },
+                      { key: 'spaDay', term: t('services.spaDay') },
+                      { key: 'lashExtensions', term: t('services.lashExtensions') },
+                      { key: 'makeup', term: t('services.makeup') }
+                    ].map(({ key, term }) => (
                       <button
-                        key={term}
+                        key={key}
                         onClick={() => {
                           setSearchQuery(term.toLowerCase())
-                          router.push(`/search?q=${encodeURIComponent(term.toLowerCase())}`)
+                          router.push(`/${locale}/search?q=${encodeURIComponent(term.toLowerCase())}`)
                         }}
                         className="text-sm px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg transition-colors font-medium border border-gray-200 hover:border-gray-300"
                       >
@@ -279,15 +292,14 @@ export default function Home() {
               <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clipRule="evenodd" />
               </svg>
-              Why choose Glamfric
+              {t('valueProps.sectionTitle')}
             </div>
             <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
-              The brighter way to
-              <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> book beauty</span>
+              {t('valueProps.title')}
+              <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> {t('valueProps.titleHighlight')}</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Join thousands who&apos;ve discovered the easiest way to book beauty services. 
-              Save time, save money, and get pampered.
+              {t('valueProps.description')}
             </p>
           </div>
           
@@ -330,7 +342,7 @@ export default function Home() {
                     
                     {/* Learn more link */}
                     <div className="mt-6 flex items-center text-indigo-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <span className="text-sm">Learn more</span>
+                      <span className="text-sm">{t('valueProps.learnMore')}</span>
                       <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
@@ -343,12 +355,12 @@ export default function Home() {
           
           {/* Bottom CTA */}
           <div className="mt-16 text-center">
-            <Link href="/search">
+            <Link href={`/${locale}/search`}>
               <Button size="lg" className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl">
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-                Start Browsing Services
+                {t('valueProps.startBrowsing')}
               </Button>
             </Link>
           </div>
