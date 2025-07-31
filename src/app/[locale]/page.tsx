@@ -292,15 +292,14 @@ export default function Home() {
               <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clipRule="evenodd" />
               </svg>
-              Why choose Glamfric
+              {t('valueProps.sectionTitle')}
             </div>
             <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
-              The brighter way to
-              <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> book beauty</span>
+              {t('valueProps.title')}
+              <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> {t('valueProps.titleHighlight')}</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Join thousands who&apos;ve discovered the easiest way to book beauty services. 
-              Save time, save money, and get pampered.
+              {t('valueProps.description')}
             </p>
           </div>
           
@@ -343,7 +342,7 @@ export default function Home() {
                     
                     {/* Learn more link */}
                     <div className="mt-6 flex items-center text-indigo-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <span className="text-sm">Learn more</span>
+                      <span className="text-sm">{t('valueProps.learnMore')}</span>
                       <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
@@ -356,12 +355,12 @@ export default function Home() {
           
           {/* Bottom CTA */}
           <div className="mt-16 text-center">
-            <Link href="/search">
+            <Link href={`/${locale}/search`}>
               <Button size="lg" className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl">
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-                Start Browsing Services
+                {t('valueProps.startBrowsing')}
               </Button>
             </Link>
           </div>

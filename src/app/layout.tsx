@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { redirect } from 'next/navigation';
-import { defaultLocale } from '@/i18n/config';
 
 export const metadata: Metadata = {
   title: "Glamfric - Book Beauty Services in 30 Seconds",
@@ -9,10 +7,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-  // Redirect to default locale - this layout should not be used
-  // The middleware handles locale routing
-  return null;
+}) {
+  return (
+    <html>
+      <body>{children}</body>
+    </html>
+  );
 }
