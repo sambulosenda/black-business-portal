@@ -1,0 +1,136 @@
+{
+  "metadata": {
+    "title": "Glamfric - Reserva Servicios de Belleza en 30 Segundos",
+    "description": "Encuentra y reserva instantáneamente citas en los mejores salones de belleza africanos cerca de ti. Cabello, uñas, spa y más. Sin llamadas, sin esperas.",
+    "keywords": "salón de belleza, peluquería, salón de uñas, spa, belleza africana, reservar cita, servicios de belleza, trenzas de cabello, maquillaje, extensiones de pestañas"
+  },
+  "navigation": {
+    "search": "Buscar",
+    "browse": "Explorar",
+    "dashboard": "Panel",
+    "signIn": "Iniciar sesión",
+    "signOut": "Cerrar sesión",
+    "getStarted": "Comenzar",
+    "forBusiness": "Para Empresas"
+  },
+  "hero": {
+    "trustedBy": "Confiado por más de 10,000 clientes",
+    "title": "Reserva servicios de belleza en",
+    "titleHighlight": "30 segundos",
+    "description": "Encuentra y reserva instantáneamente citas en los mejores salones de belleza africanos cerca de ti. Sin llamadas, sin esperas.",
+    "searchPlaceholder": "Prueba \"trenzas\", \"uñas\", o \"spa\"",
+    "locationPlaceholder": "Ciudad o barrio",
+    "findServices": "Encontrar Servicios",
+    "popularSearches": "Búsquedas populares:"
+  },
+  "services": {
+    "hairBraiding": "Trenzas de Cabello",
+    "nailArt": "Arte de Uñas",
+    "spaDay": "Día de Spa",
+    "lashExtensions": "Extensiones de Pestañas",
+    "makeup": "Maquillaje"
+  },
+  "valueProps": {
+    "sectionTitle": "Por qué elegir Glamfric",
+    "title": "La manera más brillante de",
+    "titleHighlight": "reservar belleza",
+    "description": "Únete a miles que han descubierto la forma más fácil de reservar servicios de belleza. Ahorra tiempo, ahorra dinero y consiente.",
+    "saveUp": {
+      "title": "Ahorra hasta 30%",
+      "description": "Ofertas exclusivas en reservas de último momento y citas fuera de hora pico",
+      "highlight": "Más Popular"
+    },
+    "skipCalls": {
+      "title": "Evita las llamadas telefónicas",
+      "description": "Reserva en cualquier momento desde cualquier lugar - sin esperar en el teléfono"
+    },
+    "trusted": {
+      "title": "Confiado por miles",
+      "description": "Lee reseñas reales de clientes verificados antes de reservar"
+    },
+    "learnMore": "Aprender más",
+    "startBrowsing": "Comenzar a Explorar Servicios"
+  },
+  "cta": {
+    "joinBusinesses": "Únete a más de 1,200 empresas ya en Glamfric",
+    "businessTitle": "¿Tienes un negocio de belleza? Llévalo en línea.",
+    "businessSubtitle": "¿Listo para hacer crecer tu negocio de belleza?",
+    "businessDescription": "Te ayudaremos a construir tu negocio (y base de clientes) con Treatwell, nuestro software de salón fácil de usar.",
+    "partnerWithUs": "Asociarse con nosotros",
+    "noCreditCard": "No se requiere tarjeta de crédito • Configuración en 5 minutos",
+    "availableToday": "Disponible Hoy",
+    "bookInstantly": "Reservar instantáneamente",
+    "averageBookingTime": "Tiempo promedio de reserva",
+    "seconds": "segundos"
+  },
+  "dashboard": {
+    "goodMorning": "Buenos días, Sarah",
+    "businessOverview": "Aquí está el resumen de tu negocio",
+    "bookings": "Reservas",
+    "revenue": "Ingresos",
+    "clients": "Clientes",
+    "rating": "Calificación",
+    "newClients": "nuevos",
+    "todaySchedule": "Horario de Hoy",
+    "viewAll": "Ver todo",
+    "appointments": {
+      "hairCutColor": "Corte y Color",
+      "manicurePedicure": "Manicura y Pedicura",
+      "mensHaircut": "Corte de Hombre"
+    },
+    "duration": {
+      "hours": "horas",
+      "mins": "min"
+    }
+  },
+  "testimonials": {
+    "title": "Amado por clientes y",
+    "titleHighlight": "empresas",
+    "description": "Ve lo que nuestra comunidad dice sobre su experiencia",
+    "customer1": {
+      "name": "Sarah Johnson",
+      "role": "Cliente Regular",
+      "content": "Glamfric ha hecho que encontrar y apoyar salones de propietarios negros sea muy fácil. ¡Me encanta la función de reserva instantánea!"
+    },
+    "customer2": {
+      "name": "Michelle Williams",
+      "role": "Propietaria de Salón",
+      "content": "Desde que me uní a Glamfric, mis reservas han aumentado un 40%. La plataforma es intuitiva y a mis clientes les encanta."
+    },
+    "customer3": {
+      "name": "Angela Davis",
+      "role": "Entusiasta de la Belleza",
+      "content": "Finalmente, una plataforma que celebra y apoya a nuestra comunidad. La calidad de los servicios ha sido excepcional."
+    }
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "close": "Cerrar",
+    "save": "Guardar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "select": "Seleccionar",
+    "clear": "Limpiar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "sort": "Ordenar",
+    "view": "Ver",
+    "download": "Descargar",
+    "upload": "Subir",
+    "share": "Compartir",
+    "copy": "Copiar",
+    "print": "Imprimir",
+    "refresh": "Actualizar",
+    "retry": "Reintentar",
+    "submit": "Enviar",
+    "apply": "Aplicar",
+    "reset": "Restablecer"
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "metadata": {
+    "title": "Glamfric - Book Beauty Services in 30 Seconds",
+    "description": "Find and instantly book appointments at top-rated African beauty salons and professionals near you. Hair, nails, spa, and more. No calls, no waiting.",
+    "keywords": "beauty salon, hair salon, nail salon, spa, African beauty, book appointment, beauty services, hair braiding, makeup, lash extensions"
+  },
+  "navigation": {
+    "search": "Search",
+    "browse": "Browse",
+    "dashboard": "Dashboard",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "getStarted": "Get Started",
+    "forBusiness": "For Business"
+  },
+  "hero": {
+    "trustedBy": "Trusted by 10,000+ customers",
+    "title": "Book beauty services in",
+    "titleHighlight": "30 seconds",
+    "description": "Find and instantly book appointments at top-rated African beauty salons and professionals near you. No calls, no waiting.",
+    "searchPlaceholder": "Try \"braids\", \"nails\", or \"spa\"",
+    "locationPlaceholder": "City or neighborhood",
+    "findServices": "Find Services",
+    "popularSearches": "Popular searches:"
+  },
+  "services": {
+    "hairBraiding": "Hair Braiding",
+    "nailArt": "Nail Art",
+    "spaDay": "Spa Day",
+    "lashExtensions": "Lash Extensions",
+    "makeup": "Makeup"
+  },
+  "valueProps": {
+    "sectionTitle": "Why choose Glamfric",
+    "title": "The brighter way to",
+    "titleHighlight": "book beauty",
+    "description": "Join thousands who've discovered the easiest way to book beauty services. Save time, save money, and get pampered.",
+    "saveUp": {
+      "title": "Save up to 30%",
+      "description": "Exclusive deals on last-minute bookings and off-peak appointments",
+      "highlight": "Most Popular"
+    },
+    "skipCalls": {
+      "title": "Skip the phone calls",
+      "description": "Book anytime from anywhere - no waiting on hold or playing phone tag"
+    },
+    "trusted": {
+      "title": "Trusted by thousands",
+      "description": "Read real reviews from verified customers before you book"
+    },
+    "learnMore": "Learn more",
+    "startBrowsing": "Start Browsing Services"
+  },
+  "cta": {
+    "joinBusinesses": "Join 1,200+ businesses already on Glamfric",
+    "businessTitle": "Own a hair & beauty business? Bring it online.",
+    "businessSubtitle": "Ready to grow your beauty business?",
+    "businessDescription": "We'll help you build your business (and client base) with Treatwell, our easy-to-use salon software.",
+    "partnerWithUs": "Partner with us",
+    "noCreditCard": "No credit card required • Set up in 5 minutes",
+    "availableToday": "Available Today",
+    "bookInstantly": "Book instantly",
+    "averageBookingTime": "Average booking time",
+    "seconds": "seconds"
+  },
+  "dashboard": {
+    "goodMorning": "Good morning, Sarah",
+    "businessOverview": "Here's your business overview",
+    "bookings": "Bookings",
+    "revenue": "Revenue",
+    "clients": "Clients",
+    "rating": "Rating",
+    "newClients": "new",
+    "todaySchedule": "Today's Schedule",
+    "viewAll": "View all",
+    "appointments": {
+      "hairCutColor": "Hair Cut & Color",
+      "manicurePedicure": "Manicure & Pedicure",
+      "mensHaircut": "Men's Haircut"
+    },
+    "duration": {
+      "hours": "hours",
+      "mins": "mins"
+    }
+  },
+  "testimonials": {
+    "title": "Loved by customers &",
+    "titleHighlight": "businesses",
+    "description": "See what our community has to say about their experience",
+    "customer1": {
+      "name": "Sarah Johnson",
+      "role": "Regular Customer",
+      "content": "Glamfric has made finding and supporting Black-owned salons so easy. I love the instant booking feature!"
+    },
+    "customer2": {
+      "name": "Michelle Williams",
+      "role": "Salon Owner",
+      "content": "Since joining Glamfric, my bookings have increased by 40%. The platform is intuitive and my clients love it."
+    },
+    "customer3": {
+      "name": "Angela Davis",
+      "role": "Beauty Enthusiast",
+      "content": "Finally, a platform that celebrates and supports our community. The quality of services has been exceptional."
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "select": "Select",
+    "clear": "Clear",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "view": "View",
+    "download": "Download",
+    "upload": "Upload",
+    "share": "Share",
+    "copy": "Copy",
+    "print": "Print",
+    "refresh": "Refresh",
+    "retry": "Retry",
+    "submit": "Submit",
+    "apply": "Apply",
+    "reset": "Reset"
+  }
+}

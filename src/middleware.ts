@@ -1,12 +1,24 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { getToken } from 'next-auth/jwt'
+import createIntlMiddleware from 'next-intl/middleware';
+import { locales, defaultLocale } from './src/i18n/config';
+
+const intlMiddleware = createIntlMiddleware({
+  locales,
+  defaultLocale,
+  localePrefix: 'always'
+});
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
-  // Skip middleware for API routes (except business management APIs)
-  if (pathname.startsWith('/api/')) {
+  // Skip middleware for API routes, static files and images
+  if (pathname.startsWith('/api/') || 
+      pathname.includes('/_next/') || 
+      pathname.includes('/favicon.ico') ||
+      pathname.match(/\.(png|jpg|jpeg|gif|svg|ico|webp)$/)) {
+    
     // Only protect specific business management APIs
     if (pathname.startsWith('/api/business/services')) {
       const token = await getToken({ req: request })
@@ -17,12 +29,20 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Skip middleware for static files and images
-  if (pathname.includes('/_next/') || pathname.includes('/favicon.ico')) {
-    return NextResponse.next()
+  // Handle internationalization
+  const response = intlMiddleware(request);
+  
+  // If intl middleware returns a response (redirect), we need to continue with auth checks
+  if (response.status === 307 || response.status === 302) {
+    return response;
   }
 
-  // List of public routes that don't require authentication
+  // Extract locale from pathname for auth logic
+  const localeMatch = pathname.match(/^\/([a-z]{2})(?:\/|$)/);
+  const locale = localeMatch ? localeMatch[1] : defaultLocale;
+  const pathnameWithoutLocale = pathname.replace(/^\/[a-z]{2}/, '') || '/';
+
+  // List of public routes that don't require authentication (without locale prefix)
   const publicRoutes = [
     '/',
     '/search',
@@ -32,25 +52,24 @@ export async function middleware(request: NextRequest) {
 
   // Check if it's a public route
   const isPublicRoute = publicRoutes.some(route => 
-    pathname === route || pathname.startsWith(route)
+    pathnameWithoutLocale === route || pathnameWithoutLocale.startsWith(route)
   )
 
   // Business profile pages are public (e.g., /business/curls-coils-beauty-bar)
   // But business management pages are not (e.g., /business/dashboard)
-  const isBusinessProfilePage = pathname.match(/^\/business\/[^\/]+$/)
+  const isBusinessProfilePage = pathnameWithoutLocale.match(/^\/business\/[^\/]+$/)
   const isBusinessManagementPage = 
-    pathname.startsWith('/business/dashboard') ||
-    pathname.startsWith('/business/services') ||
-    pathname.startsWith('/business/bookings') ||
-    pathname.startsWith('/business/availability') ||
-    pathname.startsWith('/business/profile') ||
-    pathname.startsWith('/business/reviews') ||
-    pathname.startsWith('/business/settings')
+    pathnameWithoutLocale.startsWith('/business/dashboard') ||
+    pathnameWithoutLocale.startsWith('/business/services') ||
+    pathnameWithoutLocale.startsWith('/business/bookings') ||
+    pathnameWithoutLocale.startsWith('/business/availability') ||
+    pathnameWithoutLocale.startsWith('/business/profile') ||
+    pathnameWithoutLocale.startsWith('/business/reviews') ||
+    pathnameWithoutLocale.startsWith('/business/settings')
 
   // If it's a business profile page (not management), it's public
   if (isBusinessProfilePage && !isBusinessManagementPage) {
-    console.log('Business profile page - allowing public access:', pathname)
-    return NextResponse.next()
+    return response
   }
 
   // If it's a public route, allow access
@@ -59,10 +78,10 @@ export async function middleware(request: NextRequest) {
     const isAuth = !!token
     
     // If user is logged in and trying to access login/signup, redirect to dashboard
-    if (isAuth && (pathname.startsWith('/login') || pathname.startsWith('/signup'))) {
-      return NextResponse.redirect(new URL('/dashboard', request.url))
+    if (isAuth && (pathnameWithoutLocale.startsWith('/login') || pathnameWithoutLocale.startsWith('/signup'))) {
+      return NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url))
     }
-    return NextResponse.next()
+    return response
   }
 
   // For all other routes, check authentication
@@ -71,21 +90,20 @@ export async function middleware(request: NextRequest) {
 
   // If not authenticated, redirect to login
   if (!isAuth) {
-    console.log('Not authenticated, redirecting to login from:', pathname)
     const from = pathname + request.nextUrl.search
     return NextResponse.redirect(
-      new URL(`/login?from=${encodeURIComponent(from)}`, request.url)
+      new URL(`/${locale}/login?from=${encodeURIComponent(from)}`, request.url)
     )
   }
 
   // Check business owner only routes
   if (isBusinessManagementPage) {
     if (token?.role !== 'BUSINESS_OWNER') {
-      return NextResponse.redirect(new URL('/dashboard', request.url))
+      return NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url))
     }
   }
 
-  return NextResponse.next()
+  return response
 }
 
 export const config = {
