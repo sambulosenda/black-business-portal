@@ -1,12 +1,18 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { DayPicker } from 'react-day-picker'
 import { format, setHours, setMinutes, isBefore } from 'date-fns'
 import Link from 'next/link'
 import 'react-day-picker/style.css'
 import { Breadcrumb, BreadcrumbWrapper } from '@/components/ui/breadcrumb'
+import { ProgressSteps, MobileProgressSteps } from '@/components/ui/progress-steps'
+import { FormFeedback, InlineValidation } from '@/components/ui/form-feedback'
+import { ServiceLoadingSkeleton, DatePickerSkeleton, AvailabilityLoader, TimeCheckLoader } from '@/components/ui/loading-states'
+import { SuccessAnimation } from '@/components/ui/success-animation'
+import { TimeSlotSelector, MobileTimeSlotSelector } from '@/components/ui/time-slot-selector'
+import { useIsMobile } from '@/components/hooks/use-mobile'
 import type { PromotionWithRelations } from '@/types'
 
 interface Service {
@@ -38,6 +44,7 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
   const router = useRouter()
   const searchParams = useSearchParams()
   const serviceId = searchParams.get('service')
+  const isMobile = useIsMobile()
   
   const [slug, setSlug] = useState<string>('')
   const [business, setBusiness] = useState<Business | null>(null)
@@ -47,6 +54,9 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
   const [selectedTime, setSelectedTime] = useState<string>('')
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([])
   const [loading, setLoading] = useState(true)
+  const [servicesLoading, setServicesLoading] = useState(false)
+  const [availabilityLoading, setAvailabilityLoading] = useState(false)
+  const [timeSlotsLoading, setTimeSlotsLoading] = useState(false)
   const [bookingLoading, setBookingLoading] = useState(false)
   const [error, setError] = useState('')
   const [timeOffDates, setTimeOffDates] = useState<Date[]>([])
@@ -55,6 +65,43 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
   const [promoValidating, setPromoValidating] = useState(false)
   const [promoError, setPromoError] = useState('')
   const [appliedPromotion, setAppliedPromotion] = useState<PromotionWithRelations | null>(null)
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [formTouched, setFormTouched] = useState({
+    service: false,
+    date: false,
+    time: false
+  })
+
+  // Calculate current step for progress indicator
+  const getCurrentStep = () => {
+    if (!selectedService) return 0
+    if (!selectedDate) return 1
+    if (!selectedTime) return 2
+    return 3
+  }
+
+  // Smooth scroll to section when step changes
+  useEffect(() => {
+    const step = getCurrentStep()
+    const sections = ['service-section', 'date-section', 'time-section', 'summary-section']
+    const targetSection = sections[step]
+    
+    if (targetSection && step > 0) {
+      setTimeout(() => {
+        const element = document.getElementById(targetSection)
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+      }, 100)
+    }
+  }, [selectedService, selectedDate, selectedTime])
+
+  const bookingSteps = [
+    { id: 'service', name: 'Select Service', description: 'Choose your treatment' },
+    { id: 'date', name: 'Pick Date', description: 'Select appointment date' },
+    { id: 'time', name: 'Choose Time', description: 'Pick available slot' },
+    { id: 'confirm', name: 'Confirm', description: 'Review and book' }
+  ]
 
   useEffect(() => {
     params.then(p => setSlug(p.slug))
@@ -76,6 +123,7 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
 
   const fetchBusinessData = async () => {
     try {
+      setServicesLoading(true)
       const response = await fetch(`/api/booking/${slug}`)
       if (!response.ok) throw new Error('Failed to fetch business data')
       
@@ -95,9 +143,10 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
       }
     } catch (error) {
       console.error('Error fetching business:', error)
-      setError('Failed to load business information')
+      setError('Failed to load business information. Please try refreshing the page.')
     } finally {
       setLoading(false)
+      setServicesLoading(false)
     }
   }
 
@@ -149,14 +198,22 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
   const generateTimeSlots = async () => {
     if (!selectedDate || !business || !selectedService) return
 
+    setTimeSlotsLoading(true)
+    setError('')
+
     const service = services.find(s => s.id === selectedService)
-    if (!service) return
+    if (!service) {
+      setTimeSlotsLoading(false)
+      return
+    }
 
     const dayOfWeek = selectedDate.getDay()
     const availability = business.availabilities.find(a => a.dayOfWeek === dayOfWeek)
     
     if (!availability) {
       setTimeSlots([])
+      setTimeSlotsLoading(false)
+      setError('No availability on this day. Please select another date.')
       return
     }
 
@@ -192,7 +249,8 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
         
         if (isClosedDay) {
           setTimeSlots([])
-          setError(reason || 'Business is closed on this day')
+          setError(reason || 'Business is closed on this day. Please select another date.')
+          setTimeSlotsLoading(false)
           return
         }
         
@@ -202,13 +260,19 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
       }
     } catch (error) {
       console.error('Error checking availability:', error)
+      setError('Unable to check availability. Please try again.')
+    } finally {
+      setTimeSlotsLoading(false)
     }
 
     setTimeSlots(slots)
   }
 
   const handleBooking = async () => {
-    if (!selectedDate || !selectedTime || !selectedService) return
+    if (!selectedDate || !selectedTime || !selectedService) {
+      setError('Please complete all booking steps before confirming')
+      return
+    }
 
     setBookingLoading(true)
     setError('')
@@ -234,6 +298,9 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
 
       const paymentData = await response.json()
       
+      // Show success animation
+      setShowSuccess(true)
+      
       // Store payment data in sessionStorage for the payment page
       sessionStorage.setItem('bookingPayment', JSON.stringify({
         ...paymentData,
@@ -243,13 +310,56 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
         time: selectedTime,
       }))
       
-      router.push(`/book/${slug}/payment`)
+      // Delay navigation to show success animation
+      setTimeout(() => {
+        router.push(`/book/${slug}/payment`)
+      }, 1500)
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to create booking')
+      setError(error instanceof Error ? error.message : 'Unable to create booking. Please try again.')
     } finally {
       setBookingLoading(false)
     }
   }
+
+  // Auto-save form data to localStorage
+  useEffect(() => {
+    if (business && selectedService) {
+      const bookingData = {
+        businessId: business.id,
+        serviceId: selectedService,
+        date: selectedDate?.toISOString(),
+        time: selectedTime,
+        promoCode
+      }
+      localStorage.setItem(`booking_${business.id}`, JSON.stringify(bookingData))
+    }
+  }, [business, selectedService, selectedDate, selectedTime, promoCode])
+
+  // Restore saved form data
+  useEffect(() => {
+    if (business) {
+      const saved = localStorage.getItem(`booking_${business.id}`)
+      if (saved) {
+        try {
+          const data = JSON.parse(saved)
+          if (data.serviceId && services.find(s => s.id === data.serviceId)) {
+            setSelectedService(data.serviceId)
+          }
+          if (data.date) {
+            setSelectedDate(new Date(data.date))
+          }
+          if (data.time) {
+            setSelectedTime(data.time)
+          }
+          if (data.promoCode) {
+            setPromoCode(data.promoCode)
+          }
+        } catch (e) {
+          console.error('Error restoring booking data:', e)
+        }
+      }
+    }
+  }, [business, services])
 
   if (loading) {
     return (
@@ -308,13 +418,25 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
           <p className="mt-2 text-gray-600">at {business.businessName}</p>
         </div>
 
+        {/* Progress Indicator */}
+        <div className="mb-8">
+          {isMobile ? (
+            <MobileProgressSteps steps={bookingSteps} currentStep={getCurrentStep()} />
+          ) : (
+            <ProgressSteps steps={bookingSteps} currentStep={getCurrentStep()} />
+          )}
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             {/* Service Selection */}
-            <div className="bg-white shadow rounded-lg p-6 mb-6">
+            <div id="service-section" className="bg-white shadow rounded-lg p-6 mb-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Select a Service</h2>
-              <div className="space-y-3">
-                {services.map((service) => (
+              {servicesLoading ? (
+                <ServiceLoadingSkeleton />
+              ) : (
+                <div className="space-y-3">
+                  {services.map((service) => (
                   <label
                     key={service.id}
                     className={`block cursor-pointer rounded-lg border p-4 hover:border-indigo-500 ${
@@ -328,7 +450,11 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
                       name="service"
                       value={service.id}
                       checked={selectedService === service.id}
-                      onChange={(e) => setSelectedService(e.target.value)}
+                      onChange={(e) => {
+                        setSelectedService(e.target.value)
+                        setFormTouched({ ...formTouched, service: true })
+                        setSelectedTime('') // Reset time when service changes
+                      }}
                       className="sr-only"
                     />
                     <div className="flex justify-between">
@@ -344,19 +470,42 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
                       <p className="text-lg font-semibold text-gray-900">${service.price}</p>
                     </div>
                   </label>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
+              {formTouched.service && selectedService && (
+                <InlineValidation 
+                  success="Service selected" 
+                  touched={true}
+                  className="mt-3"
+                />
+              )}
             </div>
 
             {/* Date Selection */}
-            <div className="bg-white shadow rounded-lg p-6 mb-6">
+            <div id="date-section" className="bg-white shadow rounded-lg p-6 mb-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Select a Date</h2>
+              {!selectedService && (
+                <FormFeedback
+                  type="info"
+                  message="Please select a service first to see available dates"
+                  className="mb-4"
+                />
+              )}
               <div className="flex justify-center">
-                <DayPicker
+                {availabilityLoading ? (
+                  <DatePickerSkeleton />
+                ) : (
+                  <DayPicker
                   mode="single"
                   selected={selectedDate}
-                  onSelect={setSelectedDate}
+                  onSelect={(date) => {
+                    setSelectedDate(date)
+                    setFormTouched({ ...formTouched, date: true })
+                    setSelectedTime('') // Reset time when date changes
+                  }}
                   disabled={[
+                    !selectedService,
                     { before: new Date() },
                     ...disabledDays.map(day => ({ dayOfWeek: [day] })),
                     ...timeOffDates
@@ -385,34 +534,59 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
                     day_hidden: "invisible",
                   }}
                 />
+                )}
               </div>
+              {formTouched.date && selectedDate && (
+                <InlineValidation 
+                  success={`Date selected: ${format(selectedDate, 'MMMM d, yyyy')}`} 
+                  touched={true}
+                  className="mt-3 text-center"
+                />
+              )}
             </div>
 
             {/* Time Selection */}
             {selectedDate && (
-              <div className="bg-white shadow rounded-lg p-6">
+              <div id="time-section" className="bg-white shadow rounded-lg p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">Select a Time</h2>
-                {timeSlots.length > 0 ? (
-                  <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3">
-                    {timeSlots.map((slot) => (
-                      <button
-                        key={slot.time}
-                        onClick={() => setSelectedTime(slot.time)}
-                        disabled={!slot.available}
-                        className={`py-2 px-3 rounded-md text-sm font-medium ${
-                          selectedTime === slot.time
-                            ? 'bg-indigo-600 text-white'
-                            : slot.available
-                            ? 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-                            : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        }`}
-                      >
-                        {slot.time}
-                      </button>
-                    ))}
-                  </div>
+                {timeSlotsLoading ? (
+                  <TimeCheckLoader message="Loading available times..." />
+                ) : timeSlots.length > 0 ? (
+                  <>
+                    {isMobile ? (
+                      <MobileTimeSlotSelector
+                        slots={timeSlots}
+                        selectedTime={selectedTime}
+                        onSelectTime={(time) => {
+                          setSelectedTime(time)
+                          setFormTouched({ ...formTouched, time: true })
+                        }}
+                        loading={timeSlotsLoading}
+                      />
+                    ) : (
+                      <TimeSlotSelector
+                        slots={timeSlots}
+                        selectedTime={selectedTime}
+                        onSelectTime={(time) => {
+                          setSelectedTime(time)
+                          setFormTouched({ ...formTouched, time: true })
+                        }}
+                        loading={timeSlotsLoading}
+                      />
+                    )}
+                  </>
                 ) : (
-                  <p className="text-gray-500">No available time slots for this date</p>
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">No available time slots for this date</p>
+                    <p className="text-sm text-gray-400 mt-2">Please try selecting a different date</p>
+                  </div>
+                )}
+                {formTouched.time && selectedTime && (
+                  <InlineValidation 
+                    success={`Time selected: ${selectedTime}`} 
+                    touched={true}
+                    className="mt-3"
+                  />
                 )}
               </div>
             )}
@@ -420,28 +594,31 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
 
           {/* Booking Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white shadow rounded-lg p-6 sticky top-4">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Booking Summary</h2>
-              <dl className="space-y-4">
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">Business</dt>
-                  <dd className="mt-1 text-sm text-gray-900">{business.businessName}</dd>
+            <div id="summary-section" className="bg-white shadow-lg rounded-lg overflow-hidden sticky top-4">
+              <div className="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-4">
+                <h2 className="text-xl font-semibold text-white">Booking Summary</h2>
+              </div>
+              <div className="p-6">
+                <dl className="space-y-4">
+                <div className="pb-4 border-b border-gray-100">
+                  <dt className="text-xs font-medium text-gray-500 uppercase tracking-wider">Business</dt>
+                  <dd className="mt-1 text-base font-medium text-gray-900">{business.businessName}</dd>
                 </div>
                 {selectedServiceData && (
                   <>
-                    <div>
-                      <dt className="text-sm font-medium text-gray-500">Service</dt>
-                      <dd className="mt-1 text-sm text-gray-900">{selectedServiceData.name}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-sm font-medium text-gray-500">Duration</dt>
-                      <dd className="mt-1 text-sm text-gray-900">
+                    <div className="bg-gray-50 rounded-lg p-3 -mx-3">
+                      <dt className="text-xs font-medium text-gray-500 uppercase tracking-wider">Service</dt>
+                      <dd className="mt-1 text-base font-medium text-gray-900">{selectedServiceData.name}</dd>
+                      <div className="mt-2 flex items-center text-sm text-gray-600">
+                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
                         {selectedServiceData.duration} minutes
-                      </dd>
+                      </div>
                     </div>
-                    <div>
-                      <dt className="text-sm font-medium text-gray-500">Price</dt>
-                      <dd className="mt-1 text-lg font-semibold text-gray-900">
+                    <div className="flex justify-between items-center">
+                      <dt className="text-xs font-medium text-gray-500 uppercase tracking-wider">Price</dt>
+                      <dd className="text-2xl font-bold text-gray-900">
                         ${selectedServiceData.price}
                       </dd>
                     </div>
@@ -488,7 +665,7 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
 
                 {/* Total with discount */}
                 {selectedServiceData && promoDiscount > 0 && (
-                  <div className="pt-4 border-t">
+                  <div className="mt-4 pt-4 border-t border-gray-200">
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-500">Subtotal</span>
@@ -496,52 +673,84 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-500">Discount</span>
-                        <span className="text-green-600">-${promoDiscount.toFixed(2)}</span>
+                        <span className="text-green-600 font-medium">-${promoDiscount.toFixed(2)}</span>
                       </div>
-                      <div className="flex justify-between text-base font-semibold pt-2 border-t">
+                      <div className="flex justify-between text-lg font-bold pt-2 border-t border-gray-200">
                         <span>Total</span>
-                        <span>${(parseFloat(selectedServiceData.price) - promoDiscount).toFixed(2)}</span>
+                        <span className="text-indigo-600">${(parseFloat(selectedServiceData.price) - promoDiscount).toFixed(2)}</span>
                       </div>
                     </div>
                   </div>
                 )}
-                {selectedDate && (
-                  <div>
-                    <dt className="text-sm font-medium text-gray-500">Date</dt>
-                    <dd className="mt-1 text-sm text-gray-900">
-                      {format(selectedDate, 'EEEE, MMMM d, yyyy')}
-                    </dd>
-                  </div>
-                )}
-                {selectedTime && (
-                  <div>
-                    <dt className="text-sm font-medium text-gray-500">Time</dt>
-                    <dd className="mt-1 text-sm text-gray-900">{selectedTime}</dd>
+                {(selectedDate || selectedTime) && (
+                  <div className="bg-indigo-50 rounded-lg p-3 -mx-3">
+                    {selectedDate && (
+                      <div className="mb-2">
+                        <dt className="text-xs font-medium text-indigo-700 uppercase tracking-wider">Date</dt>
+                        <dd className="mt-1 text-base font-medium text-gray-900 flex items-center">
+                          <svg className="w-4 h-4 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          {format(selectedDate, 'EEEE, MMMM d, yyyy')}
+                        </dd>
+                      </div>
+                    )}
+                    {selectedTime && (
+                      <div>
+                        <dt className="text-xs font-medium text-indigo-700 uppercase tracking-wider">Time</dt>
+                        <dd className="mt-1 text-base font-medium text-gray-900 flex items-center">
+                          <svg className="w-4 h-4 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          {selectedTime}
+                        </dd>
+                      </div>
+                    )}
                   </div>
                 )}
               </dl>
 
               {error && (
-                <div className="mt-4 rounded-md bg-red-50 p-4">
-                  <p className="text-sm text-red-800">{error}</p>
-                </div>
+                <FormFeedback
+                  type="error"
+                  message={error}
+                  className="mt-4"
+                />
               )}
 
               <button
                 onClick={handleBooking}
                 disabled={!selectedDate || !selectedTime || !selectedService || bookingLoading}
-                className="mt-6 w-full bg-indigo-600 text-white py-2 px-4 rounded-md font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="mt-6 w-full bg-indigo-600 text-white py-3 px-4 rounded-md font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100"
               >
-                {bookingLoading ? 'Booking...' : 'Confirm Booking'}
+                {bookingLoading ? (
+                  <span className="flex items-center justify-center">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Creating booking...
+                  </span>
+                ) : (
+                  'Confirm Booking'
+                )}
               </button>
 
-              <p className="mt-4 text-xs text-gray-500 text-center">
+              <p className="mt-6 text-xs text-gray-500 text-center">
                 By booking, you agree to our terms and conditions
               </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      
+      {/* Success Animation */}
+      <SuccessAnimation
+        show={showSuccess}
+        message="Booking Created!"
+        subMessage="Redirecting to payment..."
+      />
     </div>
   )
 }

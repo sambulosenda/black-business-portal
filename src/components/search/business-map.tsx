@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/card';
 import { MapPin, Star, Clock } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { BusinessMapFallback } from './business-map-fallback';
 
 interface Business {
   id: string;
@@ -53,6 +54,12 @@ export function BusinessMap({
   });
   const [popupBusiness, setPopupBusiness] = useState<Business | null>(null);
   const mapRef = useRef<any>(null);
+
+  // Check if Mapbox token is available
+  const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
+  if (!mapboxToken) {
+    return <BusinessMapFallback />;
+  }
 
   // Get businesses with valid coordinates
   const mappableBusinesses = businesses.filter(
@@ -124,7 +131,7 @@ export function BusinessMap({
         {...viewState}
         onMove={(evt) => setViewState(evt.viewState)}
         onMoveEnd={handleMoveEnd}
-        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
+        mapboxAccessToken={mapboxToken}
         mapStyle="mapbox://styles/mapbox/light-v11"
         reuseMaps
       >
