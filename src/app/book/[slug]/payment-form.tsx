@@ -160,6 +160,32 @@ export default function PaymentForm({
           theme: 'stripe',
           variables: {
             colorPrimary: '#4f46e5',
+            colorBackground: '#ffffff',
+            colorText: '#1f2937',
+            colorDanger: '#ef4444',
+            fontFamily: 'system-ui, -apple-system, sans-serif',
+            borderRadius: '8px',
+            spacingUnit: '4px',
+          },
+          rules: {
+            '.Tab': {
+              border: '1px solid #e5e7eb',
+              boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+            },
+            '.Tab:hover': {
+              borderColor: '#d1d5db',
+            },
+            '.Tab--selected': {
+              borderColor: '#4f46e5',
+              boxShadow: '0 0 0 2px rgba(79, 70, 229, 0.2)',
+            },
+            '.Input': {
+              borderColor: '#e5e7eb',
+            },
+            '.Input:focus': {
+              borderColor: '#4f46e5',
+              boxShadow: '0 0 0 3px rgba(79, 70, 229, 0.1)',
+            },
           },
         },
       }}
