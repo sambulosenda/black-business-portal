@@ -332,7 +332,11 @@ function SearchContent() {
               {/* View Toggle */}
               <div className="hidden sm:flex items-center bg-gray-100 rounded-lg p-1">
                 <button
-                  onClick={() => setViewMode('grid')}
+                  onClick={() => {
+                    setPrevViewMode(viewMode)
+                    setViewMode('grid')
+                    setAnimateResults(true)
+                  }}
                   className={cn(
                     "px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200",
                     viewMode === 'grid' 
@@ -343,7 +347,11 @@ function SearchContent() {
                   <Grid3X3 className="h-4 w-4" />
                 </button>
                 <button
-                  onClick={() => setViewMode('list')}
+                  onClick={() => {
+                    setPrevViewMode(viewMode)
+                    setViewMode('list')
+                    setAnimateResults(true)
+                  }}
                   className={cn(
                     "px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200",
                     viewMode === 'list' 
@@ -354,7 +362,11 @@ function SearchContent() {
                   <List className="h-4 w-4" />
                 </button>
                 <button
-                  onClick={() => setViewMode('map')}
+                  onClick={() => {
+                    setPrevViewMode(viewMode)
+                    setViewMode('map')
+                    setAnimateResults(true)
+                  }}
                   className={cn(
                     "px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200",
                     viewMode === 'map' 

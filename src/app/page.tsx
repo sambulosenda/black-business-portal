@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
@@ -14,14 +14,31 @@ export default function Home() {
   const { data: session } = useSession()
   const [searchQuery, setSearchQuery] = useState("")
   const [location, setLocation] = useState("")
+  const [isSearching, setIsSearching] = useState(false)
+  const [searchFocused, setSearchFocused] = useState(false)
+  const [locationFocused, setLocationFocused] = useState(false)
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!searchQuery && !location) return
+    
+    setIsSearching(true)
     const params = new URLSearchParams()
     if (searchQuery) params.append('q', searchQuery)
     if (location) params.append('city', location)
+    
+    // Add slight delay for better UX feedback
+    await new Promise(resolve => setTimeout(resolve, 300))
     router.push(`/search?${params.toString()}`)
   }
+
+  // Add smooth scroll behavior
+  useEffect(() => {
+    document.documentElement.style.scrollBehavior = 'smooth'
+    return () => {
+      document.documentElement.style.scrollBehavior = 'auto'
+    }
+  }, [])
 
   const valueProps = [
     {
@@ -132,40 +149,40 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-indigo-50 via-white to-purple-50 overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute top-0 left-0 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20"></div>
-        <div className="absolute top-0 right-0 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-20"></div>
-        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20"></div>
+        {/* Decorative elements with animation */}
+        <div className="absolute top-0 left-0 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow"></div>
+        <div className="absolute top-0 right-0 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[600px] lg:min-h-[700px] py-16 lg:py-24">
             
             {/* Left Content */}
-            <div className="text-left space-y-8 animate-fade-in lg:pr-8">
+            <div className="text-left space-y-8 lg:pr-8">
               <div className="space-y-6">
-                <div className="inline-flex items-center px-4 py-2 bg-indigo-50 text-indigo-700 rounded-full text-sm font-medium border border-indigo-100">
+                <div className="inline-flex items-center px-4 py-2 bg-indigo-50 text-indigo-700 rounded-full text-sm font-medium border border-indigo-100 animate-fade-in-up stagger-1">
                   <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   Trusted by 10,000+ customers
                 </div>
                 
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight animate-fade-in-up stagger-2">
                   Book beauty services in
                   <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> 30 seconds</span>
                 </h1>
                 
-                <p className="text-xl text-gray-600 leading-relaxed max-w-xl">
+                <p className="text-xl text-gray-600 leading-relaxed max-w-xl animate-fade-in-up stagger-3">
                   Find and instantly book appointments at top-rated African beauty salons and professionals near you. No calls, no waiting.
                 </p>
               </div>
               
               {/* Search Bar */}
-              <div className="bg-white rounded-2xl shadow-lg p-6 max-w-2xl border border-gray-200">
+              <div className="bg-white rounded-2xl shadow-lg p-6 max-w-2xl border border-gray-200 transition-all duration-300 hover:shadow-xl">
                 <form onSubmit={handleSearch} className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="relative">
-                      <svg className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="relative group">
+                      <svg className={`absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors duration-200 ${searchFocused ? 'text-indigo-600' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                       </svg>
                       <input
@@ -173,11 +190,13 @@ export default function Home() {
                         placeholder='Try "braids", "nails", or "spa"'
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 bg-gray-50 hover:bg-gray-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent rounded-xl transition-colors text-base border border-gray-200"
+                        onFocus={() => setSearchFocused(true)}
+                        onBlur={() => setSearchFocused(false)}
+                        className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 bg-gray-50 hover:bg-gray-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent rounded-xl transition-all duration-200 text-base border border-gray-200 focus:shadow-md"
                       />
                     </div>
-                    <div className="relative">
-                      <svg className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="relative group">
+                      <svg className={`absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors duration-200 ${locationFocused ? 'text-indigo-600' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
@@ -186,12 +205,29 @@ export default function Home() {
                         placeholder="City or neighborhood"
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}
-                        className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 bg-gray-50 hover:bg-gray-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent rounded-xl transition-colors text-base border border-gray-200"
+                        onFocus={() => setLocationFocused(true)}
+                        onBlur={() => setLocationFocused(false)}
+                        className="w-full pl-12 pr-4 py-4 text-gray-900 placeholder-gray-500 bg-gray-50 hover:bg-gray-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent rounded-xl transition-all duration-200 text-base border border-gray-200 focus:shadow-md"
                       />
                     </div>
                   </div>
-                  <Button type="submit" size="lg" className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl shadow-lg hover:shadow-xl py-4 text-lg font-semibold">
-                    Find Services
+                  <Button 
+                    type="submit" 
+                    size="lg" 
+                    disabled={isSearching}
+                    className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl shadow-lg hover:shadow-xl py-4 text-lg font-semibold transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    {isSearching ? (
+                      <span className="flex items-center justify-center">
+                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Searching...
+                      </span>
+                    ) : (
+                      'Find Services'
+                    )}
                   </Button>
                 </form>
                 
@@ -206,7 +242,7 @@ export default function Home() {
                           setSearchQuery(term.toLowerCase())
                           router.push(`/search?q=${encodeURIComponent(term.toLowerCase())}`)
                         }}
-                        className="text-sm px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg transition-colors font-medium border border-gray-200 hover:border-gray-300"
+                        className="text-sm px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg transition-all duration-200 font-medium border border-gray-200 hover:border-gray-300 transform hover:scale-105 hover:shadow-sm active:scale-95"
                       >
                         {term}
                       </button>
@@ -217,19 +253,19 @@ export default function Home() {
             </div>
             
             {/* Right Image */}
-            <div className="relative h-full flex items-center justify-center lg:justify-end">
+            <div className="relative h-full flex items-center justify-center lg:justify-end animate-fade-in stagger-4">
               <div className="relative w-full max-w-lg h-[400px] lg:h-[600px]">
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-3xl transform rotate-6 opacity-20"></div>
-                <div className="relative h-full">
+                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-3xl transform rotate-6 opacity-20 transition-transform duration-700 hover:rotate-12"></div>
+                <div className="relative h-full group">
                   <Image 
                     src="/images/client-bg-new.png" 
                     alt="Beauty professional with client" 
                     fill
                     priority
-                    className="object-cover rounded-3xl"
+                    className="object-cover rounded-3xl transition-transform duration-500 group-hover:scale-[1.02]"
                   />
                   {/* Floating elements */}
-                  <div className="absolute -top-4 -right-4 bg-white rounded-xl border border-gray-200 p-4 animate-bounce shadow-lg">
+                  <div className="absolute -top-4 -right-4 bg-white rounded-xl border border-gray-200 p-4 shadow-lg animate-float" style={{ animation: 'float 3s ease-in-out infinite' }}>
                     <div className="flex items-center gap-3">
                       <div className="flex items-center -space-x-2">
                         <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-sm">
@@ -244,7 +280,7 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-                  <div className="absolute -bottom-4 -left-4 bg-white rounded-xl border border-gray-200 p-4 shadow-lg">
+                  <div className="absolute -bottom-4 -left-4 bg-white rounded-xl border border-gray-200 p-4 shadow-lg animate-float" style={{ animation: 'float 3s ease-in-out infinite', animationDelay: '1.5s' }}>
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center">
                         <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
