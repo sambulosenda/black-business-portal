@@ -11,7 +11,7 @@ import Footer from '@/components/footer'
 import { cn } from '@/lib/utils'
 import { 
   Search, MapPin, Star, Filter, Grid3X3, List, Map,
-  ChevronDown, Heart, Clock, DollarSign
+  ChevronDown, Heart
 } from 'lucide-react'
 import dynamic from 'next/dynamic'
 
@@ -160,66 +160,72 @@ function SearchContent() {
     <div className="min-h-screen flex flex-col bg-white">
       <Navigation session={null} />
       
-      {/* Search Header */}
+      {/* Search Header - 8px grid system */}
       <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Title Section */}
+          <div className="mb-6">
+            <h1 className="text-3xl font-semibold text-gray-900 mb-2">Find Services</h1>
+            <p className="text-lg text-gray-600">Search from thousands of beauty and wellness professionals</p>
+          </div>
+          
+          {/* Search Controls */}
           <div className="flex flex-col sm:flex-row gap-4">
             {/* Search Input */}
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 pointer-events-none" />
               <input
                 ref={searchInputRef}
                 type="text"
                 value={filters.query}
                 onChange={(e) => handleFilterChange('query', e.target.value)}
                 placeholder="Search services or businesses"
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full h-12 pl-12 pr-4 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
               />
             </div>
             
             {/* Location Input */}
-            <div className="sm:w-64 relative">
-              <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <div className="sm:w-72 relative">
+              <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 pointer-events-none" />
               <input
                 type="text"
                 value={filters.city}
                 onChange={(e) => handleFilterChange('city', e.target.value)}
                 placeholder="Location"
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full h-12 pl-12 pr-4 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
               />
             </div>
             
-            {/* Search Button */}
-            <Button 
-              size="lg"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white px-8"
+            {/* Search Button - 48px height for touch targets */}
+            <button 
+              className="h-12 px-8 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Search
-            </Button>
+            </button>
           </div>
         </div>
       </div>
 
       <div className="flex-1 flex">
-        {/* Desktop Filters Sidebar */}
-        <div className="hidden lg:block w-64 bg-gray-50 border-r border-gray-200 p-6">
-          <h3 className="font-semibold text-gray-900 mb-6">Filters</h3>
+        {/* Desktop Filters Sidebar - 8px grid spacing */}
+        <div className="hidden lg:block w-80 bg-gray-50 border-r border-gray-200 p-8">
+          <h2 className="text-lg font-semibold text-gray-900 mb-8">Filters</h2>
           
           {/* Categories */}
           <div className="mb-8">
-            <h4 className="text-sm font-medium text-gray-700 mb-3">Category</h4>
-            <div className="space-y-2">
+            <h3 className="text-sm font-medium text-gray-900 mb-4">Category</h3>
+            <div className="space-y-3">
               {categories.map(cat => (
-                <label key={cat.value} className="flex items-center">
+                <label key={cat.value} className="flex items-center cursor-pointer group">
                   <input
                     type="radio"
                     name="category"
                     value={cat.value}
                     checked={filters.category === cat.value}
                     onChange={(e) => handleFilterChange('category', e.target.value)}
-                    className="text-indigo-600 focus:ring-indigo-500"
+                    className="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500"
                   />
-                  <span className="ml-2 text-sm text-gray-700">{cat.label}</span>
+                  <span className="ml-3 text-sm text-gray-700 group-hover:text-gray-900">{cat.label}</span>
                 </label>
               ))}
             </div>
@@ -227,11 +233,11 @@ function SearchContent() {
           
           {/* Rating */}
           <div className="mb-8">
-            <h4 className="text-sm font-medium text-gray-700 mb-3">Minimum Rating</h4>
+            <h3 className="text-sm font-medium text-gray-900 mb-4">Minimum Rating</h3>
             <select
               value={filters.minRating}
               onChange={(e) => handleFilterChange('minRating', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full h-10 px-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             >
               <option value="">Any Rating</option>
               <option value="4">4+ Stars</option>
@@ -242,22 +248,22 @@ function SearchContent() {
           
           {/* Price Range */}
           <div className="mb-8">
-            <h4 className="text-sm font-medium text-gray-700 mb-3">Price Range</h4>
-            <div className="flex gap-2">
+            <h3 className="text-sm font-medium text-gray-900 mb-4">Price Range</h3>
+            <div className="flex gap-3 items-center">
               <input
                 type="number"
                 placeholder="Min"
                 value={filters.priceMin}
                 onChange={(e) => handleFilterChange('priceMin', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full h-10 px-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               />
-              <span className="text-gray-500">-</span>
+              <span className="text-gray-400">–</span>
               <input
                 type="number"
                 placeholder="Max"
                 value={filters.priceMax}
                 onChange={(e) => handleFilterChange('priceMax', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full h-10 px-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               />
             </div>
           </div>
@@ -273,37 +279,37 @@ function SearchContent() {
                 priceMin: '',
                 priceMax: '',
               })}
-              className="w-full py-2 text-sm text-indigo-600 hover:text-indigo-700"
+              className="w-full h-10 text-sm font-medium text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg transition-colors"
             >
               Clear all filters
             </button>
           )}
         </div>
 
-        {/* Main Content */}
-        <div className="flex-1">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Main Content - 8px grid system */}
+        <div className="flex-1 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {/* Results Header */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-8 pb-8 border-b border-gray-200">
               <div>
                 <h2 className="text-2xl font-semibold text-gray-900">
-                  {sortedBusinesses.length} Results
+                  {sortedBusinesses.length} {sortedBusinesses.length === 1 ? 'Result' : 'Results'}
                 </h2>
                 {filters.query && (
-                  <p className="text-gray-600 mt-1">for "{filters.query}"</p>
+                  <p className="text-base text-gray-600 mt-1">Showing results for "{filters.query}"</p>
                 )}
               </div>
               
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
                 {/* Mobile Filter Button */}
                 <button
                   onClick={() => setShowFilters(true)}
-                  className="lg:hidden flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className="lg:hidden flex items-center gap-2 h-10 px-4 text-sm font-medium border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   <Filter className="h-4 w-4" />
                   Filters
                   {activeFiltersCount > 0 && (
-                    <span className="bg-indigo-600 text-white text-xs px-2 py-0.5 rounded-full">
+                    <span className="ml-1 bg-indigo-600 text-white text-xs px-2 py-1 rounded-full">
                       {activeFiltersCount}
                     </span>
                   )}
@@ -313,7 +319,7 @@ function SearchContent() {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="h-10 px-4 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 >
                   {sortOptions.map(option => (
                     <option key={option.value} value={option.value}>
@@ -323,37 +329,40 @@ function SearchContent() {
                 </select>
                 
                 {/* View Toggle */}
-                <div className="hidden sm:flex items-center border border-gray-300 rounded-lg">
+                <div className="hidden sm:flex items-center h-10 border border-gray-300 rounded-lg overflow-hidden">
                   <button
                     onClick={() => setViewMode('grid')}
                     className={cn(
-                      "px-3 py-2 transition-colors",
+                      "px-4 h-full transition-colors",
                       viewMode === 'grid' 
                         ? "bg-gray-100 text-gray-900" 
-                        : "text-gray-600 hover:text-gray-900"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                     )}
+                    aria-label="Grid view"
                   >
                     <Grid3X3 className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => setViewMode('list')}
                     className={cn(
-                      "px-3 py-2 transition-colors border-x border-gray-300",
+                      "px-4 h-full transition-colors border-x border-gray-300",
                       viewMode === 'list' 
                         ? "bg-gray-100 text-gray-900" 
-                        : "text-gray-600 hover:text-gray-900"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                     )}
+                    aria-label="List view"
                   >
                     <List className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => setViewMode('map')}
                     className={cn(
-                      "px-3 py-2 transition-colors",
+                      "px-4 h-full transition-colors",
                       viewMode === 'map' 
                         ? "bg-gray-100 text-gray-900" 
-                        : "text-gray-600 hover:text-gray-900"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                     )}
+                    aria-label="Map view"
                   >
                     <Map className="h-4 w-4" />
                   </button>
@@ -400,58 +409,61 @@ function SearchContent() {
                     const isSaved = savedBusinesses.includes(business.id)
                     
                     return viewMode === 'grid' ? (
-                      // Grid View Card
+                      // Grid View Card - 8px grid system
                       <Link
                         key={business.id}
                         href={`/business/${business.slug}`}
                         className="group block"
                       >
-                        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200">
+                        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-all duration-200 hover:border-gray-300">
                           {/* Image */}
-                          <div className="relative h-48 bg-gray-100">
+                          <div className="relative h-56 bg-gray-100">
                             <button
                               onClick={(e) => {
                                 e.preventDefault()
                                 toggleSaved(business.id)
                               }}
-                              className="absolute top-3 right-3 p-2 bg-white rounded-full shadow hover:shadow-md transition-shadow"
+                              className="absolute top-4 right-4 p-2.5 bg-white rounded-full shadow-sm hover:shadow-md transition-shadow"
+                              aria-label={isSaved ? "Remove from saved" : "Save"}
                             >
                               <Heart className={cn(
-                                "h-4 w-4",
-                                isSaved ? "fill-red-500 text-red-500" : "text-gray-400"
+                                "h-5 w-5",
+                                isSaved ? "fill-red-500 text-red-500" : "text-gray-400 hover:text-gray-600"
                               )} />
                             </button>
                           </div>
 
-                          {/* Content */}
-                          <div className="p-4">
-                            <h3 className="font-semibold text-gray-900 mb-1">
+                          {/* Content - 24px padding */}
+                          <div className="p-6">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-1">
                               {business.businessName}
                             </h3>
-                            <p className="text-sm text-gray-600 mb-3">
+                            <p className="text-sm text-gray-600 mb-4">
                               {business.category.replace(/_/g, ' ')}
                             </p>
                             
-                            <div className="flex items-center text-sm text-gray-600 mb-3">
-                              <MapPin className="h-4 w-4 mr-1" />
-                              {business.city}, {business.state}
+                            <div className="flex items-center text-sm text-gray-600 mb-4">
+                              <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
+                              <span className="line-clamp-1">{business.city}, {business.state}</span>
                             </div>
 
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center">
-                                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                                <span className="ml-1 font-medium">
-                                  {avgRating.toFixed(1)}
-                                </span>
-                                <span className="ml-1 text-gray-500">
+                            <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                              <div className="flex items-center gap-2">
+                                <div className="flex items-center">
+                                  <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                                  <span className="ml-1.5 font-medium text-gray-900">
+                                    {avgRating.toFixed(1)}
+                                  </span>
+                                </div>
+                                <span className="text-sm text-gray-500">
                                   ({business.reviews.length})
                                 </span>
                               </div>
                               
                               {business.services.length > 0 && (
                                 <div className="text-right">
-                                  <p className="text-sm text-gray-500">From</p>
-                                  <p className="font-semibold">
+                                  <p className="text-xs text-gray-500 mb-1">From</p>
+                                  <p className="text-lg font-semibold text-gray-900">
                                     ${Math.min(...business.services.map(s => parseFloat(s.price)))}
                                   </p>
                                 </div>
@@ -461,61 +473,62 @@ function SearchContent() {
                         </div>
                       </Link>
                     ) : (
-                      // List View Card
+                      // List View Card - 8px grid system
                       <Link
                         key={business.id}
                         href={`/business/${business.slug}`}
                         className="block"
                       >
-                        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200">
+                        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-all duration-200 hover:border-gray-300">
                           <div className="flex">
                             {/* Image */}
-                            <div className="relative w-48 h-48 bg-gray-100 flex-shrink-0">
+                            <div className="relative w-64 h-48 bg-gray-100 flex-shrink-0">
                               <button
                                 onClick={(e) => {
                                   e.preventDefault()
                                   toggleSaved(business.id)
                                 }}
-                                className="absolute top-3 right-3 p-2 bg-white rounded-full shadow hover:shadow-md transition-shadow"
+                                className="absolute top-4 right-4 p-2.5 bg-white rounded-full shadow-sm hover:shadow-md transition-shadow"
+                                aria-label={isSaved ? "Remove from saved" : "Save"}
                               >
                                 <Heart className={cn(
-                                  "h-4 w-4",
-                                  isSaved ? "fill-red-500 text-red-500" : "text-gray-400"
+                                  "h-5 w-5",
+                                  isSaved ? "fill-red-500 text-red-500" : "text-gray-400 hover:text-gray-600"
                                 )} />
                               </button>
                             </div>
 
-                            {/* Content */}
-                            <div className="flex-1 p-6">
+                            {/* Content - 32px padding */}
+                            <div className="flex-1 p-8">
                               <div className="flex items-start justify-between mb-4">
-                                <div>
-                                  <h3 className="text-xl font-semibold text-gray-900 mb-1">
+                                <div className="flex-1 mr-8">
+                                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
                                     {business.businessName}
                                   </h3>
-                                  <p className="text-gray-600">
+                                  <p className="text-base text-gray-600">
                                     {business.category.replace(/_/g, ' ')}
                                   </p>
                                 </div>
                                 
                                 {business.services.length > 0 && (
-                                  <div className="text-right">
-                                    <p className="text-sm text-gray-500">Starting from</p>
-                                    <p className="text-2xl font-semibold">
+                                  <div className="text-right flex-shrink-0">
+                                    <p className="text-sm text-gray-500 mb-1">Starting from</p>
+                                    <p className="text-2xl font-semibold text-gray-900">
                                       ${Math.min(...business.services.map(s => parseFloat(s.price)))}
                                     </p>
                                   </div>
                                 )}
                               </div>
 
-                              <div className="flex items-center gap-6 text-sm text-gray-600 mb-4">
+                              <div className="flex items-center gap-6 text-sm text-gray-600 mb-6">
                                 <div className="flex items-center">
-                                  <MapPin className="h-4 w-4 mr-1" />
+                                  <MapPin className="h-4 w-4 mr-2" />
                                   {business.city}, {business.state}
                                 </div>
                                 
                                 <div className="flex items-center">
                                   <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                                  <span className="ml-1 font-medium text-gray-900">
+                                  <span className="ml-1.5 font-medium text-gray-900">
                                     {avgRating.toFixed(1)}
                                   </span>
                                   <span className="ml-1">
@@ -525,7 +538,7 @@ function SearchContent() {
                                 
                                 {business.services.length > 0 && (
                                   <span>
-                                    {business.services.length} services
+                                    {business.services.length} services available
                                   </span>
                                 )}
                               </div>
@@ -536,13 +549,13 @@ function SearchContent() {
                                   {business.services.slice(0, 3).map((service) => (
                                     <span 
                                       key={service.id} 
-                                      className="px-3 py-1 bg-gray-100 text-gray-700 rounded text-sm"
+                                      className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md text-sm"
                                     >
-                                      {service.name} - ${service.price}
+                                      {service.name} • ${service.price}
                                     </span>
                                   ))}
                                   {business.services.length > 3 && (
-                                    <span className="px-3 py-1 text-indigo-600 text-sm">
+                                    <span className="px-3 py-1.5 text-indigo-600 text-sm font-medium">
                                       +{business.services.length - 3} more
                                     </span>
                                   )}
@@ -557,26 +570,33 @@ function SearchContent() {
                 </div>
               )
             ) : (
-              <div className="text-center py-12">
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No results found</h3>
-                <p className="text-gray-600 mb-6">
-                  Try adjusting your filters or search in a different area.
-                </p>
-                {activeFiltersCount > 0 && (
-                  <button
-                    onClick={() => setFilters({
-                      query: '',
-                      category: '',
-                      city: '',
-                      minRating: '',
-                      priceMin: '',
-                      priceMax: '',
-                    })}
-                    className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-                  >
-                    Clear all filters
-                  </button>
-                )}
+              <div className="text-center py-16">
+                <div className="max-w-md mx-auto">
+                  <div className="mb-6">
+                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Search className="h-8 w-8 text-gray-400" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">No results found</h3>
+                    <p className="text-base text-gray-600">
+                      Try adjusting your filters or searching in a different area.
+                    </p>
+                  </div>
+                  {activeFiltersCount > 0 && (
+                    <button
+                      onClick={() => setFilters({
+                        query: '',
+                        category: '',
+                        city: '',
+                        minRating: '',
+                        priceMin: '',
+                        priceMax: '',
+                      })}
+                      className="h-10 px-6 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      Clear all filters
+                    </button>
+                  )}
+                </div>
               </div>
             )}
           </div>
