@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, Suspense, useRef } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,9 +9,10 @@ import { SkeletonGrid } from '@/components/ui/skeleton-card'
 import Navigation from '@/components/navigation'
 import Footer from '@/components/footer'
 import { cn } from '@/lib/utils'
+import { useDebounce } from '@/hooks/useDebounce'
 import { 
   Search, MapPin, Star, Filter, Grid3X3, List, Map,
-  ChevronDown, Heart
+  ChevronDown, Heart, X, DollarSign, Loader2
 } from 'lucide-react'
 import dynamic from 'next/dynamic'
 
@@ -67,6 +68,7 @@ const sortOptions = [
 
 function SearchContent() {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const [businesses, setBusinesses] = useState<Business[]>([])
   const [loading, setLoading] = useState(true)
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid')
@@ -74,6 +76,7 @@ function SearchContent() {
   const [savedBusinesses, setSavedBusinesses] = useState<string[]>([])
   const [showFilters, setShowFilters] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
+  const [isTyping, setIsTyping] = useState(false)
   
   const [filters, setFilters] = useState({
     query: searchParams.get('q') || '',
@@ -83,6 +86,10 @@ function SearchContent() {
     priceMin: '',
     priceMax: '',
   })
+  
+  // Debounce search query for search-as-you-type
+  const debouncedQuery = useDebounce(filters.query, 500)
+  const debouncedCity = useDebounce(filters.city, 500)
 
   useEffect(() => {
     // Auto-focus search input
@@ -91,15 +98,34 @@ function SearchContent() {
     }
   }, [])
 
+  // Update URL with search params
+  useEffect(() => {
+    const params = new URLSearchParams()
+    if (debouncedQuery) params.set('q', debouncedQuery)
+    if (filters.category) params.set('category', filters.category)
+    if (debouncedCity) params.set('city', debouncedCity)
+    if (filters.minRating) params.set('minRating', filters.minRating)
+    
+    const newUrl = params.toString() ? `?${params.toString()}` : '/search'
+    router.push(newUrl, { scroll: false })
+  }, [debouncedQuery, debouncedCity, filters.category, filters.minRating, router])
+
+  // Fetch businesses when filters change
   useEffect(() => {
     const fetchBusinesses = async () => {
-      setLoading(true)
+      // Show loading only if not typing
+      if (!isTyping) {
+        setLoading(true)
+      }
+      
       try {
         const params = new URLSearchParams()
-        if (filters.query) params.append('q', filters.query)
+        if (debouncedQuery) params.append('q', debouncedQuery)
         if (filters.category) params.append('category', filters.category)
-        if (filters.city) params.append('city', filters.city)
+        if (debouncedCity) params.append('city', debouncedCity)
         if (filters.minRating) params.append('minRating', filters.minRating)
+        if (filters.priceMin) params.append('priceMin', filters.priceMin)
+        if (filters.priceMax) params.append('priceMax', filters.priceMax)
 
         const response = await fetch(`/api/search?${params.toString()}`)
         
@@ -113,13 +139,18 @@ function SearchContent() {
         console.error('Error fetching businesses:', error)
       } finally {
         setLoading(false)
+        setIsTyping(false)
       }
     }
     
     fetchBusinesses()
-  }, [filters])
+  }, [debouncedQuery, debouncedCity, filters.category, filters.minRating, filters.priceMin, filters.priceMax, isTyping])
 
   const handleFilterChange = (key: string, value: string) => {
+    // Set typing state for search and location fields
+    if (key === 'query' || key === 'city') {
+      setIsTyping(true)
+    }
     setFilters(prev => ({ ...prev, [key]: value }))
   }
 
@@ -180,8 +211,13 @@ function SearchContent() {
                 value={filters.query}
                 onChange={(e) => handleFilterChange('query', e.target.value)}
                 placeholder="Search services or businesses"
-                className="w-full h-12 pl-12 pr-4 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+                className="w-full h-12 pl-12 pr-12 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
               />
+              {isTyping && filters.query && (
+                <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                  <Loader2 className="h-5 w-5 text-gray-400 animate-spin" />
+                </div>
+              )}
             </div>
             
             {/* Location Input */}
@@ -377,6 +413,101 @@ function SearchContent() {
               </div>
             </div>
             
+            {/* Active Filters Pills */}
+            {activeFiltersCount > 0 && (
+              <div className="mb-6">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <span className="text-sm font-medium text-gray-700">Active filters:</span>
+                  
+                  {filters.query && (
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-full text-sm font-medium border border-indigo-200 animate-in fade-in slide-in-from-left duration-300">
+                      <Search className="h-3.5 w-3.5" />
+                      {filters.query}
+                      <button
+                        onClick={() => handleFilterChange('query', '')}
+                        className="ml-1 hover:bg-indigo-200 rounded-full p-0.5 transition-colors"
+                        aria-label="Remove search filter"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  )}
+                  
+                  {filters.category && (
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-purple-50 text-purple-700 rounded-full text-sm font-medium border border-purple-200 animate-in fade-in slide-in-from-left duration-300">
+                      {categories.find(c => c.value === filters.category)?.label}
+                      <button
+                        onClick={() => handleFilterChange('category', '')}
+                        className="ml-1 hover:bg-purple-200 rounded-full p-0.5 transition-colors"
+                        aria-label="Remove category filter"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  )}
+                  
+                  {filters.city && (
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-50 text-green-700 rounded-full text-sm font-medium border border-green-200 animate-in fade-in slide-in-from-left duration-300">
+                      <MapPin className="h-3.5 w-3.5" />
+                      {filters.city}
+                      <button
+                        onClick={() => handleFilterChange('city', '')}
+                        className="ml-1 hover:bg-green-200 rounded-full p-0.5 transition-colors"
+                        aria-label="Remove location filter"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  )}
+                  
+                  {filters.minRating && (
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-yellow-50 text-yellow-700 rounded-full text-sm font-medium border border-yellow-200 animate-in fade-in slide-in-from-left duration-300">
+                      <Star className="h-3.5 w-3.5" />
+                      {filters.minRating}+ Stars
+                      <button
+                        onClick={() => handleFilterChange('minRating', '')}
+                        className="ml-1 hover:bg-yellow-200 rounded-full p-0.5 transition-colors"
+                        aria-label="Remove rating filter"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  )}
+                  
+                  {(filters.priceMin || filters.priceMax) && (
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-full text-sm font-medium border border-emerald-200 animate-in fade-in slide-in-from-left duration-300">
+                      <DollarSign className="h-3.5 w-3.5" />
+                      ${filters.priceMin || '0'} - ${filters.priceMax || '∞'}
+                      <button
+                        onClick={() => {
+                          handleFilterChange('priceMin', '')
+                          handleFilterChange('priceMax', '')
+                        }}
+                        className="ml-1 hover:bg-emerald-200 rounded-full p-0.5 transition-colors"
+                        aria-label="Remove price filter"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  )}
+                  
+                  <button
+                    onClick={() => setFilters({
+                      query: '',
+                      category: '',
+                      city: '',
+                      minRating: '',
+                      priceMin: '',
+                      priceMax: '',
+                    })}
+                    className="text-sm text-gray-600 hover:text-gray-800 underline underline-offset-2 transition-colors"
+                  >
+                    Clear all
+                  </button>
+                </div>
+              </div>
+            )}
+            
             {/* Results */}
             {loading ? (
               <div className={cn(
@@ -384,7 +515,68 @@ function SearchContent() {
                   ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
                   : "space-y-4"
               )}>
-                <SkeletonGrid count={6} />
+                {[...Array(6)].map((_, index) => (
+                  <div key={index} className="animate-pulse">
+                    {viewMode === 'grid' ? (
+                      // Enhanced Grid Skeleton
+                      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                        <div className="h-56 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 relative overflow-hidden">
+                          <div className="absolute inset-0 -translate-x-full animate-shimmer">
+                            <div className="h-full w-full bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                          </div>
+                        </div>
+                        <div className="p-6">
+                          <div className="h-5 bg-gray-200 rounded w-3/4 mb-3" />
+                          <div className="h-4 bg-gray-100 rounded w-1/2 mb-4" />
+                          <div className="h-4 bg-gray-100 rounded w-2/3 mb-4" />
+                          <div className="flex justify-between items-center pt-4 border-t border-gray-100">
+                            <div className="flex items-center gap-2">
+                              <div className="h-8 w-16 bg-gray-100 rounded" />
+                              <div className="h-4 w-12 bg-gray-100 rounded" />
+                            </div>
+                            <div className="text-right">
+                              <div className="h-3 w-12 bg-gray-100 rounded mb-1" />
+                              <div className="h-5 w-16 bg-gray-200 rounded" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      // Enhanced List Skeleton
+                      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                        <div className="flex">
+                          <div className="w-64 h-48 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 relative overflow-hidden">
+                            <div className="absolute inset-0 -translate-x-full animate-shimmer">
+                              <div className="h-full w-full bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                            </div>
+                          </div>
+                          <div className="flex-1 p-8">
+                            <div className="flex justify-between mb-4">
+                              <div className="flex-1 mr-8">
+                                <div className="h-6 bg-gray-200 rounded w-2/3 mb-3" />
+                                <div className="h-4 bg-gray-100 rounded w-1/3" />
+                              </div>
+                              <div>
+                                <div className="h-4 bg-gray-100 rounded w-20 mb-2" />
+                                <div className="h-7 bg-gray-200 rounded w-24" />
+                              </div>
+                            </div>
+                            <div className="flex gap-6 mb-6">
+                              <div className="h-4 bg-gray-100 rounded w-32" />
+                              <div className="h-4 bg-gray-100 rounded w-24" />
+                              <div className="h-4 bg-gray-100 rounded w-28" />
+                            </div>
+                            <div className="flex gap-2">
+                              <div className="h-8 bg-gray-100 rounded w-32" />
+                              <div className="h-8 bg-gray-100 rounded w-28" />
+                              <div className="h-8 bg-gray-100 rounded w-24" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             ) : sortedBusinesses.length > 0 ? (
               viewMode === 'map' ? (

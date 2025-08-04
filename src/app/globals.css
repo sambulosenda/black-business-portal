@@ -20,6 +20,17 @@
   animation: shake 0.5s ease-in-out;
 }
 
+/* Shimmer animation for loading skeletons */
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
 /* Fade animations */
 @keyframes fadeIn {
   from {
