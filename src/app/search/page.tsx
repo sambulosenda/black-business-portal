@@ -206,91 +206,98 @@ function SearchContent() {
         </div>
       </div>
 
-      <div className="flex-1 flex">
-        {/* Desktop Filters Sidebar - 8px grid spacing */}
-        <div className="hidden lg:block w-80 bg-gray-50 border-r border-gray-200 p-8">
-          <h2 className="text-lg font-semibold text-gray-900 mb-8">Filters</h2>
-          
-          {/* Categories */}
-          <div className="mb-8">
-            <h3 className="text-sm font-medium text-gray-900 mb-4">Category</h3>
-            <div className="space-y-3">
-              {categories.map(cat => (
-                <label key={cat.value} className="flex items-center cursor-pointer group">
+      {/* Main Layout Container */}
+      <div className="flex-1 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex gap-8">
+            {/* Desktop Filters Sidebar - aligned with content */}
+            <div className="hidden lg:block w-64 flex-shrink-0 py-8">
+              <div className="sticky top-8">
+                <div className="bg-white rounded-lg border border-gray-200 p-6">
+                <h2 className="text-lg font-semibold text-gray-900 mb-6">Filters</h2>
+              
+              {/* Categories */}
+              <div className="mb-8">
+                <h3 className="text-sm font-medium text-gray-900 mb-4">Category</h3>
+                <div className="space-y-3">
+                  {categories.map(cat => (
+                    <label key={cat.value} className="flex items-center cursor-pointer group">
+                      <input
+                        type="radio"
+                        name="category"
+                        value={cat.value}
+                        checked={filters.category === cat.value}
+                        onChange={(e) => handleFilterChange('category', e.target.value)}
+                        className="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500"
+                      />
+                      <span className="ml-3 text-sm text-gray-700 group-hover:text-gray-900">{cat.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Rating */}
+              <div className="mb-8">
+                <h3 className="text-sm font-medium text-gray-900 mb-4">Minimum Rating</h3>
+                <select
+                  value={filters.minRating}
+                  onChange={(e) => handleFilterChange('minRating', e.target.value)}
+                  className="w-full h-10 px-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                >
+                  <option value="">Any Rating</option>
+                  <option value="4">4+ Stars</option>
+                  <option value="3">3+ Stars</option>
+                  <option value="2">2+ Stars</option>
+                </select>
+              </div>
+              
+              {/* Price Range */}
+              <div className="mb-8">
+                <h3 className="text-sm font-medium text-gray-900 mb-4">Price Range</h3>
+                <div className="flex gap-3 items-center">
                   <input
-                    type="radio"
-                    name="category"
-                    value={cat.value}
-                    checked={filters.category === cat.value}
-                    onChange={(e) => handleFilterChange('category', e.target.value)}
-                    className="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-2 focus:ring-indigo-500"
+                    type="number"
+                    placeholder="Min"
+                    value={filters.priceMin}
+                    onChange={(e) => handleFilterChange('priceMin', e.target.value)}
+                    className="w-full h-10 px-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   />
-                  <span className="ml-3 text-sm text-gray-700 group-hover:text-gray-900">{cat.label}</span>
-                </label>
-              ))}
+                  <span className="text-gray-400">–</span>
+                  <input
+                    type="number"
+                    placeholder="Max"
+                    value={filters.priceMax}
+                    onChange={(e) => handleFilterChange('priceMax', e.target.value)}
+                    className="w-full h-10 px-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+              
+              {/* Clear Filters */}
+              {activeFiltersCount > 0 && (
+                <button
+                  onClick={() => setFilters({
+                    query: '',
+                    category: '',
+                    city: '',
+                    minRating: '',
+                    priceMin: '',
+                    priceMax: '',
+                  })}
+                  className="w-full h-10 text-sm font-medium text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg transition-colors"
+                >
+                  Clear all filters
+                </button>
+              )}
+              </div>
             </div>
           </div>
-          
-          {/* Rating */}
-          <div className="mb-8">
-            <h3 className="text-sm font-medium text-gray-900 mb-4">Minimum Rating</h3>
-            <select
-              value={filters.minRating}
-              onChange={(e) => handleFilterChange('minRating', e.target.value)}
-              className="w-full h-10 px-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            >
-              <option value="">Any Rating</option>
-              <option value="4">4+ Stars</option>
-              <option value="3">3+ Stars</option>
-              <option value="2">2+ Stars</option>
-            </select>
-          </div>
-          
-          {/* Price Range */}
-          <div className="mb-8">
-            <h3 className="text-sm font-medium text-gray-900 mb-4">Price Range</h3>
-            <div className="flex gap-3 items-center">
-              <input
-                type="number"
-                placeholder="Min"
-                value={filters.priceMin}
-                onChange={(e) => handleFilterChange('priceMin', e.target.value)}
-                className="w-full h-10 px-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              />
-              <span className="text-gray-400">–</span>
-              <input
-                type="number"
-                placeholder="Max"
-                value={filters.priceMax}
-                onChange={(e) => handleFilterChange('priceMax', e.target.value)}
-                className="w-full h-10 px-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              />
-            </div>
-          </div>
-          
-          {/* Clear Filters */}
-          {activeFiltersCount > 0 && (
-            <button
-              onClick={() => setFilters({
-                query: '',
-                category: '',
-                city: '',
-                minRating: '',
-                priceMin: '',
-                priceMax: '',
-              })}
-              className="w-full h-10 text-sm font-medium text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg transition-colors"
-            >
-              Clear all filters
-            </button>
-          )}
-        </div>
 
-        {/* Main Content - 8px grid system */}
-        <div className="flex-1 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {/* Results Header */}
-            <div className="flex items-center justify-between mb-8 pb-8 border-b border-gray-200">
+            {/* Main Content - 8px grid system */}
+            <div className="flex-1 py-8">
+              <div className="bg-white rounded-lg border border-gray-200 p-8">
+                {/* Results Header */}
+                <div className="flex items-center justify-between mb-8 pb-8 border-b border-gray-100">
               <div>
                 <h2 className="text-2xl font-semibold text-gray-900">
                   {sortedBusinesses.length} {sortedBusinesses.length === 1 ? 'Result' : 'Results'}
@@ -599,6 +606,8 @@ function SearchContent() {
                 </div>
               </div>
             )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
