@@ -3,8 +3,6 @@
 import { useState, useEffect, Suspense, useRef } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { SkeletonGrid } from '@/components/ui/skeleton-card'
 import Navigation from '@/components/navigation'
 import Footer from '@/components/footer'
@@ -12,7 +10,7 @@ import { cn } from '@/lib/utils'
 import { useDebounce } from '@/hooks/useDebounce'
 import { 
   Search, MapPin, Star, Filter, Grid3X3, List, Map,
-  ChevronDown, Heart, X, DollarSign, Loader2
+  Heart, X, DollarSign, Loader2
 } from 'lucide-react'
 import dynamic from 'next/dynamic'
 
@@ -339,7 +337,7 @@ function SearchContent() {
                   {sortedBusinesses.length} {sortedBusinesses.length === 1 ? 'Result' : 'Results'}
                 </h2>
                 {filters.query && (
-                  <p className="text-base text-gray-600 mt-1">Showing results for "{filters.query}"</p>
+                  <p className="text-base text-gray-600 mt-1">Showing results for &quot;{filters.query}&quot;</p>
                 )}
               </div>
               

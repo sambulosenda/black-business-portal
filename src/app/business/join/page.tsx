@@ -187,7 +187,7 @@ export default function BusinessLandingPage() {
                   <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent block sm:inline"> better than pen & paper</span>
                 </h1>
                 <p className="text-xl text-gray-600 leading-relaxed">
-                  Transform your beauty business with Africa's #1 booking platform. Get paid faster, reduce no-shows by 40%, and give your clients the modern experience they expect.
+                  Transform your beauty business with Africa&apos;s #1 booking platform. Get paid faster, reduce no-shows by 40%, and give your clients the modern experience they expect.
                 </p>
               </div>
 
@@ -414,7 +414,7 @@ export default function BusinessLandingPage() {
               Success stories
             </Badge>
             <h2 className="text-3xl sm:text-4xl font-bold font-display text-gray-900 mb-4">
-              Trusted by Africa's top beauty professionals
+              Trusted by Africa&apos;s top beauty professionals
             </h2>
           </div>
 

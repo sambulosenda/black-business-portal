@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { DayPicker } from 'react-day-picker'
 import { format, setHours, setMinutes, isBefore } from 'date-fns'
@@ -9,7 +9,7 @@ import 'react-day-picker/style.css'
 import { Breadcrumb, BreadcrumbWrapper } from '@/components/ui/breadcrumb'
 import { ProgressSteps, MobileProgressSteps } from '@/components/ui/progress-steps'
 import { FormFeedback, InlineValidation } from '@/components/ui/form-feedback'
-import { ServiceLoadingSkeleton, DatePickerSkeleton, AvailabilityLoader, TimeCheckLoader } from '@/components/ui/loading-states'
+import { ServiceLoadingSkeleton, TimeCheckLoader } from '@/components/ui/loading-states'
 import { SuccessAnimation } from '@/components/ui/success-animation'
 import { TimeSlotSelector, MobileTimeSlotSelector } from '@/components/ui/time-slot-selector'
 import { useIsMobile } from '@/components/hooks/use-mobile'
@@ -55,7 +55,6 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([])
   const [loading, setLoading] = useState(true)
   const [servicesLoading, setServicesLoading] = useState(false)
-  const [availabilityLoading, setAvailabilityLoading] = useState(false)
   const [timeSlotsLoading, setTimeSlotsLoading] = useState(false)
   const [bookingLoading, setBookingLoading] = useState(false)
   const [error, setError] = useState('')
@@ -94,7 +93,7 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
         }
       }, 100)
     }
-  }, [selectedService, selectedDate, selectedTime])
+  }, [selectedService, selectedDate, selectedTime, getCurrentStep])
 
   const bookingSteps = [
     { id: 'service', name: 'Select Service', description: 'Choose your treatment' },
@@ -493,10 +492,7 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
                 />
               )}
               <div className="flex justify-center">
-                {availabilityLoading ? (
-                  <DatePickerSkeleton />
-                ) : (
-                  <DayPicker
+                <DayPicker
                   mode="single"
                   selected={selectedDate}
                   onSelect={(date) => {
@@ -534,7 +530,6 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
                     day_hidden: "invisible",
                   }}
                 />
-                )}
               </div>
               {formTouched.date && selectedDate && (
                 <InlineValidation 

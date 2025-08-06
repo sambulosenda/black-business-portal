@@ -1,10 +1,9 @@
 'use client'
 
 import { useState, useEffect, Suspense, useRef, useCallback } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 // import { Card, CardContent } from '@/components/ui/card' // Commented out - may be used later
 // import { Badge } from '@/components/ui/badge' // Commented out - may be used later
 import { SkeletonGrid } from '@/components/ui/skeleton-card'
@@ -15,7 +14,7 @@ import {
   Search, MapPin, Star, X, Filter,
   Grid3X3, List, Shield, Sparkles, TrendingUp, DollarSign,
   Heart, Map, ArrowUpDown, ChevronDown, Lightbulb, Mic, Clock,
-  CheckCircle, XCircle, Loader2, ChevronRight, Calendar
+  CheckCircle, ChevronRight, Calendar
 } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { PriceRangeSlider } from '@/components/ui/price-range-slider'
@@ -77,7 +76,6 @@ const sortOptions = [
 
 function SearchContent() {
   const searchParams = useSearchParams()
-  const router = useRouter()
   const [businesses, setBusinesses] = useState<Business[]>([])
   const [loading, setLoading] = useState(true)
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid')
@@ -98,9 +96,6 @@ function SearchContent() {
   const [filterAnimations, setFilterAnimations] = useState(false)
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 500])
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false)
-  const [drawerY, setDrawerY] = useState(0)
-  const [isDraggingDrawer, setIsDraggingDrawer] = useState(false)
-  const drawerRef = useRef<HTMLDivElement>(null)
   const [filters, setFilters] = useState({
     query: searchParams.get('q') || '',
     category: searchParams.get('category') || '',
@@ -146,7 +141,17 @@ function SearchContent() {
       return
     }
 
-    const recognition = new (window as any).webkitSpeechRecognition()
+    interface ISpeechRecognition {
+      continuous: boolean
+      interimResults: boolean
+      lang: string
+      onstart: () => void
+      onresult: (event: { results: { [key: number]: { [key: number]: { transcript: string } } } }) => void
+      onerror: () => void
+      onend: () => void
+      start: () => void
+    }
+    const recognition = new (window as unknown as { webkitSpeechRecognition: new() => ISpeechRecognition }).webkitSpeechRecognition()
     recognition.continuous = false
     recognition.interimResults = false
     recognition.lang = 'en-US'
@@ -155,7 +160,7 @@ function SearchContent() {
       setIsListening(true)
     }
 
-    recognition.onresult = (event: any) => {
+    recognition.onresult = (event: { results: { [key: number]: { [key: number]: { transcript: string } } } }) => {
       const transcript = event.results[0][0].transcript
       setFilters(prev => ({ ...prev, query: transcript }))
       saveToHistory(transcript)
@@ -1237,7 +1242,7 @@ function SearchContent() {
               
               {activeFiltersCount > 0 && (
                 <button
-                  onClick={() => setFilters({ query: '', category: '', city: '', minRating: '' })}
+                  onClick={() => setFilters({ query: '', category: '', city: '', minRating: '', priceMin: '', priceMax: '' })}
                   className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
                 >
                   Clear all filters
@@ -1364,7 +1369,7 @@ function SearchContent() {
               <div className="flex gap-3">
                 <button
                   onClick={() => {
-                    setFilters({ query: '', category: '', city: '', minRating: '' })
+                    setFilters({ query: '', category: '', city: '', minRating: '', priceMin: '', priceMax: '' })
                     setShowMobileFilters(false)
                   }}
                   className="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"

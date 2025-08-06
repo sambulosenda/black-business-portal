@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import Map, { Marker, Popup, NavigationControl, GeolocateControl } from 'react-map-gl/mapbox';
+import Map, { Marker, Popup, NavigationControl, GeolocateControl, MapRef } from 'react-map-gl/mapbox';
 import { Card } from '@/components/ui/card';
 import { MapPin, Star, Clock } from 'lucide-react';
 import Link from 'next/link';
@@ -53,13 +53,7 @@ export function BusinessMap({
     zoom: 12,
   });
   const [popupBusiness, setPopupBusiness] = useState<Business | null>(null);
-  const mapRef = useRef<any>(null);
-
-  // Check if Mapbox token is available
-  const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
-  if (!mapboxToken) {
-    return <BusinessMapFallback />;
-  }
+  const mapRef = useRef<MapRef>(null);
 
   // Get businesses with valid coordinates
   const mappableBusinesses = businesses.filter(
@@ -115,14 +109,22 @@ export function BusinessMap({
   const handleMoveEnd = useCallback(() => {
     if (mapRef.current && onBoundsChange) {
       const bounds = mapRef.current.getBounds();
-      onBoundsChange({
-        north: bounds.getNorth(),
-        south: bounds.getSouth(),
-        east: bounds.getEast(),
-        west: bounds.getWest(),
-      });
+      if (bounds) {
+        onBoundsChange({
+          north: bounds.getNorth(),
+          south: bounds.getSouth(),
+          east: bounds.getEast(),
+          west: bounds.getWest(),
+        });
+      }
     }
   }, [onBoundsChange]);
+
+  // Check if Mapbox token is available
+  const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
+  if (!mapboxToken) {
+    return <BusinessMapFallback />;
+  }
 
   return (
     <div className="h-full w-full relative">

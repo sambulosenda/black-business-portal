@@ -15,7 +15,12 @@ interface TabNavigationProps {
   reviews: ReviewWithRelations[]
   averageRating: number
   totalReviews: number
-  availabilities: any[]
+  availabilities: {
+    dayOfWeek: number
+    startTime: string
+    endTime: string
+    isActive: boolean
+  }[]
 }
 
 export default function TabNavigation({
