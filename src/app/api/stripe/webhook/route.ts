@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
       case 'payment_intent.succeeded': {
         const paymentIntent = event.data.object as Stripe.PaymentIntent
         
-        // Check if it's a booking or order based on metadata
+        // Check if it's a booking based on metadata
         if (paymentIntent.metadata.bookingId) {
           // Update booking status and get booking details
           const booking = await prisma.booking.update({
@@ -98,35 +98,6 @@ export async function POST(request: NextRequest) {
           }
           
           console.log('Payment succeeded for booking:', paymentIntent.metadata)
-        } else if (paymentIntent.metadata.orderId) {
-          // Update order status
-          const order = await prisma.order.update({
-            where: {
-              stripePaymentIntentId: paymentIntent.id,
-            },
-            data: {
-              status: 'CONFIRMED',
-              paymentStatus: 'SUCCEEDED',
-              paidAt: new Date(),
-            },
-            include: {
-              user: true,
-              business: true,
-              orderItems: {
-                include: {
-                  product: true,
-                },
-              },
-            },
-          })
-          
-          // Send order confirmation email
-          if (order && order.user.email) {
-            // TODO: Add order confirmation email template
-            console.log('Order confirmed:', order.orderNumber)
-          }
-          
-          console.log('Payment succeeded for order:', paymentIntent.metadata)
         }
         break
       }
@@ -146,19 +117,6 @@ export async function POST(request: NextRequest) {
           })
           
           console.log('Payment failed for booking:', paymentIntent.metadata)
-        } else if (paymentIntent.metadata.orderId) {
-          // Update order status
-          await prisma.order.update({
-            where: {
-              stripePaymentIntentId: paymentIntent.id,
-            },
-            data: {
-              paymentStatus: 'FAILED',
-              status: 'CANCELLED',
-            },
-          })
-          
-          console.log('Payment failed for order:', paymentIntent.metadata)
         }
         break
       }

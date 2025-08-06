@@ -16,7 +16,6 @@ export async function POST(request: NextRequest) {
       businessId, 
       subtotal, 
       serviceIds = [], 
-      productIds = [],
       itemCount = 1
     } = await request.json()
 
@@ -55,7 +54,7 @@ export async function POST(request: NextRequest) {
           ...promo,
           value: Number(promo.value),
           minimumAmount: promo.minimumAmount ? Number(promo.minimumAmount) : null,
-        }, session.user.id, subtotal, serviceIds, productIds, itemCount)
+        }, session.user.id, subtotal, serviceIds, itemCount)
         if (validation.valid) {
           promotion = promo
           break
@@ -78,8 +77,7 @@ export async function POST(request: NextRequest) {
     }, 
       session.user.id, 
       subtotal, 
-      serviceIds, 
-      productIds,
+      serviceIds,
       itemCount
     )
 
@@ -126,7 +124,6 @@ async function validatePromotion(
     value: number;
     scope: string;
     serviceIds: string[];
-    productIds: string[];
     startDate: Date;
     endDate: Date;
     isActive: boolean;
@@ -140,7 +137,6 @@ async function validatePromotion(
   userId: string,
   subtotal: number,
   serviceIds: string[],
-  productIds: string[],
   itemCount: number
 ): Promise<{ valid: boolean; error?: string }> {
   const now = new Date()
@@ -199,17 +195,7 @@ async function validatePromotion(
       }
     })
 
-    const previousOrders = await prisma.order.count({
-      where: {
-        userId,
-        businessId: promotion.businessId,
-        status: {
-          in: ['COMPLETED', 'PROCESSING']
-        }
-      }
-    })
-
-    if (previousBookings > 0 || previousOrders > 0) {
+    if (previousBookings > 0) {
       return { valid: false, error: 'This promotion is only for first-time customers' }
     }
   }
@@ -221,19 +207,9 @@ async function validatePromotion(
         return { valid: false, error: 'This promotion does not apply to the selected services' }
       }
       break
-    case 'SPECIFIC_PRODUCTS':
-      if (!productIds.some(id => promotion.productIds.includes(id))) {
-        return { valid: false, error: 'This promotion does not apply to the selected products' }
-      }
-      break
     case 'ALL_SERVICES':
       if (serviceIds.length === 0) {
         return { valid: false, error: 'This promotion only applies to services' }
-      }
-      break
-    case 'ALL_PRODUCTS':
-      if (productIds.length === 0) {
-        return { valid: false, error: 'This promotion only applies to products' }
       }
       break
     // ENTIRE_PURCHASE applies to everything

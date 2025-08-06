@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Next.js 15.3.3 business portal application using:
+This is a Next.js 15.3.3 Appointment booking platform for businessnes using:
 - TypeScript with strict mode
 - Tailwind CSS v4 (using new PostCSS plugin approach)
 - React 19

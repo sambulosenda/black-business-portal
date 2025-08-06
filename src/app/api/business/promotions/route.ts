@@ -88,7 +88,6 @@ export async function POST(request: NextRequest) {
         value: data.value,
         scope: data.scope,
         serviceIds: data.serviceIds || [],
-        productIds: data.productIds || [],
         startDate: new Date(data.startDate),
         endDate: new Date(data.endDate),
         isActive: data.isActive ?? true,
