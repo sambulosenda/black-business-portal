@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { CartButton } from '@/components/cart-button'
 import { Session } from 'next-auth'
 import { useState } from 'react'
 
@@ -54,7 +53,6 @@ export default function Navigation({ session }: NavigationProps) {
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center space-x-2">
-            <CartButton />
             {session ? (
               <>
                 <Link href={session.user.role === 'BUSINESS_OWNER' ? '/business/dashboard' : '/dashboard'}>

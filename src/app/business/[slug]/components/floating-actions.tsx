@@ -3,9 +3,8 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Phone, Calendar, MapPin, ShoppingCart } from 'lucide-react'
+import { Phone, Calendar, MapPin } from 'lucide-react'
 import { Session } from 'next-auth'
-import { useCart } from '@/contexts/cart-context'
 import type { BusinessWithRelations } from '@/types'
 
 interface FloatingActionsProps {
@@ -15,8 +14,6 @@ interface FloatingActionsProps {
 
 export default function FloatingActions({ business, session }: FloatingActionsProps) {
   const [isVisible, setIsVisible] = useState(false)
-  const { items } = useCart()
-  const cartItemsCount = items.reduce((acc, item) => acc + item.quantity, 0)
   
   useEffect(() => {
     const handleScroll = () => {
@@ -55,16 +52,6 @@ export default function FloatingActions({ business, session }: FloatingActionsPr
             <MapPin className="h-5 w-5" />
           </Button>
         </a>
-        {cartItemsCount > 0 && (
-          <Link href="/cart" className="flex-shrink-0">
-            <Button variant="outline" size="lg" className="px-4 relative">
-              <ShoppingCart className="h-5 w-5" />
-              <span className="absolute -top-2 -right-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center shadow-md">
-                {cartItemsCount}
-              </span>
-            </Button>
-          </Link>
-        )}
       </div>
     </div>
   )

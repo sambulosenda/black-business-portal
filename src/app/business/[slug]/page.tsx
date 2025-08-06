@@ -7,7 +7,6 @@ import BusinessHero from './components/business-hero'
 import StickyHeader from './components/sticky-header'
 import FloatingActions from './components/floating-actions'
 import ServicesSection from './components/services-section'
-import ProductsSection from './components/products-section'
 import ReviewsSection from './components/reviews-section'
 import AboutSection from './components/about-section'
 import GallerySection from './components/gallery-section'
@@ -103,21 +102,6 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
         where: { isActive: true },
         orderBy: { name: 'asc' },
       },
-      products: {
-        where: { isActive: true },
-        include: {
-          category: true,
-        },
-        orderBy: [
-          { isFeatured: 'desc' },
-          { displayOrder: 'asc' },
-          { name: 'asc' },
-        ],
-      },
-      productCategories: {
-        where: { isActive: true },
-        orderBy: { displayOrder: 'asc' },
-      },
       reviews: {
         include: {
           user: true,
@@ -175,15 +159,6 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
     services: business.services.map(service => ({
       ...service,
       price: Number(service.price)
-    })),
-    products: business.products.map(product => ({
-      ...product,
-      price: Number(product.price),
-      compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
-      cost: product.cost ? Number(product.cost) : null,
-      inventoryCount: product.quantity || 0,
-      lowStockAlert: product.lowStockAlert || 0,
-      category: product.category || undefined
     })),
     photos: business.photos.map(photo => ({
       ...photo,
@@ -247,16 +222,6 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
               businessSlug={business.slug}
               session={session}
               reviews={business.reviews}
-            />
-          )}
-
-          {business.products.length > 0 && (
-            <ProductsSection 
-              products={serializedBusiness.products}
-              productCategories={business.productCategories}
-              businessId={business.id}
-              businessName={business.businessName}
-              businessSlug={business.slug}
             />
           )}
 

@@ -36,7 +36,6 @@ export interface BusinessWithRelations {
   services?: ServiceWithRelations[]
   reviews?: ReviewWithRelations[]
   photos?: BusinessPhoto[]
-  products?: ProductWithRelations[]
   staff?: StaffWithRelations[]
 }
 
@@ -53,38 +52,6 @@ export interface ServiceWithRelations {
   createdAt: Date
   updatedAt: Date
   business?: BusinessWithRelations
-}
-
-// Product types
-export interface ProductWithRelations {
-  id: string
-  businessId: string
-  categoryId: string | null
-  name: string
-  description: string | null
-  price: number
-  compareAtPrice: number | null
-  sku: string | null
-  trackInventory: boolean
-  inventoryCount: number
-  lowStockAlert: number
-  images: string[]
-  isActive: boolean
-  isFeatured: boolean
-  createdAt: Date
-  updatedAt: Date
-  category?: ProductCategory
-  business?: BusinessWithRelations
-}
-
-export interface ProductCategory {
-  id: string
-  businessId: string
-  name: string
-  description: string | null
-  displayOrder: number
-  createdAt: Date
-  updatedAt: Date
 }
 
 // Review types
@@ -227,55 +194,6 @@ export interface Communication {
   createdAt: Date
 }
 
-// Order types
-export interface OrderWithRelations {
-  id: string
-  userId: string
-  businessId: string
-  bookingId: string | null
-  orderNumber: string
-  type: string
-  fulfillmentType: string
-  status: string
-  paymentStatus: string
-  stripePaymentIntentId: string | null
-  subtotal: number
-  tax: number
-  fees: number
-  discount: number
-  total: number
-  stripeFee: number | null
-  platformFee: number | null
-  businessPayout: number | null
-  customerName: string
-  customerEmail: string
-  customerPhone: string | null
-  deliveryAddress: string | null
-  notes: string | null
-  metadata: Record<string, unknown> // JSON field
-  createdAt: Date
-  updatedAt: Date
-  items?: OrderItem[]
-  business?: BusinessWithRelations
-  user?: {
-    id: string
-    name: string
-    email: string
-  }
-}
-
-export interface OrderItem {
-  id: string
-  orderId: string
-  productId: string
-  name: string
-  price: number
-  quantity: number
-  total: number
-  metadata: Record<string, unknown> // JSON field
-  product?: ProductWithRelations
-}
-
 // Promotion types
 export interface PromotionWithRelations {
   id: string
@@ -287,7 +205,6 @@ export interface PromotionWithRelations {
   value: number
   scope: string
   serviceIds: string[]
-  productIds: string[]
   minPurchase: number | null
   maxDiscount: number | null
   usageLimit: number | null
