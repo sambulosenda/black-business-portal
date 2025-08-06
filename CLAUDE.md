@@ -4,7 +4,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Next.js 15.3.3 business portal application using:
+This is a Next.js 15.3.3 Appointment booking platform for businessnes using:
+
 - TypeScript with strict mode
 - Tailwind CSS v4 (using new PostCSS plugin approach)
 - React 19
@@ -39,22 +40,26 @@ bunx prisma migrate dev
 ## Architecture
 
 ### App Router Structure
+
 - `/src/app/` - Main application directory using Next.js App Router
 - `/src/app/layout.tsx` - Root layout with Geist font setup
 - `/src/app/page.tsx` - Home page component
 - `/src/app/globals.css` - Global styles with Tailwind CSS v4 imports and theme configuration
 
 ### Configuration
+
 - **TypeScript**: Path alias `@/*` maps to `./src/*`
 - **Tailwind CSS v4**: No separate config file; theme is configured inline in `globals.css`
 - **ESLint**: Using new flat config format with Next.js core web vitals rules
 
 ### Key Technical Decisions
+
 1. **Tailwind CSS v4**: Using the new PostCSS plugin approach without a separate `tailwind.config.js`
 2. **Turbopack**: Enabled by default in dev mode for faster builds
 3. **Font Optimization**: Geist Sans and Geist Mono fonts are loaded via `next/font`
 
 ### Instructions
+
 1. First think through the problem, read the codebase for relevant files, and write a plan to projectplan.md.
 2. The plan should have a list of todo items that you can check off as you complete them
 3. Before you begin working, check in with me and I will verify the plan.
@@ -64,8 +69,14 @@ bunx prisma migrate dev
 7. Finally, add a review section to the projectplan.md file with a summary of the changes you made and any other relevant information.
 
 ## Workflow Memories
+
 - Everytime you finish a task create a commit
-- Always test every feature after implementation - ask the user to test it 
+- Always test every feature after implementation - ask the user to test it
 
 ## Design Memories
-- I like the color theme on home page keep using it 
+
+- I like the color theme on home page keep using it
+
+## Git Commit Memories
+
+- On git commit message dont add claude reference

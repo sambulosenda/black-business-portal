@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
+import { getSession } from '@/lib/session'
 
 export async function POST(
   request: Request,
@@ -9,7 +9,7 @@ export async function POST(
   try {
     const { customerId } = await params
     const session = await getSession()
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -65,9 +65,6 @@ export async function POST(
     return NextResponse.json({ communication }, { status: 201 })
   } catch (error) {
     console.error('Error creating communication:', error)
-    return NextResponse.json(
-      { error: 'Failed to send message' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to send message' }, { status: 500 })
   }
 }

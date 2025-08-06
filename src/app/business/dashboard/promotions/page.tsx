@@ -1,30 +1,30 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { toast } from 'sonner'
-import { 
-  Plus, 
-  Calendar, 
-  Tag, 
-  Users, 
-  TrendingUp,
+import { format } from 'date-fns'
+import {
+  Calendar,
   Copy,
+  DollarSign,
   Edit,
-  Trash2,
+  Gift,
+  Package,
+  Percent,
+  Plus,
+  Tag,
   ToggleLeft,
   ToggleRight,
-  Percent,
-  DollarSign,
-  Gift,
-  Package
+  Trash2,
+  TrendingUp,
+  Users,
 } from 'lucide-react'
-import { format } from 'date-fns'
+import { toast } from 'sonner'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 interface Promotion {
   id: string
@@ -33,7 +33,12 @@ interface Promotion {
   code: string | null
   type: 'PERCENTAGE' | 'FIXED_AMOUNT' | 'BOGO' | 'BUNDLE'
   value: number
-  scope: 'ALL_SERVICES' | 'SPECIFIC_SERVICES' | 'ALL_PRODUCTS' | 'SPECIFIC_PRODUCTS' | 'ENTIRE_PURCHASE'
+  scope:
+    | 'ALL_SERVICES'
+    | 'SPECIFIC_SERVICES'
+    | 'ALL_PRODUCTS'
+    | 'SPECIFIC_PRODUCTS'
+    | 'ENTIRE_PURCHASE'
   serviceIds: string[]
   productIds: string[]
   startDate: string
@@ -118,11 +123,11 @@ export default function PromotionsPage() {
       const response = await fetch(`/api/business/promotions/${promotionId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ isActive: !isActive })
+        body: JSON.stringify({ isActive: !isActive }),
       })
 
       if (!response.ok) throw new Error('Failed to update promotion')
-      
+
       toast.success(`Promotion ${!isActive ? 'activated' : 'deactivated'}`)
       fetchPromotions()
     } catch (error) {
@@ -136,11 +141,11 @@ export default function PromotionsPage() {
 
     try {
       const response = await fetch(`/api/business/promotions/${promotionId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
       })
 
       if (!response.ok) throw new Error('Failed to delete promotion')
-      
+
       toast.success('Promotion deleted successfully')
       fetchPromotions()
     } catch (error) {
@@ -168,48 +173,51 @@ export default function PromotionsPage() {
   //   }
   // }
 
-
-  const activePromotions = promotions.filter(p => p.isActive && new Date(p.endDate) > new Date())
-  const scheduledPromotions = promotions.filter(p => p.isActive && new Date(p.startDate) > new Date())
-  const expiredPromotions = promotions.filter(p => !p.isActive || new Date(p.endDate) <= new Date())
+  const activePromotions = promotions.filter((p) => p.isActive && new Date(p.endDate) > new Date())
+  const scheduledPromotions = promotions.filter(
+    (p) => p.isActive && new Date(p.startDate) > new Date()
+  )
+  const expiredPromotions = promotions.filter(
+    (p) => !p.isActive || new Date(p.endDate) <= new Date()
+  )
 
   if (loading) {
     return (
       <div className="p-8">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-gray-200 rounded w-1/4"></div>
-          <div className="h-64 bg-gray-200 rounded"></div>
+          <div className="h-8 w-1/4 rounded bg-gray-200"></div>
+          <div className="h-64 rounded bg-gray-200"></div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
-      <div className="flex justify-between items-center mb-8">
+    <div className="mx-auto max-w-7xl p-8">
+      <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Promotions</h1>
-          <p className="text-gray-600 mt-2">Create and manage special offers for your customers</p>
+          <p className="mt-2 text-gray-600">Create and manage special offers for your customers</p>
         </div>
-        <Button 
+        <Button
           onClick={() => router.push('/business/dashboard/promotions/new')}
           className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
         >
-          <Plus className="w-4 h-4 mr-2" />
+          <Plus className="mr-2 h-4 w-4" />
           Create Promotion
         </Button>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-4">
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Active Promotions</p>
               <p className="text-2xl font-bold text-gray-900">{activePromotions.length}</p>
             </div>
-            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-              <Tag className="w-6 h-6 text-green-600" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+              <Tag className="h-6 w-6 text-green-600" />
             </div>
           </div>
         </Card>
@@ -222,8 +230,8 @@ export default function PromotionsPage() {
                 {promotions.reduce((sum, p) => sum + p.usageCount, 0)}
               </p>
             </div>
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-              <Users className="w-6 h-6 text-blue-600" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
+              <Users className="h-6 w-6 text-blue-600" />
             </div>
           </div>
         </Card>
@@ -234,8 +242,8 @@ export default function PromotionsPage() {
               <p className="text-sm text-gray-600">Scheduled</p>
               <p className="text-2xl font-bold text-gray-900">{scheduledPromotions.length}</p>
             </div>
-            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-              <Calendar className="w-6 h-6 text-purple-600" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100">
+              <Calendar className="h-6 w-6 text-purple-600" />
             </div>
           </div>
         </Card>
@@ -246,8 +254,8 @@ export default function PromotionsPage() {
               <p className="text-sm text-gray-600">Conversion Rate</p>
               <p className="text-2xl font-bold text-gray-900">24%</p>
             </div>
-            <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-indigo-600" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100">
+              <TrendingUp className="h-6 w-6 text-indigo-600" />
             </div>
           </div>
         </Card>
@@ -264,17 +272,19 @@ export default function PromotionsPage() {
         <TabsContent value="active" className="space-y-4">
           {activePromotions.length === 0 ? (
             <Card className="p-12 text-center">
-              <Tag className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No active promotions</h3>
-              <p className="text-gray-600 mb-4">Create your first promotion to attract more customers</p>
+              <Tag className="mx-auto mb-4 h-12 w-12 text-gray-400" />
+              <h3 className="mb-2 text-lg font-semibold text-gray-900">No active promotions</h3>
+              <p className="mb-4 text-gray-600">
+                Create your first promotion to attract more customers
+              </p>
               <Button onClick={() => router.push('/business/dashboard/promotions/new')}>
                 Create Promotion
               </Button>
             </Card>
           ) : (
             activePromotions.map((promotion) => (
-              <PromotionCard 
-                key={promotion.id} 
+              <PromotionCard
+                key={promotion.id}
                 promotion={promotion}
                 onToggle={togglePromotion}
                 onDelete={deletePromotion}
@@ -287,8 +297,8 @@ export default function PromotionsPage() {
 
         <TabsContent value="scheduled" className="space-y-4">
           {scheduledPromotions.map((promotion) => (
-            <PromotionCard 
-              key={promotion.id} 
+            <PromotionCard
+              key={promotion.id}
               promotion={promotion}
               onToggle={togglePromotion}
               onDelete={deletePromotion}
@@ -300,8 +310,8 @@ export default function PromotionsPage() {
 
         <TabsContent value="expired" className="space-y-4">
           {expiredPromotions.map((promotion) => (
-            <PromotionCard 
-              key={promotion.id} 
+            <PromotionCard
+              key={promotion.id}
               promotion={promotion}
               onToggle={togglePromotion}
               onDelete={deletePromotion}
@@ -331,19 +341,15 @@ function PromotionCard({ promotion, onToggle, onDelete, onCopyCode, router }: Pr
     <Card className="p-6">
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <div className="flex items-center gap-3 mb-2">
+          <div className="mb-2 flex items-center gap-3">
             <h3 className="text-lg font-semibold text-gray-900">{promotion.name}</h3>
             {promotion.featured && (
               <Badge className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
                 Featured
               </Badge>
             )}
-            {promotion.firstTimeOnly && (
-              <Badge variant="outline">First-time customers</Badge>
-            )}
-            {isExpired && (
-              <Badge variant="outline">Expired</Badge>
-            )}
+            {promotion.firstTimeOnly && <Badge variant="outline">First-time customers</Badge>}
+            {isExpired && <Badge variant="outline">Expired</Badge>}
             {isScheduled && (
               <Badge variant="outline" className="border-purple-500 text-purple-700">
                 Scheduled
@@ -351,9 +357,7 @@ function PromotionCard({ promotion, onToggle, onDelete, onCopyCode, router }: Pr
             )}
           </div>
 
-          {promotion.description && (
-            <p className="text-gray-600 mb-3">{promotion.description}</p>
-          )}
+          {promotion.description && <p className="mb-3 text-gray-600">{promotion.description}</p>}
 
           <div className="flex flex-wrap items-center gap-4 text-sm">
             <div className="flex items-center gap-2">
@@ -365,29 +369,23 @@ function PromotionCard({ promotion, onToggle, onDelete, onCopyCode, router }: Pr
 
             {promotion.code && (
               <div className="flex items-center gap-2">
-                <code className="bg-gray-100 px-2 py-1 rounded font-mono">
-                  {promotion.code}
-                </code>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => onCopyCode(promotion.code!)}
-                >
-                  <Copy className="w-3 h-3" />
+                <code className="rounded bg-gray-100 px-2 py-1 font-mono">{promotion.code}</code>
+                <Button size="sm" variant="ghost" onClick={() => onCopyCode(promotion.code!)}>
+                  <Copy className="h-3 w-3" />
                 </Button>
               </div>
             )}
 
             <div className="flex items-center gap-2 text-gray-600">
-              <Calendar className="w-4 h-4" />
+              <Calendar className="h-4 w-4" />
               <span>
-                {format(new Date(promotion.startDate), 'MMM d, yyyy')} - 
+                {format(new Date(promotion.startDate), 'MMM d, yyyy')} -
                 {format(new Date(promotion.endDate), 'MMM d, yyyy')}
               </span>
             </div>
 
             <div className="flex items-center gap-2 text-gray-600">
-              <Users className="w-4 h-4" />
+              <Users className="h-4 w-4" />
               <span>
                 {promotion.usageCount} used
                 {promotion.usageLimit && ` / ${promotion.usageLimit} limit`}
@@ -396,13 +394,13 @@ function PromotionCard({ promotion, onToggle, onDelete, onCopyCode, router }: Pr
           </div>
 
           {promotion.minimumAmount && (
-            <p className="text-sm text-gray-600 mt-2">
+            <p className="mt-2 text-sm text-gray-600">
               Minimum purchase: ${promotion.minimumAmount}
             </p>
           )}
         </div>
 
-        <div className="flex items-center gap-2 ml-4">
+        <div className="ml-4 flex items-center gap-2">
           <Button
             size="sm"
             variant="ghost"
@@ -410,9 +408,9 @@ function PromotionCard({ promotion, onToggle, onDelete, onCopyCode, router }: Pr
             disabled={isExpired}
           >
             {promotion.isActive ? (
-              <ToggleRight className="w-4 h-4 text-green-600" />
+              <ToggleRight className="h-4 w-4 text-green-600" />
             ) : (
-              <ToggleLeft className="w-4 h-4 text-gray-400" />
+              <ToggleLeft className="h-4 w-4 text-gray-400" />
             )}
           </Button>
           <Button
@@ -420,7 +418,7 @@ function PromotionCard({ promotion, onToggle, onDelete, onCopyCode, router }: Pr
             variant="ghost"
             onClick={() => router.push(`/business/dashboard/promotions/${promotion.id}/edit`)}
           >
-            <Edit className="w-4 h-4" />
+            <Edit className="h-4 w-4" />
           </Button>
           <Button
             size="sm"
@@ -428,7 +426,7 @@ function PromotionCard({ promotion, onToggle, onDelete, onCopyCode, router }: Pr
             onClick={() => onDelete(promotion.id)}
             className="text-red-600 hover:text-red-700"
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="h-4 w-4" />
           </Button>
         </div>
       </div>

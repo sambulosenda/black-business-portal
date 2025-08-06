@@ -1,9 +1,9 @@
 'use client'
 
+import { Clock, Globe, Instagram, MapPin, Phone, Shield, Sparkles, Star } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { S3Image } from '@/components/ui/s3-image'
-import { MapPin, Phone, Globe, Instagram, Star, Clock, Shield, Sparkles } from 'lucide-react'
-import type { BusinessWithRelations, BusinessPhoto } from '@/types'
+import type { BusinessPhoto, BusinessWithRelations } from '@/types'
 
 interface BusinessHeroProps {
   business: BusinessWithRelations
@@ -12,9 +12,14 @@ interface BusinessHeroProps {
   isOpenNow: boolean
 }
 
-export default function BusinessHero({ business, averageRating, totalReviews, isOpenNow }: BusinessHeroProps) {
+export default function BusinessHero({
+  business,
+  averageRating,
+  totalReviews,
+  isOpenNow,
+}: BusinessHeroProps) {
   const heroImage = business.photos?.find((p: BusinessPhoto) => p.type === 'HERO')
-  
+
   return (
     <div className="relative">
       {/* Hero Image Section */}
@@ -30,83 +35,90 @@ export default function BusinessHero({ business, averageRating, totalReviews, is
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
         </div>
       ) : (
-        <div className="h-[200px] lg:h-[280px] bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 relative overflow-hidden">
+        <div className="relative h-[200px] overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 lg:h-[280px]">
           <div className="absolute inset-0">
-            <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-2xl animate-pulse" />
-            <div className="absolute bottom-10 right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl animate-pulse animation-delay-2000" />
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
+            <div className="absolute top-10 left-10 h-32 w-32 animate-pulse rounded-full bg-white/10 blur-2xl" />
+            <div className="animation-delay-2000 absolute right-10 bottom-10 h-40 w-40 animate-pulse rounded-full bg-white/10 blur-3xl" />
+            <div className="absolute top-1/2 left-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-white/5 blur-3xl" />
           </div>
         </div>
       )}
-      
+
       {/* Content Section */}
       <div className={`relative ${heroImage ? '-mt-24' : '-mt-12'} z-10`}>
-        <div className="bg-white rounded-t-3xl shadow-xl">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="rounded-t-3xl bg-white shadow-xl">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             {/* Top Section with Badges */}
-            <div className="pt-8 pb-6 border-b border-gray-100">
-              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+            <div className="border-b border-gray-100 pt-8 pb-6">
+              <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
                 <div className="flex-1">
                   {/* Business Name and Badges */}
-                  <div className="flex items-start gap-4 flex-wrap mb-4">
-                    <h1 className="text-3xl lg:text-4xl font-bold text-gray-900">
+                  <div className="mb-4 flex flex-wrap items-start gap-4">
+                    <h1 className="text-3xl font-bold text-gray-900 lg:text-4xl">
                       {business.businessName}
                     </h1>
-                    <div className="flex gap-2 flex-wrap">
+                    <div className="flex flex-wrap gap-2">
                       {business.isVerified && (
-                        <Badge className="bg-blue-50 text-blue-700 border-blue-200 px-3 py-1">
-                          <Shield className="w-4 h-4 mr-1.5" />
+                        <Badge className="border-blue-200 bg-blue-50 px-3 py-1 text-blue-700">
+                          <Shield className="mr-1.5 h-4 w-4" />
                           Verified
                         </Badge>
                       )}
                       {isOpenNow && (
-                        <Badge className="bg-green-50 text-green-700 border-green-200 px-3 py-1">
-                          <Clock className="w-4 h-4 mr-1.5" />
+                        <Badge className="border-green-200 bg-green-50 px-3 py-1 text-green-700">
+                          <Clock className="mr-1.5 h-4 w-4" />
                           Open Now
                         </Badge>
                       )}
                     </div>
                   </div>
-                  
+
                   {/* Rating and Category */}
-                  <div className="flex flex-wrap items-center gap-4 mb-4">
-                    <div className="flex items-center bg-purple-50 rounded-full px-4 py-2">
+                  <div className="mb-4 flex flex-wrap items-center gap-4">
+                    <div className="flex items-center rounded-full bg-purple-50 px-4 py-2">
                       <div className="flex items-center">
                         {[...Array(5)].map((_, i) => (
                           <Star
                             key={i}
                             className={`h-5 w-5 ${
                               i < Math.floor(averageRating)
-                                ? 'text-purple-500 fill-current'
+                                ? 'fill-current text-purple-500'
                                 : 'text-gray-300'
                             }`}
                           />
                         ))}
                       </div>
-                      <span className="ml-2 font-semibold text-gray-900">{averageRating.toFixed(1)}</span>
+                      <span className="ml-2 font-semibold text-gray-900">
+                        {averageRating.toFixed(1)}
+                      </span>
                       <span className="ml-1 text-gray-600">({totalReviews} reviews)</span>
                     </div>
-                    <div className="flex items-center text-gray-600 bg-gray-50 rounded-full px-4 py-2">
-                      <Sparkles className="h-4 w-4 mr-2 text-purple-500" />
+                    <div className="flex items-center rounded-full bg-gray-50 px-4 py-2 text-gray-600">
+                      <Sparkles className="mr-2 h-4 w-4 text-purple-500" />
                       {business.category.replace(/_/g, ' ')}
                     </div>
                   </div>
-                  
+
                   {/* Contact Info */}
                   <div className="space-y-2">
                     <div className="flex items-center text-gray-600">
-                      <MapPin className="h-5 w-5 mr-3 text-gray-400 flex-shrink-0" />
-                      <span>{business.address}, {business.city}, {business.state} {business.zipCode}</span>
+                      <MapPin className="mr-3 h-5 w-5 flex-shrink-0 text-gray-400" />
+                      <span>
+                        {business.address}, {business.city}, {business.state} {business.zipCode}
+                      </span>
                     </div>
                     <div className="flex items-center text-gray-600">
-                      <Phone className="h-5 w-5 mr-3 text-gray-400 flex-shrink-0" />
-                      <a href={`tel:${business.phone}`} className="hover:text-purple-600 transition-colors">
+                      <Phone className="mr-3 h-5 w-5 flex-shrink-0 text-gray-400" />
+                      <a
+                        href={`tel:${business.phone}`}
+                        className="transition-colors hover:text-purple-600"
+                      >
                         {business.phone}
                       </a>
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Social Links */}
                 <div className="flex gap-3">
                   {business.website && (
@@ -114,10 +126,10 @@ export default function BusinessHero({ business, averageRating, totalReviews, is
                       href={business.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center w-12 h-12 bg-gray-50 hover:bg-gray-100 rounded-full transition-colors group"
+                      className="group inline-flex h-12 w-12 items-center justify-center rounded-full bg-gray-50 transition-colors hover:bg-gray-100"
                       aria-label="Visit website"
                     >
-                      <Globe className="h-5 w-5 text-gray-600 group-hover:text-purple-600 transition-colors" />
+                      <Globe className="h-5 w-5 text-gray-600 transition-colors group-hover:text-purple-600" />
                     </a>
                   )}
                   {business.instagram && (
@@ -125,22 +137,20 @@ export default function BusinessHero({ business, averageRating, totalReviews, is
                       href={`https://instagram.com/${business.instagram.replace('@', '')}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center w-12 h-12 bg-gray-50 hover:bg-gray-100 rounded-full transition-colors group"
+                      className="group inline-flex h-12 w-12 items-center justify-center rounded-full bg-gray-50 transition-colors hover:bg-gray-100"
                       aria-label="Visit Instagram"
                     >
-                      <Instagram className="h-5 w-5 text-gray-600 group-hover:text-purple-600 transition-colors" />
+                      <Instagram className="h-5 w-5 text-gray-600 transition-colors group-hover:text-purple-600" />
                     </a>
                   )}
                 </div>
               </div>
             </div>
-            
+
             {/* Description Section */}
             {business.description && (
               <div className="py-6">
-                <p className="text-gray-600 leading-relaxed max-w-4xl">
-                  {business.description}
-                </p>
+                <p className="max-w-4xl leading-relaxed text-gray-600">{business.description}</p>
               </div>
             )}
           </div>

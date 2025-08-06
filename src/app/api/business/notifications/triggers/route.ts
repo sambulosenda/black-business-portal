@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
-import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
+import { getSession } from '@/lib/session'
 
 export async function POST(request: Request) {
   try {
     const session = await getSession()
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -33,14 +33,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Notification settings not found' }, { status: 404 })
     }
 
-    const { 
-      event, 
-      channel, 
-      enabled = true, 
+    const {
+      event,
+      channel,
+      enabled = true,
       timing = 'IMMEDIATE',
       delayMinutes,
       advanceHours,
-      conditions
+      conditions,
     } = await request.json()
 
     // Check if trigger already exists
@@ -89,9 +89,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ trigger })
   } catch (error) {
     console.error('Error managing notification trigger:', error)
-    return NextResponse.json(
-      { error: 'Failed to manage notification trigger' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to manage notification trigger' }, { status: 500 })
   }
 }

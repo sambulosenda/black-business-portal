@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, Suspense } from 'react'
+import { Suspense, useState } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+import { ArrowLeft, Loader2, Mail } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Mail, ArrowLeft, Loader2 } from 'lucide-react'
-import { useSearchParams } from 'next/navigation'
 
 function VerifyEmailContent() {
   const searchParams = useSearchParams()
@@ -25,7 +25,7 @@ function VerifyEmailContent() {
       const response = await fetch('/api/auth/resend-verification', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email }),
       })
 
       const data = await response.json()
@@ -43,15 +43,15 @@ function VerifyEmailContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <div className="max-w-md w-full">
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+      <div className="w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center space-x-3 group">
-            <div className="w-12 h-12 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg group-hover:shadow-xl transition-all">
+        <div className="mb-8 text-center">
+          <Link href="/" className="group inline-flex items-center space-x-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 text-lg font-bold text-white shadow-lg transition-all group-hover:shadow-xl">
               G
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-2xl font-bold text-transparent">
               Glamfric
             </span>
           </Link>
@@ -60,36 +60,32 @@ function VerifyEmailContent() {
         <Card className="shadow-xl">
           <CardContent className="p-8">
             <div className="text-center">
-              <div className="mx-auto w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100">
                 <Mail className="h-8 w-8 text-indigo-600" />
               </div>
-              
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                Check your email
-              </h2>
-              
-              <p className="text-gray-600 mb-6">
+
+              <h2 className="mb-2 text-2xl font-bold text-gray-900">Check your email</h2>
+
+              <p className="mb-6 text-gray-600">
                 We&apos;ve sent a verification link to{' '}
                 <span className="font-medium text-gray-900">{email || 'your email'}</span>
               </p>
 
               <div className="space-y-4">
                 <p className="text-sm text-gray-500">
-                  Please check your inbox and click the link to verify your account.
-                  The link will expire in 24 hours.
+                  Please check your inbox and click the link to verify your account. The link will
+                  expire in 24 hours.
                 </p>
 
-                <div className="pt-4 border-t border-gray-200">
-                  <p className="text-sm text-gray-600 mb-3">
-                    Didn&apos;t receive the email?
-                  </p>
-                  
+                <div className="border-t border-gray-200 pt-4">
+                  <p className="mb-3 text-sm text-gray-600">Didn&apos;t receive the email?</p>
+
                   {resendSuccess ? (
-                    <div className="bg-green-50 text-green-800 px-4 py-3 rounded-lg text-sm">
+                    <div className="rounded-lg bg-green-50 px-4 py-3 text-sm text-green-800">
                       Email sent! Please check your inbox.
                     </div>
                   ) : resendError ? (
-                    <div className="bg-red-50 text-red-800 px-4 py-3 rounded-lg text-sm">
+                    <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-800">
                       {resendError}
                     </div>
                   ) : (
@@ -139,11 +135,13 @@ function VerifyEmailContent() {
 
 export default function VerifyEmailPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-indigo-600"></div>
+        </div>
+      }
+    >
       <VerifyEmailContent />
     </Suspense>
   )

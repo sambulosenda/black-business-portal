@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
-import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
+import { getSession } from '@/lib/session'
 
 export async function POST(request: Request) {
   try {
     const session = await getSession()
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -82,17 +82,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ template })
   } catch (error) {
     console.error('Error managing notification template:', error)
-    return NextResponse.json(
-      { error: 'Failed to manage notification template' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to manage notification template' }, { status: 500 })
   }
 }
 
 // Helper function to get available variables for each template type
 function getTemplateVariables(type: string): string[] {
   const commonVars = ['customerName', 'businessName']
-  
+
   const typeSpecificVars: Record<string, string[]> = {
     BOOKING_CONFIRMATION: ['serviceName', 'date', 'time', 'staffName', 'price'],
     BOOKING_REMINDER: ['serviceName', 'date', 'time', 'staffName', 'hoursUntil'],
@@ -104,6 +101,6 @@ function getTemplateVariables(type: string): string[] {
     BIRTHDAY: ['birthdayOffer', 'expiryDate'],
     RE_ENGAGEMENT: ['lastVisitDate', 'specialOffer'],
   }
-  
+
   return [...commonVars, ...(typeSpecificVars[type] || [])]
 }

@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
-import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
+import { getSession } from '@/lib/session'
 
 export async function GET() {
   try {
     const session = await getSession()
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -53,17 +53,14 @@ export async function GET() {
     return NextResponse.json({ staff })
   } catch (error) {
     console.error('Error fetching staff:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch staff' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch staff' }, { status: 500 })
   }
 }
 
 export async function POST(request: Request) {
   try {
     const session = await getSession()
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -144,9 +141,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ staff: createdStaff }, { status: 201 })
   } catch (error) {
     console.error('Error creating staff:', error)
-    return NextResponse.json(
-      { error: 'Failed to create staff member' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to create staff member' }, { status: 500 })
   }
 }

@@ -26,13 +26,13 @@ Add this CORS configuration to your bucket:
 
 ```json
 [
-    {
-        "AllowedHeaders": ["*"],
-        "AllowedMethods": ["GET", "PUT", "POST", "DELETE"],
-        "AllowedOrigins": ["http://localhost:3000", "https://yourdomain.com"],
-        "ExposeHeaders": ["ETag"],
-        "MaxAgeSeconds": 3000
-    }
+  {
+    "AllowedHeaders": ["*"],
+    "AllowedMethods": ["GET", "PUT", "POST", "DELETE"],
+    "AllowedOrigins": ["http://localhost:3000", "https://yourdomain.com"],
+    "ExposeHeaders": ["ETag"],
+    "MaxAgeSeconds": 3000
+  }
 ]
 ```
 
@@ -44,18 +44,14 @@ Add this CORS configuration to your bucket:
 
 ```json
 {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:PutObject",
-                "s3:GetObject",
-                "s3:DeleteObject"
-            ],
-            "Resource": "arn:aws:s3:::your-business-portal-images/*"
-        }
-    ]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["s3:PutObject", "s3:GetObject", "s3:DeleteObject"],
+      "Resource": "arn:aws:s3:::your-business-portal-images/*"
+    }
+  ]
 }
 ```
 
@@ -88,6 +84,7 @@ AWS_CLOUDFRONT_URL=https://d1234567890.cloudfront.net
 ## Usage in the Application
 
 The application automatically handles:
+
 - Generating presigned URLs for secure uploads
 - Direct browser-to-S3 uploads (no server bandwidth used)
 - Automatic deletion of old images when replaced
@@ -104,15 +101,18 @@ The application automatically handles:
 ## Troubleshooting
 
 ### CORS Errors
+
 - Ensure your domain is in the AllowedOrigins
 - Check that the bucket CORS policy is applied
 
 ### Access Denied
+
 - Verify IAM permissions
 - Check bucket policy doesn't block access
 - Ensure credentials are correct
 
 ### Upload Failures
+
 - Check file size limits (default 4MB)
 - Verify content type is allowed
 - Check network connectivity

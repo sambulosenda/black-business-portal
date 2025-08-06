@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
+import { NextRequest, NextResponse } from 'next/server'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
@@ -10,13 +10,13 @@ export async function GET(
   try {
     const { promotionId } = await params
     const session = await getServerSession(authOptions)
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const business = await prisma.business.findUnique({
-      where: { userId: session.user.id }
+      where: { userId: session.user.id },
     })
 
     if (!business) {
@@ -26,8 +26,8 @@ export async function GET(
     const promotion = await prisma.promotion.findFirst({
       where: {
         id: promotionId,
-        businessId: business.id
-      }
+        businessId: business.id,
+      },
     })
 
     if (!promotion) {
@@ -38,7 +38,7 @@ export async function GET(
     const serializedPromotion = {
       ...promotion,
       value: Number(promotion.value),
-      minimumAmount: promotion.minimumAmount ? Number(promotion.minimumAmount) : null
+      minimumAmount: promotion.minimumAmount ? Number(promotion.minimumAmount) : null,
     }
 
     return NextResponse.json(serializedPromotion)
@@ -55,13 +55,13 @@ export async function PATCH(
   try {
     const { promotionId } = await params
     const session = await getServerSession(authOptions)
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const business = await prisma.business.findUnique({
-      where: { userId: session.user.id }
+      where: { userId: session.user.id },
     })
 
     if (!business) {
@@ -74,8 +74,8 @@ export async function PATCH(
     const existingPromotion = await prisma.promotion.findFirst({
       where: {
         id: promotionId,
-        businessId: business.id
-      }
+        businessId: business.id,
+      },
     })
 
     if (!existingPromotion) {
@@ -88,8 +88,8 @@ export async function PATCH(
         where: {
           businessId: business.id,
           code: data.code,
-          NOT: { id: promotionId }
-        }
+          NOT: { id: promotionId },
+        },
       })
 
       if (duplicateCode) {
@@ -117,15 +117,15 @@ export async function PATCH(
         ...(data.minimumAmount !== undefined && { minimumAmount: data.minimumAmount }),
         ...(data.minimumItems !== undefined && { minimumItems: data.minimumItems }),
         ...(data.firstTimeOnly !== undefined && { firstTimeOnly: data.firstTimeOnly }),
-        ...(data.featured !== undefined && { featured: data.featured })
-      }
+        ...(data.featured !== undefined && { featured: data.featured }),
+      },
     })
 
     // Convert Decimal to number for JSON serialization
     const serializedPromotion = {
       ...updatedPromotion,
       value: Number(updatedPromotion.value),
-      minimumAmount: updatedPromotion.minimumAmount ? Number(updatedPromotion.minimumAmount) : null
+      minimumAmount: updatedPromotion.minimumAmount ? Number(updatedPromotion.minimumAmount) : null,
     }
 
     return NextResponse.json(serializedPromotion)
@@ -142,13 +142,13 @@ export async function DELETE(
   try {
     const { promotionId } = await params
     const session = await getServerSession(authOptions)
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const business = await prisma.business.findUnique({
-      where: { userId: session.user.id }
+      where: { userId: session.user.id },
     })
 
     if (!business) {
@@ -159,8 +159,8 @@ export async function DELETE(
     const promotion = await prisma.promotion.findFirst({
       where: {
         id: promotionId,
-        businessId: business.id
-      }
+        businessId: business.id,
+      },
     })
 
     if (!promotion) {
@@ -169,7 +169,7 @@ export async function DELETE(
 
     // Delete the promotion (this will cascade delete usage records)
     await prisma.promotion.delete({
-      where: { id: promotionId }
+      where: { id: promotionId },
     })
 
     return NextResponse.json({ message: 'Promotion deleted successfully' })

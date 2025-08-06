@@ -1,14 +1,14 @@
-import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
+import { NextResponse } from 'next/server'
+import { addMinutes, parseISO, startOfDay } from 'date-fns'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { stripe, calculateFees, formatAmountForStripe } from '@/lib/stripe'
-import { addMinutes, parseISO, startOfDay } from 'date-fns'
+import { calculateFees, formatAmountForStripe, stripe } from '@/lib/stripe'
 
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions)
-    
+
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -62,32 +62,23 @@ export async function POST(request: Request) {
         status: { in: ['PENDING', 'CONFIRMED'] },
         OR: [
           {
-            AND: [
-              { startTime: { lte: startTime } },
-              { endTime: { gt: startTime } },
-            ],
+            AND: [{ startTime: { lte: startTime } }, { endTime: { gt: startTime } }],
           },
           {
-            AND: [
-              { startTime: { lt: endTime } },
-              { endTime: { gte: endTime } },
-            ],
+            AND: [{ startTime: { lt: endTime } }, { endTime: { gte: endTime } }],
           },
         ],
       },
     })
 
     if (existingBooking) {
-      return NextResponse.json(
-        { error: 'This time slot is no longer available' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'This time slot is no longer available' }, { status: 400 })
     }
 
     // Get user with stripeCustomerId
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
-      select: { stripeCustomerId: true }
+      select: { stripeCustomerId: true },
     })
 
     // Get or create Stripe customer
@@ -171,11 +162,11 @@ export async function POST(request: Request) {
     })
   } catch (error) {
     console.error('Error creating payment intent:', error)
-    
+
     // Provide specific error messages
     let errorMessage = 'Failed to create payment'
     let statusCode = 500
-    
+
     if (error instanceof Error) {
       if ('type' in error && error.type === 'StripeInvalidRequestError') {
         if ('code' in error && error.code === 'account_invalid') {
@@ -190,10 +181,7 @@ export async function POST(request: Request) {
         errorMessage = 'Business is not set up to receive payments'
       }
     }
-    
-    return NextResponse.json(
-      { error: errorMessage },
-      { status: statusCode }
-    )
+
+    return NextResponse.json({ error: errorMessage }, { status: statusCode })
   }
 }

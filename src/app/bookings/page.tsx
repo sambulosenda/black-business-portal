@@ -1,8 +1,8 @@
-import { requireAuth } from "@/lib/session"
-import { prisma } from "@/lib/prisma"
-import Link from "next/link"
+import Link from 'next/link'
 import { Breadcrumb, BreadcrumbWrapper } from '@/components/ui/breadcrumb'
 import { EmptyState } from '@/components/ui/empty-state'
+import { prisma } from '@/lib/prisma'
+import { requireAuth } from '@/lib/session'
 import BookingsTable from './bookings-table'
 
 export default async function BookingsPage() {
@@ -23,24 +23,24 @@ export default async function BookingsPage() {
   })
 
   const upcomingBookings = bookings
-    .filter(booking => new Date(booking.date) >= new Date() && booking.status !== 'CANCELLED')
-    .map(booking => ({
+    .filter((booking) => new Date(booking.date) >= new Date() && booking.status !== 'CANCELLED')
+    .map((booking) => ({
       ...booking,
-      totalPrice: Number(booking.totalPrice)
+      totalPrice: Number(booking.totalPrice),
     }))
   const pastBookings = bookings
-    .filter(booking => new Date(booking.date) < new Date() || booking.status === 'CANCELLED')
-    .map(booking => ({
+    .filter((booking) => new Date(booking.date) < new Date() || booking.status === 'CANCELLED')
+    .map((booking) => ({
       ...booking,
-      totalPrice: Number(booking.totalPrice)
+      totalPrice: Number(booking.totalPrice),
     }))
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
       <nav className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 justify-between">
             <div className="flex items-center">
               <Link href="/" className="text-xl font-bold text-indigo-600">
                 Glamfric
@@ -49,13 +49,13 @@ export default async function BookingsPage() {
             <div className="flex items-center space-x-4">
               <Link
                 href="/dashboard"
-                className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
               >
                 Dashboard
               </Link>
               <Link
                 href="/"
-                className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
               >
                 Find Services
               </Link>
@@ -64,21 +64,19 @@ export default async function BookingsPage() {
         </div>
       </nav>
       <BreadcrumbWrapper>
-        <Breadcrumb 
+        <Breadcrumb
           items={[
             { label: 'Home', href: '/' },
             { label: 'Dashboard', href: '/dashboard' },
-            { label: 'My Bookings' }
+            { label: 'My Bookings' },
           ]}
         />
       </BreadcrumbWrapper>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">My Bookings</h1>
-          <p className="mt-2 text-gray-600">
-            View and manage your appointments
-          </p>
+          <p className="mt-2 text-gray-600">View and manage your appointments</p>
         </div>
 
         {/* Upcoming Bookings */}
@@ -92,8 +90,8 @@ export default async function BookingsPage() {
                 title="No upcoming appointments"
                 description="Book a service with one of our talented professionals"
                 action={{
-                  label: "Find Services",
-                  href: "/search"
+                  label: 'Find Services',
+                  href: '/search',
                 }}
               />
             }

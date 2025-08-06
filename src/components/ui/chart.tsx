@@ -12,11 +12,11 @@ interface ChartContainerProps {
 
 export function ChartContainer({ children, className, title, description }: ChartContainerProps) {
   return (
-    <div className={cn('rounded-lg bg-white p-6 shadow-sm border border-gray-200', className)}>
+    <div className={cn('rounded-lg border border-gray-200 bg-white p-6 shadow-sm', className)}>
       {(title || description) && (
         <div className="mb-4">
           {title && <h3 className="text-lg font-semibold text-gray-900">{title}</h3>}
-          {description && <p className="text-sm text-gray-500 mt-1">{description}</p>}
+          {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
         </div>
       )}
       <div className="w-full">{children}</div>
@@ -32,17 +32,17 @@ interface BarChartProps {
 }
 
 export function BarChart({ data, height = 200, showValues = true, animate = true }: BarChartProps) {
-  const maxValue = Math.max(...data.map(d => d.value))
-  
+  const maxValue = Math.max(...data.map((d) => d.value))
+
   return (
     <div className="relative" style={{ height }}>
-      <div className="flex items-end justify-between h-full gap-2">
+      <div className="flex h-full items-end justify-between gap-2">
         {data.map((item, index) => {
           const heightPercentage = (item.value / maxValue) * 100
           return (
-            <div key={index} className="flex-1 flex flex-col items-center justify-end">
+            <div key={index} className="flex flex-1 flex-col items-center justify-end">
               {showValues && (
-                <span className="text-sm font-medium text-gray-700 mb-1">
+                <span className="mb-1 text-sm font-medium text-gray-700">
                   ${item.value.toLocaleString()}
                 </span>
               )}
@@ -55,10 +55,10 @@ export function BarChart({ data, height = 200, showValues = true, animate = true
                 style={{
                   height: `${heightPercentage}%`,
                   animationDelay: `${index * 100}ms`,
-                  animationFillMode: 'both'
+                  animationFillMode: 'both',
                 }}
               />
-              <span className="text-xs text-gray-500 mt-2">{item.label}</span>
+              <span className="mt-2 text-xs text-gray-500">{item.label}</span>
             </div>
           )
         })}
@@ -88,7 +88,7 @@ export function PieChart({ data, size = 200, showLegend = true, animate = true }
       'bg-indigo-500': '#6366f1',
       'bg-purple-500': '#a855f7',
       'bg-pink-500': '#ec4899',
-      'bg-gray-500': '#6b7280'
+      'bg-gray-500': '#6b7280',
     }
     return colorMap[colorClass] || '#6366f1'
   }
@@ -96,7 +96,10 @@ export function PieChart({ data, size = 200, showLegend = true, animate = true }
   return (
     <div className="flex items-center justify-center gap-8">
       <div className="relative" style={{ width: size, height: size }}>
-        <svg viewBox="0 0 100 100" className={cn('transform -rotate-90', animate && 'animate-fade-in')}>
+        <svg
+          viewBox="0 0 100 100"
+          className={cn('-rotate-90 transform', animate && 'animate-fade-in')}
+        >
           {data.map((item, index) => {
             const percentage = (item.value / total) * 100
             const strokeDasharray = `${percentage} ${100 - percentage}`
@@ -116,7 +119,7 @@ export function PieChart({ data, size = 200, showLegend = true, animate = true }
                 strokeDashoffset={strokeDashoffset}
                 className="transition-all duration-500 hover:opacity-80"
                 style={{
-                  animationDelay: `${index * 100}ms`
+                  animationDelay: `${index * 100}ms`,
                 }}
               />
             )
@@ -129,14 +132,14 @@ export function PieChart({ data, size = 200, showLegend = true, animate = true }
           </div>
         </div>
       </div>
-      
+
       {showLegend && (
         <div className="space-y-2">
           {data.map((item, index) => (
             <div key={index} className="flex items-center gap-2">
-              <div className={cn('w-3 h-3 rounded-full', item.color)} />
+              <div className={cn('h-3 w-3 rounded-full', item.color)} />
               <span className="text-sm text-gray-600">{item.label}</span>
-              <span className="text-sm font-medium text-gray-900 ml-auto">
+              <span className="ml-auto text-sm font-medium text-gray-900">
                 ${item.value.toLocaleString()}
               </span>
             </div>
@@ -155,26 +158,28 @@ interface LineChartProps {
   animate?: boolean
 }
 
-export function LineChart({ 
-  data, 
-  height = 200, 
+export function LineChart({
+  data,
+  height = 200,
   color = 'stroke-indigo-600',
   showDots = true,
-  animate = true 
+  animate = true,
 }: LineChartProps) {
-  const maxY = Math.max(...data.map(d => d.y))
-  const minY = Math.min(...data.map(d => d.y))
+  const maxY = Math.max(...data.map((d) => d.y))
+  const minY = Math.min(...data.map((d) => d.y))
   const rangeY = maxY - minY || 1
 
-  const points = data.map((item, index) => {
-    const x = (index / (data.length - 1)) * 100
-    const y = 100 - ((item.y - minY) / rangeY) * 100
-    return `${x},${y}`
-  }).join(' ')
+  const points = data
+    .map((item, index) => {
+      const x = (index / (data.length - 1)) * 100
+      const y = 100 - ((item.y - minY) / rangeY) * 100
+      return `${x},${y}`
+    })
+    .join(' ')
 
   return (
     <div className="relative" style={{ height }}>
-      <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full">
         <polyline
           points={points}
           fill="none"
@@ -182,22 +187,27 @@ export function LineChart({
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-        {showDots && data.map((item, index) => {
-          const x = (index / (data.length - 1)) * 100
-          const y = 100 - ((item.y - minY) / rangeY) * 100
-          return (
-            <circle
-              key={index}
-              cx={x}
-              cy={y}
-              r="1.5"
-              className={cn('fill-white', color.replace('stroke', 'stroke'), animate && 'animate-scale-in')}
-              style={{ animationDelay: `${index * 50}ms` }}
-            />
-          )
-        })}
+        {showDots &&
+          data.map((item, index) => {
+            const x = (index / (data.length - 1)) * 100
+            const y = 100 - ((item.y - minY) / rangeY) * 100
+            return (
+              <circle
+                key={index}
+                cx={x}
+                cy={y}
+                r="1.5"
+                className={cn(
+                  'fill-white',
+                  color.replace('stroke', 'stroke'),
+                  animate && 'animate-scale-in'
+                )}
+                style={{ animationDelay: `${index * 50}ms` }}
+              />
+            )
+          })}
       </svg>
-      <div className="absolute bottom-0 left-0 right-0 flex justify-between text-xs text-gray-500 mt-2">
+      <div className="absolute right-0 bottom-0 left-0 mt-2 flex justify-between text-xs text-gray-500">
         {data.map((item, index) => (
           <span key={index}>{item.x}</span>
         ))}
@@ -218,35 +228,46 @@ interface StatCardProps {
   color?: string
 }
 
-export function StatCard({ title, value, description, icon, trend, color = 'bg-indigo-600' }: StatCardProps) {
+export function StatCard({
+  title,
+  value,
+  description,
+  icon,
+  trend,
+  color = 'bg-indigo-600',
+}: StatCardProps) {
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
+    <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-shadow duration-200 hover:shadow-md">
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <p className="text-sm font-medium text-gray-600">{title}</p>
-          <p className="text-2xl font-bold text-gray-900 mt-1">{value}</p>
-          {description && (
-            <p className="text-sm text-gray-500 mt-1">{description}</p>
-          )}
+          <p className="mt-1 text-2xl font-bold text-gray-900">{value}</p>
+          {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
           {trend && (
-            <div className={cn('flex items-center mt-2 text-sm', trend.isPositive ? 'text-green-600' : 'text-red-600')}>
+            <div
+              className={cn(
+                'mt-2 flex items-center text-sm',
+                trend.isPositive ? 'text-green-600' : 'text-red-600'
+              )}
+            >
               <svg
-                className={cn('w-4 h-4 mr-1', !trend.isPositive && 'rotate-180')}
+                className={cn('mr-1 h-4 w-4', !trend.isPositive && 'rotate-180')}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                />
               </svg>
               <span>{Math.abs(trend.value)}% from last period</span>
             </div>
           )}
         </div>
-        {icon && (
-          <div className={cn('p-3 rounded-lg text-white', color)}>
-            {icon}
-          </div>
-        )}
+        {icon && <div className={cn('rounded-lg p-3 text-white', color)}>{icon}</div>}
       </div>
     </div>
   )

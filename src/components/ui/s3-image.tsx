@@ -1,7 +1,7 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Image, { ImageProps } from 'next/image'
-import { useState, useEffect } from 'react'
 
 interface S3ImageProps extends Omit<ImageProps, 'src'> {
   src: string
@@ -26,9 +26,7 @@ export function S3Image({ src, fallback = '/placeholder-image.png', alt, ...prop
 
   return (
     <>
-      {isLoading && (
-        <div className="absolute inset-0 bg-gray-100 animate-pulse" />
-      )}
+      {isLoading && <div className="absolute inset-0 animate-pulse bg-gray-100" />}
       <Image
         {...props}
         src={error ? fallback : imageSrc}

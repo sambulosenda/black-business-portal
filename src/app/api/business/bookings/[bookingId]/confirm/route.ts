@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
+import { getSession } from '@/lib/session'
 
 export async function POST(
   request: Request,
@@ -9,7 +9,7 @@ export async function POST(
   try {
     const { bookingId } = await params
     const session = await getSession()
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -55,9 +55,6 @@ export async function POST(
     return NextResponse.json({ booking: updatedBooking })
   } catch (error) {
     console.error('Error confirming booking:', error)
-    return NextResponse.json(
-      { error: 'Failed to confirm booking' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to confirm booking' }, { status: 500 })
   }
 }

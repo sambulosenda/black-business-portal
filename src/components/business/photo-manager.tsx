@@ -1,18 +1,11 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { PhotoType } from '@prisma/client'
-import { S3Image } from '@/components/ui/s3-image'
-import { ImageUpload } from '@/components/ui/image-upload'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useCallback, useEffect, useState } from 'react'
+import { Edit2, ImageIcon, Loader2, Star, Trash2 } from 'lucide-react'
 // import { Badge } from '@/components/ui/badge' // Commented out - may be used later
 import { toast } from 'sonner'
-import { Trash2, Star, Edit2, Loader2, ImageIcon } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
@@ -21,6 +14,20 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { ImageUpload } from '@/components/ui/image-upload'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { S3Image } from '@/components/ui/s3-image'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { PhotoType } from '@prisma/client'
+
 // import { cn } from '@/lib/utils' // Commented out - may be used later
 
 interface Photo {
@@ -43,9 +50,9 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
   const [loading, setLoading] = useState(true)
   const [editingPhoto, setEditingPhoto] = useState<Photo | null>(null)
   const [editForm, setEditForm] = useState<{
-    type: PhotoType;
-    caption: string;
-    order: number;
+    type: PhotoType
+    caption: string
+    order: number
   }>({
     type: PhotoType.GALLERY,
     caption: '',
@@ -85,7 +92,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
       })
 
       if (!response.ok) throw new Error('Failed to update photo')
-      
+
       await fetchPhotos()
       toast.success('Hero image updated')
     } catch {
@@ -107,7 +114,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
       })
 
       if (!response.ok) throw new Error('Failed to update photo')
-      
+
       await fetchPhotos()
       setEditingPhoto(null)
       toast.success('Photo updated')
@@ -126,7 +133,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
       })
 
       if (!response.ok) throw new Error('Failed to delete photo')
-      
+
       await fetchPhotos()
       toast.success('Photo deleted')
     } catch {
@@ -134,9 +141,9 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
     }
   }
 
-  const heroPhoto = photos.find(p => p.type === PhotoType.HERO)
-  const galleryPhotos = photos.filter(p => p.type === PhotoType.GALLERY)
-  const logoPhoto = photos.find(p => p.type === PhotoType.LOGO)
+  const heroPhoto = photos.find((p) => p.type === PhotoType.HERO)
+  const galleryPhotos = photos.filter((p) => p.type === PhotoType.GALLERY)
+  const logoPhoto = photos.find((p) => p.type === PhotoType.LOGO)
 
   if (loading) {
     return (
@@ -161,20 +168,15 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
             </TabsList>
 
             <TabsContent value="hero" className="space-y-4">
-              <div className="text-sm text-gray-600 mb-4">
+              <div className="mb-4 text-sm text-gray-600">
                 The hero image is the main image displayed on your business profile page.
               </div>
-              
+
               {heroPhoto ? (
-                <div className="relative group">
-                  <div className="aspect-[16/9] relative rounded-lg overflow-hidden border border-gray-200">
-                    <S3Image
-                      src={heroPhoto.url}
-                      alt="Hero image"
-                      fill
-                      className="object-cover"
-                    />
-                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                <div className="group relative">
+                  <div className="relative aspect-[16/9] overflow-hidden rounded-lg border border-gray-200">
+                    <S3Image src={heroPhoto.url} alt="Hero image" fill className="object-cover" />
+                    <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
                       <Button
                         size="sm"
                         variant="outline"
@@ -187,7 +189,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
                           })
                         }}
                       >
-                        <Edit2 className="h-4 w-4 mr-1" />
+                        <Edit2 className="mr-1 h-4 w-4" />
                         Edit
                       </Button>
                       <Button
@@ -195,13 +197,13 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
                         variant="destructive"
                         onClick={() => handleDeletePhoto(heroPhoto)}
                       >
-                        <Trash2 className="h-4 w-4 mr-1" />
+                        <Trash2 className="mr-1 h-4 w-4" />
                         Remove
                       </Button>
                     </div>
                   </div>
                   {heroPhoto.caption && (
-                    <p className="text-sm text-gray-600 mt-2">{heroPhoto.caption}</p>
+                    <p className="mt-2 text-sm text-gray-600">{heroPhoto.caption}</p>
                   )}
                 </div>
               ) : (
@@ -214,14 +216,14 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
 
               {galleryPhotos.length > 0 && !heroPhoto && (
                 <div className="mt-6">
-                  <h4 className="text-sm font-medium text-gray-700 mb-3">
+                  <h4 className="mb-3 text-sm font-medium text-gray-700">
                     Or choose from your gallery:
                   </h4>
                   <div className="grid grid-cols-4 gap-3">
-                    {galleryPhotos.slice(0, 8).map(photo => (
+                    {galleryPhotos.slice(0, 8).map((photo) => (
                       <div
                         key={photo.id}
-                        className="relative aspect-square rounded-lg overflow-hidden border-2 border-gray-200 hover:border-indigo-500 cursor-pointer transition-colors group"
+                        className="group relative aspect-square cursor-pointer overflow-hidden rounded-lg border-2 border-gray-200 transition-colors hover:border-indigo-500"
                         onClick={() => handleSetAsHero(photo)}
                       >
                         <S3Image
@@ -230,7 +232,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
                           fill
                           className="object-cover"
                         />
-                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
                           <Star className="h-6 w-6 text-white" />
                         </div>
                       </div>
@@ -241,28 +243,28 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
             </TabsContent>
 
             <TabsContent value="gallery" className="space-y-4">
-              <div className="text-sm text-gray-600 mb-4">
+              <div className="mb-4 text-sm text-gray-600">
                 Gallery photos showcase your business, services, and atmosphere.
               </div>
 
               <ImageUpload
                 businessId={businessId}
                 onUploadComplete={handleUploadComplete}
-                className="h-48 mb-6"
+                className="mb-6 h-48"
               />
 
               {galleryPhotos.length > 0 ? (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                  {galleryPhotos.map(photo => (
-                    <div key={photo.id} className="relative group">
-                      <div className="aspect-square relative rounded-lg overflow-hidden border border-gray-200">
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+                  {galleryPhotos.map((photo) => (
+                    <div key={photo.id} className="group relative">
+                      <div className="relative aspect-square overflow-hidden rounded-lg border border-gray-200">
                         <S3Image
                           src={photo.url}
                           alt="Gallery image"
                           fill
                           className="object-cover"
                         />
-                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
+                        <div className="absolute inset-0 flex items-center justify-center gap-1 bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
                           <Button
                             size="icon"
                             variant="outline"
@@ -301,28 +303,28 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-8 text-gray-500">
-                  <ImageIcon className="h-12 w-12 mx-auto mb-3 text-gray-400" />
+                <div className="py-8 text-center text-gray-500">
+                  <ImageIcon className="mx-auto mb-3 h-12 w-12 text-gray-400" />
                   <p>No gallery photos yet</p>
                 </div>
               )}
             </TabsContent>
 
             <TabsContent value="logo" className="space-y-4">
-              <div className="text-sm text-gray-600 mb-4">
+              <div className="mb-4 text-sm text-gray-600">
                 Your business logo will be displayed alongside your business name.
               </div>
-              
+
               {logoPhoto ? (
                 <div className="flex items-center gap-6">
-                  <div className="relative w-32 h-32 rounded-lg overflow-hidden border border-gray-200 group">
+                  <div className="group relative h-32 w-32 overflow-hidden rounded-lg border border-gray-200">
                     <S3Image
                       src={logoPhoto.url}
                       alt="Business logo"
                       fill
                       className="object-contain p-2"
                     />
-                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
                       <Button
                         size="sm"
                         variant="destructive"
@@ -355,14 +357,15 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Photo</DialogTitle>
-            <DialogDescription>
-              Update photo details and settings
-            </DialogDescription>
+            <DialogDescription>Update photo details and settings</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="type">Photo Type</Label>
-              <Select value={editForm.type} onValueChange={(value) => setEditForm({ ...editForm, type: value as PhotoType })}>
+              <Select
+                value={editForm.type}
+                onValueChange={(value) => setEditForm({ ...editForm, type: value as PhotoType })}
+              >
                 <SelectTrigger id="type">
                   <SelectValue />
                 </SelectTrigger>
@@ -398,9 +401,7 @@ export default function PhotoManager({ businessId }: PhotoManagerProps) {
             <Button variant="outline" onClick={() => setEditingPhoto(null)}>
               Cancel
             </Button>
-            <Button onClick={handleEditPhoto}>
-              Save Changes
-            </Button>
+            <Button onClick={handleEditPhoto}>Save Changes</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

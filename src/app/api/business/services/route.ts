@@ -1,8 +1,8 @@
-import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
+import { NextResponse } from 'next/server'
+import { z } from 'zod'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { z } from 'zod'
 
 const serviceSchema = z.object({
   name: z.string().min(2),
@@ -35,10 +35,7 @@ export async function GET() {
     return NextResponse.json({ services })
   } catch (error) {
     console.error('Error fetching services:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch services' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch services' }, { status: 500 })
   }
 }
 
@@ -70,16 +67,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ service })
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid input data' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Invalid input data' }, { status: 400 })
     }
 
     console.error('Error creating service:', error)
-    return NextResponse.json(
-      { error: 'Failed to create service' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to create service' }, { status: 500 })
   }
 }

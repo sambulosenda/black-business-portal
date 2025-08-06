@@ -4,9 +4,9 @@ import { Skeleton } from '@/components/ui/skeleton'
 export function SkeletonCard() {
   return (
     <Card className="p-6">
-      <div className="flex items-start justify-between mb-4">
+      <div className="mb-4 flex items-start justify-between">
         <div className="flex-1">
-          <Skeleton className="h-6 w-3/4 mb-2" />
+          <Skeleton className="mb-2 h-6 w-3/4" />
           <Skeleton className="h-4 w-1/2" />
         </div>
         <Skeleton className="h-6 w-16 rounded-full" />

@@ -31,7 +31,6 @@ model User {
   bookings      Booking[]
   reviews       Review[]
   customerProfiles CustomerProfile[]
-  orders        Order[]
 }
 
 model Business {
@@ -45,6 +44,8 @@ model Business {
   city             String
   state            String
   zipCode          String
+  latitude         Float?         // Added for map functionality
+  longitude        Float?         // Added for map functionality
   phone            String
   email            String?
   website          String?
@@ -74,9 +75,6 @@ model Business {
   customerProfiles CustomerProfile[]
   communications   Communication[]
   notificationSettings NotificationSettings?
-  products         Product[]
-  productCategories ProductCategory[]
-  orders           Order[]
   promotions       Promotion[]
   photos           BusinessPhoto[]
 }
@@ -128,8 +126,6 @@ model Booking {
   service     Service       @relation(fields: [serviceId], references: [id])
   staff       Staff?        @relation(fields: [staffId], references: [id])
   review      Review?
-  items       BookingItem[] // Products purchased with booking
-  order       Order?        // Link to order if part of a combined purchase
 }
 
 model Review {
@@ -491,214 +487,7 @@ enum TriggerTiming {
   SCHEDULED
 }
 
-// Product Management Models
-model ProductCategory {
-  id          String   @id @default(cuid())
-  businessId  String
-  name        String
-  description String?
-  displayOrder Int     @default(0)
-  isActive    Boolean  @default(true)
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  // Relations
-  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  products    Product[]
-  
-  @@unique([businessId, name])
-  @@index([businessId, isActive])
-}
 
-model Product {
-  id              String   @id @default(cuid())
-  businessId      String
-  categoryId      String?
-  
-  // Basic Info
-  name            String
-  description     String?
-  sku             String?
-  barcode         String?
-  
-  // Pricing
-  price           Decimal  @db.Decimal(10, 2)
-  compareAtPrice  Decimal? @db.Decimal(10, 2) // Original price for sales
-  cost            Decimal? @db.Decimal(10, 2) // Cost to business
-  
-  // Inventory
-  trackInventory  Boolean  @default(true)
-  quantity        Int      @default(0)
-  lowStockAlert   Int?     // Alert when quantity falls below this
-  
-  // Display
-  images          String[]
-  displayOrder    Int      @default(0)
-  isActive        Boolean  @default(true)
-  isFeatured      Boolean  @default(false)
-  
-  // Additional Info
-  brand           String?
-  tags            String[]
-  weight          Float?   // In ounces
-  weightUnit      String?  // oz, lb, g, kg
-  
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  
-  // Relations
-  business        Business         @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  category        ProductCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  inventoryLogs   InventoryLog[]
-  bookingItems    BookingItem[]
-  orderItems      OrderItem[]
-  
-  @@unique([businessId, sku])
-  @@index([businessId, isActive])
-  @@index([businessId, categoryId])
-  @@index([businessId, isFeatured])
-}
-
-model InventoryLog {
-  id          String   @id @default(cuid())
-  productId   String
-  
-  type        InventoryLogType
-  quantity    Int      // Positive for additions, negative for removals
-  previousQty Int
-  newQty      Int
-  
-  reason      String?
-  reference   String?  // Order ID, adjustment ID, etc.
-  notes       String?
-  
-  createdAt   DateTime @default(now())
-  createdBy   String?  // User ID who made the change
-  
-  // Relations
-  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  
-  @@index([productId, createdAt])
-}
-
-model BookingItem {
-  id          String   @id @default(cuid())
-  bookingId   String
-  productId   String
-  
-  quantity    Int
-  price       Decimal  @db.Decimal(10, 2) // Price at time of booking
-  total       Decimal  @db.Decimal(10, 2)
-  
-  createdAt   DateTime @default(now())
-  
-  // Relations
-  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  product     Product  @relation(fields: [productId], references: [id])
-  
-  @@index([bookingId])
-  @@index([productId])
-}
-
-enum InventoryLogType {
-  SALE
-  RETURN
-  ADJUSTMENT
-  RESTOCK
-  DAMAGE
-  LOSS
-  INITIAL
-}
-
-// Order Management Models
-model Order {
-  id              String   @id @default(cuid())
-  orderNumber     String   @unique @default(cuid())
-  userId          String
-  businessId      String
-  
-  // Order Details
-  type            OrderType @default(PRODUCT_ONLY) // PRODUCT_ONLY, SERVICE_ONLY, MIXED
-  status          OrderStatus @default(PENDING)
-  
-  // Pricing
-  subtotal        Decimal  @db.Decimal(10, 2)
-  tax             Decimal  @db.Decimal(10, 2)
-  deliveryFee     Decimal? @db.Decimal(10, 2)
-  total           Decimal  @db.Decimal(10, 2)
-  
-  // Fulfillment
-  fulfillmentType FulfillmentType @default(PICKUP) // PICKUP, DELIVERY
-  
-  // Customer Info
-  customerEmail   String
-  customerPhone   String
-  
-  // Delivery Address (if applicable)
-  deliveryAddress Json?
-  deliveryNotes   String?
-  
-  // Payment
-  paymentStatus   PaymentStatus @default(PENDING)
-  stripePaymentIntentId String? @unique
-  paidAt          DateTime?
-  
-  // Timestamps
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  
-  // Relations
-  user            User     @relation(fields: [userId], references: [id])
-  business        Business @relation(fields: [businessId], references: [id])
-  orderItems      OrderItem[]
-  booking         Booking? @relation(fields: [bookingId], references: [id])
-  bookingId       String?  @unique
-  
-  @@index([businessId, status])
-  @@index([userId])
-}
-
-model OrderItem {
-  id          String   @id @default(cuid())
-  orderId     String
-  productId   String
-  
-  quantity    Int
-  price       Decimal  @db.Decimal(10, 2) // Price at time of order
-  total       Decimal  @db.Decimal(10, 2)
-  
-  createdAt   DateTime @default(now())
-  
-  // Relations
-  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product     Product  @relation(fields: [productId], references: [id])
-  
-  @@index([orderId])
-  @@index([productId])
-}
-
-enum OrderType {
-  PRODUCT_ONLY
-  SERVICE_ONLY
-  MIXED
-}
-
-enum OrderStatus {
-  PENDING
-  CONFIRMED
-  PROCESSING
-  READY_FOR_PICKUP
-  OUT_FOR_DELIVERY
-  COMPLETED
-  CANCELLED
-  REFUNDED
-}
-
-enum FulfillmentType {
-  PICKUP
-  DELIVERY
-}
 
 // Promotion Management Models
 model Promotion {
@@ -717,7 +506,6 @@ model Promotion {
   // Scope
   scope           PromotionScope
   serviceIds      String[] // Specific services (if scope is SPECIFIC_SERVICES)
-  productIds      String[] // Specific products (if scope is SPECIFIC_PRODUCTS)
   
   // Validity
   startDate       DateTime
@@ -782,9 +570,7 @@ enum PromotionType {
 enum PromotionScope {
   ALL_SERVICES
   SPECIFIC_SERVICES
-  ALL_PRODUCTS
-  SPECIFIC_PRODUCTS
-  ENTIRE_PURCHASE // Applies to total (services + products)
+  ENTIRE_PURCHASE // Applies to total
 }
 
 // Business Photo Management

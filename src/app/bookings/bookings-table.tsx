@@ -1,13 +1,13 @@
 'use client'
 
-import { DataTable, Column } from '@/components/ui/data-table'
-import { format } from 'date-fns'
 import Link from 'next/link'
+import { format } from 'date-fns'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Column, DataTable } from '@/components/ui/data-table'
+import type { ReviewWithRelations } from '@/types'
 import CancelButton from './cancel-button'
 import RefundButton from './refund-button'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import type { ReviewWithRelations } from '@/types'
 
 interface Booking extends Record<string, unknown> {
   id: string
@@ -38,11 +38,11 @@ interface BookingsTableProps {
   isPast?: boolean
 }
 
-export default function BookingsTable({ 
-  title, 
-  bookings, 
-  emptyState, 
-  isPast = false 
+export default function BookingsTable({
+  title,
+  bookings,
+  emptyState,
+  isPast = false,
 }: BookingsTableProps) {
   const columns: Column<Booking>[] = [
     {
@@ -50,7 +50,7 @@ export default function BookingsTable({
       header: 'Business',
       cell: (booking) => (
         <div>
-          <Link 
+          <Link
             href={`/business/${booking.business.slug}`}
             className="font-medium text-gray-900 hover:text-indigo-600"
           >
@@ -59,7 +59,7 @@ export default function BookingsTable({
           <p className="text-sm text-gray-500">{booking.service.name}</p>
         </div>
       ),
-      sortable: true
+      sortable: true,
     },
     {
       key: 'date',
@@ -70,11 +70,12 @@ export default function BookingsTable({
             {format(new Date(booking.date), 'MMM d, yyyy')}
           </p>
           <p className="text-sm text-gray-500">
-            {format(new Date(booking.startTime), 'h:mm a')} - {format(new Date(booking.endTime), 'h:mm a')}
+            {format(new Date(booking.startTime), 'h:mm a')} -{' '}
+            {format(new Date(booking.endTime), 'h:mm a')}
           </p>
         </div>
       ),
-      sortable: true
+      sortable: true,
     },
     {
       key: 'business.address',
@@ -82,9 +83,11 @@ export default function BookingsTable({
       cell: (booking) => (
         <div className="text-sm text-gray-600">
           <p>{booking.business.address}</p>
-          <p>{booking.business.city}, {booking.business.state}</p>
+          <p>
+            {booking.business.city}, {booking.business.state}
+          </p>
         </div>
-      )
+      ),
     },
     {
       key: 'status',
@@ -93,11 +96,15 @@ export default function BookingsTable({
         <div className="flex gap-2">
           <Badge
             variant={
-              booking.status === 'CONFIRMED' ? 'success' :
-              booking.status === 'COMPLETED' ? 'success' :
-              booking.status === 'PENDING' ? 'warning' :
-              booking.status === 'CANCELLED' ? 'destructive' :
-              'default'
+              booking.status === 'CONFIRMED'
+                ? 'success'
+                : booking.status === 'COMPLETED'
+                  ? 'success'
+                  : booking.status === 'PENDING'
+                    ? 'warning'
+                    : booking.status === 'CANCELLED'
+                      ? 'destructive'
+                      : 'default'
             }
           >
             {booking.status}
@@ -105,32 +112,36 @@ export default function BookingsTable({
           {booking.paymentStatus && (
             <Badge
               variant={
-                booking.paymentStatus === 'SUCCEEDED' ? 'success' :
-                booking.paymentStatus === 'REFUNDED' ? 'outline' :
-                booking.paymentStatus === 'FAILED' ? 'destructive' :
-                'warning'
+                booking.paymentStatus === 'SUCCEEDED'
+                  ? 'success'
+                  : booking.paymentStatus === 'REFUNDED'
+                    ? 'outline'
+                    : booking.paymentStatus === 'FAILED'
+                      ? 'destructive'
+                      : 'warning'
               }
             >
-              {booking.paymentStatus === 'SUCCEEDED' ? 'Paid' : 
-               booking.paymentStatus === 'REFUNDED' ? 'Refunded' :
-               booking.paymentStatus === 'FAILED' ? 'Payment Failed' :
-               'Payment Pending'}
+              {booking.paymentStatus === 'SUCCEEDED'
+                ? 'Paid'
+                : booking.paymentStatus === 'REFUNDED'
+                  ? 'Refunded'
+                  : booking.paymentStatus === 'FAILED'
+                    ? 'Payment Failed'
+                    : 'Payment Pending'}
             </Badge>
           )}
         </div>
       ),
-      sortable: true
+      sortable: true,
     },
     {
       key: 'totalPrice',
       header: 'Price',
       cell: (booking) => (
-        <p className="font-semibold text-gray-900">
-          ${booking.totalPrice.toString()}
-        </p>
+        <p className="font-semibold text-gray-900">${booking.totalPrice.toString()}</p>
       ),
       sortable: true,
-      className: 'text-right'
+      className: 'text-right',
     },
     {
       key: 'actions',
@@ -145,7 +156,7 @@ export default function BookingsTable({
             </Link>
           ) : null
         }
-        
+
         return (
           <div className="flex gap-2">
             <CancelButton
@@ -160,13 +171,13 @@ export default function BookingsTable({
             />
           </div>
         )
-      }
-    }
+      },
+    },
   ]
 
   return (
     <div>
-      <h2 className="text-xl font-semibold text-gray-900 mb-4">{title}</h2>
+      <h2 className="mb-4 text-xl font-semibold text-gray-900">{title}</h2>
       <DataTable
         data={bookings}
         columns={columns}

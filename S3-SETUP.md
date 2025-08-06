@@ -29,7 +29,7 @@ To fix the "Failed to upload file to S3" error, you only need to configure CORS 
 
 ### 2. Keep Bucket Private (Recommended)
 
-Since your AWS account has Block Public Access enabled (which is a security best practice), we'll keep the bucket private and use presigned URLs to display images. 
+Since your AWS account has Block Public Access enabled (which is a security best practice), we'll keep the bucket private and use presigned URLs to display images.
 
 **No bucket policy changes needed!**
 
@@ -50,11 +50,7 @@ Ensure your IAM user `Glamfric-portal-s3-user` has the following permissions:
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": [
-        "s3:PutObject",
-        "s3:GetObject",
-        "s3:DeleteObject"
-      ],
+      "Action": ["s3:PutObject", "s3:GetObject", "s3:DeleteObject"],
       "Resource": "arn:aws:s3:::glamfric-portal-images-2025/*"
     }
   ]
@@ -72,6 +68,7 @@ When deploying to production, update the CORS configuration to include your prod
 ## Testing
 
 After applying the CORS configuration:
+
 1. Restart your development server: `bun dev`
 2. Try uploading an image again
 3. Check the browser console for any errors

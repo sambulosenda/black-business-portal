@@ -11,6 +11,7 @@ This guide will help you set up AWS Simple Email Service (SES) for sending email
 ## Step 1: Configure AWS SES
 
 ### 1.1 Access AWS SES Console
+
 1. Log in to [AWS Console](https://console.aws.amazon.com)
 2. Navigate to Simple Email Service (SES)
 3. Choose your region (recommended: `us-east-1` for better deliverability)
@@ -18,12 +19,14 @@ This guide will help you set up AWS Simple Email Service (SES) for sending email
 ### 1.2 Verify Your Email/Domain
 
 #### For Development (Quick Start):
+
 1. Go to "Verified identities" → "Create identity"
 2. Choose "Email address"
 3. Enter your email and click "Create identity"
 4. Check your email and click the verification link
 
 #### For Production (Domain Verification):
+
 1. Go to "Verified identities" → "Create identity"
 2. Choose "Domain"
 3. Enter your domain (e.g., `beautyportal.com`)
@@ -33,6 +36,7 @@ This guide will help you set up AWS Simple Email Service (SES) for sending email
 5. Wait for verification (usually 24-72 hours)
 
 ### 1.3 Request Production Access
+
 By default, SES is in sandbox mode (can only send to verified emails).
 
 1. Go to "Account dashboard"
@@ -46,28 +50,27 @@ By default, SES is in sandbox mode (can only send to verified emails).
 ## Step 2: Create IAM User for SES
 
 ### 2.1 Create Policy
+
 1. Go to IAM → Policies → Create policy
 2. Use this JSON:
 
 ```json
 {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "ses:SendEmail",
-                "ses:SendRawEmail"
-            ],
-            "Resource": "*"
-        }
-    ]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["ses:SendEmail", "ses:SendRawEmail"],
+      "Resource": "*"
+    }
+  ]
 }
 ```
 
 3. Name it: `BeautyPortalSESPolicy`
 
 ### 2.2 Create IAM User
+
 1. Go to IAM → Users → Add users
 2. Username: `beautyportal-ses`
 3. Select "Programmatic access"
@@ -77,6 +80,7 @@ By default, SES is in sandbox mode (can only send to verified emails).
 ## Step 3: Configure BeautyPortal
 
 ### 3.1 Update Environment Variables
+
 Add to your `.env` file:
 
 ```env
@@ -91,6 +95,7 @@ ENABLE_EMAIL_SENDING="true"
 ```
 
 ### 3.2 Test Email Sending
+
 1. Start your development server
 2. Sign up with a verified email address
 3. Check the console for "✅ Email sent via AWS SES"
@@ -99,6 +104,7 @@ ENABLE_EMAIL_SENDING="true"
 ## Step 4: Monitor and Maintain
 
 ### 4.1 Set Up SNS for Bounces/Complaints
+
 1. In SES Console → Configuration sets → Create
 2. Name: `beautyportal-config`
 3. Add event destination:
@@ -107,16 +113,18 @@ ENABLE_EMAIL_SENDING="true"
    - Create topic: `beautyportal-email-events`
 
 ### 4.2 Update Email Service
+
 In `src/lib/email.ts`, add configuration set:
 
 ```typescript
 const command = new SendEmailCommand({
   // ... existing config
-  ConfigurationSetName: 'beautyportal-config'
+  ConfigurationSetName: 'beautyportal-config',
 })
 ```
 
 ### 4.3 Monitor Dashboard
+
 - Check SES → Reputation dashboard regularly
 - Keep bounce rate < 5%
 - Keep complaint rate < 0.1%
@@ -140,6 +148,7 @@ const command = new SendEmailCommand({
    - Warm up sending gradually
 
 ### Testing Commands:
+
 ```bash
 # Test SES connection
 aws ses get-send-quota --region us-east-1

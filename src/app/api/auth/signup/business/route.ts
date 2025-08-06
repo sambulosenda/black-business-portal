@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
-import { prisma } from '@/lib/prisma'
-import { z } from 'zod'
 import crypto from 'crypto'
+import { z } from 'zod'
 import { sendVerificationEmail } from '@/lib/email'
+import { prisma } from '@/lib/prisma'
 
 const signupSchema = z.object({
   ownerName: z.string().min(2),
@@ -39,10 +39,7 @@ export async function POST(req: Request) {
     })
 
     if (existingUser) {
-      return NextResponse.json(
-        { error: 'User already exists with this email' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'User already exists with this email' }, { status: 400 })
     }
 
     // Generate unique slug
@@ -76,7 +73,16 @@ export async function POST(req: Request) {
           userId: user.id,
           businessName: validatedData.businessName,
           slug: uniqueSlug,
-          category: validatedData.category as 'HAIR_SALON' | 'BARBER_SHOP' | 'NAIL_SALON' | 'SPA' | 'MASSAGE' | 'MAKEUP' | 'SKINCARE' | 'WELLNESS' | 'OTHER',
+          category: validatedData.category as
+            | 'HAIR_SALON'
+            | 'BARBER_SHOP'
+            | 'NAIL_SALON'
+            | 'SPA'
+            | 'MASSAGE'
+            | 'MAKEUP'
+            | 'SKINCARE'
+            | 'WELLNESS'
+            | 'OTHER',
           phone: validatedData.businessPhone,
           email: validatedData.businessEmail || null,
           address: validatedData.address,
@@ -102,18 +108,19 @@ export async function POST(req: Request) {
       data: {
         identifier: validatedData.email,
         token,
-        expires
-      }
+        expires,
+      },
     })
 
     // Send verification email
     await sendVerificationEmail(validatedData.email, validatedData.ownerName, token)
 
     return NextResponse.json({
-      message: 'Business account created successfully. Please check your email to verify your account.',
+      message:
+        'Business account created successfully. Please check your email to verify your account.',
       userId: result.user.id,
       businessId: result.business.id,
-      requiresVerification: true
+      requiresVerification: true,
     })
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -124,9 +131,6 @@ export async function POST(req: Request) {
     }
 
     console.error('Business signup error:', error)
-    return NextResponse.json(
-      { error: 'Something went wrong' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Something went wrong' }, { status: 500 })
   }
 }

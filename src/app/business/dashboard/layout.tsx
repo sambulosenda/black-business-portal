@@ -1,6 +1,19 @@
-import { requireRole } from "@/lib/session"
-import Link from "next/link"
-import type { Metadata } from "next"
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import {
+  BarChart3,
+  Bell,
+  Calendar,
+  CalendarDays,
+  Clock,
+  LayoutDashboard,
+  LogOut,
+  Package,
+  Settings,
+  Star,
+  Tag,
+  Users,
+} from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -14,104 +27,82 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
+} from '@/components/ui/sidebar'
+import { requireRole } from '@/lib/session'
 
 export const metadata: Metadata = {
-  title: "Business Dashboard",
-  description: "Manage your beauty business on Glamfric. Track bookings, manage services, view analytics, and grow your customer base.",
+  title: 'Business Dashboard',
+  description:
+    'Manage your beauty business on Glamfric. Track bookings, manage services, view analytics, and grow your customer base.',
   robots: {
     index: false,
     follow: false,
   },
 }
-import {
-  LayoutDashboard,
-  Package,
-  Calendar,
-  CalendarDays,
-  Clock,
-  BarChart3,
-  Star,
-  Settings,
-  LogOut,
-  Users,
-  Bell,
-  ShoppingCart,
-  Tag,
-} from "lucide-react"
 
-export default async function BusinessDashboardLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  const session = await requireRole("BUSINESS_OWNER")
+export default async function BusinessDashboardLayout({ children }: { children: React.ReactNode }) {
+  const session = await requireRole('BUSINESS_OWNER')
 
   const menuItems = [
     {
-      title: "Dashboard",
+      title: 'Dashboard',
       icon: LayoutDashboard,
-      href: "/business/dashboard",
+      href: '/business/dashboard',
     },
     {
-      title: "Services",
+      title: 'Services',
       icon: Package,
-      href: "/business/dashboard/services",
+      href: '/business/dashboard/services',
     },
     {
-      title: "Products",
-      icon: ShoppingCart,
-      href: "/business/dashboard/products",
-    },
-    {
-      title: "Promotions",
+      title: 'Promotions',
       icon: Tag,
-      href: "/business/dashboard/promotions",
+      href: '/business/dashboard/promotions',
     },
     {
-      title: "Staff",
+      title: 'Staff',
       icon: Users,
-      href: "/business/dashboard/staff",
+      href: '/business/dashboard/staff',
     },
     {
-      title: "Customers",
+      title: 'Customers',
       icon: Users,
-      href: "/business/dashboard/customers",
+      href: '/business/dashboard/customers',
     },
     {
-      title: "Bookings",
+      title: 'Bookings',
       icon: Calendar,
-      href: "/business/dashboard/bookings",
+      href: '/business/dashboard/bookings',
     },
     {
-      title: "Calendar",
+      title: 'Calendar',
       icon: CalendarDays,
-      href: "/business/dashboard/calendar",
+      href: '/business/dashboard/calendar',
     },
     {
-      title: "Availability",
+      title: 'Availability',
       icon: Clock,
-      href: "/business/dashboard/availability",
+      href: '/business/dashboard/availability',
     },
     {
-      title: "Analytics",
+      title: 'Analytics',
       icon: BarChart3,
-      href: "/business/dashboard/analytics",
+      href: '/business/dashboard/analytics',
     },
     {
-      title: "Reviews",
+      title: 'Reviews',
       icon: Star,
-      href: "/business/dashboard/reviews",
+      href: '/business/dashboard/reviews',
     },
     {
-      title: "Notifications",
+      title: 'Notifications',
       icon: Bell,
-      href: "/business/dashboard/notifications",
+      href: '/business/dashboard/notifications',
     },
     {
-      title: "Settings",
+      title: 'Settings',
       icon: Settings,
-      href: "/business/dashboard/settings",
+      href: '/business/dashboard/settings',
     },
   ]
 
@@ -119,9 +110,9 @@ export default async function BusinessDashboardLayout({
     <SidebarProvider defaultOpen={true}>
       <div className="flex min-h-screen w-full bg-gray-50">
         <Sidebar className="border-r bg-white">
-          <SidebarHeader className="border-b px-6 py-4 bg-gray-50">
-            <Link href="/" className="flex items-center space-x-3 group">
-              <div className="w-10 h-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg group-hover:scale-105 transition-transform">
+          <SidebarHeader className="border-b bg-gray-50 px-6 py-4">
+            <Link href="/" className="group flex items-center space-x-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 font-bold text-white shadow-lg transition-transform group-hover:scale-105">
                 B
               </div>
               <div className="flex flex-col">
@@ -130,18 +121,28 @@ export default async function BusinessDashboardLayout({
               </div>
             </Link>
           </SidebarHeader>
-          
+
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Navigation</SidebarGroupLabel>
+              <SidebarGroupLabel className="px-3 text-xs font-semibold tracking-wider text-gray-500 uppercase">
+                Navigation
+              </SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu className="space-y-1">
                   {menuItems.map((item) => (
                     <SidebarMenuItem key={item.href}>
-                      <SidebarMenuButton asChild className="hover:bg-gray-50 transition-all data-[active=true]:bg-indigo-50 data-[active=true]:text-indigo-700">
-                        <Link href={item.href} className="flex items-center gap-3 px-3 py-2 rounded-lg group">
-                          <item.icon className="h-5 w-5 text-gray-400 group-hover:text-gray-600 group-data-[active=true]:text-indigo-600 transition-colors" />
-                          <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900 group-data-[active=true]:text-indigo-700 transition-colors">{item.title}</span>
+                      <SidebarMenuButton
+                        asChild
+                        className="transition-all hover:bg-gray-50 data-[active=true]:bg-indigo-50 data-[active=true]:text-indigo-700"
+                      >
+                        <Link
+                          href={item.href}
+                          className="group flex items-center gap-3 rounded-lg px-3 py-2"
+                        >
+                          <item.icon className="h-5 w-5 text-gray-400 transition-colors group-hover:text-gray-600 group-data-[active=true]:text-indigo-600" />
+                          <span className="text-sm font-medium text-gray-700 transition-colors group-hover:text-gray-900 group-data-[active=true]:text-indigo-700">
+                            {item.title}
+                          </span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -151,7 +152,7 @@ export default async function BusinessDashboardLayout({
             </SidebarGroup>
           </SidebarContent>
 
-          <SidebarFooter className="border-t px-6 py-4 bg-gray-50">
+          <SidebarFooter className="border-t bg-gray-50 px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex flex-col">
                 <span className="text-sm font-semibold text-gray-900">{session.user.name}</span>
@@ -160,9 +161,9 @@ export default async function BusinessDashboardLayout({
             </div>
             <Link
               href="/api/auth/signout"
-              className="mt-4 flex items-center space-x-2 text-sm text-gray-600 hover:text-red-600 transition-colors group"
+              className="group mt-4 flex items-center space-x-2 text-sm text-gray-600 transition-colors hover:text-red-600"
             >
-              <LogOut className="h-4 w-4 group-hover:scale-110 transition-transform" />
+              <LogOut className="h-4 w-4 transition-transform group-hover:scale-110" />
               <span>Sign out</span>
             </Link>
           </SidebarFooter>
@@ -170,14 +171,12 @@ export default async function BusinessDashboardLayout({
 
         <main className="flex-1 overflow-hidden">
           <div className="sticky top-0 z-10 flex h-16 items-center border-b bg-white px-8 shadow-sm">
-            <SidebarTrigger className="mr-4 hover:bg-gray-100 rounded-lg transition-colors" />
+            <SidebarTrigger className="mr-4 rounded-lg transition-colors hover:bg-gray-100" />
             <h2 className="text-lg font-semibold text-gray-900">Business Portal</h2>
           </div>
           <div className="overflow-auto">
             <div className="min-h-[calc(100vh-4rem)] bg-gray-50">
-              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-                {children}
-              </div>
+              <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">{children}</div>
             </div>
           </div>
         </main>

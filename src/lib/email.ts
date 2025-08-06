@@ -2,32 +2,37 @@
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses'
 
 // Initialize SES client only if credentials are provided
-const sesClient = process.env.AWS_SES_REGION ? new SESClient({
-  region: process.env.AWS_SES_REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-  },
-}) : null
+const sesClient = process.env.AWS_SES_REGION
+  ? new SESClient({
+      region: process.env.AWS_SES_REGION,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+      },
+    })
+  : null
 
 interface EmailOptions {
-  to: string;
-  subject: string;
-  html: string;
-  text?: string;
+  to: string
+  subject: string
+  html: string
+  text?: string
 }
 
 export async function sendEmail(options: EmailOptions): Promise<void> {
   // Use console.log if SES is not configured or in development without ENABLE_EMAIL_SENDING
-  if (!sesClient || (process.env.NODE_ENV === 'development' && process.env.ENABLE_EMAIL_SENDING !== 'true')) {
+  if (
+    !sesClient ||
+    (process.env.NODE_ENV === 'development' && process.env.ENABLE_EMAIL_SENDING !== 'true')
+  ) {
     console.log('📧 Email would be sent:', {
       to: options.to,
       subject: options.subject,
-      preview: options.text || options.html.substring(0, 100) + '...'
-    });
-    
+      preview: options.text || options.html.substring(0, 100) + '...',
+    })
+
     if (process.env.NODE_ENV === 'development') {
-      console.log('Full email content:', options.html);
+      console.log('Full email content:', options.html)
     }
     return
   }
@@ -69,13 +74,13 @@ export async function sendEmail(options: EmailOptions): Promise<void> {
 // Email templates
 export const emailTemplates = {
   bookingConfirmation: (booking: {
-    customerName: string;
-    businessName: string;
-    serviceName: string;
-    date: string;
-    time: string;
-    totalPrice: number;
-    bookingId: string;
+    customerName: string
+    businessName: string
+    serviceName: string
+    date: string
+    time: string
+    totalPrice: number
+    bookingId: string
   }) => ({
     subject: `Booking Confirmation - ${booking.businessName}`,
     html: `
@@ -93,16 +98,16 @@ export const emailTemplates = {
       <p>You can manage your booking at: ${process.env.NEXTAUTH_URL}/bookings</p>
       <p>Thank you for your business!</p>
     `,
-    text: `Booking confirmed at ${booking.businessName} for ${booking.serviceName} on ${booking.date} at ${booking.time}. Total: $${booking.totalPrice}`
+    text: `Booking confirmed at ${booking.businessName} for ${booking.serviceName} on ${booking.date} at ${booking.time}. Total: $${booking.totalPrice}`,
   }),
 
   paymentReceipt: (payment: {
-    customerName: string;
-    businessName: string;
-    serviceName: string;
-    amount: number;
-    paymentId: string;
-    date: string;
+    customerName: string
+    businessName: string
+    serviceName: string
+    amount: number
+    paymentId: string
+    date: string
   }) => ({
     subject: `Payment Receipt - ${payment.businessName}`,
     html: `
@@ -118,16 +123,16 @@ export const emailTemplates = {
       </ul>
       <p>Thank you for your payment!</p>
     `,
-    text: `Payment receipt for $${payment.amount} at ${payment.businessName} for ${payment.serviceName}`
+    text: `Payment receipt for $${payment.amount} at ${payment.businessName} for ${payment.serviceName}`,
   }),
 
   bookingCancellation: (booking: {
-    customerName: string;
-    businessName: string;
-    serviceName: string;
-    date: string;
-    time: string;
-    bookingId: string;
+    customerName: string
+    businessName: string
+    serviceName: string
+    date: string
+    time: string
+    bookingId: string
   }) => ({
     subject: `Booking Cancelled - ${booking.businessName}`,
     html: `
@@ -143,14 +148,14 @@ export const emailTemplates = {
       <p>Booking ID: ${booking.bookingId}</p>
       <p>If you need to book again, visit: ${process.env.NEXTAUTH_URL}/business/${booking.businessName.toLowerCase().replace(/\s+/g, '-')}</p>
     `,
-    text: `Your booking at ${booking.businessName} for ${booking.serviceName} on ${booking.date} at ${booking.time} has been cancelled.`
+    text: `Your booking at ${booking.businessName} for ${booking.serviceName} on ${booking.date} at ${booking.time} has been cancelled.`,
   }),
 
   refundProcessed: (refund: {
-    customerName: string;
-    businessName: string;
-    amount: number;
-    refundId: string;
+    customerName: string
+    businessName: string
+    amount: number
+    refundId: string
   }) => ({
     subject: `Refund Processed - ${refund.businessName}`,
     html: `
@@ -164,13 +169,10 @@ export const emailTemplates = {
       </ul>
       <p>The refund should appear in your account within 5-10 business days.</p>
     `,
-    text: `Refund of $${refund.amount} processed for ${refund.businessName}. Refund ID: ${refund.refundId}`
+    text: `Refund of $${refund.amount} processed for ${refund.businessName}. Refund ID: ${refund.refundId}`,
   }),
 
-  emailVerification: (verification: {
-    name: string;
-    token: string;
-  }) => ({
+  emailVerification: (verification: { name: string; token: string }) => ({
     subject: 'Verify your email - Glamfric',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -202,17 +204,17 @@ export const emailTemplates = {
         </p>
       </div>
     `,
-    text: `Welcome to Glamfric! Please verify your email by visiting: ${process.env.NEXTAUTH_URL}/api/auth/verify-email?token=${verification.token}. This link will expire in 24 hours.`
-  })
-};
+    text: `Welcome to Glamfric! Please verify your email by visiting: ${process.env.NEXTAUTH_URL}/api/auth/verify-email?token=${verification.token}. This link will expire in 24 hours.`,
+  }),
+}
 
 // Helper function to send verification email
 export async function sendVerificationEmail(email: string, name: string, token: string) {
-  const template = emailTemplates.emailVerification({ name, token });
+  const template = emailTemplates.emailVerification({ name, token })
   await sendEmail({
     to: email,
     subject: template.subject,
     html: template.html,
-    text: template.text
-  });
+    text: template.text,
+  })
 }

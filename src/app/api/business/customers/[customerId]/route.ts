@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
+import { getSession } from '@/lib/session'
 
 export async function GET(
   request: Request,
@@ -9,7 +9,7 @@ export async function GET(
   try {
     const { customerId } = await params
     const session = await getSession()
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -75,23 +75,20 @@ export async function GET(
       },
     })
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       customer: {
         ...customer,
         totalSpent: Number(customer.totalSpent),
         averageSpent: Number(customer.averageSpent),
-        bookings: bookings.map(booking => ({
+        bookings: bookings.map((booking) => ({
           ...booking,
           totalPrice: Number(booking.totalPrice),
         })),
-      }
+      },
     })
   } catch (error) {
     console.error('Error fetching customer:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch customer' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch customer' }, { status: 500 })
   }
 }
 
@@ -102,7 +99,7 @@ export async function PATCH(
   try {
     const { customerId } = await params
     const session = await getSession()
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -176,22 +173,19 @@ export async function PATCH(
       },
     })
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       customer: {
         ...updatedCustomer,
         totalSpent: Number(updatedCustomer.totalSpent),
         averageSpent: Number(updatedCustomer.averageSpent),
-        bookings: bookings.map(booking => ({
+        bookings: bookings.map((booking) => ({
           ...booking,
           totalPrice: Number(booking.totalPrice),
         })),
-      }
+      },
     })
   } catch (error) {
     console.error('Error updating customer:', error)
-    return NextResponse.json(
-      { error: 'Failed to update customer' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to update customer' }, { status: 500 })
   }
 }

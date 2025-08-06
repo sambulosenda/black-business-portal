@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
+import { NextRequest, NextResponse } from 'next/server'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
 export async function PATCH(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -14,7 +14,15 @@ export async function PATCH(request: NextRequest) {
     const data = await request.json()
 
     // Validate required fields
-    const requiredFields = ['businessName', 'category', 'address', 'city', 'state', 'zipCode', 'phone']
+    const requiredFields = [
+      'businessName',
+      'category',
+      'address',
+      'city',
+      'state',
+      'zipCode',
+      'phone',
+    ]
     for (const field of requiredFields) {
       if (!data[field]) {
         return NextResponse.json({ error: `${field} is required` }, { status: 400 })
@@ -23,7 +31,7 @@ export async function PATCH(request: NextRequest) {
 
     // Get the business for this user
     const business = await prisma.business.findUnique({
-      where: { userId: session.user.id }
+      where: { userId: session.user.id },
     })
 
     if (!business) {
@@ -45,7 +53,7 @@ export async function PATCH(request: NextRequest) {
         email: data.email || null,
         website: data.website || null,
         instagram: data.instagram || null,
-      }
+      },
     })
 
     return NextResponse.json(updatedBusiness)

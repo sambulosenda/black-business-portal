@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
+import { NextResponse } from 'next/server'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { stripe } from '@/lib/stripe'
@@ -7,7 +7,7 @@ import { stripe } from '@/lib/stripe'
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions)
-    
+
     if (!session?.user || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -75,15 +75,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ url: accountLink.url })
   } catch (error) {
     console.error('Error creating Stripe Connect account:', error)
-    
+
     // Return more specific error message
     const errorMessage = error instanceof Error ? error.message : 'Failed to create Stripe account'
     const isStripeError = error instanceof Error && 'type' in error && error.type === 'StripeError'
-    
+
     return NextResponse.json(
-      { 
+      {
         error: errorMessage,
-        details: isStripeError && 'raw' in error ? (error.raw as Record<string, unknown>)?.message : undefined 
+        details:
+          isStripeError && 'raw' in error
+            ? (error.raw as Record<string, unknown>)?.message
+            : undefined,
       },
       { status: 500 }
     )

@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
-import { prisma } from '@/lib/prisma'
-import { z } from 'zod'
 import crypto from 'crypto'
+import { z } from 'zod'
 import { sendVerificationEmail } from '@/lib/email'
+import { prisma } from '@/lib/prisma'
 
 const signupSchema = z.object({
   name: z.string().min(2),
@@ -23,10 +23,7 @@ export async function POST(req: Request) {
     })
 
     if (existingUser) {
-      return NextResponse.json(
-        { error: 'User already exists with this email' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'User already exists with this email' }, { status: 400 })
     }
 
     // Hash the password
@@ -52,8 +49,8 @@ export async function POST(req: Request) {
       data: {
         identifier: email,
         token,
-        expires
-      }
+        expires,
+      },
     })
 
     // Send verification email
@@ -62,20 +59,14 @@ export async function POST(req: Request) {
     return NextResponse.json({
       message: 'User created successfully. Please check your email to verify your account.',
       userId: user.id,
-      requiresVerification: true
+      requiresVerification: true,
     })
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid input data' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Invalid input data' }, { status: 400 })
     }
 
     console.error('Signup error:', error)
-    return NextResponse.json(
-      { error: 'Something went wrong' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Something went wrong' }, { status: 500 })
   }
 }

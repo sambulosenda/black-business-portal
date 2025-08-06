@@ -1,7 +1,7 @@
-import { requireAuth } from "@/lib/session"
-import { prisma } from "@/lib/prisma"
-import { redirect } from "next/navigation"
-import ReviewForm from "./review-form"
+import { redirect } from 'next/navigation'
+import { prisma } from '@/lib/prisma'
+import { requireAuth } from '@/lib/session'
+import ReviewForm from './review-form'
 
 interface ReviewPageProps {
   params: Promise<{
@@ -42,7 +42,7 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Leave a Review</h1>
           <p className="mt-2 text-gray-600">
@@ -50,18 +50,16 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
           </p>
         </div>
 
-        <div className="bg-white shadow rounded-lg p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">
-            Your Appointment
-          </h2>
-          <div className="text-sm text-gray-600 space-y-1">
+        <div className="mb-6 rounded-lg bg-white p-6 shadow">
+          <h2 className="mb-2 text-lg font-semibold text-gray-900">Your Appointment</h2>
+          <div className="space-y-1 text-sm text-gray-600">
             <p>Service: {booking.service.name}</p>
             <p>Date: {new Date(booking.date).toLocaleDateString()}</p>
             <p>Price: ${booking.totalPrice.toString()}</p>
           </div>
         </div>
 
-        <ReviewForm 
+        <ReviewForm
           bookingId={booking.id}
           businessId={booking.businessId}
           businessName={booking.business.businessName}

@@ -1,18 +1,33 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import {
+  Clock,
+  DollarSign,
+  Edit,
+  Loader2,
+  MoreHorizontal,
+  Package,
+  Plus,
+  Power,
+  Trash2,
+} from 'lucide-react'
 // import { useRouter } from 'next/navigation' // Commented out - may be used later
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Badge } from '@/components/ui/badge'
-import { Loader2, Plus, Clock, DollarSign, Package, MoreHorizontal, Edit, Trash2, Power } from 'lucide-react'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 const serviceSchema = z.object({
   name: z.string().min(2, 'Service name must be at least 2 characters'),
@@ -141,7 +156,7 @@ export default function ServicesPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex min-h-[400px] items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
       </div>
     )
@@ -153,16 +168,14 @@ export default function ServicesPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">Services</h1>
-          <p className="text-gray-600 mt-1">
-            Manage the services you offer to customers
-          </p>
+          <p className="mt-1 text-gray-600">Manage the services you offer to customers</p>
         </div>
         {!showAddForm && (
           <Button
             onClick={() => setShowAddForm(true)}
             className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800"
           >
-            <Plus className="h-4 w-4 mr-2" />
+            <Plus className="mr-2 h-4 w-4" />
             Add Service
           </Button>
         )}
@@ -175,9 +188,7 @@ export default function ServicesPage() {
             <CardTitle className="text-lg font-semibold">
               {editingService ? 'Edit Service' : 'Add New Service'}
             </CardTitle>
-            <CardDescription>
-              Fill in the details for your service
-            </CardDescription>
+            <CardDescription>Fill in the details for your service</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -190,9 +201,7 @@ export default function ServicesPage() {
                     placeholder="e.g., Classic Haircut"
                     className="border-gray-300"
                   />
-                  {errors.name && (
-                    <p className="text-sm text-red-600">{errors.name.message}</p>
-                  )}
+                  {errors.name && <p className="text-sm text-red-600">{errors.name.message}</p>}
                 </div>
 
                 <div className="space-y-2">
@@ -211,28 +220,26 @@ export default function ServicesPage() {
                 <div className="space-y-2">
                   <Label htmlFor="price">Price ($)</Label>
                   <div className="relative">
-                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                    <DollarSign className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-500" />
                     <Input
                       {...register('price')}
                       id="price"
                       placeholder="50.00"
-                      className="pl-10 border-gray-300"
+                      className="border-gray-300 pl-10"
                     />
                   </div>
-                  {errors.price && (
-                    <p className="text-sm text-red-600">{errors.price.message}</p>
-                  )}
+                  {errors.price && <p className="text-sm text-red-600">{errors.price.message}</p>}
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="duration">Duration (minutes)</Label>
                   <div className="relative">
-                    <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                    <Clock className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-500" />
                     <Input
                       {...register('duration')}
                       id="duration"
                       placeholder="60"
-                      className="pl-10 border-gray-300"
+                      className="border-gray-300 pl-10"
                     />
                   </div>
                   {errors.duration && (
@@ -248,7 +255,7 @@ export default function ServicesPage() {
                   id="description"
                   placeholder="Describe what this service includes..."
                   rows={3}
-                  className="border-gray-300 resize-none"
+                  className="resize-none border-gray-300"
                 />
               </div>
 
@@ -282,7 +289,10 @@ export default function ServicesPage() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {services.length > 0 ? (
           services.map((service) => (
-            <Card key={service.id} className="border border-gray-200 shadow-sm hover:shadow-md transition-all">
+            <Card
+              key={service.id}
+              className="border border-gray-200 shadow-sm transition-all hover:shadow-md"
+            >
               <CardHeader className="pb-4">
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
@@ -335,10 +345,10 @@ export default function ServicesPage() {
               </CardHeader>
               <CardContent>
                 {service.description && (
-                  <p className="text-sm text-gray-600 mb-4">{service.description}</p>
+                  <p className="mb-4 text-sm text-gray-600">{service.description}</p>
                 )}
                 <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-1 text-gray-900 font-medium">
+                  <div className="flex items-center gap-1 font-medium text-gray-900">
                     <DollarSign className="h-4 w-4 text-gray-400" />
                     <span>{service.price}</span>
                   </div>
@@ -353,16 +363,16 @@ export default function ServicesPage() {
         ) : (
           <Card className="col-span-full border-2 border-dashed border-gray-300">
             <CardContent className="flex flex-col items-center justify-center py-12">
-              <Package className="h-12 w-12 text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-1">No services added yet</h3>
-              <p className="text-sm text-gray-500 mb-4">
+              <Package className="mb-4 h-12 w-12 text-gray-400" />
+              <h3 className="mb-1 text-lg font-medium text-gray-900">No services added yet</h3>
+              <p className="mb-4 text-sm text-gray-500">
                 Add your first service to start receiving bookings
               </p>
               <Button
                 onClick={() => setShowAddForm(true)}
                 className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800"
               >
-                <Plus className="h-4 w-4 mr-2" />
+                <Plus className="mr-2 h-4 w-4" />
                 Add Your First Service
               </Button>
             </CardContent>

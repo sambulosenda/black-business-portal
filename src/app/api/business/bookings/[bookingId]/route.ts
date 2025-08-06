@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
+import { NextRequest, NextResponse } from 'next/server'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
@@ -10,7 +10,7 @@ export async function PATCH(
   try {
     const { bookingId } = await params
     const session = await getServerSession(authOptions)
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -25,7 +25,7 @@ export async function PATCH(
 
     // Get the business for this user
     const business = await prisma.business.findUnique({
-      where: { userId: session.user.id }
+      where: { userId: session.user.id },
     })
 
     if (!business) {
@@ -36,8 +36,8 @@ export async function PATCH(
     const booking = await prisma.booking.findFirst({
       where: {
         id: bookingId,
-        businessId: business.id
-      }
+        businessId: business.id,
+      },
     })
 
     if (!booking) {
@@ -47,7 +47,7 @@ export async function PATCH(
     // Update the booking status
     const updatedBooking = await prisma.booking.update({
       where: { id: bookingId },
-      data: { status }
+      data: { status },
     })
 
     return NextResponse.json(updatedBooking)

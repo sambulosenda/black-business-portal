@@ -26,7 +26,7 @@ export async function GET(request: Request) {
 
     // Check if onboarding is complete
     const account = await stripe.accounts.retrieve(business.stripeAccountId)
-    
+
     if (account.charges_enabled && account.payouts_enabled) {
       // Mark as onboarded in database
       await prisma.business.update({

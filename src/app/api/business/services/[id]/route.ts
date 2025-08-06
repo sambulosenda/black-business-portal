@@ -1,8 +1,8 @@
-import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
+import { NextResponse } from 'next/server'
+import { z } from 'zod'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { z } from 'zod'
 
 const updateSchema = z.object({
   name: z.string().min(2).optional(),
@@ -57,17 +57,11 @@ export async function PUT(req: Request, { params }: RouteParams) {
     return NextResponse.json({ service: updatedService })
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid input data' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Invalid input data' }, { status: 400 })
     }
 
     console.error('Error updating service:', error)
-    return NextResponse.json(
-      { error: 'Failed to update service' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to update service' }, { status: 500 })
   }
 }
 
@@ -109,10 +103,7 @@ export async function PATCH(req: Request, { params }: RouteParams) {
     return NextResponse.json({ service: updatedService })
   } catch (error) {
     console.error('Error updating service status:', error)
-    return NextResponse.json(
-      { error: 'Failed to update service status' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to update service status' }, { status: 500 })
   }
 }
 
@@ -164,9 +155,6 @@ export async function DELETE(req: Request, { params }: RouteParams) {
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Error deleting service:', error)
-    return NextResponse.json(
-      { error: 'Failed to delete service' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to delete service' }, { status: 500 })
   }
 }

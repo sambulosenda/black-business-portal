@@ -1,8 +1,8 @@
 'use client'
 
 import Link from 'next/link'
+import { MoreHorizontal, Star, ThumbsUp } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Star, ThumbsUp, MoreHorizontal } from 'lucide-react'
 import type { ReviewWithRelations } from '@/types'
 
 interface ReviewsSectionProps {
@@ -12,19 +12,27 @@ interface ReviewsSectionProps {
   businessSlug: string
 }
 
-export default function ReviewsSection({ reviews, averageRating, totalReviews, businessSlug }: ReviewsSectionProps) {
-  const ratingBreakdown = [5, 4, 3, 2, 1].map(rating => {
-    const count = reviews.filter(r => r.rating === rating).length
+export default function ReviewsSection({
+  reviews,
+  averageRating,
+  totalReviews,
+  businessSlug,
+}: ReviewsSectionProps) {
+  const ratingBreakdown = [5, 4, 3, 2, 1].map((rating) => {
+    const count = reviews.filter((r) => r.rating === rating).length
     const percentage = totalReviews > 0 ? (count / totalReviews) * 100 : 0
     return { rating, count, percentage }
   })
-  
+
   return (
-    <section id="reviews" className="bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/50 rounded-2xl p-8 border border-indigo-100/50">
-      <div className="flex items-center justify-between mb-6">
+    <section
+      id="reviews"
+      className="rounded-2xl border border-indigo-100/50 bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/50 p-8"
+    >
+      <div className="mb-6 flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Customer Reviews</h2>
-          <p className="text-gray-600 mt-1">Real experiences from real customers</p>
+          <p className="mt-1 text-gray-600">Real experiences from real customers</p>
         </div>
         {totalReviews > reviews.length && (
           <Link href={`/business/${businessSlug}/reviews`}>
@@ -34,64 +42,60 @@ export default function ReviewsSection({ reviews, averageRating, totalReviews, b
           </Link>
         )}
       </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+
+      <div className="mb-8 grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="text-center">
           <div className="text-5xl font-bold text-gray-900">{averageRating.toFixed(1)}</div>
-          <div className="flex justify-center mt-2">
+          <div className="mt-2 flex justify-center">
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
                 className={`h-6 w-6 ${
-                  i < Math.round(averageRating)
-                    ? 'text-purple-500 fill-current'
-                    : 'text-gray-300'
+                  i < Math.round(averageRating) ? 'fill-current text-purple-500' : 'text-gray-300'
                 }`}
               />
             ))}
           </div>
-          <p className="text-gray-600 mt-2">{totalReviews} total reviews</p>
+          <p className="mt-2 text-gray-600">{totalReviews} total reviews</p>
         </div>
-        
-        <div className="lg:col-span-2 space-y-2">
+
+        <div className="space-y-2 lg:col-span-2">
           {ratingBreakdown.map(({ rating, count, percentage }) => (
             <div key={rating} className="flex items-center gap-3">
-              <span className="text-sm font-medium w-3">{rating}</span>
-              <Star className="h-4 w-4 text-purple-500 fill-current" />
-              <div className="flex-1 bg-gray-200 rounded-full h-2 overflow-hidden">
-                <div 
-                  className="bg-gradient-to-r from-indigo-500 to-purple-500 h-full transition-all duration-500"
+              <span className="w-3 text-sm font-medium">{rating}</span>
+              <Star className="h-4 w-4 fill-current text-purple-500" />
+              <div className="h-2 flex-1 overflow-hidden rounded-full bg-gray-200">
+                <div
+                  className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-500"
                   style={{ width: `${percentage}%` }}
                 />
               </div>
-              <span className="text-sm text-gray-600 w-12 text-right">{count}</span>
+              <span className="w-12 text-right text-sm text-gray-600">{count}</span>
             </div>
           ))}
         </div>
       </div>
-      
+
       <div className="space-y-6">
         {reviews.slice(0, 3).map((review) => (
-          <div key={review.id} className="bg-white rounded-xl p-6 shadow-sm">
-            <div className="flex items-start justify-between mb-3">
+          <div key={review.id} className="rounded-xl bg-white p-6 shadow-sm">
+            <div className="mb-3 flex items-start justify-between">
               <div>
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center">
-                    <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent font-semibold">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-indigo-100 to-purple-100">
+                    <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text font-semibold text-transparent">
                       {review.user?.name?.charAt(0) || 'U'}
                     </span>
                   </div>
                   <div>
                     <p className="font-medium text-gray-900">{review.user?.name || 'Anonymous'}</p>
-                    <div className="flex items-center gap-2 mt-1">
+                    <div className="mt-1 flex items-center gap-2">
                       <div className="flex">
                         {[...Array(5)].map((_, i) => (
                           <Star
                             key={i}
                             className={`h-4 w-4 ${
-                              i < review.rating
-                                ? 'text-purple-500 fill-current'
-                                : 'text-gray-300'
+                              i < review.rating ? 'fill-current text-purple-500' : 'text-gray-300'
                             }`}
                           />
                         ))}
@@ -100,7 +104,7 @@ export default function ReviewsSection({ reviews, averageRating, totalReviews, b
                         {new Date(review.createdAt).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
-                          year: 'numeric'
+                          year: 'numeric',
                         })}
                       </span>
                     </div>
@@ -111,11 +115,9 @@ export default function ReviewsSection({ reviews, averageRating, totalReviews, b
                 <MoreHorizontal className="h-5 w-5" />
               </button>
             </div>
-            
-            {review.comment && (
-              <p className="text-gray-700 leading-relaxed">{review.comment}</p>
-            )}
-            
+
+            {review.comment && <p className="leading-relaxed text-gray-700">{review.comment}</p>}
+
             <div className="mt-4 flex items-center gap-4">
               <button className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700">
                 <ThumbsUp className="h-4 w-4" />

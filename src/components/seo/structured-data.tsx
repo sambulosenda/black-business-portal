@@ -39,29 +39,37 @@ export function LocalBusinessSchema({
     url,
     telephone,
     email,
-    address: address ? {
-      '@type': 'PostalAddress',
-      streetAddress: address,
-      addressLocality: city,
-      postalCode: postalCode,
-      addressCountry: 'US',
-    } : undefined,
+    address: address
+      ? {
+          '@type': 'PostalAddress',
+          streetAddress: address,
+          addressLocality: city,
+          postalCode: postalCode,
+          addressCountry: 'US',
+        }
+      : undefined,
     priceRange,
-    aggregateRating: ratingValue && ratingCount ? {
-      '@type': 'AggregateRating',
-      ratingValue,
-      ratingCount,
-    } : undefined,
+    aggregateRating:
+      ratingValue && ratingCount
+        ? {
+            '@type': 'AggregateRating',
+            ratingValue,
+            ratingCount,
+          }
+        : undefined,
     image,
-    hasOfferCatalog: services.length > 0 ? {
-      '@type': 'OfferCatalog',
-      name: 'Beauty Services',
-      itemListElement: services.map((service, index) => ({
-        '@type': 'Offer',
-        position: index + 1,
-        name: service,
-      })),
-    } : undefined,
+    hasOfferCatalog:
+      services.length > 0
+        ? {
+            '@type': 'OfferCatalog',
+            name: 'Beauty Services',
+            itemListElement: services.map((service, index) => ({
+              '@type': 'Offer',
+              position: index + 1,
+              name: service,
+            })),
+          }
+        : undefined,
   }
 
   // Remove undefined values
@@ -83,7 +91,8 @@ export function WebsiteSchema() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Glamfric',
-    description: 'Find and instantly book appointments at top-rated African beauty salons near you.',
+    description:
+      'Find and instantly book appointments at top-rated African beauty salons near you.',
     url: process.env.NEXT_PUBLIC_URL || 'https://glamfric.com',
     potentialAction: {
       '@type': 'SearchAction',

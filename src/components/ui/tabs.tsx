@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, createContext, useContext, ReactNode } from 'react'
+import { ReactNode, createContext, useContext, useState } from 'react'
 import { cn } from '@/lib/utils'
 
 interface TabsContextValue {
@@ -21,9 +21,7 @@ export function Tabs({ defaultValue, children, className }: TabsProps) {
 
   return (
     <TabsContext.Provider value={{ activeTab, setActiveTab }}>
-      <div className={cn('w-full', className)}>
-        {children}
-      </div>
+      <div className={cn('w-full', className)}>{children}</div>
     </TabsContext.Provider>
   )
 }
@@ -70,12 +68,12 @@ export function TabsTrigger({ value, children, className }: TabsTriggerProps) {
       aria-controls={`panel-${value}`}
       onClick={() => setActiveTab(value)}
       className={cn(
-        'inline-flex items-center justify-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium ring-offset-white transition-all duration-200',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2',
+        'inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium whitespace-nowrap ring-offset-white transition-all duration-200',
+        'focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:outline-none',
         'disabled:pointer-events-none disabled:opacity-50',
         isActive
           ? 'bg-white text-indigo-600 shadow-sm'
-          : 'text-gray-500 hover:text-gray-700 hover:bg-white/50',
+          : 'text-gray-500 hover:bg-white/50 hover:text-gray-700',
         className
       )}
     >
@@ -106,7 +104,7 @@ export function TabsContent({ value, children, className }: TabsContentProps) {
       role="tabpanel"
       id={`panel-${value}`}
       className={cn(
-        'mt-2 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950 focus-visible:ring-offset-2',
+        'mt-2 ring-offset-white focus-visible:ring-2 focus-visible:ring-gray-950 focus-visible:ring-offset-2 focus-visible:outline-none',
         'animate-fade-in',
         className
       )}

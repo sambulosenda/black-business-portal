@@ -1,22 +1,47 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useEffect, useState } from 'react'
 // import { ScrollArea } from "@/components/ui/scroll-area" // Commented out - may be used later
-import { Loader2, Plus, User, Mail, Phone, Shield, Calendar, Clock, Edit, CheckCircle, XCircle } from "lucide-react"
-import { toast } from "sonner"
+import {
+  Calendar,
+  CheckCircle,
+  Clock,
+  Edit,
+  Loader2,
+  Mail,
+  Phone,
+  Plus,
+  Shield,
+  User,
+  XCircle,
+} from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import { z } from 'zod'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 const staffSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -74,7 +99,7 @@ export default function StaffPage() {
       role: 'STAFF',
       canManageBookings: true,
       canManageStaff: false,
-    }
+    },
   })
 
   const watchRole = watch('role')
@@ -128,9 +153,7 @@ export default function StaffPage() {
 
   const onSubmit = async (data: StaffFormData) => {
     try {
-      const url = editingStaff
-        ? `/api/business/staff/${editingStaff.id}`
-        : '/api/business/staff'
+      const url = editingStaff ? `/api/business/staff/${editingStaff.id}` : '/api/business/staff'
       const method = editingStaff ? 'PUT' : 'POST'
 
       const response = await fetch(url, {
@@ -207,7 +230,7 @@ export default function StaffPage() {
     setValue('role', member.role as 'STAFF' | 'MANAGER' | 'OWNER')
     setValue('canManageBookings', member.canManageBookings)
     setValue('canManageStaff', member.canManageStaff)
-    setSelectedServices(member.services?.map(s => s.service.id) || [])
+    setSelectedServices(member.services?.map((s) => s.service.id) || [])
     setShowAddDialog(true)
   }
 
@@ -224,7 +247,7 @@ export default function StaffPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex min-h-[400px] items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
       </div>
     )
@@ -235,10 +258,13 @@ export default function StaffPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">Staff Management</h1>
-          <p className="text-gray-600 mt-1">Manage your team members and their permissions</p>
+          <p className="mt-1 text-gray-600">Manage your team members and their permissions</p>
         </div>
-        <Button onClick={() => setShowAddDialog(true)} className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800">
-          <Plus className="h-4 w-4 mr-2" />
+        <Button
+          onClick={() => setShowAddDialog(true)}
+          className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800"
+        >
+          <Plus className="mr-2 h-4 w-4" />
           Add Staff Member
         </Button>
       </div>
@@ -246,24 +272,33 @@ export default function StaffPage() {
       {/* Staff List */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {staff.map((member) => (
-          <Card key={member.id} className={`border border-gray-200 shadow-sm hover:shadow-md transition-all ${!member.isActive ? 'opacity-60' : ''}`}>
+          <Card
+            key={member.id}
+            className={`border border-gray-200 shadow-sm transition-all hover:shadow-md ${!member.isActive ? 'opacity-60' : ''}`}
+          >
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div className="flex items-center space-x-3">
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={member.profileImage || ''} />
                     <AvatarFallback>
-                      {member.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                      {member.name
+                        .split(' ')
+                        .map((n) => n[0])
+                        .join('')
+                        .toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   <div>
                     <h3 className="font-semibold text-gray-900">{member.name}</h3>
-                    <Badge 
-                      variant="outline" 
+                    <Badge
+                      variant="outline"
                       className={`mt-1 ${
-                        member.role === 'OWNER' ? 'border-red-200 bg-red-50 text-red-700' :
-                        member.role === 'MANAGER' ? 'border-indigo-200 bg-indigo-50 text-indigo-700' :
-                        'border-gray-200 bg-gray-50 text-gray-700'
+                        member.role === 'OWNER'
+                          ? 'border-red-200 bg-red-50 text-red-700'
+                          : member.role === 'MANAGER'
+                            ? 'border-indigo-200 bg-indigo-50 text-indigo-700'
+                            : 'border-gray-200 bg-gray-50 text-gray-700'
                       }`}
                     >
                       {member.role}
@@ -296,14 +331,20 @@ export default function StaffPage() {
 
               <div className="flex flex-wrap gap-2">
                 {member.canManageBookings && (
-                  <Badge variant="outline" className="text-xs border-blue-200 bg-blue-50 text-blue-700">
-                    <Calendar className="h-3 w-3 mr-1" />
+                  <Badge
+                    variant="outline"
+                    className="border-blue-200 bg-blue-50 text-xs text-blue-700"
+                  >
+                    <Calendar className="mr-1 h-3 w-3" />
                     Manage Bookings
                   </Badge>
                 )}
                 {member.canManageStaff && (
-                  <Badge variant="outline" className="text-xs border-purple-200 bg-purple-50 text-purple-700">
-                    <Shield className="h-3 w-3 mr-1" />
+                  <Badge
+                    variant="outline"
+                    className="border-purple-200 bg-purple-50 text-xs text-purple-700"
+                  >
+                    <Shield className="mr-1 h-3 w-3" />
                     Manage Staff
                   </Badge>
                 )}
@@ -312,23 +353,25 @@ export default function StaffPage() {
               <div className="flex items-center justify-between pt-2">
                 <div className="flex items-center gap-2">
                   {member.isActive ? (
-                    <Badge variant="outline" className="text-xs border-green-200 bg-green-50 text-green-700">
-                      <CheckCircle className="h-3 w-3 mr-1" />
+                    <Badge
+                      variant="outline"
+                      className="border-green-200 bg-green-50 text-xs text-green-700"
+                    >
+                      <CheckCircle className="mr-1 h-3 w-3" />
                       Active
                     </Badge>
                   ) : (
-                    <Badge variant="outline" className="text-xs border-red-200 bg-red-50 text-red-700">
-                      <XCircle className="h-3 w-3 mr-1" />
+                    <Badge
+                      variant="outline"
+                      className="border-red-200 bg-red-50 text-xs text-red-700"
+                    >
+                      <XCircle className="mr-1 h-3 w-3" />
                       Inactive
                     </Badge>
                   )}
                 </div>
                 <div className="flex items-center gap-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => startEdit(member)}
-                  >
+                  <Button variant="ghost" size="sm" onClick={() => startEdit(member)}>
                     <Edit className="h-3 w-3" />
                   </Button>
                   <Button
@@ -348,13 +391,16 @@ export default function StaffPage() {
       {staff.length === 0 && (
         <Card className="border-2 border-dashed border-gray-300">
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <User className="h-12 w-12 text-gray-400 mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">No staff members yet</h3>
-            <p className="text-gray-600 text-center mb-4">
+            <User className="mb-4 h-12 w-12 text-gray-400" />
+            <h3 className="mb-2 text-lg font-semibold text-gray-900">No staff members yet</h3>
+            <p className="mb-4 text-center text-gray-600">
               Add your first team member to get started
             </p>
-            <Button onClick={() => setShowAddDialog(true)} className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800">
-              <Plus className="h-4 w-4 mr-2" />
+            <Button
+              onClick={() => setShowAddDialog(true)}
+              className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800"
+            >
+              <Plus className="mr-2 h-4 w-4" />
               Add Staff Member
             </Button>
           </CardContent>
@@ -362,22 +408,21 @@ export default function StaffPage() {
       )}
 
       {/* Add/Edit Staff Dialog */}
-      <Dialog open={showAddDialog} onOpenChange={(open) => {
-        setShowAddDialog(open)
-        if (!open) {
-          setEditingStaff(null)
-          setSelectedServices([])
-          reset()
-        }
-      }}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <Dialog
+        open={showAddDialog}
+        onOpenChange={(open) => {
+          setShowAddDialog(open)
+          if (!open) {
+            setEditingStaff(null)
+            setSelectedServices([])
+            reset()
+          }
+        }}
+      >
+        <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>
-              {editingStaff ? 'Edit Staff Member' : 'Add New Staff Member'}
-            </DialogTitle>
-            <DialogDescription>
-              Enter the details of your team member
-            </DialogDescription>
+            <DialogTitle>{editingStaff ? 'Edit Staff Member' : 'Add New Staff Member'}</DialogTitle>
+            <DialogDescription>Enter the details of your team member</DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -385,14 +430,8 @@ export default function StaffPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="name">Name</Label>
-                  <Input
-                    {...register('name')}
-                    id="name"
-                    placeholder="John Doe"
-                  />
-                  {errors.name && (
-                    <p className="text-sm text-red-600">{errors.name.message}</p>
-                  )}
+                  <Input {...register('name')} id="name" placeholder="John Doe" />
+                  {errors.name && <p className="text-sm text-red-600">{errors.name.message}</p>}
                 </div>
 
                 <div className="space-y-2">
@@ -403,25 +442,21 @@ export default function StaffPage() {
                     type="email"
                     placeholder="john@example.com"
                   />
-                  {errors.email && (
-                    <p className="text-sm text-red-600">{errors.email.message}</p>
-                  )}
+                  {errors.email && <p className="text-sm text-red-600">{errors.email.message}</p>}
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone (optional)</Label>
-                  <Input
-                    {...register('phone')}
-                    id="phone"
-                    placeholder="+1 (555) 123-4567"
-                  />
+                  <Input {...register('phone')} id="phone" placeholder="+1 (555) 123-4567" />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="role">Role</Label>
                   <Select
                     value={watch('role')}
-                    onValueChange={(value) => setValue('role', value as 'STAFF' | 'MANAGER' | 'OWNER')}
+                    onValueChange={(value) =>
+                      setValue('role', value as 'STAFF' | 'MANAGER' | 'OWNER')
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -443,12 +478,14 @@ export default function StaffPage() {
                       {...register('canManageBookings')}
                       id="canManageBookings"
                       checked={watch('canManageBookings')}
-                      onCheckedChange={(checked) => setValue('canManageBookings', checked as boolean)}
+                      onCheckedChange={(checked) =>
+                        setValue('canManageBookings', checked as boolean)
+                      }
                       disabled={watchRole === 'OWNER' || watchRole === 'MANAGER'}
                     />
                     <Label
                       htmlFor="canManageBookings"
-                      className="text-sm font-normal cursor-pointer"
+                      className="cursor-pointer text-sm font-normal"
                     >
                       Can manage bookings (view, confirm, cancel)
                     </Label>
@@ -461,10 +498,7 @@ export default function StaffPage() {
                       onCheckedChange={(checked) => setValue('canManageStaff', checked as boolean)}
                       disabled={watchRole === 'OWNER'}
                     />
-                    <Label
-                      htmlFor="canManageStaff"
-                      className="text-sm font-normal cursor-pointer"
-                    >
+                    <Label htmlFor="canManageStaff" className="cursor-pointer text-sm font-normal">
                       Can manage other staff members
                     </Label>
                   </div>
@@ -487,13 +521,15 @@ export default function StaffPage() {
                             if (checked) {
                               setSelectedServices([...selectedServices, service.id])
                             } else {
-                              setSelectedServices(selectedServices.filter(id => id !== service.id))
+                              setSelectedServices(
+                                selectedServices.filter((id) => id !== service.id)
+                              )
                             }
                           }}
                         />
                         <Label
                           htmlFor={`service-${service.id}`}
-                          className="text-sm font-normal cursor-pointer"
+                          className="cursor-pointer text-sm font-normal"
                         >
                           {service.name}
                         </Label>
@@ -513,8 +549,12 @@ export default function StaffPage() {
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isSubmitting} className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800">
-                {isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800"
+              >
+                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {editingStaff ? 'Update' : 'Add'} Staff Member
               </Button>
             </DialogFooter>
@@ -532,9 +572,24 @@ export default function StaffPage() {
 
             <Tabs defaultValue="info" className="mt-4">
               <TabsList className="grid w-full grid-cols-3 bg-gray-100">
-                <TabsTrigger value="info" className="data-[state=active]:bg-white data-[state=active]:text-indigo-600">Information</TabsTrigger>
-                <TabsTrigger value="services" className="data-[state=active]:bg-white data-[state=active]:text-indigo-600">Services</TabsTrigger>
-                <TabsTrigger value="schedule" className="data-[state=active]:bg-white data-[state=active]:text-indigo-600">Schedule</TabsTrigger>
+                <TabsTrigger
+                  value="info"
+                  className="data-[state=active]:bg-white data-[state=active]:text-indigo-600"
+                >
+                  Information
+                </TabsTrigger>
+                <TabsTrigger
+                  value="services"
+                  className="data-[state=active]:bg-white data-[state=active]:text-indigo-600"
+                >
+                  Services
+                </TabsTrigger>
+                <TabsTrigger
+                  value="schedule"
+                  className="data-[state=active]:bg-white data-[state=active]:text-indigo-600"
+                >
+                  Schedule
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="info" className="space-y-4">
@@ -542,17 +597,23 @@ export default function StaffPage() {
                   <Avatar className="h-16 w-16">
                     <AvatarImage src={selectedStaff.profileImage || ''} />
                     <AvatarFallback>
-                      {selectedStaff.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                      {selectedStaff.name
+                        .split(' ')
+                        .map((n) => n[0])
+                        .join('')
+                        .toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900">{selectedStaff.name}</h3>
-                    <Badge 
+                    <Badge
                       variant="outline"
                       className={`${
-                        selectedStaff.role === 'OWNER' ? 'border-red-200 bg-red-50 text-red-700' :
-                        selectedStaff.role === 'MANAGER' ? 'border-indigo-200 bg-indigo-50 text-indigo-700' :
-                        'border-gray-200 bg-gray-50 text-gray-700'
+                        selectedStaff.role === 'OWNER'
+                          ? 'border-red-200 bg-red-50 text-red-700'
+                          : selectedStaff.role === 'MANAGER'
+                            ? 'border-indigo-200 bg-indigo-50 text-indigo-700'
+                            : 'border-gray-200 bg-gray-50 text-gray-700'
                       }`}
                     >
                       {selectedStaff.role}
@@ -573,15 +634,18 @@ export default function StaffPage() {
                   )}
                   <div>
                     <Label className="text-sm text-gray-500">Status</Label>
-                    <div className="flex items-center gap-2 mt-1">
+                    <div className="mt-1 flex items-center gap-2">
                       {selectedStaff.isActive ? (
-                        <Badge variant="outline" className="border-green-200 bg-green-50 text-green-700">
-                          <CheckCircle className="h-3 w-3 mr-1" />
+                        <Badge
+                          variant="outline"
+                          className="border-green-200 bg-green-50 text-green-700"
+                        >
+                          <CheckCircle className="mr-1 h-3 w-3" />
                           Active
                         </Badge>
                       ) : (
                         <Badge variant="outline" className="border-red-200 bg-red-50 text-red-700">
-                          <XCircle className="h-3 w-3 mr-1" />
+                          <XCircle className="mr-1 h-3 w-3" />
                           Inactive
                         </Badge>
                       )}
@@ -597,16 +661,19 @@ export default function StaffPage() {
 
                 <div>
                   <Label className="text-sm text-gray-500">Permissions</Label>
-                  <div className="flex flex-wrap gap-2 mt-2">
+                  <div className="mt-2 flex flex-wrap gap-2">
                     {selectedStaff.canManageBookings && (
                       <Badge variant="outline" className="border-blue-200 bg-blue-50 text-blue-700">
-                        <Calendar className="h-3 w-3 mr-1" />
+                        <Calendar className="mr-1 h-3 w-3" />
                         Manage Bookings
                       </Badge>
                     )}
                     {selectedStaff.canManageStaff && (
-                      <Badge variant="outline" className="border-purple-200 bg-purple-50 text-purple-700">
-                        <Shield className="h-3 w-3 mr-1" />
+                      <Badge
+                        variant="outline"
+                        className="border-purple-200 bg-purple-50 text-purple-700"
+                      >
+                        <Shield className="mr-1 h-3 w-3" />
                         Manage Staff
                       </Badge>
                     )}
@@ -616,41 +683,35 @@ export default function StaffPage() {
 
               <TabsContent value="services">
                 <div className="space-y-4">
-                  <p className="text-sm text-gray-600">
-                    Services this staff member can perform
-                  </p>
+                  <p className="text-sm text-gray-600">Services this staff member can perform</p>
                   {selectedStaff.services && selectedStaff.services.length > 0 ? (
                     <div className="grid gap-2">
                       {selectedStaff.services.map((item) => (
                         <div
                           key={item.service.id}
-                          className="flex items-center justify-between p-3 rounded-lg border border-gray-200 bg-gray-50"
+                          className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-3"
                         >
                           <span className="font-medium text-gray-900">{item.service.name}</span>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-center py-8 text-gray-500">
-                      No services assigned yet
-                    </p>
+                    <p className="py-8 text-center text-gray-500">No services assigned yet</p>
                   )}
                 </div>
               </TabsContent>
 
               <TabsContent value="schedule">
                 <div className="space-y-4">
-                  <p className="text-sm text-gray-600">
-                    Working hours for this staff member
-                  </p>
+                  <p className="text-sm text-gray-600">Working hours for this staff member</p>
                   {selectedStaff.schedules && selectedStaff.schedules.length > 0 ? (
                     <div className="grid gap-2">
                       {dayNames.map((day, index) => {
-                        const schedule = selectedStaff.schedules?.find(s => s.dayOfWeek === index)
+                        const schedule = selectedStaff.schedules?.find((s) => s.dayOfWeek === index)
                         return (
                           <div
                             key={index}
-                            className="flex items-center justify-between p-3 rounded-lg border border-gray-200 bg-gray-50"
+                            className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-3"
                           >
                             <span className="font-medium text-gray-900">{day}</span>
                             {schedule && schedule.isActive ? (
@@ -666,23 +727,28 @@ export default function StaffPage() {
                       })}
                     </div>
                   ) : (
-                    <p className="text-center py-8 text-gray-500">
-                      No schedule set yet
-                    </p>
+                    <p className="py-8 text-center text-gray-500">No schedule set yet</p>
                   )}
                 </div>
               </TabsContent>
             </Tabs>
 
             <DialogFooter>
-              <Button variant="outline" onClick={() => setSelectedStaff(null)} className="hover:bg-gray-50">
+              <Button
+                variant="outline"
+                onClick={() => setSelectedStaff(null)}
+                className="hover:bg-gray-50"
+              >
                 Close
               </Button>
-              <Button onClick={() => {
-                startEdit(selectedStaff)
-                setSelectedStaff(null)
-              }} className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800">
-                <Edit className="h-4 w-4 mr-2" />
+              <Button
+                onClick={() => {
+                  startEdit(selectedStaff)
+                  setSelectedStaff(null)
+                }}
+                className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800"
+              >
+                <Edit className="mr-2 h-4 w-4" />
                 Edit Staff Member
               </Button>
             </DialogFooter>

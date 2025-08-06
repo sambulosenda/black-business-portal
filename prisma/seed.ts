@@ -1,5 +1,5 @@
-import { PrismaClient, BookingStatus } from '@prisma/client'
 import bcrypt from 'bcryptjs'
+import { BookingStatus, PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -8,11 +8,7 @@ async function main() {
 
   // Clean existing data in the correct order
   await prisma.review.deleteMany()
-  await prisma.orderItem.deleteMany()
-  await prisma.order.deleteMany()
   await prisma.booking.deleteMany()
-  await prisma.product.deleteMany()
-  await prisma.productCategory.deleteMany()
   await prisma.service.deleteMany()
   await prisma.promotion.deleteMany()
   await prisma.availability.deleteMany()
@@ -66,7 +62,8 @@ async function main() {
       userId: businessOwner1.id,
       businessName: 'Curls & Coils Beauty Bar',
       slug: 'curls-coils-beauty-bar',
-      description: 'Specializing in natural hair care and styling for all curl patterns. We use organic products and provide personalized consultations.',
+      description:
+        'Specializing in natural hair care and styling for all curl patterns. We use organic products and provide personalized consultations.',
       category: 'HAIR_SALON',
       address: '123 Main Street',
       city: 'Atlanta',
@@ -130,7 +127,8 @@ async function main() {
       userId: businessOwner2.id,
       businessName: 'King Cuts Barbershop',
       slug: 'king-cuts-barbershop',
-      description: 'Premium barbershop experience with skilled barbers specializing in fades, designs, and beard grooming.',
+      description:
+        'Premium barbershop experience with skilled barbers specializing in fades, designs, and beard grooming.',
       category: 'BARBER_SHOP',
       address: '456 Peachtree Ave',
       city: 'Atlanta',
@@ -192,7 +190,8 @@ async function main() {
       userId: businessOwner3.id,
       businessName: 'Glow Up Nail Studio',
       slug: 'glow-up-nail-studio',
-      description: 'Luxury nail care with a focus on nail health. We offer gel, acrylic, and natural nail services.',
+      description:
+        'Luxury nail care with a focus on nail health. We offer gel, acrylic, and natural nail services.',
       category: 'NAIL_SALON',
       address: '789 MLK Blvd',
       city: 'Houston',
@@ -254,7 +253,8 @@ async function main() {
       userId: businessOwner4.id,
       businessName: 'Serenity Spa & Wellness',
       slug: 'serenity-spa-wellness',
-      description: 'Full-service spa offering massages, facials, and body treatments in a tranquil environment.',
+      description:
+        'Full-service spa offering massages, facials, and body treatments in a tranquil environment.',
       category: 'SPA',
       address: '321 Wellness Way',
       city: 'Chicago',
@@ -302,379 +302,6 @@ async function main() {
     ],
   })
 
-  // Create product categories and products
-  // Products for Curls & Coils Beauty Bar (Hair Salon)
-  const hairCareCategory = await prisma.productCategory.create({
-    data: {
-      businessId: business1.id,
-      name: 'Hair Care',
-      description: 'Premium hair care products for all curl patterns',
-      displayOrder: 1,
-      isActive: true,
-    },
-  })
-
-  const stylingCategory = await prisma.productCategory.create({
-    data: {
-      businessId: business1.id,
-      name: 'Styling Products',
-      description: 'Professional styling products for natural hair',
-      displayOrder: 2,
-      isActive: true,
-    },
-  })
-
-  await prisma.product.createMany({
-    data: [
-      {
-        businessId: business1.id,
-        categoryId: hairCareCategory.id,
-        name: 'Moisturizing Shampoo',
-        description: 'Sulfate-free shampoo for curly and coily hair',
-        sku: 'CC-SHMP-001',
-        price: 24.99,
-        compareAtPrice: 29.99,
-        trackInventory: true,
-        quantity: 50,
-        lowStockAlert: 10,
-        images: [],
-        displayOrder: 1,
-        isActive: true,
-        isFeatured: true,
-        brand: 'Curls & Coils',
-        tags: ['shampoo', 'moisturizing', 'sulfate-free'],
-      },
-      {
-        businessId: business1.id,
-        categoryId: hairCareCategory.id,
-        name: 'Deep Conditioner',
-        description: 'Intensive moisture treatment for dry, damaged hair',
-        sku: 'CC-COND-001',
-        price: 28.99,
-        trackInventory: true,
-        quantity: 45,
-        lowStockAlert: 10,
-        images: [],
-        displayOrder: 2,
-        isActive: true,
-        brand: 'Curls & Coils',
-        tags: ['conditioner', 'deep treatment', 'moisture'],
-      },
-      {
-        businessId: business1.id,
-        categoryId: stylingCategory.id,
-        name: 'Curl Defining Cream',
-        description: 'Lightweight cream for defined, bouncy curls',
-        sku: 'CC-STYL-001',
-        price: 22.99,
-        trackInventory: true,
-        quantity: 60,
-        lowStockAlert: 15,
-        images: [],
-        displayOrder: 3,
-        isActive: true,
-        isFeatured: true,
-        brand: 'Curls & Coils',
-        tags: ['styling', 'curl cream', 'definition'],
-      },
-      {
-        businessId: business1.id,
-        categoryId: stylingCategory.id,
-        name: 'Edge Control Gel',
-        description: 'Long-lasting hold for edges and baby hairs',
-        sku: 'CC-EDGE-001',
-        price: 12.99,
-        trackInventory: true,
-        quantity: 100,
-        lowStockAlert: 20,
-        images: [],
-        displayOrder: 4,
-        isActive: true,
-        brand: 'Curls & Coils',
-        tags: ['edge control', 'gel', 'hold'],
-      },
-    ],
-  })
-
-  // Products for King Cuts Barbershop
-  const groomingCategory = await prisma.productCategory.create({
-    data: {
-      businessId: business2.id,
-      name: 'Grooming Essentials',
-      description: 'Premium grooming products for men',
-      displayOrder: 1,
-      isActive: true,
-    },
-  })
-
-  const beardCategory = await prisma.productCategory.create({
-    data: {
-      businessId: business2.id,
-      name: 'Beard Care',
-      description: 'Keep your beard looking fresh',
-      displayOrder: 2,
-      isActive: true,
-    },
-  })
-
-  await prisma.product.createMany({
-    data: [
-      {
-        businessId: business2.id,
-        categoryId: beardCategory.id,
-        name: 'Beard Oil',
-        description: 'Nourishing oil blend for soft, healthy beards',
-        sku: 'KC-BRDOIL-001',
-        price: 18.99,
-        compareAtPrice: 24.99,
-        trackInventory: true,
-        quantity: 75,
-        lowStockAlert: 15,
-        images: [],
-        displayOrder: 1,
-        isActive: true,
-        isFeatured: true,
-        brand: 'King Cuts',
-        tags: ['beard oil', 'grooming', 'moisturizing'],
-      },
-      {
-        businessId: business2.id,
-        categoryId: beardCategory.id,
-        name: 'Beard Balm',
-        description: 'Styling balm for shape and control',
-        sku: 'KC-BRDBLM-001',
-        price: 16.99,
-        trackInventory: true,
-        quantity: 50,
-        lowStockAlert: 10,
-        images: [],
-        displayOrder: 2,
-        isActive: true,
-        brand: 'King Cuts',
-        tags: ['beard balm', 'styling', 'control'],
-      },
-      {
-        businessId: business2.id,
-        categoryId: groomingCategory.id,
-        name: 'Hair Pomade',
-        description: 'Medium hold pomade with natural shine',
-        sku: 'KC-PMDE-001',
-        price: 14.99,
-        trackInventory: true,
-        quantity: 80,
-        lowStockAlert: 20,
-        images: [],
-        displayOrder: 3,
-        isActive: true,
-        brand: 'King Cuts',
-        tags: ['pomade', 'hair styling', 'medium hold'],
-      },
-      {
-        businessId: business2.id,
-        categoryId: groomingCategory.id,
-        name: 'Wave Brush',
-        description: 'Premium boar bristle wave brush',
-        sku: 'KC-BRSH-001',
-        price: 25.99,
-        trackInventory: true,
-        quantity: 40,
-        lowStockAlert: 10,
-        images: [],
-        displayOrder: 4,
-        isActive: true,
-        isFeatured: true,
-        brand: 'King Cuts',
-        tags: ['brush', 'waves', 'grooming tool'],
-      },
-    ],
-  })
-
-  // Products for Glow Up Nail Studio
-  const nailCareCategory = await prisma.productCategory.create({
-    data: {
-      businessId: business3.id,
-      name: 'Nail Care',
-      description: 'Professional nail care products',
-      displayOrder: 1,
-      isActive: true,
-    },
-  })
-
-  const polishCategory = await prisma.productCategory.create({
-    data: {
-      businessId: business3.id,
-      name: 'Nail Polish',
-      description: 'Long-lasting nail colors',
-      displayOrder: 2,
-      isActive: true,
-    },
-  })
-
-  await prisma.product.createMany({
-    data: [
-      {
-        businessId: business3.id,
-        categoryId: nailCareCategory.id,
-        name: 'Cuticle Oil',
-        description: 'Nourishing oil for healthy cuticles',
-        sku: 'GU-CUTL-001',
-        price: 12.99,
-        trackInventory: true,
-        quantity: 100,
-        lowStockAlert: 20,
-        images: [],
-        displayOrder: 1,
-        isActive: true,
-        brand: 'Glow Up',
-        tags: ['cuticle oil', 'nail care', 'moisturizing'],
-      },
-      {
-        businessId: business3.id,
-        categoryId: nailCareCategory.id,
-        name: 'Hand Cream',
-        description: 'Luxurious hand cream with shea butter',
-        sku: 'GU-HNDCRM-001',
-        price: 15.99,
-        compareAtPrice: 19.99,
-        trackInventory: true,
-        quantity: 60,
-        lowStockAlert: 15,
-        images: [],
-        displayOrder: 2,
-        isActive: true,
-        isFeatured: true,
-        brand: 'Glow Up',
-        tags: ['hand cream', 'moisturizer', 'shea butter'],
-      },
-      {
-        businessId: business3.id,
-        categoryId: polishCategory.id,
-        name: 'Gel Polish Set - Nude Collection',
-        description: '6 nude shades gel polish collection',
-        sku: 'GU-GELPOL-001',
-        price: 45.99,
-        trackInventory: true,
-        quantity: 30,
-        lowStockAlert: 5,
-        images: [],
-        displayOrder: 3,
-        isActive: true,
-        isFeatured: true,
-        brand: 'Glow Up',
-        tags: ['gel polish', 'nude', 'collection'],
-      },
-      {
-        businessId: business3.id,
-        categoryId: polishCategory.id,
-        name: 'Top Coat - Quick Dry',
-        description: 'Fast-drying top coat for lasting shine',
-        sku: 'GU-TPCT-001',
-        price: 9.99,
-        trackInventory: true,
-        quantity: 80,
-        lowStockAlert: 20,
-        images: [],
-        displayOrder: 4,
-        isActive: true,
-        brand: 'Glow Up',
-        tags: ['top coat', 'quick dry', 'nail polish'],
-      },
-    ],
-  })
-
-  // Products for Serenity Spa & Wellness
-  const skincareCategory = await prisma.productCategory.create({
-    data: {
-      businessId: business4.id,
-      name: 'Skincare',
-      description: 'Luxury skincare products',
-      displayOrder: 1,
-      isActive: true,
-    },
-  })
-
-  const wellnessCategory = await prisma.productCategory.create({
-    data: {
-      businessId: business4.id,
-      name: 'Wellness',
-      description: 'Products for mind and body wellness',
-      displayOrder: 2,
-      isActive: true,
-    },
-  })
-
-  await prisma.product.createMany({
-    data: [
-      {
-        businessId: business4.id,
-        categoryId: skincareCategory.id,
-        name: 'Hydrating Face Mask',
-        description: 'Intensive hydration mask with hyaluronic acid',
-        sku: 'SS-FCMSK-001',
-        price: 32.99,
-        compareAtPrice: 39.99,
-        trackInventory: true,
-        quantity: 40,
-        lowStockAlert: 10,
-        images: [],
-        displayOrder: 1,
-        isActive: true,
-        isFeatured: true,
-        brand: 'Serenity',
-        tags: ['face mask', 'hydrating', 'skincare'],
-      },
-      {
-        businessId: business4.id,
-        categoryId: skincareCategory.id,
-        name: 'Vitamin C Serum',
-        description: 'Brightening serum for radiant skin',
-        sku: 'SS-VITC-001',
-        price: 48.99,
-        trackInventory: true,
-        quantity: 35,
-        lowStockAlert: 10,
-        images: [],
-        displayOrder: 2,
-        isActive: true,
-        brand: 'Serenity',
-        tags: ['serum', 'vitamin c', 'brightening'],
-      },
-      {
-        businessId: business4.id,
-        categoryId: wellnessCategory.id,
-        name: 'Essential Oil Blend - Relaxation',
-        description: 'Calming blend of lavender and chamomile',
-        sku: 'SS-ESSOIL-001',
-        price: 26.99,
-        trackInventory: true,
-        quantity: 50,
-        lowStockAlert: 15,
-        images: [],
-        displayOrder: 3,
-        isActive: true,
-        isFeatured: true,
-        brand: 'Serenity',
-        tags: ['essential oil', 'aromatherapy', 'relaxation'],
-      },
-      {
-        businessId: business4.id,
-        categoryId: wellnessCategory.id,
-        name: 'Massage Oil - Coconut & Almond',
-        description: 'Nourishing massage oil blend',
-        sku: 'SS-MSGOIL-001',
-        price: 22.99,
-        trackInventory: true,
-        quantity: 45,
-        lowStockAlert: 10,
-        images: [],
-        displayOrder: 4,
-        isActive: true,
-        brand: 'Serenity',
-        tags: ['massage oil', 'coconut', 'almond'],
-      },
-    ],
-  })
-
   // Add availability for businesses
   const daysOfWeek = [1, 2, 3, 4, 5, 6] // Monday to Saturday
   for (const dayOfWeek of daysOfWeek) {
@@ -718,12 +345,12 @@ async function main() {
 
   // Create some bookings
   const services = await prisma.service.findMany()
-  
+
   // Get services for Curls & Coils Beauty Bar
-  const curlsServices = services.filter(s => s.businessId === business1.id)
-  const washAndGo = curlsServices.find(s => s.name === 'Wash & Go')!
-  const protectiveStyle = curlsServices.find(s => s.name === 'Protective Style Installation')!
-  const deepCondition = curlsServices.find(s => s.name === 'Deep Conditioning Treatment')!
+  const curlsServices = services.filter((s) => s.businessId === business1.id)
+  const washAndGo = curlsServices.find((s) => s.name === 'Wash & Go')!
+  const protectiveStyle = curlsServices.find((s) => s.name === 'Protective Style Installation')!
+  const deepCondition = curlsServices.find((s) => s.name === 'Deep Conditioning Treatment')!
 
   // Create July 2025 bookings for Curls & Coils Beauty Bar
   const julyBookings = [
@@ -737,7 +364,7 @@ async function main() {
       endTime: new Date('2025-07-01T11:30:00'),
       status: BookingStatus.CONFIRMED,
       totalPrice: 65,
-      notes: 'First time client, needs consultation for curl pattern'
+      notes: 'First time client, needs consultation for curl pattern',
     },
     {
       userId: customer2.id,
@@ -748,7 +375,7 @@ async function main() {
       endTime: new Date('2025-07-02T13:00:00'),
       status: BookingStatus.CONFIRMED,
       totalPrice: 150,
-      notes: 'Box braids - medium length'
+      notes: 'Box braids - medium length',
     },
     {
       userId: customer3.id,
@@ -770,7 +397,7 @@ async function main() {
       endTime: new Date('2025-07-08T15:00:00'),
       status: BookingStatus.CONFIRMED,
       totalPrice: 150,
-      notes: 'Senegalese twists'
+      notes: 'Senegalese twists',
     },
     {
       userId: customer2.id,
@@ -791,7 +418,7 @@ async function main() {
       endTime: new Date('2025-07-10T13:30:00'),
       status: BookingStatus.CONFIRMED,
       totalPrice: 65,
-      notes: 'Regular client - prefers light products'
+      notes: 'Regular client - prefers light products',
     },
     // Week 3
     {
@@ -823,7 +450,7 @@ async function main() {
       endTime: new Date('2025-07-17T13:00:00'),
       status: BookingStatus.CONFIRMED,
       totalPrice: 150,
-      notes: 'Knotless braids - waist length'
+      notes: 'Knotless braids - waist length',
     },
     // Week 4
     {
@@ -845,7 +472,7 @@ async function main() {
       endTime: new Date('2025-07-23T12:00:00'),
       status: BookingStatus.CONFIRMED,
       totalPrice: 45,
-      notes: 'Protein treatment needed'
+      notes: 'Protein treatment needed',
     },
     {
       userId: customer3.id,
@@ -867,7 +494,7 @@ async function main() {
       endTime: new Date('2025-07-29T14:00:00'),
       status: BookingStatus.PENDING,
       totalPrice: 150,
-      notes: 'Faux locs installation'
+      notes: 'Faux locs installation',
     },
     {
       userId: customer2.id,
@@ -888,7 +515,7 @@ async function main() {
       endTime: new Date('2025-07-31T17:00:00'),
       status: BookingStatus.CONFIRMED,
       totalPrice: 45,
-      notes: 'Monthly deep treatment'
+      notes: 'Monthly deep treatment',
     },
   ]
 
@@ -897,14 +524,16 @@ async function main() {
     await prisma.booking.create({ data: bookingData })
   }
 
-  console.log(`✅ Created ${julyBookings.length} bookings for Curls & Coils Beauty Bar in July 2025`)
+  console.log(
+    `✅ Created ${julyBookings.length} bookings for Curls & Coils Beauty Bar in July 2025`
+  )
 
   // Create original booking (January)
   const booking1 = await prisma.booking.create({
     data: {
       userId: customer1.id,
       businessId: business1.id,
-      serviceId: services.find(s => s.businessId === business1.id)!.id,
+      serviceId: services.find((s) => s.businessId === business1.id)!.id,
       date: new Date('2025-01-20'),
       startTime: new Date('2025-01-20T14:00:00'),
       endTime: new Date('2025-01-20T15:30:00'),
@@ -917,7 +546,7 @@ async function main() {
     data: {
       userId: customer2.id,
       businessId: business2.id,
-      serviceId: services.find(s => s.businessId === business2.id)!.id,
+      serviceId: services.find((s) => s.businessId === business2.id)!.id,
       date: new Date('2025-01-22'),
       startTime: new Date('2025-01-22T15:00:00'),
       endTime: new Date('2025-01-22T15:45:00'),
@@ -930,7 +559,7 @@ async function main() {
     data: {
       userId: customer3.id,
       businessId: business4.id,
-      serviceId: services.find(s => s.businessId === business4.id)!.id,
+      serviceId: services.find((s) => s.businessId === business4.id)!.id,
       date: new Date('2025-01-18'),
       startTime: new Date('2025-01-18T11:00:00'),
       endTime: new Date('2025-01-18T12:00:00'),
@@ -946,7 +575,8 @@ async function main() {
       businessId: business1.id,
       bookingId: booking1.id,
       rating: 5,
-      comment: 'Amazing service! Tasha really knows how to work with natural hair. My curls have never looked better!',
+      comment:
+        'Amazing service! Tasha really knows how to work with natural hair. My curls have never looked better!',
     },
   })
 
@@ -956,7 +586,8 @@ async function main() {
       businessId: business4.id,
       bookingId: booking3.id,
       rating: 5,
-      comment: 'So relaxing and professional. The spa is beautiful and the massage was exactly what I needed.',
+      comment:
+        'So relaxing and professional. The spa is beautiful and the massage was exactly what I needed.',
     },
   })
 
@@ -965,7 +596,7 @@ async function main() {
     data: {
       userId: customer2.id,
       businessId: business1.id,
-      serviceId: services.find(s => s.businessId === business1.id)!.id,
+      serviceId: services.find((s) => s.businessId === business1.id)!.id,
       date: new Date('2025-01-15'),
       startTime: new Date('2025-01-15T10:00:00'),
       endTime: new Date('2025-01-15T11:30:00'),
@@ -978,7 +609,7 @@ async function main() {
     data: {
       userId: customer1.id,
       businessId: business2.id,
-      serviceId: services.find(s => s.businessId === business2.id)!.id,
+      serviceId: services.find((s) => s.businessId === business2.id)!.id,
       date: new Date('2025-01-10'),
       startTime: new Date('2025-01-10T16:00:00'),
       endTime: new Date('2025-01-10T16:45:00'),

@@ -1,0 +1,129 @@
+/* UI/UX Improvements - Visual Hierarchy and Spacing */
+
+/* Consistent section spacing */
+.section-spacing {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+
+@media (max-width: 768px) {
+  .section-spacing {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+}
+
+/* Enhanced card shadows and hover effects */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgb(229 231 235);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1);
+  border-color: rgb(99 102 241 / 0.2);
+}
+
+/* Improved button depth and interaction */
+.button-3d {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: all 0.15s ease;
+}
+
+.button-3d::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2));
+  border-radius: inherit;
+  transform: translateZ(-2px) translateY(2px);
+  transition: all 0.15s ease;
+  opacity: 0.5;
+}
+
+.button-3d:hover {
+  transform: translateY(-2px);
+}
+
+.button-3d:hover::before {
+  transform: translateZ(-4px) translateY(4px);
+  opacity: 0.7;
+}
+
+.button-3d:active {
+  transform: translateY(0);
+}
+
+.button-3d:active::before {
+  transform: translateZ(-1px) translateY(1px);
+}
+
+/* Typography improvements */
+.heading-gradient {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+/* Consistent border radius system */
+.rounded-sm {
+  border-radius: 0.375rem;
+}
+.rounded-md {
+  border-radius: 0.5rem;
+}
+.rounded-lg {
+  border-radius: 0.75rem;
+}
+.rounded-xl {
+  border-radius: 1rem;
+}
+.rounded-2xl {
+  border-radius: 1.5rem;
+}
+.rounded-3xl {
+  border-radius: 2rem;
+}
+
+/* Enhanced focus states */
+.focus-ring:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(99, 102, 241, 0.1),
+    0 0 0 1px rgba(99, 102, 241, 0.4);
+}
+
+/* Improved loading skeleton */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #f3f4f6 0%, #e5e7eb 20%, #f3f4f6 40%, #f3f4f6 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Improved mobile tap targets */
+@media (max-width: 768px) {
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

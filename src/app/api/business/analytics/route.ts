@@ -1,32 +1,32 @@
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
-import { startOfMonth, endOfMonth, subMonths, startOfWeek, endOfWeek } from 'date-fns';
+import { getServerSession } from 'next-auth'
+import { NextResponse } from 'next/server'
+import { endOfMonth, endOfWeek, startOfMonth, startOfWeek, subMonths } from 'date-fns'
+import { authOptions } from '@/lib/auth'
+import { prisma } from '@/lib/prisma'
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions)
     if (!session?.user || session.user.role !== 'BUSINESS_OWNER') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     // Get business
     const business = await prisma.business.findFirst({
       where: { userId: session.user.id },
-    });
+    })
 
     if (!business) {
-      return NextResponse.json({ error: 'Business not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Business not found' }, { status: 404 })
     }
 
-    const now = new Date();
-    const startOfThisMonth = startOfMonth(now);
-    const endOfThisMonth = endOfMonth(now);
-    const startOfLastMonth = startOfMonth(subMonths(now, 1));
-    const endOfLastMonth = endOfMonth(subMonths(now, 1));
-    const startOfThisWeek = startOfWeek(now);
-    const endOfThisWeek = endOfWeek(now);
+    const now = new Date()
+    const startOfThisMonth = startOfMonth(now)
+    const endOfThisMonth = endOfMonth(now)
+    const startOfLastMonth = startOfMonth(subMonths(now, 1))
+    const endOfLastMonth = endOfMonth(subMonths(now, 1))
+    const startOfThisWeek = startOfWeek(now)
+    const endOfThisWeek = endOfWeek(now)
 
     // Get bookings with payment data
     const [
@@ -107,40 +107,39 @@ export async function GET() {
           },
         },
       }),
-    ]);
+    ])
 
     // Calculate revenue metrics
     const thisMonthRevenue = thisMonthBookings.reduce(
       (sum, booking) => sum + (booking.businessPayout?.toNumber() || 0),
       0
-    );
+    )
     const thisMonthGross = thisMonthBookings.reduce(
       (sum, booking) => sum + booking.totalPrice.toNumber(),
       0
-    );
+    )
     const thisMonthPlatformFees = thisMonthBookings.reduce(
       (sum, booking) => sum + (booking.platformFee?.toNumber() || 0),
       0
-    );
+    )
     const thisMonthStripeFees = thisMonthBookings.reduce(
       (sum, booking) => sum + (booking.stripeFee?.toNumber() || 0),
       0
-    );
+    )
 
     const lastMonthRevenue = lastMonthBookings.reduce(
       (sum, booking) => sum + (booking.businessPayout?.toNumber() || 0),
       0
-    );
+    )
 
     const thisWeekRevenue = thisWeekBookings.reduce(
       (sum, booking) => sum + (booking.businessPayout?.toNumber() || 0),
       0
-    );
+    )
 
     // Calculate growth percentage
-    const monthOverMonthGrowth = lastMonthRevenue > 0
-      ? ((thisMonthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100
-      : 0;
+    const monthOverMonthGrowth =
+      lastMonthRevenue > 0 ? ((thisMonthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100 : 0
 
     // Get recent transactions
     const recentTransactions = await prisma.booking.findMany({
@@ -165,7 +164,7 @@ export async function GET() {
           },
         },
       },
-    });
+    })
 
     // Get top services
     const topServices = await prisma.booking.groupBy({
@@ -186,10 +185,10 @@ export async function GET() {
         },
       },
       take: 5,
-    });
+    })
 
     // Get service details for top services
-    const serviceIds = topServices.map(s => s.serviceId);
+    const serviceIds = topServices.map((s) => s.serviceId)
     const services = await prisma.service.findMany({
       where: {
         id: {
@@ -200,16 +199,16 @@ export async function GET() {
         id: true,
         name: true,
       },
-    });
+    })
 
-    const topServicesWithNames = topServices.map(service => {
-      const serviceDetails = services.find(s => s.id === service.serviceId);
+    const topServicesWithNames = topServices.map((service) => {
+      const serviceDetails = services.find((s) => s.id === service.serviceId)
       return {
         serviceName: serviceDetails?.name || 'Unknown',
         bookingCount: service._count.serviceId,
         revenue: service._sum.businessPayout?.toNumber() || 0,
-      };
-    });
+      }
+    })
 
     return NextResponse.json({
       revenue: {
@@ -226,7 +225,7 @@ export async function GET() {
         completed: completedBookings,
         upcoming: upcomingBookings,
       },
-      recentTransactions: recentTransactions.map(transaction => ({
+      recentTransactions: recentTransactions.map((transaction) => ({
         id: transaction.id,
         customerName: transaction.user.name || 'Customer',
         customerEmail: transaction.user.email,
@@ -237,12 +236,9 @@ export async function GET() {
         status: transaction.status,
       })),
       topServices: topServicesWithNames,
-    });
+    })
   } catch (error) {
-    console.error('Analytics error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch analytics' },
-      { status: 500 }
-    );
+    console.error('Analytics error:', error)
+    return NextResponse.json({ error: 'Failed to fetch analytics' }, { status: 500 })
   }
 }

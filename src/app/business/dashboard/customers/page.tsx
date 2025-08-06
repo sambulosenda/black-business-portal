@@ -1,20 +1,35 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { 
-  Search, 
-  Phone, Mail, Loader2, Filter, Download, TrendingUp,
-  ChevronRight, Users, Crown, AlertCircle, DollarSign
-} from "lucide-react"
-import { format } from "date-fns"
-import { toast } from "sonner"
+import { useEffect, useState } from 'react'
+import { format } from 'date-fns'
+import {
+  AlertCircle,
+  ChevronRight,
+  Crown,
+  DollarSign,
+  Download,
+  Filter,
+  Loader2,
+  Mail,
+  Phone,
+  Search,
+  TrendingUp,
+  Users,
+} from 'lucide-react'
+import { toast } from 'sonner'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 interface CustomerProfile {
   id: string
@@ -100,31 +115,30 @@ export default function CustomersPage() {
 
     // Search filter
     if (searchQuery) {
-      filtered = filtered.filter(customer =>
-        customer.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        customer.customerEmail.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (customer.customerPhone && customer.customerPhone.includes(searchQuery))
+      filtered = filtered.filter(
+        (customer) =>
+          customer.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          customer.customerEmail.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (customer.customerPhone && customer.customerPhone.includes(searchQuery))
       )
     }
 
     // Type filter
     const thirtyDaysAgo = new Date()
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
-    
+
     switch (filterType) {
       case 'vip':
-        filtered = filtered.filter(c => c.isVip)
+        filtered = filtered.filter((c) => c.isVip)
         break
       case 'new':
-        filtered = filtered.filter(c => 
-          c.firstVisit && new Date(c.firstVisit) > thirtyDaysAgo
-        )
+        filtered = filtered.filter((c) => c.firstVisit && new Date(c.firstVisit) > thirtyDaysAgo)
         break
       case 'at-risk':
         const ninetyDaysAgo = new Date()
         ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90)
-        filtered = filtered.filter(c => 
-          c.lastVisit && new Date(c.lastVisit) < ninetyDaysAgo && c.totalVisits > 2
+        filtered = filtered.filter(
+          (c) => c.lastVisit && new Date(c.lastVisit) < ninetyDaysAgo && c.totalVisits > 2
         )
         break
     }
@@ -152,19 +166,19 @@ export default function CustomersPage() {
   const handleExportCustomers = () => {
     // Create CSV content
     const headers = ['Name', 'Email', 'Phone', 'Total Visits', 'Total Spent', 'Last Visit', 'Tags']
-    const rows = filteredCustomers.map(customer => [
+    const rows = filteredCustomers.map((customer) => [
       customer.customerName,
       customer.customerEmail,
       customer.customerPhone || '',
       customer.totalVisits.toString(),
       `$${Number(customer.totalSpent).toFixed(2)}`,
       customer.lastVisit ? format(new Date(customer.lastVisit), 'MM/dd/yyyy') : '',
-      customer.tags.join(', ')
+      customer.tags.join(', '),
     ])
 
     const csvContent = [
       headers.join(','),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+      ...rows.map((row) => row.map((cell) => `"${cell}"`).join(',')),
     ].join('\n')
 
     // Download file
@@ -175,30 +189,33 @@ export default function CustomersPage() {
     a.download = `customers-${format(new Date(), 'yyyy-MM-dd')}.csv`
     a.click()
     window.URL.revokeObjectURL(url)
-    
+
     toast.success('Customer data exported')
   }
 
   const getCustomerSegment = (customer: CustomerProfile) => {
-    if (customer.isVip) return { label: 'VIP', color: 'border-purple-200 bg-purple-50 text-purple-700' }
-    if (customer.totalVisits === 1) return { label: 'New', color: 'border-green-200 bg-green-50 text-green-700' }
-    if (customer.totalVisits > 10) return { label: 'Regular', color: 'border-blue-200 bg-blue-50 text-blue-700' }
-    
+    if (customer.isVip)
+      return { label: 'VIP', color: 'border-purple-200 bg-purple-50 text-purple-700' }
+    if (customer.totalVisits === 1)
+      return { label: 'New', color: 'border-green-200 bg-green-50 text-green-700' }
+    if (customer.totalVisits > 10)
+      return { label: 'Regular', color: 'border-blue-200 bg-blue-50 text-blue-700' }
+
     const lastVisitDate = customer.lastVisit ? new Date(customer.lastVisit) : null
-    const daysSinceLastVisit = lastVisitDate 
+    const daysSinceLastVisit = lastVisitDate
       ? Math.floor((new Date().getTime() - lastVisitDate.getTime()) / (1000 * 60 * 60 * 24))
       : null
-    
+
     if (daysSinceLastVisit && daysSinceLastVisit > 90) {
       return { label: 'At Risk', color: 'border-red-200 bg-red-50 text-red-700' }
     }
-    
+
     return { label: 'Active', color: 'border-gray-200 bg-gray-50 text-gray-700' }
   }
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex min-h-[400px] items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
       </div>
     )
@@ -209,10 +226,10 @@ export default function CustomersPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">Customer Management</h1>
-          <p className="text-gray-600 mt-1">Track and manage your customer relationships</p>
+          <p className="mt-1 text-gray-600">Track and manage your customer relationships</p>
         </div>
         <Button onClick={handleExportCustomers} variant="outline" className="hover:bg-gray-50">
-          <Download className="h-4 w-4 mr-2" />
+          <Download className="mr-2 h-4 w-4" />
           Export
         </Button>
       </div>
@@ -220,63 +237,66 @@ export default function CustomersPage() {
       {/* Metrics Cards */}
       {metrics && (
         <div className="grid gap-6 md:grid-cols-4">
-          <Card className="border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all">
+          <Card className="border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">Total Customers</CardTitle>
-              <div className="h-12 w-12 rounded-full bg-gradient-to-br from-indigo-50 to-indigo-100 flex items-center justify-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-indigo-50 to-indigo-100">
                 <Users className="h-6 w-6 text-indigo-600" />
               </div>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-gray-900">{metrics.totalCustomers}</div>
-              <p className="text-xs text-gray-500 mt-1">
-                <span className="text-green-600 font-medium">+{metrics.newCustomersThisMonth}</span> this month
+              <p className="mt-1 text-xs text-gray-500">
+                <span className="font-medium text-green-600">+{metrics.newCustomersThisMonth}</span>{' '}
+                this month
               </p>
             </CardContent>
           </Card>
 
-          <Card className="border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all">
+          <Card className="border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">Total Revenue</CardTitle>
-              <div className="h-12 w-12 rounded-full bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-50 to-emerald-100">
                 <DollarSign className="h-6 w-6 text-emerald-600" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-gray-900">${Number(metrics.totalRevenue).toFixed(2)}</div>
-              <p className="text-xs text-gray-500 mt-1">
-                From all customers
-              </p>
+              <div className="text-2xl font-bold text-gray-900">
+                ${Number(metrics.totalRevenue).toFixed(2)}
+              </div>
+              <p className="mt-1 text-xs text-gray-500">From all customers</p>
             </CardContent>
           </Card>
 
-          <Card className="border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all">
+          <Card className="border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">Avg Customer Value</CardTitle>
-              <div className="h-12 w-12 rounded-full bg-gradient-to-br from-purple-50 to-purple-100 flex items-center justify-center">
+              <CardTitle className="text-sm font-medium text-gray-600">
+                Avg Customer Value
+              </CardTitle>
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-purple-50 to-purple-100">
                 <TrendingUp className="h-6 w-6 text-purple-600" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-gray-900">${Number(metrics.averageCustomerValue).toFixed(2)}</div>
-              <p className="text-xs text-gray-500 mt-1">
-                Per customer lifetime
-              </p>
+              <div className="text-2xl font-bold text-gray-900">
+                ${Number(metrics.averageCustomerValue).toFixed(2)}
+              </div>
+              <p className="mt-1 text-xs text-gray-500">Per customer lifetime</p>
             </CardContent>
           </Card>
 
-          <Card className="border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all">
+          <Card className="border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">At Risk</CardTitle>
-              <div className="h-12 w-12 rounded-full bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-red-50 to-red-100">
                 <AlertCircle className="h-6 w-6 text-red-600" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-gray-900">{metrics.atRiskCustomers.length}</div>
-              <p className="text-xs text-gray-500 mt-1">
-                Haven&apos;t visited in 90+ days
-              </p>
+              <div className="text-2xl font-bold text-gray-900">
+                {metrics.atRiskCustomers.length}
+              </div>
+              <p className="mt-1 text-xs text-gray-500">Haven&apos;t visited in 90+ days</p>
             </CardContent>
           </Card>
         </div>
@@ -289,17 +309,20 @@ export default function CustomersPage() {
             <CardTitle className="text-lg font-semibold">Customer Database</CardTitle>
             <div className="flex items-center gap-2">
               <div className="relative w-64">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
+                <Search className="absolute top-2.5 left-2 h-4 w-4 text-gray-400" />
                 <Input
                   placeholder="Search customers..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-8 border-gray-300"
+                  className="border-gray-300 pl-8"
                 />
               </div>
-              <Select value={filterType} onValueChange={(value) => setFilterType(value as 'all' | 'vip' | 'new' | 'at-risk')}>
+              <Select
+                value={filterType}
+                onValueChange={(value) => setFilterType(value as 'all' | 'vip' | 'new' | 'at-risk')}
+              >
                 <SelectTrigger className="w-32">
-                  <Filter className="h-4 w-4 mr-2" />
+                  <Filter className="mr-2 h-4 w-4" />
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -309,7 +332,10 @@ export default function CustomersPage() {
                   <SelectItem value="at-risk">At Risk</SelectItem>
                 </SelectContent>
               </Select>
-              <Select value={sortBy} onValueChange={(value) => setSortBy(value as 'recent' | 'spent' | 'visits')}>
+              <Select
+                value={sortBy}
+                onValueChange={(value) => setSortBy(value as 'recent' | 'spent' | 'visits')}
+              >
                 <SelectTrigger className="w-32">
                   <SelectValue />
                 </SelectTrigger>
@@ -330,24 +356,28 @@ export default function CustomersPage() {
                   {filteredCustomers.map((customer) => {
                     const segment = getCustomerSegment(customer)
                     return (
-                      <Card 
+                      <Card
                         key={customer.id}
-                        className="cursor-pointer hover:shadow-md transition-all border border-gray-200"
+                        className="cursor-pointer border border-gray-200 transition-all hover:shadow-md"
                       >
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-4">
                               <Avatar className="h-10 w-10">
                                 <AvatarFallback>
-                                  {customer.customerName.split(' ').map(n => n[0]).join('').toUpperCase()}
+                                  {customer.customerName
+                                    .split(' ')
+                                    .map((n) => n[0])
+                                    .join('')
+                                    .toUpperCase()}
                                 </AvatarFallback>
                               </Avatar>
                               <div>
                                 <div className="flex items-center gap-2">
-                                  <h4 className="font-semibold text-gray-900">{customer.customerName}</h4>
-                                  {customer.isVip && (
-                                    <Crown className="h-4 w-4 text-purple-600" />
-                                  )}
+                                  <h4 className="font-semibold text-gray-900">
+                                    {customer.customerName}
+                                  </h4>
+                                  {customer.isVip && <Crown className="h-4 w-4 text-purple-600" />}
                                   <Badge variant="outline" className={segment.color}>
                                     {segment.label}
                                   </Badge>
@@ -366,33 +396,40 @@ export default function CustomersPage() {
                                 </div>
                               </div>
                             </div>
-                            
+
                             <div className="flex items-center gap-6 text-sm">
                               <div className="text-right">
-                                <p className="font-semibold text-gray-900">${Number(customer.totalSpent).toFixed(2)}</p>
+                                <p className="font-semibold text-gray-900">
+                                  ${Number(customer.totalSpent).toFixed(2)}
+                                </p>
                                 <p className="text-xs text-gray-500">Total spent</p>
                               </div>
                               <div className="text-right">
-                                <p className="font-semibold text-gray-900">{customer.totalVisits}</p>
+                                <p className="font-semibold text-gray-900">
+                                  {customer.totalVisits}
+                                </p>
                                 <p className="text-xs text-gray-500">Visits</p>
                               </div>
                               <div className="text-right">
                                 <p className="font-semibold text-gray-900">
-                                  {customer.lastVisit 
+                                  {customer.lastVisit
                                     ? format(new Date(customer.lastVisit), 'MMM d')
-                                    : 'Never'
-                                  }
+                                    : 'Never'}
                                 </p>
                                 <p className="text-xs text-gray-500">Last visit</p>
                               </div>
                               <ChevronRight className="h-4 w-4 text-gray-400" />
                             </div>
                           </div>
-                          
+
                           {customer.tags.length > 0 && (
-                            <div className="flex gap-2 mt-3">
+                            <div className="mt-3 flex gap-2">
                               {customer.tags.map((tag, index) => (
-                                <Badge key={index} variant="outline" className="text-xs border-gray-300 text-gray-700">
+                                <Badge
+                                  key={index}
+                                  variant="outline"
+                                  className="border-gray-300 text-xs text-gray-700"
+                                >
                                   {tag}
                                 </Badge>
                               ))}
@@ -405,14 +442,13 @@ export default function CustomersPage() {
                 </div>
               </ScrollArea>
             ) : (
-              <div className="text-center py-12">
-                <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">No customers found</h3>
+              <div className="py-12 text-center">
+                <Users className="mx-auto mb-4 h-12 w-12 text-gray-400" />
+                <h3 className="mb-2 text-lg font-semibold text-gray-900">No customers found</h3>
                 <p className="text-gray-600">
-                  {searchQuery || filterType !== 'all' 
+                  {searchQuery || filterType !== 'all'
                     ? 'Try adjusting your filters'
-                    : 'Customers will appear here after their first booking'
-                  }
+                    : 'Customers will appear here after their first booking'}
                 </p>
               </div>
             )}
@@ -425,14 +461,16 @@ export default function CustomersPage() {
         <Card className="border border-gray-200 shadow-sm">
           <CardHeader>
             <CardTitle className="text-lg font-semibold">Top Spenders</CardTitle>
-            <CardDescription className="text-gray-600">Your most valuable customers</CardDescription>
+            <CardDescription className="text-gray-600">
+              Your most valuable customers
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {metrics.topSpenders.map((customer, index) => (
                 <div key={customer.id} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-100 to-indigo-200 flex items-center justify-center text-sm font-semibold text-indigo-700">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-indigo-100 to-indigo-200 text-sm font-semibold text-indigo-700">
                       {index + 1}
                     </div>
                     <div>
@@ -442,9 +480,7 @@ export default function CustomersPage() {
                   </div>
                   <div className="text-right">
                     <p className="font-semibold text-gray-900">${customer.totalSpent.toFixed(2)}</p>
-                    <p className="text-sm text-gray-600">
-                      ${customer.averageSpent.toFixed(2)} avg
-                    </p>
+                    <p className="text-sm text-gray-600">${customer.averageSpent.toFixed(2)} avg</p>
                   </div>
                 </div>
               ))}

@@ -2,20 +2,26 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import type { Availability, TimeOff } from '@prisma/client'
 import { format } from 'date-fns'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { toast } from "sonner"
-import { Clock, Calendar, Trash2, Plus, Loader2, CheckCircle } from 'lucide-react'
+import { Calendar, CheckCircle, Clock, Loader2, Plus, Trash2 } from 'lucide-react'
+import { toast } from 'sonner'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Separator } from '@/components/ui/separator'
+import { Switch } from '@/components/ui/switch'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import type { Availability, TimeOff } from '@prisma/client'
 
 const DAYS_OF_WEEK = [
   { value: 0, label: 'Sunday' },
@@ -35,7 +41,7 @@ const TIME_SLOTS = Array.from({ length: 48 }, (_, i) => {
   const ampm = hour < 12 ? 'AM' : 'PM'
   return {
     value: time,
-    label: `${displayHour}:${minute} ${ampm}`
+    label: `${displayHour}:${minute} ${ampm}`,
   }
 })
 
@@ -48,23 +54,23 @@ interface AvailabilityFormProps {
 export default function AvailabilityForm({
   businessId,
   availabilities,
-  timeOffs
+  timeOffs,
 }: AvailabilityFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [businessHours, setBusinessHours] = useState(() => {
     const hours: Record<number, { isActive: boolean; startTime: string; endTime: string }> = {}
-    
+
     // Initialize with existing data or defaults
-    DAYS_OF_WEEK.forEach(day => {
-      const existing = availabilities.find(a => a.dayOfWeek === day.value)
+    DAYS_OF_WEEK.forEach((day) => {
+      const existing = availabilities.find((a) => a.dayOfWeek === day.value)
       hours[day.value] = {
         isActive: existing?.isActive ?? (day.value >= 1 && day.value <= 5), // Mon-Fri default
         startTime: existing?.startTime ?? '09:00',
-        endTime: existing?.endTime ?? '18:00'
+        endTime: existing?.endTime ?? '18:00',
       }
     })
-    
+
     return hours
   })
 
@@ -73,7 +79,7 @@ export default function AvailabilityForm({
     allDay: true,
     startTime: '09:00',
     endTime: '18:00',
-    reason: ''
+    reason: '',
   })
 
   const handleSaveHours = async () => {
@@ -86,13 +92,13 @@ export default function AvailabilityForm({
           businessId,
           availabilities: Object.entries(businessHours).map(([day, hours]) => ({
             dayOfWeek: parseInt(day),
-            ...hours
-          }))
-        })
+            ...hours,
+          })),
+        }),
       })
 
       if (!response.ok) throw new Error('Failed to update availability')
-      
+
       toast.success('Business hours updated successfully')
       router.refresh()
     } catch (error) {
@@ -119,18 +125,18 @@ export default function AvailabilityForm({
           date: newTimeOff.date,
           startTime: newTimeOff.allDay ? null : newTimeOff.startTime,
           endTime: newTimeOff.allDay ? null : newTimeOff.endTime,
-          reason: newTimeOff.reason || null
-        })
+          reason: newTimeOff.reason || null,
+        }),
       })
 
       if (!response.ok) throw new Error('Failed to add time off')
-      
+
       setNewTimeOff({
         date: '',
         allDay: true,
         startTime: '09:00',
         endTime: '18:00',
-        reason: ''
+        reason: '',
       })
       toast.success('Time off added successfully')
       router.refresh()
@@ -148,11 +154,11 @@ export default function AvailabilityForm({
     setLoading(true)
     try {
       const response = await fetch(`/api/business/timeoff?id=${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
       })
 
       if (!response.ok) throw new Error('Failed to delete time off')
-      
+
       toast.success('Time off deleted successfully')
       router.refresh()
     } catch (error) {
@@ -167,12 +173,18 @@ export default function AvailabilityForm({
     <div className="space-y-6">
       <Tabs defaultValue="hours">
         <TabsList className="grid w-full grid-cols-2 bg-gray-100">
-          <TabsTrigger value="hours" className="data-[state=active]:bg-white data-[state=active]:text-indigo-600">
-            <Clock className="h-4 w-4 mr-2" />
+          <TabsTrigger
+            value="hours"
+            className="data-[state=active]:bg-white data-[state=active]:text-indigo-600"
+          >
+            <Clock className="mr-2 h-4 w-4" />
             Business Hours
           </TabsTrigger>
-          <TabsTrigger value="timeoff" className="data-[state=active]:bg-white data-[state=active]:text-indigo-600">
-            <Calendar className="h-4 w-4 mr-2" />
+          <TabsTrigger
+            value="timeoff"
+            className="data-[state=active]:bg-white data-[state=active]:text-indigo-600"
+          >
+            <Calendar className="mr-2 h-4 w-4" />
             Time Off
           </TabsTrigger>
         </TabsList>
@@ -182,65 +194,77 @@ export default function AvailabilityForm({
             <CardHeader>
               <CardTitle className="text-lg font-semibold">Business Hours</CardTitle>
               <CardDescription className="text-gray-600">
-                Set your regular business hours. Customers will only be able to book appointments during these times.
+                Set your regular business hours. Customers will only be able to book appointments
+                during these times.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <ScrollArea className="h-[500px] pr-4">
                 <div className="space-y-4">
-                  {DAYS_OF_WEEK.map(day => (
-                    <Card key={day.value} className={`border ${businessHours[day.value].isActive ? 'border-gray-200' : 'border-gray-100 bg-gray-50/50'}`}>
+                  {DAYS_OF_WEEK.map((day) => (
+                    <Card
+                      key={day.value}
+                      className={`border ${businessHours[day.value].isActive ? 'border-gray-200' : 'border-gray-100 bg-gray-50/50'}`}
+                    >
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <Switch
                               checked={businessHours[day.value].isActive}
-                              onCheckedChange={(checked) => setBusinessHours(prev => ({
-                                ...prev,
-                                [day.value]: { ...prev[day.value], isActive: checked }
-                              }))}
+                              onCheckedChange={(checked) =>
+                                setBusinessHours((prev) => ({
+                                  ...prev,
+                                  [day.value]: { ...prev[day.value], isActive: checked },
+                                }))
+                              }
                               className="data-[state=checked]:bg-indigo-600"
                             />
-                            <Label className={`font-semibold ${businessHours[day.value].isActive ? 'text-gray-900' : 'text-gray-500'}`}>
+                            <Label
+                              className={`font-semibold ${businessHours[day.value].isActive ? 'text-gray-900' : 'text-gray-500'}`}
+                            >
                               {day.label}
                             </Label>
                           </div>
-                          
+
                           {businessHours[day.value].isActive ? (
                             <div className="flex items-center gap-3">
                               <Select
                                 value={businessHours[day.value].startTime}
-                                onValueChange={(value) => setBusinessHours(prev => ({
-                                  ...prev,
-                                  [day.value]: { ...prev[day.value], startTime: value }
-                                }))}
+                                onValueChange={(value) =>
+                                  setBusinessHours((prev) => ({
+                                    ...prev,
+                                    [day.value]: { ...prev[day.value], startTime: value },
+                                  }))
+                                }
                               >
                                 <SelectTrigger className="w-32 border-gray-300">
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  {TIME_SLOTS.map(slot => (
+                                  {TIME_SLOTS.map((slot) => (
                                     <SelectItem key={slot.value} value={slot.value}>
                                       {slot.label}
                                     </SelectItem>
                                   ))}
                                 </SelectContent>
                               </Select>
-                              
+
                               <span className="text-gray-500">to</span>
-                              
+
                               <Select
                                 value={businessHours[day.value].endTime}
-                                onValueChange={(value) => setBusinessHours(prev => ({
-                                  ...prev,
-                                  [day.value]: { ...prev[day.value], endTime: value }
-                                }))}
+                                onValueChange={(value) =>
+                                  setBusinessHours((prev) => ({
+                                    ...prev,
+                                    [day.value]: { ...prev[day.value], endTime: value },
+                                  }))
+                                }
                               >
                                 <SelectTrigger className="w-32 border-gray-300">
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  {TIME_SLOTS.map(slot => (
+                                  {TIME_SLOTS.map((slot) => (
                                     <SelectItem key={slot.value} value={slot.value}>
                                       {slot.label}
                                     </SelectItem>
@@ -259,9 +283,9 @@ export default function AvailabilityForm({
                   ))}
                 </div>
               </ScrollArea>
-              
+
               <Separator className="my-6" />
-              
+
               <div className="flex justify-end">
                 <Button
                   onClick={handleSaveHours}
@@ -270,12 +294,12 @@ export default function AvailabilityForm({
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Saving...
                     </>
                   ) : (
                     <>
-                      <CheckCircle className="h-4 w-4 mr-2" />
+                      <CheckCircle className="mr-2 h-4 w-4" />
                       Save Business Hours
                     </>
                   )}
@@ -295,40 +319,50 @@ export default function AvailabilityForm({
             <CardContent className="space-y-4">
               <div className="grid gap-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="date" className="text-gray-900">Date</Label>
+                  <Label htmlFor="date" className="text-gray-900">
+                    Date
+                  </Label>
                   <Input
                     id="date"
                     type="date"
                     value={newTimeOff.date}
-                    onChange={(e) => setNewTimeOff(prev => ({ ...prev, date: e.target.value }))}
+                    onChange={(e) => setNewTimeOff((prev) => ({ ...prev, date: e.target.value }))}
                     min={format(new Date(), 'yyyy-MM-dd')}
                     className="border-gray-300"
                   />
                 </div>
-                
+
                 <div className="flex items-center space-x-2">
                   <Switch
                     id="allDay"
                     checked={newTimeOff.allDay}
-                    onCheckedChange={(checked) => setNewTimeOff(prev => ({ ...prev, allDay: checked }))}
+                    onCheckedChange={(checked) =>
+                      setNewTimeOff((prev) => ({ ...prev, allDay: checked }))
+                    }
                     className="data-[state=checked]:bg-indigo-600"
                   />
-                  <Label htmlFor="allDay" className="text-gray-700">All day</Label>
+                  <Label htmlFor="allDay" className="text-gray-700">
+                    All day
+                  </Label>
                 </div>
-                
+
                 {!newTimeOff.allDay && (
                   <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
-                      <Label htmlFor="startTime" className="text-gray-900">Start Time</Label>
+                      <Label htmlFor="startTime" className="text-gray-900">
+                        Start Time
+                      </Label>
                       <Select
                         value={newTimeOff.startTime}
-                        onValueChange={(value) => setNewTimeOff(prev => ({ ...prev, startTime: value }))}
+                        onValueChange={(value) =>
+                          setNewTimeOff((prev) => ({ ...prev, startTime: value }))
+                        }
                       >
                         <SelectTrigger id="startTime" className="border-gray-300">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          {TIME_SLOTS.map(slot => (
+                          {TIME_SLOTS.map((slot) => (
                             <SelectItem key={slot.value} value={slot.value}>
                               {slot.label}
                             </SelectItem>
@@ -336,18 +370,22 @@ export default function AvailabilityForm({
                         </SelectContent>
                       </Select>
                     </div>
-                    
+
                     <div className="grid gap-2">
-                      <Label htmlFor="endTime" className="text-gray-900">End Time</Label>
+                      <Label htmlFor="endTime" className="text-gray-900">
+                        End Time
+                      </Label>
                       <Select
                         value={newTimeOff.endTime}
-                        onValueChange={(value) => setNewTimeOff(prev => ({ ...prev, endTime: value }))}
+                        onValueChange={(value) =>
+                          setNewTimeOff((prev) => ({ ...prev, endTime: value }))
+                        }
                       >
                         <SelectTrigger id="endTime" className="border-gray-300">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          {TIME_SLOTS.map(slot => (
+                          {TIME_SLOTS.map((slot) => (
                             <SelectItem key={slot.value} value={slot.value}>
                               {slot.label}
                             </SelectItem>
@@ -357,19 +395,21 @@ export default function AvailabilityForm({
                     </div>
                   </div>
                 )}
-                
+
                 <div className="grid gap-2">
-                  <Label htmlFor="reason" className="text-gray-900">Reason (optional)</Label>
+                  <Label htmlFor="reason" className="text-gray-900">
+                    Reason (optional)
+                  </Label>
                   <Input
                     id="reason"
                     type="text"
                     value={newTimeOff.reason}
-                    onChange={(e) => setNewTimeOff(prev => ({ ...prev, reason: e.target.value }))}
+                    onChange={(e) => setNewTimeOff((prev) => ({ ...prev, reason: e.target.value }))}
                     placeholder="e.g., Holiday, Training, Personal"
                     className="border-gray-300"
                   />
                 </div>
-                
+
                 <Button
                   onClick={handleAddTimeOff}
                   disabled={loading}
@@ -377,12 +417,12 @@ export default function AvailabilityForm({
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Adding...
                     </>
                   ) : (
                     <>
-                      <Plus className="h-4 w-4 mr-2" />
+                      <Plus className="mr-2 h-4 w-4" />
                       Add Time Off
                     </>
                   )}
@@ -390,7 +430,7 @@ export default function AvailabilityForm({
               </div>
             </CardContent>
           </Card>
-          
+
           <Card className="border border-gray-200 shadow-sm">
             <CardHeader>
               <CardTitle className="text-lg font-semibold">Scheduled Time Off</CardTitle>
@@ -405,18 +445,18 @@ export default function AvailabilityForm({
                     {timeOffs.map((timeOff) => (
                       <div
                         key={timeOff.id}
-                        className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:shadow-sm transition-all"
+                        className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4 transition-all hover:shadow-sm"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-full bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-red-50 to-red-100">
                             <Calendar className="h-5 w-5 text-red-600" />
                           </div>
                           <div>
                             <p className="font-medium text-gray-900">
                               {format(new Date(timeOff.date), 'EEEE, MMMM d, yyyy')}
                             </p>
-                            <div className="flex items-center gap-2 mt-1">
-                              <Badge variant="outline" className="text-xs border-gray-300">
+                            <div className="mt-1 flex items-center gap-2">
+                              <Badge variant="outline" className="border-gray-300 text-xs">
                                 {timeOff.startTime && timeOff.endTime
                                   ? `${timeOff.startTime} - ${timeOff.endTime}`
                                   : 'All day'}
@@ -441,10 +481,12 @@ export default function AvailabilityForm({
                   </div>
                 </ScrollArea>
               ) : (
-                <div className="text-center py-12">
-                  <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                <div className="py-12 text-center">
+                  <Calendar className="mx-auto mb-3 h-12 w-12 text-gray-400" />
                   <p className="text-gray-600">No time off scheduled</p>
-                  <p className="text-sm text-gray-500 mt-1">Add time off above to block booking availability</p>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Add time off above to block booking availability
+                  </p>
                 </div>
               )}
             </CardContent>
