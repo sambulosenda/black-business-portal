@@ -620,8 +620,8 @@ function SearchContent() {
                             price: parseFloat(s.price),
                           })),
                         }))}
-                        onBoundsChange={(bounds) => {
-                          console.log('Map bounds changed:', bounds)
+                        onBoundsChange={(_bounds) => {
+                          // Map bounds changed - feature to be implemented
                         }}
                       />
                     </div>

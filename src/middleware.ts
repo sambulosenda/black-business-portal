@@ -44,7 +44,7 @@ export async function middleware(request: NextRequest) {
 
   // If it's a business profile page (not management), it's public
   if (isBusinessProfilePage && !isBusinessManagementPage) {
-    console.log('Business profile page - allowing public access:', pathname)
+    // Business profile page - allowing public access
     return NextResponse.next()
   }
 
@@ -66,7 +66,7 @@ export async function middleware(request: NextRequest) {
 
   // If not authenticated, redirect to login
   if (!isAuth) {
-    console.log('Not authenticated, redirecting to login from:', pathname)
+    // Not authenticated, redirecting to login
     const from = pathname + request.nextUrl.search
     return NextResponse.redirect(new URL(`/login?from=${encodeURIComponent(from)}`, request.url))
   }

@@ -6,7 +6,7 @@ import { prisma } from '@/lib/prisma'
 export async function POST(request: NextRequest) {
   try {
     const { email } = await request.json()
-    console.log('Password reset requested for:', email)
+    // Password reset requested
 
     if (!email) {
       return NextResponse.json({ error: 'Email is required' }, { status: 400 })
@@ -19,13 +19,13 @@ export async function POST(request: NextRequest) {
 
     // Always return success even if user doesn't exist (security best practice)
     if (!user) {
-      console.log('User not found for email:', email)
+      // User not found - returning success for security
       return NextResponse.json({
         message: 'If an account exists with that email, we sent a password reset link.',
       })
     }
 
-    console.log('User found:', user.name, user.id)
+    // User found, proceeding with reset
 
     // Generate reset token
     const resetToken = crypto.randomBytes(32).toString('hex')
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
     // Create reset URL
     const resetUrl = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`
 
-    console.log('Reset URL generated:', resetUrl)
+    // Reset URL generated
 
     // Send email
     await sendEmail({

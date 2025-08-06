@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
 
 interface PriceRangeSliderProps {
@@ -36,30 +36,35 @@ export function PriceRangeSlider({
     setIsDragging(type)
   }
 
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!isDragging || !sliderRef.current) return
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (!isDragging || !sliderRef.current) return
 
-    const rect = sliderRef.current.getBoundingClientRect()
-    const percentage = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100))
-    const newValue = Math.round((percentage / 100) * (max - min) + min)
+      const rect = sliderRef.current.getBoundingClientRect()
+      const percentage = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100))
+      const newValue = Math.round((percentage / 100) * (max - min) + min)
 
-    const [currentMin, currentMax] = localValue
+      setLocalValue((prev) => {
+        const [currentMin, currentMax] = prev
 
-    if (isDragging === 'min') {
-      const newMin = Math.min(newValue, currentMax - step)
-      setLocalValue([newMin, currentMax])
-    } else {
-      const newMax = Math.max(newValue, currentMin + step)
-      setLocalValue([currentMin, newMax])
-    }
-  }
+        if (isDragging === 'min') {
+          const newMin = Math.min(newValue, currentMax - step)
+          return [newMin, currentMax]
+        } else {
+          const newMax = Math.max(newValue, currentMin + step)
+          return [currentMin, newMax]
+        }
+      })
+    },
+    [isDragging, max, min, step]
+  )
 
-  const handleMouseUp = () => {
+  const handleMouseUp = useCallback(() => {
     if (isDragging) {
       onChange(localValue)
       setIsDragging(null)
     }
-  }
+  }, [isDragging, localValue, onChange])
 
   useEffect(() => {
     if (isDragging) {
@@ -71,7 +76,7 @@ export function PriceRangeSlider({
         document.removeEventListener('mouseup', handleMouseUp)
       }
     }
-  }, [isDragging, localValue])
+  }, [isDragging, handleMouseMove, handleMouseUp])
 
   const leftPercentage = getPercentage(localValue[0])
   const rightPercentage = 100 - getPercentage(localValue[1])

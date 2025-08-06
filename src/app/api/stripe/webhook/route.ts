@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
             })
           }
 
-          console.log('Payment succeeded for booking:', paymentIntent.metadata)
+          // Payment succeeded for booking
         }
         break
       }
@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
             },
           })
 
-          console.log('Payment failed for booking:', paymentIntent.metadata)
+          // Payment failed for booking
         }
         break
       }
@@ -135,7 +135,7 @@ export async function POST(request: NextRequest) {
       }
 
       default:
-        console.log(`Unhandled event type: ${event.type}`)
+        // Unhandled event type - no action needed
     }
 
     return NextResponse.json({ received: true })

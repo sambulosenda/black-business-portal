@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { format, isBefore, setHours, setMinutes } from 'date-fns'
@@ -72,12 +72,12 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
   })
 
   // Calculate current step for progress indicator
-  const getCurrentStep = () => {
+  const getCurrentStep = useCallback(() => {
     if (!selectedService) return 0
     if (!selectedDate) return 1
     if (!selectedTime) return 2
     return 3
-  }
+  }, [selectedService, selectedDate, selectedTime])
 
   // Smooth scroll to section when step changes
   useEffect(() => {

@@ -67,7 +67,7 @@ export function ImageUpload({
         const { uploadUrl, publicUrl } = await presignedResponse.json()
 
         // Step 2: Upload to S3
-        console.log('Uploading to S3 with URL:', uploadUrl)
+        // Uploading to S3
         const uploadResponse = await fetch(uploadUrl, {
           method: 'PUT',
           body: file,
@@ -77,8 +77,7 @@ export function ImageUpload({
           mode: 'cors',
         })
 
-        console.log('S3 upload response status:', uploadResponse.status)
-        console.log('S3 upload response headers:', uploadResponse.headers)
+        // S3 upload completed
 
         if (!uploadResponse.ok) {
           const responseText = await uploadResponse.text()

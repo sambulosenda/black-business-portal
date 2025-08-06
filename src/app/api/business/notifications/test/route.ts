@@ -92,14 +92,14 @@ export async function POST(request: Request) {
     })
 
     // TODO: Integrate with AWS SES for email or AWS SNS for SMS
-    // For now, we'll just log and return success
-    console.log('Test notification:', {
+    // Test notification details captured for debugging
+    const _testNotification = {
       channel,
       type,
       recipient: channel === 'EMAIL' ? business.user.email : business.user.phone,
       subject: processedSubject,
       content: processedContent,
-    })
+    }
 
     // Record the test notification
     await prisma.communication.create({

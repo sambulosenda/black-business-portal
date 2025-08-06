@@ -1020,9 +1020,9 @@ function SearchContent() {
                       price: parseFloat(s.price),
                     })),
                   }))}
-                  onBoundsChange={(bounds) => {
+                  onBoundsChange={(_bounds) => {
                     // TODO: Implement search within map bounds
-                    console.log('Map bounds changed:', bounds)
+                    // Map bounds changed - feature to be implemented
                   }}
                 />
               </div>
