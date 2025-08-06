@@ -1,18 +1,59 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, startOfWeek, endOfWeek, isSameMonth, addMonths, subMonths, startOfDay, endOfDay, addDays, isToday } from "date-fns"
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, User, DollarSign, Phone, Loader2, CheckCircle, XCircle, AlertCircle, TrendingUp, Calendar, Scissors, Palette, Sparkles, Heart, Activity } from "lucide-react"
-import Link from "next/link"
-import { cn } from "@/lib/utils"
-import { motion, AnimatePresence } from "framer-motion"
+import {
+  addDays,
+  addMonths,
+  eachDayOfInterval,
+  endOfDay,
+  endOfMonth,
+  endOfWeek,
+  format,
+  isSameDay,
+  isSameMonth,
+  isToday,
+  startOfDay,
+  startOfMonth,
+  startOfWeek,
+  subMonths,
+} from 'date-fns'
+import { AnimatePresence, motion } from 'framer-motion'
+import {
+  Activity,
+  AlertCircle,
+  Calendar,
+  Calendar as CalendarIcon,
+  CheckCircle,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  DollarSign,
+  Heart,
+  Loader2,
+  Palette,
+  Phone,
+  Scissors,
+  Sparkles,
+  TrendingUp,
+  User,
+  XCircle,
+} from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { cn } from '@/lib/utils'
 
 interface Booking {
   id: string
@@ -38,44 +79,44 @@ type ViewMode = 'month' | 'week' | 'day'
 
 // Service category icons
 const serviceIcons: Record<string, React.ReactNode> = {
-  'hair': <Scissors className="w-4 h-4" />,
-  'nails': <Palette className="w-4 h-4" />,
-  'makeup': <Sparkles className="w-4 h-4" />,
-  'spa': <Heart className="w-4 h-4" />,
-  'wellness': <Activity className="w-4 h-4" />,
-  'default': <Calendar className="w-4 h-4" />
+  hair: <Scissors className="h-4 w-4" />,
+  nails: <Palette className="h-4 w-4" />,
+  makeup: <Sparkles className="h-4 w-4" />,
+  spa: <Heart className="h-4 w-4" />,
+  wellness: <Activity className="h-4 w-4" />,
+  default: <Calendar className="h-4 w-4" />,
 }
 
 // Status color schemes with gradients
 const statusStyles = {
-  'CONFIRMED': {
+  CONFIRMED: {
     bg: 'bg-gradient-to-r from-blue-500/10 to-blue-600/10',
     border: 'border-blue-500/20',
     text: 'text-blue-700',
     badge: 'bg-blue-100 text-blue-700 border-blue-200',
-    icon: <CheckCircle className="w-3 h-3" />
+    icon: <CheckCircle className="h-3 w-3" />,
   },
-  'PENDING': {
+  PENDING: {
     bg: 'bg-gradient-to-r from-amber-500/10 to-yellow-600/10',
     border: 'border-amber-500/20',
     text: 'text-amber-700',
     badge: 'bg-amber-100 text-amber-700 border-amber-200',
-    icon: <AlertCircle className="w-3 h-3" />
+    icon: <AlertCircle className="h-3 w-3" />,
   },
-  'COMPLETED': {
+  COMPLETED: {
     bg: 'bg-gradient-to-r from-green-500/10 to-emerald-600/10',
     border: 'border-green-500/20',
     text: 'text-green-700',
     badge: 'bg-green-100 text-green-700 border-green-200',
-    icon: <CheckCircle className="w-3 h-3" />
+    icon: <CheckCircle className="h-3 w-3" />,
   },
-  'CANCELLED': {
+  CANCELLED: {
     bg: 'bg-gradient-to-r from-gray-300/10 to-gray-400/10',
     border: 'border-gray-300/20',
     text: 'text-gray-500 line-through',
     badge: 'bg-gray-100 text-gray-500 border-gray-200',
-    icon: <XCircle className="w-3 h-3" />
-  }
+    icon: <XCircle className="h-3 w-3" />,
+  },
 }
 
 export default function ImprovedCalendarPage() {
@@ -93,11 +134,11 @@ export default function ImprovedCalendarPage() {
   // Calculate stats for the header
   const calculateStats = () => {
     const today = new Date()
-    const todayBookings = bookings.filter(b => isSameDay(new Date(b.date), today))
-    const confirmedToday = todayBookings.filter(b => b.status === 'CONFIRMED').length
-    const pendingToday = todayBookings.filter(b => b.status === 'PENDING').length
+    const todayBookings = bookings.filter((b) => isSameDay(new Date(b.date), today))
+    const confirmedToday = todayBookings.filter((b) => b.status === 'CONFIRMED').length
+    const pendingToday = todayBookings.filter((b) => b.status === 'PENDING').length
     const revenue = todayBookings
-      .filter(b => b.status !== 'CANCELLED')
+      .filter((b) => b.status !== 'CANCELLED')
       .reduce((sum, b) => sum + b.totalPrice, 0)
 
     return { confirmedToday, pendingToday, revenue, totalToday: todayBookings.length }
@@ -111,12 +152,12 @@ export default function ImprovedCalendarPage() {
       case 'day':
         return {
           start: startOfDay(currentDate),
-          end: endOfDay(currentDate)
+          end: endOfDay(currentDate),
         }
       case 'week':
         return {
           start: startOfWeek(currentDate),
-          end: endOfWeek(currentDate)
+          end: endOfWeek(currentDate),
         }
       case 'month':
       default:
@@ -124,7 +165,7 @@ export default function ImprovedCalendarPage() {
         const monthEnd = endOfMonth(currentDate)
         return {
           start: startOfWeek(monthStart),
-          end: endOfWeek(monthEnd)
+          end: endOfWeek(monthEnd),
         }
     }
   }
@@ -134,15 +175,17 @@ export default function ImprovedCalendarPage() {
     const fetchBookings = async () => {
       setLoading(true)
       setError(null)
-      
+
       try {
         const { start, end } = getDateRange()
-        const response = await fetch(`/api/business/bookings?startDate=${start.toISOString()}&endDate=${end.toISOString()}`)
-        
+        const response = await fetch(
+          `/api/business/bookings?startDate=${start.toISOString()}&endDate=${end.toISOString()}`
+        )
+
         if (!response.ok) {
           throw new Error('Failed to fetch bookings')
         }
-        
+
         const data = await response.json()
         setBookings(data.bookings)
       } catch (err) {
@@ -205,10 +248,8 @@ export default function ImprovedCalendarPage() {
       }
 
       // Update local state
-      setBookings(bookings.map(b => 
-        b.id === booking.id ? { ...b, status: 'CONFIRMED' } : b
-      ))
-      
+      setBookings(bookings.map((b) => (b.id === booking.id ? { ...b, status: 'CONFIRMED' } : b)))
+
       if (selectedBooking?.id === booking.id) {
         setSelectedBooking({ ...selectedBooking, status: 'CONFIRMED' })
       }
@@ -231,10 +272,8 @@ export default function ImprovedCalendarPage() {
       }
 
       // Update local state
-      setBookings(bookings.map(b => 
-        b.id === booking.id ? { ...b, status: 'COMPLETED' } : b
-      ))
-      
+      setBookings(bookings.map((b) => (b.id === booking.id ? { ...b, status: 'COMPLETED' } : b)))
+
       if (selectedBooking?.id === booking.id) {
         setSelectedBooking({ ...selectedBooking, status: 'COMPLETED' })
       }
@@ -247,7 +286,7 @@ export default function ImprovedCalendarPage() {
 
   const handleCancelBooking = async () => {
     if (!selectedBooking) return
-    
+
     setActionLoading(true)
     try {
       const response = await fetch(`/api/business/bookings/${selectedBooking.id}/cancel`, {
@@ -259,10 +298,10 @@ export default function ImprovedCalendarPage() {
       }
 
       // Update local state
-      setBookings(bookings.map(b => 
-        b.id === selectedBooking.id ? { ...b, status: 'CANCELLED' } : b
-      ))
-      
+      setBookings(
+        bookings.map((b) => (b.id === selectedBooking.id ? { ...b, status: 'CANCELLED' } : b))
+      )
+
       setSelectedBooking({ ...selectedBooking, status: 'CANCELLED' })
       setShowCancelDialog(false)
     } catch (err) {
@@ -273,17 +312,26 @@ export default function ImprovedCalendarPage() {
   }
 
   // Group bookings by date
-  const bookingsByDate = bookings.reduce((acc, booking) => {
-    const dateKey = format(new Date(booking.date), 'yyyy-MM-dd')
-    if (!acc[dateKey]) {
-      acc[dateKey] = []
-    }
-    acc[dateKey].push(booking)
-    return acc
-  }, {} as Record<string, Booking[]>)
+  const bookingsByDate = bookings.reduce(
+    (acc, booking) => {
+      const dateKey = format(new Date(booking.date), 'yyyy-MM-dd')
+      if (!acc[dateKey]) {
+        acc[dateKey] = []
+      }
+      acc[dateKey].push(booking)
+      return acc
+    },
+    {} as Record<string, Booking[]>
+  )
 
   // Render appointment card
-  const AppointmentCard = ({ booking, compact = false }: { booking: Booking; compact?: boolean }) => {
+  const AppointmentCard = ({
+    booking,
+    compact = false,
+  }: {
+    booking: Booking
+    compact?: boolean
+  }) => {
     const status = statusStyles[booking.status as keyof typeof statusStyles] || statusStyles.PENDING
     const serviceCategory = booking.service.category?.toLowerCase() || 'default'
     const icon = serviceIcons[serviceCategory] || serviceIcons.default
@@ -296,10 +344,10 @@ export default function ImprovedCalendarPage() {
         exit={{ opacity: 0, scale: 0.95 }}
         whileHover={{ scale: 1.02 }}
         className={cn(
-          "relative group cursor-pointer rounded-lg border p-3 transition-all",
+          'group relative cursor-pointer rounded-lg border p-3 transition-all',
           status.bg,
           status.border,
-          "hover:shadow-md hover:border-opacity-40"
+          'hover:border-opacity-40 hover:shadow-md'
         )}
         onClick={(e) => {
           e.stopPropagation()
@@ -308,51 +356,44 @@ export default function ImprovedCalendarPage() {
       >
         {compact ? (
           <div className="flex items-center gap-2">
-            <div className={cn("p-1 rounded", status.badge)}>
-              {icon}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className={cn("text-sm font-medium truncate", status.text)}>
+            <div className={cn('rounded p-1', status.badge)}>{icon}</div>
+            <div className="min-w-0 flex-1">
+              <p className={cn('truncate text-sm font-medium', status.text)}>
                 {format(new Date(booking.startTime), 'h:mm a')}
               </p>
-              <p className="text-xs text-muted-foreground truncate">
-                {booking.service.name}
-              </p>
+              <p className="text-muted-foreground truncate text-xs">{booking.service.name}</p>
             </div>
           </div>
         ) : (
           <div className="space-y-2">
             <div className="flex items-start justify-between gap-2">
               <div className="flex items-center gap-2">
-                <div className={cn("p-1.5 rounded-md", status.badge)}>
-                  {icon}
-                </div>
+                <div className={cn('rounded-md p-1.5', status.badge)}>{icon}</div>
                 <div>
-                  <p className={cn("font-medium", status.text)}>
-                    {booking.service.name}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {format(new Date(booking.startTime), 'h:mm a')} - {format(new Date(booking.endTime), 'h:mm a')}
+                  <p className={cn('font-medium', status.text)}>{booking.service.name}</p>
+                  <p className="text-muted-foreground text-sm">
+                    {format(new Date(booking.startTime), 'h:mm a')} -{' '}
+                    {format(new Date(booking.endTime), 'h:mm a')}
                   </p>
                 </div>
               </div>
-              <Badge variant="outline" className={cn("text-xs", status.badge)}>
+              <Badge variant="outline" className={cn('text-xs', status.badge)}>
                 {status.icon}
                 <span className="ml-1">{booking.status}</span>
               </Badge>
             </div>
-            
+
             <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-1 text-muted-foreground">
-                <User className="w-3 h-3" />
+              <div className="text-muted-foreground flex items-center gap-1">
+                <User className="h-3 w-3" />
                 <span>{booking.user.name}</span>
               </div>
               <span className="font-medium">${booking.totalPrice.toFixed(2)}</span>
             </div>
 
             {/* Quick actions on hover */}
-            <div className="absolute inset-x-3 -bottom-8 opacity-0 group-hover:opacity-100 transition-opacity">
-              <div className="bg-white rounded-md shadow-lg border p-1 flex gap-1">
+            <div className="absolute inset-x-3 -bottom-8 opacity-0 transition-opacity group-hover:opacity-100">
+              <div className="flex gap-1 rounded-md border bg-white p-1 shadow-lg">
                 {booking.status === 'PENDING' && (
                   <Button
                     size="sm"
@@ -382,7 +423,7 @@ export default function ImprovedCalendarPage() {
                 <Button
                   size="sm"
                   variant="ghost"
-                  className="h-7 text-xs text-destructive"
+                  className="text-destructive h-7 text-xs"
                   onClick={(e) => {
                     e.stopPropagation()
                     setSelectedBooking(booking)
@@ -411,14 +452,14 @@ export default function ImprovedCalendarPage() {
     return (
       <div>
         {/* Week day headers */}
-        <div className="grid grid-cols-7 mb-2">
+        <div className="mb-2 grid grid-cols-7">
           {weekDays.map((day) => (
-            <div key={day} className="text-center text-sm font-medium text-muted-foreground py-2">
+            <div key={day} className="text-muted-foreground py-2 text-center text-sm font-medium">
               {day}
             </div>
           ))}
         </div>
-        
+
         {/* Calendar grid */}
         <div className="grid grid-cols-7 gap-1">
           {calendarDays.map((day, index) => {
@@ -427,37 +468,39 @@ export default function ImprovedCalendarPage() {
             const isCurrentMonth = isSameMonth(day, monthStart)
             const isSelected = isSameDay(day, selectedDate)
             const hasBookings = dayBookings.length > 0
-            
+
             return (
               <motion.div
                 key={index}
                 whileHover={{ scale: 1.02 }}
                 onClick={() => setSelectedDate(day)}
                 className={cn(
-                  "relative min-h-[120px] p-2 rounded-lg border cursor-pointer transition-all",
-                  !isCurrentMonth && "opacity-50 bg-gray-50/50",
-                  isToday(day) && "bg-gradient-to-br from-indigo-50 to-purple-50 border-indigo-200",
-                  isSelected && "ring-2 ring-indigo-500 ring-offset-2",
-                  hasBookings && "border-gray-300",
-                  !hasBookings && "border-gray-200",
-                  "hover:shadow-md hover:border-gray-300"
+                  'relative min-h-[120px] cursor-pointer rounded-lg border p-2 transition-all',
+                  !isCurrentMonth && 'bg-gray-50/50 opacity-50',
+                  isToday(day) && 'border-indigo-200 bg-gradient-to-br from-indigo-50 to-purple-50',
+                  isSelected && 'ring-2 ring-indigo-500 ring-offset-2',
+                  hasBookings && 'border-gray-300',
+                  !hasBookings && 'border-gray-200',
+                  'hover:border-gray-300 hover:shadow-md'
                 )}
               >
-                <div className="flex items-center justify-between mb-2">
-                  <span className={cn(
-                    "text-sm font-medium",
-                    !isCurrentMonth && "text-muted-foreground",
-                    isToday(day) && "text-indigo-600 font-bold"
-                  )}>
+                <div className="mb-2 flex items-center justify-between">
+                  <span
+                    className={cn(
+                      'text-sm font-medium',
+                      !isCurrentMonth && 'text-muted-foreground',
+                      isToday(day) && 'font-bold text-indigo-600'
+                    )}
+                  >
                     {format(day, 'd')}
                   </span>
                   {dayBookings.length > 0 && (
-                    <Badge variant="default" className="text-xs h-5 px-1.5">
+                    <Badge variant="default" className="h-5 px-1.5 text-xs">
                       {dayBookings.length}
                     </Badge>
                   )}
                 </div>
-                
+
                 {/* Show appointments */}
                 <div className="space-y-1">
                   <AnimatePresence>
@@ -466,7 +509,7 @@ export default function ImprovedCalendarPage() {
                     ))}
                   </AnimatePresence>
                   {dayBookings.length > 2 && (
-                    <p className="text-xs text-center text-muted-foreground mt-1">
+                    <p className="text-muted-foreground mt-1 text-center text-xs">
                       +{dayBookings.length - 2} more
                     </p>
                   )}
@@ -474,10 +517,11 @@ export default function ImprovedCalendarPage() {
 
                 {/* Revenue indicator */}
                 {dayBookings.length > 0 && (
-                  <div className="absolute bottom-1 right-1">
-                    <p className="text-xs font-medium text-muted-foreground">
-                      ${dayBookings
-                        .filter(b => b.status !== 'CANCELLED')
+                  <div className="absolute right-1 bottom-1">
+                    <p className="text-muted-foreground text-xs font-medium">
+                      $
+                      {dayBookings
+                        .filter((b) => b.status !== 'CANCELLED')
                         .reduce((sum, b) => sum + b.totalPrice, 0)
                         .toFixed(0)}
                     </p>
@@ -500,10 +544,8 @@ export default function ImprovedCalendarPage() {
     return (
       <div>
         {/* Day headers */}
-        <div className="grid grid-cols-8 gap-1 mb-2 sticky top-0 bg-background z-10">
-          <div className="text-center text-sm font-medium text-muted-foreground p-2">
-            Time
-          </div>
+        <div className="bg-background sticky top-0 z-10 mb-2 grid grid-cols-8 gap-1">
+          <div className="text-muted-foreground p-2 text-center text-sm font-medium">Time</div>
           {weekDays.map((day) => {
             const isSelected = isSameDay(day, selectedDate)
             return (
@@ -511,19 +553,16 @@ export default function ImprovedCalendarPage() {
                 key={day.toISOString()}
                 onClick={() => setSelectedDate(day)}
                 className={cn(
-                  "text-center p-2 rounded-lg cursor-pointer transition-all",
-                  isToday(day) && "bg-gradient-to-br from-indigo-50 to-purple-50",
-                  isSelected && "ring-2 ring-indigo-500",
-                  "hover:bg-gray-50"
+                  'cursor-pointer rounded-lg p-2 text-center transition-all',
+                  isToday(day) && 'bg-gradient-to-br from-indigo-50 to-purple-50',
+                  isSelected && 'ring-2 ring-indigo-500',
+                  'hover:bg-gray-50'
                 )}
               >
-                <div className="text-sm font-medium text-muted-foreground">
+                <div className="text-muted-foreground text-sm font-medium">
                   {format(day, 'EEE')}
                 </div>
-                <div className={cn(
-                  "text-lg font-semibold",
-                  isToday(day) && "text-indigo-600"
-                )}>
+                <div className={cn('text-lg font-semibold', isToday(day) && 'text-indigo-600')}>
                   {format(day, 'd')}
                 </div>
               </div>
@@ -536,13 +575,13 @@ export default function ImprovedCalendarPage() {
           <div className="min-w-[800px]">
             {hours.map((hour) => (
               <div key={hour} className="grid grid-cols-8 gap-1">
-                <div className="text-right text-xs text-muted-foreground p-2 pr-4">
+                <div className="text-muted-foreground p-2 pr-4 text-right text-xs">
                   {format(new Date().setHours(hour, 0), 'h a')}
                 </div>
                 {weekDays.map((day) => {
                   const dateKey = format(day, 'yyyy-MM-dd')
                   const dayBookings = bookingsByDate[dateKey] || []
-                  const hourBookings = dayBookings.filter(booking => {
+                  const hourBookings = dayBookings.filter((booking) => {
                     const bookingHour = new Date(booking.startTime).getHours()
                     return bookingHour === hour
                   })
@@ -550,7 +589,7 @@ export default function ImprovedCalendarPage() {
                   return (
                     <div
                       key={`${day.toISOString()}-${hour}`}
-                      className="relative min-h-[80px] border rounded-lg p-1"
+                      className="relative min-h-[80px] rounded-lg border p-1"
                     >
                       <AnimatePresence>
                         {hourBookings.map((booking) => (
@@ -577,17 +616,17 @@ export default function ImprovedCalendarPage() {
       <ScrollArea className="h-[700px]">
         <div className="min-w-[600px] space-y-1">
           {hours.map((hour) => {
-            const hourBookings = dayBookings.filter(booking => {
+            const hourBookings = dayBookings.filter((booking) => {
               const bookingHour = new Date(booking.startTime).getHours()
               return bookingHour === hour
             })
 
             return (
               <div key={hour} className="flex gap-4">
-                <div className="w-20 text-right text-sm text-muted-foreground py-3">
+                <div className="text-muted-foreground w-20 py-3 text-right text-sm">
                   {format(new Date().setHours(hour, 0), 'h a')}
                 </div>
-                <div className="flex-1 min-h-[100px] border rounded-lg p-2 relative">
+                <div className="relative min-h-[100px] flex-1 rounded-lg border p-2">
                   <AnimatePresence>
                     {hourBookings.map((booking) => (
                       <AppointmentCard key={booking.id} booking={booking} />
@@ -595,7 +634,7 @@ export default function ImprovedCalendarPage() {
                   </AnimatePresence>
                   {hourBookings.length === 0 && (
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <p className="text-xs text-muted-foreground">Available</p>
+                      <p className="text-muted-foreground text-xs">Available</p>
                     </div>
                   )}
                 </div>
@@ -610,10 +649,10 @@ export default function ImprovedCalendarPage() {
   if (loading) {
     return (
       <div className="space-y-6">
-        <div className="h-32 bg-gray-100 rounded-lg animate-pulse" />
+        <div className="h-32 animate-pulse rounded-lg bg-gray-100" />
         <div className="grid gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2 h-[600px] bg-gray-100 rounded-lg animate-pulse" />
-          <div className="h-[600px] bg-gray-100 rounded-lg animate-pulse" />
+          <div className="h-[600px] animate-pulse rounded-lg bg-gray-100 lg:col-span-2" />
+          <div className="h-[600px] animate-pulse rounded-lg bg-gray-100" />
         </div>
       </div>
     )
@@ -621,9 +660,9 @@ export default function ImprovedCalendarPage() {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex min-h-[400px] items-center justify-center">
         <div className="text-center">
-          <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+          <AlertCircle className="text-destructive mx-auto mb-4 h-12 w-12" />
           <p className="text-destructive mb-2">{error}</p>
           <Button onClick={() => router.refresh()}>Try Again</Button>
         </div>
@@ -634,55 +673,55 @@ export default function ImprovedCalendarPage() {
   return (
     <div className="space-y-6">
       {/* Header with stats */}
-      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 text-white">
-        <div className="flex items-center justify-between mb-4">
+      <div className="rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 p-6 text-white">
+        <div className="mb-4 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold">Calendar</h1>
-            <p className="text-indigo-100 mt-1">Manage your appointments and schedule</p>
+            <p className="mt-1 text-indigo-100">Manage your appointments and schedule</p>
           </div>
           <Button
             variant="secondary"
             size="lg"
-            className="bg-white/20 hover:bg-white/30 text-white border-0"
+            className="border-0 bg-white/20 text-white hover:bg-white/30"
           >
             <Calendar className="mr-2 h-5 w-5" />
             Add Booking
           </Button>
         </div>
-        
+
         {/* Today's stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-          <div className="bg-white/10 backdrop-blur rounded-lg p-4">
+        <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="rounded-lg bg-white/10 p-4 backdrop-blur">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-indigo-100 text-sm">Today&apos;s Bookings</p>
+                <p className="text-sm text-indigo-100">Today&apos;s Bookings</p>
                 <p className="text-2xl font-bold">{stats.totalToday}</p>
               </div>
               <Calendar className="h-8 w-8 text-indigo-200" />
             </div>
           </div>
-          <div className="bg-white/10 backdrop-blur rounded-lg p-4">
+          <div className="rounded-lg bg-white/10 p-4 backdrop-blur">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-indigo-100 text-sm">Confirmed</p>
+                <p className="text-sm text-indigo-100">Confirmed</p>
                 <p className="text-2xl font-bold">{stats.confirmedToday}</p>
               </div>
               <CheckCircle className="h-8 w-8 text-green-300" />
             </div>
           </div>
-          <div className="bg-white/10 backdrop-blur rounded-lg p-4">
+          <div className="rounded-lg bg-white/10 p-4 backdrop-blur">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-indigo-100 text-sm">Pending</p>
+                <p className="text-sm text-indigo-100">Pending</p>
                 <p className="text-2xl font-bold">{stats.pendingToday}</p>
               </div>
               <AlertCircle className="h-8 w-8 text-yellow-300" />
             </div>
           </div>
-          <div className="bg-white/10 backdrop-blur rounded-lg p-4">
+          <div className="rounded-lg bg-white/10 p-4 backdrop-blur">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-indigo-100 text-sm">Today&apos;s Revenue</p>
+                <p className="text-sm text-indigo-100">Today&apos;s Revenue</p>
                 <p className="text-2xl font-bold">${stats.revenue.toFixed(0)}</p>
               </div>
               <TrendingUp className="h-8 w-8 text-indigo-200" />
@@ -693,12 +732,12 @@ export default function ImprovedCalendarPage() {
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Calendar View - Takes up 2 columns */}
-        <Card className="lg:col-span-2 shadow-lg border-0">
-          <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100/50 rounded-t-lg">
+        <Card className="border-0 shadow-lg lg:col-span-2">
+          <CardHeader className="rounded-t-lg bg-gradient-to-r from-gray-50 to-gray-100/50">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   size="icon"
                   onClick={goToPrevious}
                   className="hover:bg-white"
@@ -710,23 +749,13 @@ export default function ImprovedCalendarPage() {
                   {viewMode === 'week' && `Week of ${format(startOfWeek(currentDate), 'MMM d')}`}
                   {viewMode === 'day' && format(currentDate, 'EEEE, MMMM d')}
                 </h2>
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  onClick={goToNext}
-                  className="hover:bg-white"
-                >
+                <Button variant="ghost" size="icon" onClick={goToNext} className="hover:bg-white">
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
-              
+
               <div className="flex items-center gap-2">
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={goToToday}
-                  className="hidden sm:flex"
-                >
+                <Button variant="outline" size="sm" onClick={goToToday} className="hidden sm:flex">
                   Today
                 </Button>
                 <Tabs defaultValue="month">
@@ -757,14 +786,15 @@ export default function ImprovedCalendarPage() {
         </Card>
 
         {/* Selected Date/Booking Details */}
-        <Card className="shadow-lg border-0">
+        <Card className="border-0 shadow-lg">
           <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100/50">
             <CardTitle className="text-lg">
               {selectedBooking ? 'Booking Details' : format(selectedDate, 'EEEE, MMMM d')}
             </CardTitle>
             {!selectedBooking && (
               <CardDescription>
-                {bookingsByDate[format(selectedDate, 'yyyy-MM-dd')]?.length || 0} appointment{bookingsByDate[format(selectedDate, 'yyyy-MM-dd')]?.length !== 1 ? 's' : ''}
+                {bookingsByDate[format(selectedDate, 'yyyy-MM-dd')]?.length || 0} appointment
+                {bookingsByDate[format(selectedDate, 'yyyy-MM-dd')]?.length !== 1 ? 's' : ''}
               </CardDescription>
             )}
           </CardHeader>
@@ -783,25 +813,23 @@ export default function ImprovedCalendarPage() {
                       <Badge
                         variant="outline"
                         className={cn(
-                          "text-sm",
+                          'text-sm',
                           statusStyles[selectedBooking.status as keyof typeof statusStyles]?.badge
                         )}
                       >
                         {statusStyles[selectedBooking.status as keyof typeof statusStyles]?.icon}
                         <span className="ml-1">{selectedBooking.status}</span>
                       </Badge>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setSelectedBooking(null)}
-                      >
+                      <Button variant="ghost" size="sm" onClick={() => setSelectedBooking(null)}>
                         Back
                       </Button>
                     </div>
 
                     <div className="space-y-4">
-                      <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-4">
-                        <h3 className="font-semibold text-lg mb-2">{selectedBooking.service.name}</h3>
+                      <div className="rounded-lg bg-gradient-to-r from-indigo-50 to-purple-50 p-4">
+                        <h3 className="mb-2 text-lg font-semibold">
+                          {selectedBooking.service.name}
+                        </h3>
                         <div className="space-y-2 text-sm">
                           <div className="flex items-center gap-2">
                             <CalendarIcon className="h-4 w-4 text-indigo-600" />
@@ -810,19 +838,21 @@ export default function ImprovedCalendarPage() {
                           <div className="flex items-center gap-2">
                             <Clock className="h-4 w-4 text-indigo-600" />
                             <span>
-                              {format(new Date(selectedBooking.startTime), 'h:mm a')} - 
+                              {format(new Date(selectedBooking.startTime), 'h:mm a')} -
                               {format(new Date(selectedBooking.endTime), 'h:mm a')}
                             </span>
                           </div>
                           <div className="flex items-center gap-2">
                             <DollarSign className="h-4 w-4 text-indigo-600" />
-                            <span className="font-semibold">${selectedBooking.totalPrice.toFixed(2)}</span>
+                            <span className="font-semibold">
+                              ${selectedBooking.totalPrice.toFixed(2)}
+                            </span>
                           </div>
                         </div>
                       </div>
 
-                      <div className="border rounded-lg p-4 space-y-3">
-                        <h4 className="font-medium flex items-center gap-2">
+                      <div className="space-y-3 rounded-lg border p-4">
+                        <h4 className="flex items-center gap-2 font-medium">
                           <User className="h-4 w-4" />
                           Customer Information
                         </h4>
@@ -846,7 +876,11 @@ export default function ImprovedCalendarPage() {
                               disabled={actionLoading}
                               className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
                             >
-                              {actionLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <CheckCircle className="h-4 w-4 mr-2" />}
+                              {actionLoading ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              ) : (
+                                <CheckCircle className="mr-2 h-4 w-4" />
+                              )}
                               Confirm Booking
                             </Button>
                             <Button
@@ -855,7 +889,7 @@ export default function ImprovedCalendarPage() {
                               variant="outline"
                               className="w-full"
                             >
-                              <XCircle className="h-4 w-4 mr-2" />
+                              <XCircle className="mr-2 h-4 w-4" />
                               Cancel Booking
                             </Button>
                           </>
@@ -867,7 +901,11 @@ export default function ImprovedCalendarPage() {
                               disabled={actionLoading}
                               className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
                             >
-                              {actionLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <CheckCircle className="h-4 w-4 mr-2" />}
+                              {actionLoading ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              ) : (
+                                <CheckCircle className="mr-2 h-4 w-4" />
+                              )}
                               Mark as Completed
                             </Button>
                             <Button
@@ -876,7 +914,7 @@ export default function ImprovedCalendarPage() {
                               variant="outline"
                               className="w-full"
                             >
-                              <XCircle className="h-4 w-4 mr-2" />
+                              <XCircle className="mr-2 h-4 w-4" />
                               Cancel Booking
                             </Button>
                           </>
@@ -899,18 +937,19 @@ export default function ImprovedCalendarPage() {
                   >
                     {bookingsByDate[format(selectedDate, 'yyyy-MM-dd')]?.length > 0 ? (
                       bookingsByDate[format(selectedDate, 'yyyy-MM-dd')]
-                        .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime())
+                        .sort(
+                          (a, b) =>
+                            new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+                        )
                         .map((booking) => (
                           <div key={booking.id} className="cursor-pointer">
                             <AppointmentCard booking={booking} />
                           </div>
                         ))
                     ) : (
-                      <div className="text-center py-12">
-                        <CalendarIcon className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-                        <p className="text-sm text-muted-foreground">
-                          No appointments scheduled
-                        </p>
+                      <div className="py-12 text-center">
+                        <CalendarIcon className="text-muted-foreground mx-auto mb-3 h-12 w-12" />
+                        <p className="text-muted-foreground text-sm">No appointments scheduled</p>
                         <Button variant="outline" className="mt-4">
                           Add Appointment
                         </Button>
@@ -935,8 +974,8 @@ export default function ImprovedCalendarPage() {
           </DialogHeader>
           <div className="space-y-2 py-4">
             <p className="font-medium">{selectedBooking?.service.name}</p>
-            <p className="text-sm text-muted-foreground">{selectedBooking?.user.name}</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">{selectedBooking?.user.name}</p>
+            <p className="text-muted-foreground text-sm">
               {selectedBooking && format(new Date(selectedBooking.startTime), 'MMM d, yyyy h:mm a')}
             </p>
           </div>
@@ -944,12 +983,8 @@ export default function ImprovedCalendarPage() {
             <Button variant="outline" onClick={() => setShowCancelDialog(false)}>
               Keep Booking
             </Button>
-            <Button 
-              variant="destructive" 
-              onClick={handleCancelBooking}
-              disabled={actionLoading}
-            >
-              {actionLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+            <Button variant="destructive" onClick={handleCancelBooking} disabled={actionLoading}>
+              {actionLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               Cancel Booking
             </Button>
           </DialogFooter>

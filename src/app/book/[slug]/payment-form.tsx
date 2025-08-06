@@ -1,15 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-// import { useRouter } from 'next/navigation' // Commented out - may be used later
-import {
-  PaymentElement,
-  Elements,
-  useStripe,
-  useElements,
-} from '@stripe/react-stripe-js'
-import { getStripe } from '@/lib/stripe-client'
 import { format } from 'date-fns'
+import { getStripe } from '@/lib/stripe-client'
+// import { useRouter } from 'next/navigation' // Commented out - may be used later
+import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 
 interface PaymentFormProps {
   clientSecret: string
@@ -61,7 +56,7 @@ function CheckoutForm({
       if (submitError) {
         // Provide user-friendly error messages
         let errorMessage = 'Payment failed. Please try again.'
-        
+
         if (submitError.type === 'card_error') {
           errorMessage = submitError.message || 'Your card was declined.'
         } else if (submitError.type === 'validation_error') {
@@ -71,7 +66,7 @@ function CheckoutForm({
         } else if (submitError.message) {
           errorMessage = submitError.message
         }
-        
+
         setError(errorMessage)
         setProcessing(false)
       }
@@ -85,8 +80,8 @@ function CheckoutForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Booking Summary */}
-      <div className="bg-gray-50 rounded-lg p-4">
-        <h3 className="font-medium text-gray-900 mb-3">Booking Summary</h3>
+      <div className="rounded-lg bg-gray-50 p-4">
+        <h3 className="mb-3 font-medium text-gray-900">Booking Summary</h3>
         <dl className="space-y-2 text-sm">
           <div className="flex justify-between">
             <dt className="text-gray-600">Business:</dt>
@@ -104,16 +99,16 @@ function CheckoutForm({
             <dt className="text-gray-600">Time:</dt>
             <dd className="font-medium">{time}</dd>
           </div>
-          <div className="pt-2 border-t flex justify-between">
-            <dt className="text-gray-900 font-medium">Total:</dt>
-            <dd className="font-bold text-lg">${amount.toFixed(2)}</dd>
+          <div className="flex justify-between border-t pt-2">
+            <dt className="font-medium text-gray-900">Total:</dt>
+            <dd className="text-lg font-bold">${amount.toFixed(2)}</dd>
           </div>
         </dl>
       </div>
 
       {/* Payment Element */}
       <div>
-        <h3 className="font-medium text-gray-900 mb-3">Payment Details</h3>
+        <h3 className="mb-3 font-medium text-gray-900">Payment Details</h3>
         <PaymentElement />
       </div>
 
@@ -128,20 +123,21 @@ function CheckoutForm({
       <button
         type="submit"
         disabled={!stripe || processing}
-        className="w-full bg-indigo-600 text-white py-3 px-4 rounded-md font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full rounded-md bg-indigo-600 px-4 py-3 font-medium text-white hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
       >
         {processing ? 'Processing...' : `Pay $${amount.toFixed(2)}`}
       </button>
 
-      <p className="text-xs text-gray-500 text-center">
-        Your payment is processed securely by Stripe. The business will receive your payment minus platform fees.
+      <p className="text-center text-xs text-gray-500">
+        Your payment is processed securely by Stripe. The business will receive your payment minus
+        platform fees.
       </p>
     </form>
   )
 }
 
-export default function PaymentForm({ 
-  clientSecret, 
+export default function PaymentForm({
+  clientSecret,
   bookingId,
   businessName,
   serviceName,

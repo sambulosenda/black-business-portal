@@ -2,10 +2,11 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { AlertCircle, CheckCircle2, CreditCard, ExternalLink, Loader2 } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+
 interface StripeConnectSectionProps {
   businessId: string
   businessName: string
@@ -44,7 +45,7 @@ export default function StripeConnectSection({
       }
 
       const { url } = data
-      
+
       // Redirect to Stripe Connect onboarding
       window.location.href = url
     } catch (err: unknown) {
@@ -71,7 +72,7 @@ export default function StripeConnectSection({
       }
 
       const { url } = await response.json()
-      
+
       // Redirect to Stripe Express dashboard
       window.location.href = url
     } catch (err: unknown) {
@@ -91,20 +92,25 @@ export default function StripeConnectSection({
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Platform Fee Information */}
-        <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-lg p-4">
+        <div className="rounded-lg border border-indigo-200 bg-gradient-to-r from-indigo-50 to-purple-50 p-4">
           <div className="flex items-start gap-3">
-            <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center shadow-sm">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm">
               <CreditCard className="h-5 w-5 text-indigo-600" />
             </div>
             <div className="flex-1">
-              <h3 className="text-sm font-semibold text-gray-900 mb-2">Platform Fee Structure</h3>
+              <h3 className="mb-2 text-sm font-semibold text-gray-900">Platform Fee Structure</h3>
               <p className="text-sm text-gray-700">
-                {process.env.NEXT_PUBLIC_PLATFORM_NAME || 'Glamfric'} charges a {commissionRate.toString()}% commission on all bookings.
+                {process.env.NEXT_PUBLIC_PLATFORM_NAME || 'Glamfric'} charges a{' '}
+                {commissionRate.toString()}% commission on all bookings.
               </p>
-              <p className="text-sm text-gray-700 mt-1">
-                You&apos;ll receive <span className="font-semibold text-green-700">{(100 - Number(commissionRate)).toFixed(0)}%</span> of each booking after platform fees.
+              <p className="mt-1 text-sm text-gray-700">
+                You&apos;ll receive{' '}
+                <span className="font-semibold text-green-700">
+                  {(100 - Number(commissionRate)).toFixed(0)}%
+                </span>{' '}
+                of each booking after platform fees.
               </p>
-              <p className="text-xs text-gray-600 mt-2">
+              <p className="mt-2 text-xs text-gray-600">
                 Note: Additional Stripe processing fees apply (2.9% + $0.30 per transaction)
               </p>
             </div>
@@ -113,14 +119,15 @@ export default function StripeConnectSection({
 
         {/* Stripe Connect Status */}
         <div>
-          <h3 className="text-base font-semibold text-gray-900 mb-4">Stripe Account Status</h3>
-          
+          <h3 className="mb-4 text-base font-semibold text-gray-900">Stripe Account Status</h3>
+
           {!stripeAccountId ? (
             <div className="space-y-4">
-              <div className="flex items-center gap-2 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-                <AlertCircle className="h-5 w-5 text-amber-600 flex-shrink-0" />
+              <div className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 p-4">
+                <AlertCircle className="h-5 w-5 flex-shrink-0 text-amber-600" />
                 <p className="text-sm text-gray-700">
-                  Connect your Stripe account to start accepting payments. You&apos;ll be redirected to Stripe to complete the setup.
+                  Connect your Stripe account to start accepting payments. You&apos;ll be redirected
+                  to Stripe to complete the setup.
                 </p>
               </div>
               <Button
@@ -134,8 +141,8 @@ export default function StripeConnectSection({
             </div>
           ) : !stripeOnboarded ? (
             <div className="space-y-4">
-              <div className="flex items-center gap-2 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <div className="h-3 w-3 bg-yellow-400 rounded-full animate-pulse flex-shrink-0" />
+              <div className="flex items-center gap-2 rounded-lg border border-yellow-200 bg-yellow-50 p-4">
+                <div className="h-3 w-3 flex-shrink-0 animate-pulse rounded-full bg-yellow-400" />
                 <p className="text-sm text-gray-700">
                   Your Stripe account setup is incomplete. Please complete the onboarding process.
                 </p>
@@ -151,19 +158,22 @@ export default function StripeConnectSection({
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="flex items-center gap-2 p-4 bg-green-50 border border-green-200 rounded-lg">
-                <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0" />
+              <div className="flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 p-4">
+                <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-green-600" />
                 <div>
                   <p className="text-sm font-medium text-gray-900">
                     Your Stripe account is connected and ready to accept payments
                   </p>
-                  <Badge variant="outline" className="mt-1 border-green-200 bg-green-50 text-green-700">
+                  <Badge
+                    variant="outline"
+                    className="mt-1 border-green-200 bg-green-50 text-green-700"
+                  >
                     Active
                   </Badge>
                 </div>
               </div>
-              
-              <div className="flex flex-col sm:flex-row gap-3">
+
+              <div className="flex flex-col gap-3 sm:flex-row">
                 <Button
                   onClick={handleStripePortal}
                   disabled={loading}
@@ -188,7 +198,7 @@ export default function StripeConnectSection({
 
         {/* Error Message */}
         {error && (
-          <div className="rounded-lg bg-red-50 border border-red-200 p-4">
+          <div className="rounded-lg border border-red-200 bg-red-50 p-4">
             <div className="flex items-center gap-2">
               <AlertCircle className="h-4 w-4 text-red-600" />
               <p className="text-sm text-red-800">{error}</p>
@@ -198,23 +208,39 @@ export default function StripeConnectSection({
 
         {/* Additional Information */}
         <div className="border-t border-gray-200 pt-6">
-          <h4 className="text-sm font-semibold text-gray-900 mb-3">How it works:</h4>
+          <h4 className="mb-3 text-sm font-semibold text-gray-900">How it works:</h4>
           <ol className="space-y-2">
             <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-xs font-semibold">1</span>
-              <span className="text-sm text-gray-600">Connect your Stripe account to start accepting payments</span>
+              <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-semibold text-indigo-600">
+                1
+              </span>
+              <span className="text-sm text-gray-600">
+                Connect your Stripe account to start accepting payments
+              </span>
             </li>
             <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-xs font-semibold">2</span>
-              <span className="text-sm text-gray-600">Customers pay securely through our platform</span>
+              <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-semibold text-indigo-600">
+                2
+              </span>
+              <span className="text-sm text-gray-600">
+                Customers pay securely through our platform
+              </span>
             </li>
             <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-xs font-semibold">3</span>
-              <span className="text-sm text-gray-600">Funds are automatically split and deposited to your account</span>
+              <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-semibold text-indigo-600">
+                3
+              </span>
+              <span className="text-sm text-gray-600">
+                Funds are automatically split and deposited to your account
+              </span>
             </li>
             <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-xs font-semibold">4</span>
-              <span className="text-sm text-gray-600">Track your earnings and payouts in your dashboard</span>
+              <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-semibold text-indigo-600">
+                4
+              </span>
+              <span className="text-sm text-gray-600">
+                Track your earnings and payouts in your dashboard
+              </span>
             </li>
           </ol>
         </div>

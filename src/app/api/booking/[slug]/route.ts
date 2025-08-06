@@ -10,11 +10,11 @@ interface RouteParams {
 export async function GET(req: Request, { params }: RouteParams) {
   try {
     const { slug } = await params
-    
+
     const business = await prisma.business.findUnique({
-      where: { 
+      where: {
         slug: slug,
-        isActive: true 
+        isActive: true,
       },
       select: {
         id: true,
@@ -34,10 +34,7 @@ export async function GET(req: Request, { params }: RouteParams) {
     })
 
     if (!business) {
-      return NextResponse.json(
-        { error: 'Business not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'Business not found' }, { status: 404 })
     }
 
     const services = await prisma.service.findMany({
@@ -58,9 +55,6 @@ export async function GET(req: Request, { params }: RouteParams) {
     return NextResponse.json({ business, services })
   } catch (error) {
     console.error('Error fetching booking data:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch booking data' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch booking data' }, { status: 500 })
   }
 }

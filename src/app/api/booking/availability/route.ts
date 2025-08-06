@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { endOfDay, format, startOfDay } from 'date-fns'
 import { prisma } from '@/lib/prisma'
-import { startOfDay, endOfDay, format } from 'date-fns'
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,10 +10,7 @@ export async function GET(request: NextRequest) {
     const serviceId = searchParams.get('serviceId')
 
     if (!businessId || !date || !serviceId) {
-      return NextResponse.json(
-        { error: 'Missing required parameters' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 })
     }
 
     const selectedDate = new Date(date)
@@ -34,10 +31,10 @@ export async function GET(request: NextRequest) {
 
     // If full day off, return that no slots are available
     if (timeOff && !timeOff.startTime && !timeOff.endTime) {
-      return NextResponse.json({ 
-        bookedSlots: [], 
+      return NextResponse.json({
+        bookedSlots: [],
         isClosedDay: true,
-        reason: timeOff.reason || 'Business is closed'
+        reason: timeOff.reason || 'Business is closed',
       })
     }
 
@@ -51,10 +48,10 @@ export async function GET(request: NextRequest) {
     })
 
     if (!availability) {
-      return NextResponse.json({ 
-        bookedSlots: [], 
+      return NextResponse.json({
+        bookedSlots: [],
         isClosedDay: true,
-        reason: 'Business is closed on this day'
+        reason: 'Business is closed on this day',
       })
     }
 
@@ -77,7 +74,7 @@ export async function GET(request: NextRequest) {
     })
 
     // Convert booked times to HH:mm format
-    const bookedSlots = bookings.map(booking => {
+    const bookedSlots = bookings.map((booking) => {
       const time = new Date(booking.startTime)
       return `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`
     })
@@ -86,31 +83,28 @@ export async function GET(request: NextRequest) {
     if (timeOff && timeOff.startTime && timeOff.endTime) {
       const [startHour, startMin] = timeOff.startTime.split(':').map(Number)
       const [endHour, endMin] = timeOff.endTime.split(':').map(Number)
-      
+
       let currentTime = new Date(selectedDate)
       currentTime.setHours(startHour, startMin, 0, 0)
-      
+
       const endTime = new Date(selectedDate)
       endTime.setHours(endHour, endMin, 0, 0)
-      
+
       while (currentTime < endTime) {
         bookedSlots.push(format(currentTime, 'HH:mm'))
         currentTime = new Date(currentTime.getTime() + 30 * 60000) // 30-minute intervals
       }
     }
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       bookedSlots,
       availability: {
         startTime: availability.startTime,
         endTime: availability.endTime,
-      }
+      },
     })
   } catch (error) {
     console.error('Error checking availability:', error)
-    return NextResponse.json(
-      { error: 'Failed to check availability' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to check availability' }, { status: 500 })
   }
 }

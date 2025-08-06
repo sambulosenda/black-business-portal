@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
+import { NextRequest, NextResponse } from 'next/server'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { generateS3Key, generateUploadUrl, isValidImageType, isValidFileSize } from '@/lib/s3'
+import { generateS3Key, generateUploadUrl, isValidFileSize, isValidImageType } from '@/lib/s3'
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,16 +21,22 @@ export async function POST(request: NextRequest) {
 
     // Validate file type
     if (!isValidImageType(contentType)) {
-      return NextResponse.json({ 
-        error: 'Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.' 
-      }, { status: 400 })
+      return NextResponse.json(
+        {
+          error: 'Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.',
+        },
+        { status: 400 }
+      )
     }
 
     // Validate file size (4MB max)
     if (!isValidFileSize(fileSize)) {
-      return NextResponse.json({ 
-        error: 'File too large. Maximum size is 4MB.' 
-      }, { status: 400 })
+      return NextResponse.json(
+        {
+          error: 'File too large. Maximum size is 4MB.',
+        },
+        { status: 400 }
+      )
     }
 
     // Verify user owns this business
@@ -56,7 +62,7 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error('Error generating presigned URL:', error)
-    
+
     // Provide more specific error messages
     if (error instanceof Error) {
       if (error.message.includes('credentials')) {
@@ -72,7 +78,7 @@ export async function POST(request: NextRequest) {
         )
       }
     }
-    
+
     return NextResponse.json(
       { error: 'Failed to generate upload URL. Please check server logs.' },
       { status: 500 }

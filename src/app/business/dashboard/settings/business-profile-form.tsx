@@ -2,16 +2,22 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { AnimatePresence, motion } from 'framer-motion'
+import { CheckCircle, Globe, Loader2, Mail, MapPin, Phone, Save, Store } from 'lucide-react'
 // import { Badge } from '@/components/ui/badge' // Commented out - may be used later
 import { toast } from 'sonner'
-import { Loader2, Save, Globe, Phone, Mail, MapPin, Store, CheckCircle } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 
 interface BusinessProfileFormProps {
   business: {
@@ -90,7 +96,7 @@ export default function BusinessProfileForm({ business }: BusinessProfileFormPro
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+    setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
   return (
@@ -99,9 +105,9 @@ export default function BusinessProfileForm({ business }: BusinessProfileFormPro
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <Card className="shadow-lg border-0 overflow-hidden">
+      <Card className="overflow-hidden border-0 shadow-lg">
         <div className="h-2 bg-gradient-to-r from-indigo-500 to-purple-600" />
-        
+
         <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100/50">
           <div className="flex items-center justify-between">
             <div>
@@ -116,7 +122,7 @@ export default function BusinessProfileForm({ business }: BusinessProfileFormPro
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   exit={{ scale: 0 }}
-                  className="flex items-center gap-2 text-green-600 bg-green-50 px-4 py-2 rounded-lg"
+                  className="flex items-center gap-2 rounded-lg bg-green-50 px-4 py-2 text-green-600"
                 >
                   <CheckCircle className="h-5 w-5" />
                   <span className="font-medium">Saved</span>
@@ -125,16 +131,16 @@ export default function BusinessProfileForm({ business }: BusinessProfileFormPro
             </AnimatePresence>
           </div>
         </CardHeader>
-        
+
         <CardContent className="p-6">
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Basic Information */}
             <div className="space-y-6">
-              <h3 className="text-lg font-semibold flex items-center gap-2">
+              <h3 className="flex items-center gap-2 text-lg font-semibold">
                 <Store className="h-5 w-5 text-indigo-600" />
                 Basic Information
               </h3>
-              
+
               <div className="grid gap-6 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="businessName">Business Name</Label>
@@ -148,12 +154,12 @@ export default function BusinessProfileForm({ business }: BusinessProfileFormPro
                     required
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="category">Category</Label>
                   <Select
                     value={formData.category}
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
+                    onValueChange={(value) => setFormData((prev) => ({ ...prev, category: value }))}
                   >
                     <SelectTrigger className="border-gray-300 focus:border-indigo-500">
                       <SelectValue />
@@ -168,7 +174,7 @@ export default function BusinessProfileForm({ business }: BusinessProfileFormPro
                   </Select>
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="description">Description</Label>
                 <Textarea
@@ -178,21 +184,21 @@ export default function BusinessProfileForm({ business }: BusinessProfileFormPro
                   onChange={handleInputChange}
                   placeholder="Tell customers about your business..."
                   rows={4}
-                  className="border-gray-300 focus:border-indigo-500 resize-none"
+                  className="resize-none border-gray-300 focus:border-indigo-500"
                 />
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   {formData.description.length}/500 characters
                 </p>
               </div>
             </div>
 
             {/* Location Information */}
-            <div className="space-y-6 pt-6 border-t">
-              <h3 className="text-lg font-semibold flex items-center gap-2">
+            <div className="space-y-6 border-t pt-6">
+              <h3 className="flex items-center gap-2 text-lg font-semibold">
                 <MapPin className="h-5 w-5 text-indigo-600" />
                 Location Information
               </h3>
-              
+
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="address">Street Address</Label>
@@ -206,7 +212,7 @@ export default function BusinessProfileForm({ business }: BusinessProfileFormPro
                     required
                   />
                 </div>
-                
+
                 <div className="grid gap-4 sm:grid-cols-3">
                   <div className="space-y-2">
                     <Label htmlFor="city">City</Label>
@@ -220,7 +226,7 @@ export default function BusinessProfileForm({ business }: BusinessProfileFormPro
                       required
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="state">State</Label>
                     <Input
@@ -234,7 +240,7 @@ export default function BusinessProfileForm({ business }: BusinessProfileFormPro
                       required
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="zipCode">ZIP Code</Label>
                     <Input
@@ -253,17 +259,17 @@ export default function BusinessProfileForm({ business }: BusinessProfileFormPro
             </div>
 
             {/* Contact Information */}
-            <div className="space-y-6 pt-6 border-t">
-              <h3 className="text-lg font-semibold flex items-center gap-2">
+            <div className="space-y-6 border-t pt-6">
+              <h3 className="flex items-center gap-2 text-lg font-semibold">
                 <Phone className="h-5 w-5 text-indigo-600" />
                 Contact Information
               </h3>
-              
+
               <div className="grid gap-6 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone Number</Label>
                   <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                    <Phone className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-500" />
                     <Input
                       id="phone"
                       name="phone"
@@ -271,16 +277,16 @@ export default function BusinessProfileForm({ business }: BusinessProfileFormPro
                       value={formData.phone}
                       onChange={handleInputChange}
                       placeholder="(555) 123-4567"
-                      className="pl-10 border-gray-300 focus:border-indigo-500"
+                      className="border-gray-300 pl-10 focus:border-indigo-500"
                       required
                     />
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="email">Business Email</Label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                    <Mail className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-500" />
                     <Input
                       id="email"
                       name="email"
@@ -288,7 +294,7 @@ export default function BusinessProfileForm({ business }: BusinessProfileFormPro
                       value={formData.email}
                       onChange={handleInputChange}
                       placeholder="contact@business.com"
-                      className="pl-10 border-gray-300 focus:border-indigo-500"
+                      className="border-gray-300 pl-10 focus:border-indigo-500"
                     />
                   </div>
                 </div>
@@ -296,17 +302,17 @@ export default function BusinessProfileForm({ business }: BusinessProfileFormPro
             </div>
 
             {/* Online Presence */}
-            <div className="space-y-6 pt-6 border-t">
-              <h3 className="text-lg font-semibold flex items-center gap-2">
+            <div className="space-y-6 border-t pt-6">
+              <h3 className="flex items-center gap-2 text-lg font-semibold">
                 <Globe className="h-5 w-5 text-indigo-600" />
                 Online Presence
               </h3>
-              
+
               <div className="grid gap-6 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="website">Website</Label>
                   <div className="relative">
-                    <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                    <Globe className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-500" />
                     <Input
                       id="website"
                       name="website"
@@ -314,16 +320,20 @@ export default function BusinessProfileForm({ business }: BusinessProfileFormPro
                       value={formData.website}
                       onChange={handleInputChange}
                       placeholder="https://www.yourbusiness.com"
-                      className="pl-10 border-gray-300 focus:border-indigo-500"
+                      className="border-gray-300 pl-10 focus:border-indigo-500"
                     />
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="instagram">Instagram</Label>
                   <div className="relative">
-                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                    <svg
+                      className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-500"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
                     </svg>
                     <Input
                       id="instagram"
@@ -331,7 +341,7 @@ export default function BusinessProfileForm({ business }: BusinessProfileFormPro
                       value={formData.instagram}
                       onChange={handleInputChange}
                       placeholder="@yourbusiness"
-                      className="pl-10 border-gray-300 focus:border-indigo-500"
+                      className="border-gray-300 pl-10 focus:border-indigo-500"
                     />
                   </div>
                 </div>
@@ -339,11 +349,11 @@ export default function BusinessProfileForm({ business }: BusinessProfileFormPro
             </div>
 
             {/* Form Actions */}
-            <div className="flex items-center justify-between pt-6 border-t">
-              <p className="text-sm text-muted-foreground">
+            <div className="flex items-center justify-between border-t pt-6">
+              <p className="text-muted-foreground text-sm">
                 Changes will be visible to customers immediately
               </p>
-              
+
               <div className="flex gap-3">
                 <Button
                   type="button"

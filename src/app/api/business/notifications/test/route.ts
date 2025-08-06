@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
-import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
+import { getSession } from '@/lib/session'
 
 export async function POST(request: Request) {
   try {
     const session = await getSession()
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -119,10 +119,7 @@ export async function POST(request: Request) {
     })
   } catch (error) {
     console.error('Error sending test notification:', error)
-    return NextResponse.json(
-      { error: 'Failed to send test notification' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to send test notification' }, { status: 500 })
   }
 }
 

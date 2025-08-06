@@ -1,23 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
+import { NextRequest, NextResponse } from 'next/server'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
-    
+
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { 
-      code, 
-      businessId, 
-      subtotal, 
-      serviceIds = [], 
-      itemCount = 1
-    } = await request.json()
+    const { code, businessId, subtotal, serviceIds = [], itemCount = 1 } = await request.json()
 
     if (!businessId) {
       return NextResponse.json({ error: 'Business ID is required' }, { status: 400 })
@@ -31,8 +25,8 @@ export async function POST(request: NextRequest) {
         where: {
           businessId,
           code: code.toUpperCase(),
-          isActive: true
-        }
+          isActive: true,
+        },
       })
     } else {
       // Find automatic promotions (no code required)
@@ -41,20 +35,26 @@ export async function POST(request: NextRequest) {
           businessId,
           code: null,
           isActive: true,
-          featured: true // Prioritize featured automatic promotions
+          featured: true, // Prioritize featured automatic promotions
         },
         orderBy: {
-          value: 'desc' // Best discount first
-        }
+          value: 'desc', // Best discount first
+        },
       })
-      
+
       // Find the best applicable promotion
       for (const promo of promotions) {
-        const validation = await validatePromotion({
-          ...promo,
-          value: Number(promo.value),
-          minimumAmount: promo.minimumAmount ? Number(promo.minimumAmount) : null,
-        }, session.user.id, subtotal, serviceIds, itemCount)
+        const validation = await validatePromotion(
+          {
+            ...promo,
+            value: Number(promo.value),
+            minimumAmount: promo.minimumAmount ? Number(promo.minimumAmount) : null,
+          },
+          session.user.id,
+          subtotal,
+          serviceIds,
+          itemCount
+        )
         if (validation.valid) {
           promotion = promo
           break
@@ -63,36 +63,47 @@ export async function POST(request: NextRequest) {
     }
 
     if (!promotion) {
-      return NextResponse.json({ 
-        valid: false, 
-        error: code ? 'Invalid promo code' : 'No promotions available' 
-      }, { status: 400 })
+      return NextResponse.json(
+        {
+          valid: false,
+          error: code ? 'Invalid promo code' : 'No promotions available',
+        },
+        { status: 400 }
+      )
     }
 
     // Validate the promotion
-    const validation = await validatePromotion({
-      ...promotion,
-      value: Number(promotion.value),
-      minimumAmount: promotion.minimumAmount ? Number(promotion.minimumAmount) : null,
-    }, 
-      session.user.id, 
-      subtotal, 
+    const validation = await validatePromotion(
+      {
+        ...promotion,
+        value: Number(promotion.value),
+        minimumAmount: promotion.minimumAmount ? Number(promotion.minimumAmount) : null,
+      },
+      session.user.id,
+      subtotal,
       serviceIds,
       itemCount
     )
 
     if (!validation.valid) {
-      return NextResponse.json({ 
-        valid: false, 
-        error: validation.error 
-      }, { status: 400 })
+      return NextResponse.json(
+        {
+          valid: false,
+          error: validation.error,
+        },
+        { status: 400 }
+      )
     }
 
     // Calculate discount
-    const discount = calculateDiscount({
-      type: promotion.type,
-      value: Number(promotion.value)
-    }, subtotal, itemCount)
+    const discount = calculateDiscount(
+      {
+        type: promotion.type,
+        value: Number(promotion.value),
+      },
+      subtotal,
+      itemCount
+    )
 
     return NextResponse.json({
       valid: true,
@@ -102,10 +113,10 @@ export async function POST(request: NextRequest) {
         description: promotion.description,
         type: promotion.type,
         value: Number(promotion.value),
-        code: promotion.code
+        code: promotion.code,
       },
       discount: discount,
-      finalAmount: Math.max(0, subtotal - discount)
+      finalAmount: Math.max(0, subtotal - discount),
     })
   } catch (error) {
     console.error('Error validating promotion:', error)
@@ -115,24 +126,24 @@ export async function POST(request: NextRequest) {
 
 async function validatePromotion(
   promotion: {
-    id: string;
-    businessId: string;
-    name: string;
-    description: string | null;
-    code: string | null;
-    type: string;
-    value: number;
-    scope: string;
-    serviceIds: string[];
-    startDate: Date;
-    endDate: Date;
-    isActive: boolean;
-    usageLimit: number | null;
-    usageCount: number;
-    perCustomerLimit: number | null;
-    minimumAmount: number | null;
-    minimumItems: number | null;
-    firstTimeOnly: boolean;
+    id: string
+    businessId: string
+    name: string
+    description: string | null
+    code: string | null
+    type: string
+    value: number
+    scope: string
+    serviceIds: string[]
+    startDate: Date
+    endDate: Date
+    isActive: boolean
+    usageLimit: number | null
+    usageCount: number
+    perCustomerLimit: number | null
+    minimumAmount: number | null
+    minimumItems: number | null
+    firstTimeOnly: boolean
   },
   userId: string,
   subtotal: number,
@@ -164,18 +175,24 @@ async function validatePromotion(
     const customerUsageCount = await prisma.promotionUsage.count({
       where: {
         promotionId: promotion.id,
-        userId
-      }
+        userId,
+      },
     })
 
     if (customerUsageCount >= promotion.perCustomerLimit) {
-      return { valid: false, error: 'You have already used this promotion the maximum number of times' }
+      return {
+        valid: false,
+        error: 'You have already used this promotion the maximum number of times',
+      }
     }
   }
 
   // Check minimum amount
   if (promotion.minimumAmount && subtotal < Number(promotion.minimumAmount)) {
-    return { valid: false, error: `Minimum purchase amount of $${promotion.minimumAmount} required` }
+    return {
+      valid: false,
+      error: `Minimum purchase amount of $${promotion.minimumAmount} required`,
+    }
   }
 
   // Check minimum items
@@ -190,9 +207,9 @@ async function validatePromotion(
         userId,
         businessId: promotion.businessId,
         status: {
-          in: ['COMPLETED', 'CONFIRMED']
-        }
-      }
+          in: ['COMPLETED', 'CONFIRMED'],
+        },
+      },
     })
 
     if (previousBookings > 0) {
@@ -203,7 +220,7 @@ async function validatePromotion(
   // Check scope
   switch (promotion.scope) {
     case 'SPECIFIC_SERVICES':
-      if (!serviceIds.some(id => promotion.serviceIds.includes(id))) {
+      if (!serviceIds.some((id) => promotion.serviceIds.includes(id))) {
         return { valid: false, error: 'This promotion does not apply to the selected services' }
       }
       break
@@ -220,8 +237,8 @@ async function validatePromotion(
 
 function calculateDiscount(
   promotion: {
-    type: string;
-    value: number;
+    type: string
+    value: number
   },
   subtotal: number,
   itemCount: number
@@ -229,22 +246,22 @@ function calculateDiscount(
   switch (promotion.type) {
     case 'PERCENTAGE':
       return (subtotal * Number(promotion.value)) / 100
-    
+
     case 'FIXED_AMOUNT':
       return Math.min(Number(promotion.value), subtotal)
-    
+
     case 'BOGO':
       // For BOGO, we give 50% off (buy one get one free)
       // This is a simplified implementation
       return subtotal * 0.5
-    
+
     case 'BUNDLE':
       // For bundle deals, apply discount if minimum items met
       if (itemCount >= 2) {
         return (subtotal * Number(promotion.value)) / 100
       }
       return 0
-    
+
     default:
       return 0
   }

@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
+import { NextRequest, NextResponse } from 'next/server'
 import { authOptions } from '@/lib/auth'
 import { prisma as db } from '@/lib/prisma'
-import { PhotoType } from '@prisma/client'
 import { deleteS3Object } from '@/lib/s3'
+import { PhotoType } from '@prisma/client'
 
 export async function GET(request: NextRequest) {
   try {
@@ -47,10 +47,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ photos })
   } catch (error) {
     console.error('Error fetching business photos:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch photos' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch photos' }, { status: 500 })
   }
 }
 
@@ -111,10 +108,7 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ photo: updatedPhoto })
   } catch (error) {
     console.error('Error updating photo:', error)
-    return NextResponse.json(
-      { error: 'Failed to update photo' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to update photo' }, { status: 500 })
   }
 }
 
@@ -163,9 +157,6 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Error deleting photo:', error)
-    return NextResponse.json(
-      { error: 'Failed to delete photo' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to delete photo' }, { status: 500 })
   }
 }

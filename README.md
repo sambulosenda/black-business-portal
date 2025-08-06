@@ -5,12 +5,14 @@ A modern appointment booking platform designed specifically for Black-owned beau
 ## Features
 
 ### For Customers
+
 - 🔍 Browse and search businesses by category, location, and ratings
 - 📅 Book appointments with real-time availability
 - 👤 Manage bookings and view history
 - ⭐ Leave reviews after appointments
 
 ### For Business Owners
+
 - 🏪 Create and manage business profiles
 - 💇‍♀️ Add and manage services with pricing
 - 📊 View booking analytics and customer insights
@@ -27,18 +29,21 @@ A modern appointment booking platform designed specifically for Black-owned beau
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js 18+ or Bun
 - PostgreSQL database (local or cloud)
 
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
 cd businesportal
 ```
 
 2. Install dependencies:
+
 ```bash
 bun install
 # or
@@ -46,11 +51,13 @@ npm install
 ```
 
 3. Set up environment variables:
+
 ```bash
 cp .env.example .env
 ```
 
 Edit `.env` with your database credentials:
+
 ```env
 DATABASE_URL="postgresql://username:password@localhost:5432/beauty_portal"
 NEXTAUTH_URL="http://localhost:3000"
@@ -58,16 +65,19 @@ NEXTAUTH_SECRET="your-secret-key"
 ```
 
 4. Run database migrations:
+
 ```bash
 bunx prisma migrate dev
 ```
 
 5. Seed the database (optional):
+
 ```bash
 bun run db:seed
 ```
 
 6. Start the development server:
+
 ```bash
 bun dev
 # or
@@ -81,11 +91,13 @@ Visit [http://localhost:3000](http://localhost:3000) to see the application.
 After seeding the database, you can use these test accounts:
 
 ### Customers
+
 - `customer1@example.com` / `password123`
 - `customer2@example.com` / `password123`
 - `customer3@example.com` / `password123`
 
 ### Business Owners
+
 - `business1@example.com` / `password123` - Curls & Coils Beauty Bar
 - `business2@example.com` / `password123` - King Cuts Barbershop
 - `business3@example.com` / `password123` - Glow Up Nail Studio

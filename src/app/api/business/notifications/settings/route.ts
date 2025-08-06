@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
-import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
+import { getSession } from '@/lib/session'
 
 export async function GET() {
   try {
     const session = await getSession()
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -54,17 +54,14 @@ export async function GET() {
     })
   } catch (error) {
     console.error('Error fetching notification settings:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch notification settings' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch notification settings' }, { status: 500 })
   }
 }
 
 export async function POST(request: Request) {
   try {
     const session = await getSession()
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -112,17 +109,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ settings }, { status: 201 })
   } catch (error) {
     console.error('Error creating notification settings:', error)
-    return NextResponse.json(
-      { error: 'Failed to create notification settings' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to create notification settings' }, { status: 500 })
   }
 }
 
 export async function PATCH(request: Request) {
   try {
     const session = await getSession()
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -161,9 +155,6 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ settings })
   } catch (error) {
     console.error('Error updating notification settings:', error)
-    return NextResponse.json(
-      { error: 'Failed to update notification settings' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to update notification settings' }, { status: 500 })
   }
 }

@@ -1,6 +1,8 @@
 'use client'
 
-import React, { useState, ReactNode } from 'react'
+import React, { ReactNode, useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   Table,
   TableBody,
@@ -9,8 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 
 export interface Column<T> {
@@ -42,7 +42,7 @@ export function DataTable<T extends Record<string, unknown>>({
   onRowClick,
   className,
   itemsPerPage = 10,
-  showPagination = true
+  showPagination = true,
 }: DataTableProps<T>) {
   const [searchTerm, setSearchTerm] = useState('')
   const [sortConfig, setSortConfig] = useState<{
@@ -95,7 +95,7 @@ export function DataTable<T extends Record<string, unknown>>({
     if (column.cell) {
       return column.cell(item)
     }
-    
+
     // Handle nested keys like 'user.name'
     const keys = String(column.key).split('.')
     const value = item as Record<string, unknown>
@@ -114,9 +114,7 @@ export function DataTable<T extends Record<string, unknown>>({
   const totalPages = Math.ceil(sortedData.length / itemsPerPage)
   const startIndex = (currentPage - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
-  const paginatedData = showPagination 
-    ? sortedData.slice(startIndex, endIndex)
-    : sortedData
+  const paginatedData = showPagination ? sortedData.slice(startIndex, endIndex) : sortedData
 
   // Reset to first page when search changes
   React.useEffect(() => {
@@ -136,7 +134,7 @@ export function DataTable<T extends Record<string, unknown>>({
         </div>
       )}
 
-      <div className="rounded-lg border bg-white shadow-sm overflow-hidden">
+      <div className="overflow-hidden rounded-lg border bg-white shadow-sm">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
@@ -154,7 +152,7 @@ export function DataTable<T extends Record<string, unknown>>({
                     {column.sortable && sortConfig?.key === String(column.key) && (
                       <svg
                         className={cn(
-                          'w-4 h-4 transition-transform',
+                          'h-4 w-4 transition-transform',
                           sortConfig.direction === 'desc' && 'rotate-180'
                         )}
                         fill="none"
@@ -179,17 +177,11 @@ export function DataTable<T extends Record<string, unknown>>({
               paginatedData.map((item, index) => (
                 <TableRow
                   key={index}
-                  className={cn(
-                    onRowClick && 'cursor-pointer',
-                    'hover:bg-gray-50'
-                  )}
+                  className={cn(onRowClick && 'cursor-pointer', 'hover:bg-gray-50')}
                   onClick={() => onRowClick?.(item)}
                 >
                   {columns.map((column) => (
-                    <TableCell
-                      key={String(column.key)}
-                      className={column.className}
-                    >
+                    <TableCell key={String(column.key)} className={column.className}>
                       {getCellValue(item, column)}
                     </TableCell>
                   ))}
@@ -197,13 +189,8 @@ export function DataTable<T extends Record<string, unknown>>({
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-32 text-center"
-                >
-                  {emptyState || (
-                    <p className="text-gray-500">No data available</p>
-                  )}
+                <TableCell colSpan={columns.length} className="h-32 text-center">
+                  {emptyState || <p className="text-gray-500">No data available</p>}
                 </TableCell>
               </TableRow>
             )}
@@ -214,7 +201,8 @@ export function DataTable<T extends Record<string, unknown>>({
       {sortedData.length > 0 && (
         <div className="flex items-center justify-between px-2">
           <p className="text-sm text-gray-700">
-            Showing {startIndex + 1}-{Math.min(endIndex, sortedData.length)} of {sortedData.length} results
+            Showing {startIndex + 1}-{Math.min(endIndex, sortedData.length)} of {sortedData.length}{' '}
+            results
             {searchTerm && ` (filtered from ${data.length} total)`}
           </p>
           {showPagination && totalPages > 1 && (
@@ -225,8 +213,13 @@ export function DataTable<T extends Record<string, unknown>>({
                 onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1}
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
                 </svg>
               </Button>
               <div className="flex items-center gap-1">
@@ -240,7 +233,7 @@ export function DataTable<T extends Record<string, unknown>>({
                     return (
                       <Button
                         key={page}
-                        variant={page === currentPage ? "primary" : "outline"}
+                        variant={page === currentPage ? 'primary' : 'outline'}
                         size="sm"
                         onClick={() => setCurrentPage(page)}
                         className="min-w-[2rem]"
@@ -266,8 +259,13 @@ export function DataTable<T extends Record<string, unknown>>({
                 onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                 disabled={currentPage === totalPages}
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </Button>
             </div>

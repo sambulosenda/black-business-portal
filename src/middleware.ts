@@ -1,6 +1,6 @@
+import { getToken } from 'next-auth/jwt'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { getToken } from 'next-auth/jwt'
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
@@ -23,22 +23,17 @@ export async function middleware(request: NextRequest) {
   }
 
   // List of public routes that don't require authentication
-  const publicRoutes = [
-    '/',
-    '/search',
-    '/login',
-    '/signup',
-  ]
+  const publicRoutes = ['/', '/search', '/login', '/signup']
 
   // Check if it's a public route
-  const isPublicRoute = publicRoutes.some(route => 
-    pathname === route || pathname.startsWith(route)
+  const isPublicRoute = publicRoutes.some(
+    (route) => pathname === route || pathname.startsWith(route)
   )
 
   // Business profile pages are public (e.g., /business/curls-coils-beauty-bar)
   // But business management pages are not (e.g., /business/dashboard)
   const isBusinessProfilePage = pathname.match(/^\/business\/[^\/]+$/)
-  const isBusinessManagementPage = 
+  const isBusinessManagementPage =
     pathname.startsWith('/business/dashboard') ||
     pathname.startsWith('/business/services') ||
     pathname.startsWith('/business/bookings') ||
@@ -57,7 +52,7 @@ export async function middleware(request: NextRequest) {
   if (isPublicRoute) {
     const token = await getToken({ req: request })
     const isAuth = !!token
-    
+
     // If user is logged in and trying to access login/signup, redirect to dashboard
     if (isAuth && (pathname.startsWith('/login') || pathname.startsWith('/signup'))) {
       return NextResponse.redirect(new URL('/dashboard', request.url))
@@ -73,9 +68,7 @@ export async function middleware(request: NextRequest) {
   if (!isAuth) {
     console.log('Not authenticated, redirecting to login from:', pathname)
     const from = pathname + request.nextUrl.search
-    return NextResponse.redirect(
-      new URL(`/login?from=${encodeURIComponent(from)}`, request.url)
-    )
+    return NextResponse.redirect(new URL(`/login?from=${encodeURIComponent(from)}`, request.url))
   }
 
   // Check business owner only routes
@@ -93,7 +86,7 @@ export const config = {
     /*
      * Match all request paths except:
      * - _next/static (static files)
-     * - _next/image (image optimization files)  
+     * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - files with extensions (e.g. .css, .js, .png)
      */

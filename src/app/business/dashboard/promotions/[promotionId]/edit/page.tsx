@@ -1,21 +1,27 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Switch } from '@/components/ui/switch'
-import { Calendar } from '@/components/ui/calendar'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { toast } from 'sonner'
 import { format } from 'date-fns'
-import { Calendar as CalendarIcon, ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Calendar as CalendarIcon } from 'lucide-react'
+import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
+import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
 
 interface Service {
@@ -30,14 +36,18 @@ interface Product {
   price: number
 }
 
-export default function EditPromotionPage({ params }: { params: Promise<{ promotionId: string }> }) {
+export default function EditPromotionPage({
+  params,
+}: {
+  params: Promise<{ promotionId: string }>
+}) {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [services, setServices] = useState<Service[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [promotionId, setPromotionId] = useState<string>('')
-  
+
   // Form state
   const [formData, setFormData] = useState({
     name: '',
@@ -56,11 +66,11 @@ export default function EditPromotionPage({ params }: { params: Promise<{ promot
     minimumAmount: '',
     minimumItems: '',
     firstTimeOnly: false,
-    featured: false
+    featured: false,
   })
 
   useEffect(() => {
-    params.then(p => setPromotionId(p.promotionId))
+    params.then((p) => setPromotionId(p.promotionId))
   }, [params])
 
   useEffect(() => {
@@ -87,7 +97,7 @@ export default function EditPromotionPage({ params }: { params: Promise<{ promot
         throw new Error('Failed to fetch promotion')
       }
       const promotion = await promotionRes.json()
-      
+
       setFormData({
         name: promotion.name,
         description: promotion.description || '',
@@ -105,7 +115,7 @@ export default function EditPromotionPage({ params }: { params: Promise<{ promot
         minimumAmount: promotion.minimumAmount?.toString() || '',
         minimumItems: promotion.minimumItems?.toString() || '',
         firstTimeOnly: promotion.firstTimeOnly,
-        featured: promotion.featured
+        featured: promotion.featured,
       })
 
       // Fetch services
@@ -147,8 +157,8 @@ export default function EditPromotionPage({ params }: { params: Promise<{ promot
           usageLimit: formData.usageLimit ? parseInt(formData.usageLimit) : null,
           perCustomerLimit: formData.perCustomerLimit ? parseInt(formData.perCustomerLimit) : null,
           minimumAmount: formData.minimumAmount ? parseFloat(formData.minimumAmount) : null,
-          minimumItems: formData.minimumItems ? parseInt(formData.minimumItems) : null
-        })
+          minimumItems: formData.minimumItems ? parseInt(formData.minimumItems) : null,
+        }),
       })
 
       if (!response.ok) {
@@ -170,8 +180,8 @@ export default function EditPromotionPage({ params }: { params: Promise<{ promot
     setFormData({
       ...formData,
       serviceIds: formData.serviceIds.includes(serviceId)
-        ? formData.serviceIds.filter(id => id !== serviceId)
-        : [...formData.serviceIds, serviceId]
+        ? formData.serviceIds.filter((id) => id !== serviceId)
+        : [...formData.serviceIds, serviceId],
     })
   }
 
@@ -179,24 +189,24 @@ export default function EditPromotionPage({ params }: { params: Promise<{ promot
     setFormData({
       ...formData,
       productIds: formData.productIds.includes(productId)
-        ? formData.productIds.filter(id => id !== productId)
-        : [...formData.productIds, productId]
+        ? formData.productIds.filter((id) => id !== productId)
+        : [...formData.productIds, productId],
     })
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-8">
-      <div className="flex items-center gap-4 mb-8">
+    <div className="mx-auto max-w-4xl p-8">
+      <div className="mb-8 flex items-center gap-4">
         <Button
           variant="ghost"
           size="icon"
           onClick={() => router.push('/business/dashboard/promotions')}
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Edit Promotion</h1>
-          <p className="text-gray-600 mt-1">Update your promotion details</p>
+          <p className="mt-1 text-gray-600">Update your promotion details</p>
         </div>
       </div>
 
@@ -243,7 +253,7 @@ export default function EditPromotionPage({ params }: { params: Promise<{ promot
                   Generate
                 </Button>
               </div>
-              <p className="text-sm text-gray-500 mt-1">Leave empty for automatic promotions</p>
+              <p className="mt-1 text-sm text-gray-500">Leave empty for automatic promotions</p>
             </div>
           </CardContent>
         </Card>
@@ -312,7 +322,7 @@ export default function EditPromotionPage({ params }: { params: Promise<{ promot
             {formData.scope === 'SPECIFIC_SERVICES' && services.length > 0 && (
               <div>
                 <Label>Select Services</Label>
-                <div className="space-y-2 mt-2 max-h-40 overflow-y-auto">
+                <div className="mt-2 max-h-40 space-y-2 overflow-y-auto">
                   {services.map((service) => (
                     <div key={service.id} className="flex items-center space-x-2">
                       <Checkbox
@@ -320,10 +330,7 @@ export default function EditPromotionPage({ params }: { params: Promise<{ promot
                         checked={formData.serviceIds.includes(service.id)}
                         onCheckedChange={() => toggleServiceId(service.id)}
                       />
-                      <Label
-                        htmlFor={service.id}
-                        className="text-sm font-normal cursor-pointer"
-                      >
+                      <Label htmlFor={service.id} className="cursor-pointer text-sm font-normal">
                         {service.name} (${service.price})
                       </Label>
                     </div>
@@ -335,7 +342,7 @@ export default function EditPromotionPage({ params }: { params: Promise<{ promot
             {formData.scope === 'SPECIFIC_PRODUCTS' && products.length > 0 && (
               <div>
                 <Label>Select Products</Label>
-                <div className="space-y-2 mt-2 max-h-40 overflow-y-auto">
+                <div className="mt-2 max-h-40 space-y-2 overflow-y-auto">
                   {products.map((product) => (
                     <div key={product.id} className="flex items-center space-x-2">
                       <Checkbox
@@ -343,10 +350,7 @@ export default function EditPromotionPage({ params }: { params: Promise<{ promot
                         checked={formData.productIds.includes(product.id)}
                         onCheckedChange={() => toggleProductId(product.id)}
                       />
-                      <Label
-                        htmlFor={product.id}
-                        className="text-sm font-normal cursor-pointer"
-                      >
+                      <Label htmlFor={product.id} className="cursor-pointer text-sm font-normal">
                         {product.name} (${product.price})
                       </Label>
                     </div>
@@ -372,12 +376,12 @@ export default function EditPromotionPage({ params }: { params: Promise<{ promot
                     <Button
                       variant="outline"
                       className={cn(
-                        "w-full justify-start text-left font-normal",
-                        !formData.startDate && "text-muted-foreground"
+                        'w-full justify-start text-left font-normal',
+                        !formData.startDate && 'text-muted-foreground'
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {formData.startDate ? format(formData.startDate, "PPP") : "Pick a date"}
+                      {formData.startDate ? format(formData.startDate, 'PPP') : 'Pick a date'}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
@@ -398,12 +402,12 @@ export default function EditPromotionPage({ params }: { params: Promise<{ promot
                     <Button
                       variant="outline"
                       className={cn(
-                        "w-full justify-start text-left font-normal",
-                        !formData.endDate && "text-muted-foreground"
+                        'w-full justify-start text-left font-normal',
+                        !formData.endDate && 'text-muted-foreground'
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {formData.endDate ? format(formData.endDate, "PPP") : "Pick a date"}
+                      {formData.endDate ? format(formData.endDate, 'PPP') : 'Pick a date'}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">

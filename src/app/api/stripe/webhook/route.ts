@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { headers } from 'next/headers'
-import { stripe } from '@/lib/stripe'
-import { prisma } from '@/lib/prisma'
-import type Stripe from 'stripe'
-import { sendEmail, emailTemplates } from '@/lib/email'
+import { NextRequest, NextResponse } from 'next/server'
 import { format } from 'date-fns'
+import type Stripe from 'stripe'
+import { emailTemplates, sendEmail } from '@/lib/email'
+import { prisma } from '@/lib/prisma'
+import { stripe } from '@/lib/stripe'
 
 export async function POST(request: NextRequest) {
   const body = await request.text()
@@ -17,11 +17,7 @@ export async function POST(request: NextRequest) {
   try {
     // Always verify signature if webhook secret is configured
     if (webhookSecret && signature) {
-      event = stripe.webhooks.constructEvent(
-        body,
-        signature,
-        webhookSecret
-      )
+      event = stripe.webhooks.constructEvent(body, signature, webhookSecret)
     } else if (process.env.NODE_ENV === 'development') {
       // In development without webhook secret, parse body directly
       console.warn('⚠️  Webhook signature verification skipped in development')
@@ -32,11 +28,11 @@ export async function POST(request: NextRequest) {
     }
   } catch (err) {
     console.error('Webhook error:', err)
-    
+
     if (err instanceof Error && 'type' in err && err.type === 'StripeSignatureVerificationError') {
       return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
     }
-    
+
     const errorMessage = err instanceof Error ? err.message : 'Invalid request'
     return NextResponse.json({ error: errorMessage }, { status: 400 })
   }
@@ -45,7 +41,7 @@ export async function POST(request: NextRequest) {
     switch (event.type) {
       case 'payment_intent.succeeded': {
         const paymentIntent = event.data.object as Stripe.PaymentIntent
-        
+
         // Check if it's a booking based on metadata
         if (paymentIntent.metadata.bookingId) {
           // Update booking status and get booking details
@@ -63,7 +59,7 @@ export async function POST(request: NextRequest) {
               service: true,
             },
           })
-          
+
           // Send confirmation email
           if (booking && booking.user.email) {
             const emailData = emailTemplates.bookingConfirmation({
@@ -75,12 +71,12 @@ export async function POST(request: NextRequest) {
               totalPrice: booking.totalPrice.toNumber(),
               bookingId: booking.id,
             })
-            
+
             await sendEmail({
               to: booking.user.email,
               ...emailData,
             })
-            
+
             // Also send payment receipt
             const receiptData = emailTemplates.paymentReceipt({
               customerName: booking.user.name || 'Customer',
@@ -90,13 +86,13 @@ export async function POST(request: NextRequest) {
               paymentId: paymentIntent.id,
               date: format(new Date(), 'MMMM d, yyyy'),
             })
-            
+
             await sendEmail({
               to: booking.user.email,
               ...receiptData,
             })
           }
-          
+
           console.log('Payment succeeded for booking:', paymentIntent.metadata)
         }
         break
@@ -104,7 +100,7 @@ export async function POST(request: NextRequest) {
 
       case 'payment_intent.payment_failed': {
         const paymentIntent = event.data.object as Stripe.PaymentIntent
-        
+
         if (paymentIntent.metadata.bookingId) {
           // Update booking status
           await prisma.booking.update({
@@ -115,7 +111,7 @@ export async function POST(request: NextRequest) {
               paymentStatus: 'FAILED',
             },
           })
-          
+
           console.log('Payment failed for booking:', paymentIntent.metadata)
         }
         break
@@ -123,7 +119,7 @@ export async function POST(request: NextRequest) {
 
       case 'account.updated': {
         const account = event.data.object as Stripe.Account
-        
+
         // Update business onboarding status
         if (account.charges_enabled && account.payouts_enabled) {
           await prisma.business.update({
@@ -145,9 +141,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ received: true })
   } catch (error) {
     console.error('Error processing webhook:', error)
-    return NextResponse.json(
-      { error: 'Webhook processing failed' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 })
   }
 }

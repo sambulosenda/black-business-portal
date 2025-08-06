@@ -12,10 +12,10 @@ export async function GET(request: NextRequest) {
 
     // Build where clause
     const where: {
-      isActive: boolean;
-      OR?: Array<Record<string, unknown>>;
-      category?: BusinessCategory;
-      city?: Record<string, unknown>;
+      isActive: boolean
+      OR?: Array<Record<string, unknown>>
+      category?: BusinessCategory
+      city?: Record<string, unknown>
     } = {
       isActive: true,
     }
@@ -76,9 +76,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ businesses: businessesWithRating })
   } catch (error) {
     console.error('Search error:', error)
-    return NextResponse.json(
-      { error: 'Failed to search businesses' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to search businesses' }, { status: 500 })
   }
 }

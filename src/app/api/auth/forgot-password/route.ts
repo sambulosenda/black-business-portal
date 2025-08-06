@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
-import { sendEmail } from '@/lib/email'
 import crypto from 'crypto'
+import { sendEmail } from '@/lib/email'
+import { prisma } from '@/lib/prisma'
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,40 +9,34 @@ export async function POST(request: NextRequest) {
     console.log('Password reset requested for:', email)
 
     if (!email) {
-      return NextResponse.json(
-        { error: 'Email is required' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Email is required' }, { status: 400 })
     }
 
     // Find user by email
     const user = await prisma.user.findUnique({
-      where: { email: email.toLowerCase() }
+      where: { email: email.toLowerCase() },
     })
 
     // Always return success even if user doesn't exist (security best practice)
     if (!user) {
       console.log('User not found for email:', email)
       return NextResponse.json({
-        message: 'If an account exists with that email, we sent a password reset link.'
+        message: 'If an account exists with that email, we sent a password reset link.',
       })
     }
-    
+
     console.log('User found:', user.name, user.id)
 
     // Generate reset token
     const resetToken = crypto.randomBytes(32).toString('hex')
-    const hashedToken = crypto
-      .createHash('sha256')
-      .update(resetToken)
-      .digest('hex')
+    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex')
 
     // Create expiry time (1 hour from now)
     const expires = new Date(Date.now() + 3600000) // 1 hour
 
     // Delete any existing tokens for this email
     await prisma.verificationToken.deleteMany({
-      where: { identifier: email.toLowerCase() }
+      where: { identifier: email.toLowerCase() },
     })
 
     // Save the token
@@ -56,7 +50,7 @@ export async function POST(request: NextRequest) {
 
     // Create reset URL
     const resetUrl = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`
-    
+
     console.log('Reset URL generated:', resetUrl)
 
     // Send email
@@ -96,18 +90,14 @@ export async function POST(request: NextRequest) {
             </p>
           </div>
         </div>
-      `
+      `,
     })
 
     return NextResponse.json({
-      message: 'If an account exists with that email, we sent a password reset link.'
+      message: 'If an account exists with that email, we sent a password reset link.',
     })
-
   } catch (error) {
     console.error('Password reset error:', error)
-    return NextResponse.json(
-      { error: 'Something went wrong. Please try again.' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Something went wrong. Please try again.' }, { status: 500 })
   }
 }

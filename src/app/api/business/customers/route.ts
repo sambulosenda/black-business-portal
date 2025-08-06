@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
-import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
+import { getSession } from '@/lib/session'
 
 export async function GET() {
   try {
     const session = await getSession()
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -49,21 +49,24 @@ export async function GET() {
       })
 
       // Group bookings by user
-      const customerMap = new Map<string, {
-        userId: string;
-        customerName: string | null;
-        customerEmail: string | null;
-        customerPhone: string | null;
-        firstVisit: Date;
-        lastVisit: Date;
-        totalVisits: number;
-        totalSpent: number;
-        services: Map<string, number>;
-      }>()
-      
+      const customerMap = new Map<
+        string,
+        {
+          userId: string
+          customerName: string | null
+          customerEmail: string | null
+          customerPhone: string | null
+          firstVisit: Date
+          lastVisit: Date
+          totalVisits: number
+          totalSpent: number
+          services: Map<string, number>
+        }
+      >()
+
       for (const booking of bookings) {
         const userId = booking.userId
-        
+
         if (!customerMap.has(userId)) {
           customerMap.set(userId, {
             userId,
@@ -77,16 +80,16 @@ export async function GET() {
             services: new Map<string, number>(),
           })
         }
-        
+
         const customer = customerMap.get(userId)
         if (customer) {
           customer.totalVisits++
           customer.totalSpent += Number(booking.totalPrice)
-          
+
           // Track service frequency
           const serviceCount = customer.services.get(booking.service.name) || 0
           customer.services.set(booking.service.name, serviceCount + 1)
-          
+
           // Update first/last visit
           if (booking.date < customer.firstVisit) {
             customer.firstVisit = booking.date
@@ -139,7 +142,7 @@ export async function GET() {
       })
 
       // Convert Decimal fields to numbers for JSON serialization
-      const newCustomersWithNumbers = newCustomers.map(customer => ({
+      const newCustomersWithNumbers = newCustomers.map((customer) => ({
         ...customer,
         totalSpent: Number(customer.totalSpent),
         averageSpent: Number(customer.averageSpent),
@@ -149,7 +152,7 @@ export async function GET() {
     }
 
     // Convert Decimal fields to numbers for JSON serialization
-    const customersWithNumbers = customers.map(customer => ({
+    const customersWithNumbers = customers.map((customer) => ({
       ...customer,
       totalSpent: Number(customer.totalSpent),
       averageSpent: Number(customer.averageSpent),
@@ -158,9 +161,6 @@ export async function GET() {
     return NextResponse.json({ customers: customersWithNumbers })
   } catch (error) {
     console.error('Error fetching customers:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch customers' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch customers' }, { status: 500 })
   }
 }

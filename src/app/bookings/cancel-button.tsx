@@ -1,27 +1,28 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 interface CancelButtonProps {
-  bookingId: string;
-  bookingDate: Date;
-  bookingStatus: string;
+  bookingId: string
+  bookingDate: Date
+  bookingStatus: string
 }
 
 export default function CancelButton({ bookingId, bookingDate, bookingStatus }: CancelButtonProps) {
-  const [isCancelling, setIsCancelling] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [reason, setReason] = useState('');
-  const router = useRouter();
+  const [isCancelling, setIsCancelling] = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
+  const [reason, setReason] = useState('')
+  const router = useRouter()
 
   // Check if cancellation is allowed
-  const hoursBeforeAppointment = (new Date(bookingDate).getTime() - Date.now()) / (1000 * 60 * 60);
-  const canCancel = bookingStatus !== 'CANCELLED' && bookingStatus !== 'COMPLETED' && hoursBeforeAppointment > 0;
-  const requiresBusinessContact = hoursBeforeAppointment < 24 && hoursBeforeAppointment > 0;
+  const hoursBeforeAppointment = (new Date(bookingDate).getTime() - Date.now()) / (1000 * 60 * 60)
+  const canCancel =
+    bookingStatus !== 'CANCELLED' && bookingStatus !== 'COMPLETED' && hoursBeforeAppointment > 0
+  const requiresBusinessContact = hoursBeforeAppointment < 24 && hoursBeforeAppointment > 0
 
   const handleCancel = async () => {
-    setIsCancelling(true);
+    setIsCancelling(true)
     try {
       const response = await fetch('/api/booking/cancel', {
         method: 'POST',
@@ -29,26 +30,26 @@ export default function CancelButton({ bookingId, bookingDate, bookingStatus }: 
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ bookingId, reason }),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to cancel booking');
+        throw new Error(data.error || 'Failed to cancel booking')
       }
 
       // Refresh the page to show updated status
-      router.refresh();
-      setShowConfirm(false);
+      router.refresh()
+      setShowConfirm(false)
     } catch (error) {
-      alert(error instanceof Error ? error.message : 'Failed to cancel booking');
+      alert(error instanceof Error ? error.message : 'Failed to cancel booking')
     } finally {
-      setIsCancelling(false);
+      setIsCancelling(false)
     }
-  };
+  }
 
   if (!canCancel) {
-    return null;
+    return null
   }
 
   return (
@@ -60,7 +61,7 @@ export default function CancelButton({ bookingId, bookingDate, bookingStatus }: 
       ) : (
         <button
           onClick={() => setShowConfirm(true)}
-          className="text-sm text-red-600 hover:text-red-800 font-medium"
+          className="text-sm font-medium text-red-600 hover:text-red-800"
           disabled={isCancelling}
         >
           Cancel Booking
@@ -68,25 +69,25 @@ export default function CancelButton({ bookingId, bookingDate, bookingStatus }: 
       )}
 
       {showConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h3 className="text-lg font-semibold mb-4">Cancel Booking</h3>
-            <p className="text-gray-600 mb-4">
+        <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
+          <div className="mx-4 w-full max-w-md rounded-lg bg-white p-6">
+            <h3 className="mb-4 text-lg font-semibold">Cancel Booking</h3>
+            <p className="mb-4 text-gray-600">
               Are you sure you want to cancel this booking? This action cannot be undone.
             </p>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="mb-1 block text-sm font-medium text-gray-700">
                 Reason for cancellation (optional)
               </label>
               <textarea
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
                 rows={3}
                 placeholder="Let the business know why you're cancelling..."
               />
             </div>
-            <div className="flex gap-3 justify-end">
+            <div className="flex justify-end gap-3">
               <button
                 onClick={() => setShowConfirm(false)}
                 className="px-4 py-2 text-gray-600 hover:text-gray-800"
@@ -97,7 +98,7 @@ export default function CancelButton({ bookingId, bookingDate, bookingStatus }: 
               <button
                 onClick={handleCancel}
                 disabled={isCancelling}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+                className="rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700 disabled:opacity-50"
               >
                 {isCancelling ? 'Cancelling...' : 'Cancel Booking'}
               </button>
@@ -106,5 +107,5 @@ export default function CancelButton({ bookingId, bookingDate, bookingStatus }: 
         </div>
       )}
     </>
-  );
+  )
 }

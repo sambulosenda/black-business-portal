@@ -1,30 +1,27 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
+import { NextRequest, NextResponse } from 'next/server'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
-    
+
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { 
-      promotionId, 
-      discountAmount, 
-      orderTotal,
-      bookingId,
-      orderId
-    } = await request.json()
+    const { promotionId, discountAmount, orderTotal, bookingId, orderId } = await request.json()
 
     if (!promotionId || !discountAmount || !orderTotal) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
     if (!bookingId && !orderId) {
-      return NextResponse.json({ error: 'Either bookingId or orderId is required' }, { status: 400 })
+      return NextResponse.json(
+        { error: 'Either bookingId or orderId is required' },
+        { status: 400 }
+      )
     }
 
     // First, fetch the promotion to check if it has a usage limit
@@ -33,8 +30,8 @@ export async function POST(request: NextRequest) {
       select: {
         usageLimit: true,
         usageCount: true,
-        perCustomerLimit: true
-      }
+        perCustomerLimit: true,
+      },
     })
 
     if (!promotion) {
@@ -48,11 +45,11 @@ export async function POST(request: NextRequest) {
         const updatedPromotion = await tx.promotion.updateMany({
           where: {
             id: promotionId,
-            usageCount: { lt: promotion.usageLimit } // Only update if under limit
+            usageCount: { lt: promotion.usageLimit }, // Only update if under limit
           },
           data: {
-            usageCount: { increment: 1 }
-          }
+            usageCount: { increment: 1 },
+          },
         })
 
         // If no rows were updated, the limit was reached
@@ -64,8 +61,8 @@ export async function POST(request: NextRequest) {
         await tx.promotion.update({
           where: { id: promotionId },
           data: {
-            usageCount: { increment: 1 }
-          }
+            usageCount: { increment: 1 },
+          },
         })
       }
 
@@ -74,8 +71,8 @@ export async function POST(request: NextRequest) {
         const customerUsageCount = await tx.promotionUsage.count({
           where: {
             promotionId,
-            userId: session.user.id
-          }
+            userId: session.user.id,
+          },
         })
 
         if (customerUsageCount >= promotion.perCustomerLimit) {
@@ -91,8 +88,8 @@ export async function POST(request: NextRequest) {
           discountAmount,
           orderTotal,
           bookingId: bookingId || null,
-          orderId: orderId || null
-        }
+          orderId: orderId || null,
+        },
       })
 
       return usage
@@ -101,13 +98,13 @@ export async function POST(request: NextRequest) {
     // Return the usage record created in the transaction
     const usage = result
 
-    return NextResponse.json({ 
-      success: true, 
-      usageId: usage.id 
+    return NextResponse.json({
+      success: true,
+      usageId: usage.id,
     })
   } catch (error) {
     console.error('Error recording promotion usage:', error)
-    
+
     // Provide more specific error messages for known errors
     if (error instanceof Error) {
       if (error.message.includes('usage limit')) {
@@ -117,7 +114,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: error.message }, { status: 409 }) // Conflict
       }
     }
-    
+
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

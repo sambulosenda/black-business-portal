@@ -1,4 +1,9 @@
-import { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3'
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
 // This file should only be imported on the server side
@@ -11,7 +16,11 @@ let CLOUDFRONT_URL: string | undefined = undefined
 
 if (typeof window === 'undefined') {
   // Server-side only
-  if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY || !process.env.AWS_S3_BUCKET_NAME) {
+  if (
+    !process.env.AWS_ACCESS_KEY_ID ||
+    !process.env.AWS_SECRET_ACCESS_KEY ||
+    !process.env.AWS_S3_BUCKET_NAME
+  ) {
     console.error('Missing required AWS environment variables')
     console.error('Required: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_S3_BUCKET_NAME')
   }
@@ -60,7 +69,7 @@ export async function generateUploadUrl(
     ContentType: contentType,
   })
 
-  const uploadUrl = await getSignedUrl(s3Client, command, { 
+  const uploadUrl = await getSignedUrl(s3Client, command, {
     expiresIn: 3600, // 1 hour
   })
 
@@ -121,18 +130,18 @@ export async function generateReadUrl(url: string): Promise<string> {
     if (urlParts.length !== 2) {
       return url // Return original URL if not an S3 URL
     }
-    
+
     const key = urlParts[1]
-    
+
     const command = new GetObjectCommand({
       Bucket: BUCKET_NAME,
       Key: key,
     })
-    
+
     const signedUrl = await getSignedUrl(s3Client, command, {
       expiresIn: 3600, // 1 hour
     })
-    
+
     return signedUrl
   } catch (error) {
     console.error('Error generating read URL:', error)

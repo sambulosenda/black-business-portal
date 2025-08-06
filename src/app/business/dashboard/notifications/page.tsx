@@ -1,18 +1,24 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Separator } from "@/components/ui/separator"
-import { AlertCircle, Mail, MessageSquare, Clock, Loader2, Save } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { AlertCircle, Clock, Loader2, Mail, MessageSquare, Save } from 'lucide-react'
 import { toast } from 'sonner'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Separator } from '@/components/ui/separator'
+import { Switch } from '@/components/ui/switch'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Textarea } from '@/components/ui/textarea'
 
 interface NotificationSettings {
   id: string
@@ -170,7 +176,11 @@ export default function NotificationSettingsPage() {
   //   }
   // }
 
-  const updateTrigger = async (event: string, channel: string, updates: Partial<NotificationTrigger>) => {
+  const updateTrigger = async (
+    event: string,
+    channel: string,
+    updates: Partial<NotificationTrigger>
+  ) => {
     try {
       const response = await fetch(`/api/business/notifications/triggers`, {
         method: 'POST',
@@ -215,8 +225,8 @@ export default function NotificationSettingsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex min-h-[400px] items-center justify-center">
+        <Loader2 className="text-primary h-8 w-8 animate-spin" />
       </div>
     )
   }
@@ -225,9 +235,7 @@ export default function NotificationSettingsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Notification Settings</h1>
-        <p className="text-muted-foreground">
-          Configure how you communicate with your customers
-        </p>
+        <p className="text-muted-foreground">Configure how you communicate with your customers</p>
       </div>
 
       <Tabs defaultValue="general">
@@ -242,23 +250,21 @@ export default function NotificationSettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle>Email Settings</CardTitle>
-              <CardDescription>
-                Configure your email notification preferences
-              </CardDescription>
+              <CardDescription>Configure your email notification preferences</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label htmlFor="email-enabled">Enable Email Notifications</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Send notifications to customers via email
                   </p>
                 </div>
                 <Switch
                   id="email-enabled"
                   checked={settings?.emailEnabled || false}
-                  onCheckedChange={(checked) => 
-                    setSettings(prev => prev ? {...prev, emailEnabled: checked} : null)
+                  onCheckedChange={(checked) =>
+                    setSettings((prev) => (prev ? { ...prev, emailEnabled: checked } : null))
                   }
                 />
               </div>
@@ -272,11 +278,13 @@ export default function NotificationSettingsPage() {
                       id="email-from"
                       placeholder="Your Business Name"
                       value={settings.emailFrom || ''}
-                      onChange={(e) => 
-                        setSettings(prev => prev ? {...prev, emailFrom: e.target.value} : null)
+                      onChange={(e) =>
+                        setSettings((prev) =>
+                          prev ? { ...prev, emailFrom: e.target.value } : null
+                        )
                       }
                     />
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                       The name that appears in the &quot;From&quot; field
                     </p>
                   </div>
@@ -288,11 +296,13 @@ export default function NotificationSettingsPage() {
                       type="email"
                       placeholder="your-email@example.com"
                       value={settings.emailReplyTo || ''}
-                      onChange={(e) => 
-                        setSettings(prev => prev ? {...prev, emailReplyTo: e.target.value} : null)
+                      onChange={(e) =>
+                        setSettings((prev) =>
+                          prev ? { ...prev, emailReplyTo: e.target.value } : null
+                        )
                       }
                     />
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                       Where customer replies will be sent
                     </p>
                   </div>
@@ -304,23 +314,21 @@ export default function NotificationSettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle>SMS Settings</CardTitle>
-              <CardDescription>
-                Configure your SMS notification preferences
-              </CardDescription>
+              <CardDescription>Configure your SMS notification preferences</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label htmlFor="sms-enabled">Enable SMS Notifications</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Send notifications to customers via text message
                   </p>
                 </div>
                 <Switch
                   id="sms-enabled"
                   checked={settings?.smsEnabled || false}
-                  onCheckedChange={(checked) => 
-                    setSettings(prev => prev ? {...prev, smsEnabled: checked} : null)
+                  onCheckedChange={(checked) =>
+                    setSettings((prev) => (prev ? { ...prev, smsEnabled: checked } : null))
                   }
                 />
               </div>
@@ -334,17 +342,17 @@ export default function NotificationSettingsPage() {
                       id="sms-from"
                       placeholder="+1234567890 or Business Name"
                       value={settings.smsFrom || ''}
-                      onChange={(e) => 
-                        setSettings(prev => prev ? {...prev, smsFrom: e.target.value} : null)
+                      onChange={(e) =>
+                        setSettings((prev) => (prev ? { ...prev, smsFrom: e.target.value } : null))
                       }
                     />
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                       Your SMS sender ID or phone number
                     </p>
                   </div>
 
-                  <div className="p-3 bg-amber-50 rounded-lg flex items-start gap-2">
-                    <AlertCircle className="h-4 w-4 text-amber-600 mt-0.5" />
+                  <div className="flex items-start gap-2 rounded-lg bg-amber-50 p-3">
+                    <AlertCircle className="mt-0.5 h-4 w-4 text-amber-600" />
                     <div className="text-sm">
                       <p className="font-medium text-amber-900">SMS requires setup</p>
                       <p className="text-amber-700">
@@ -369,15 +377,15 @@ export default function NotificationSettingsPage() {
                 <Label htmlFor="timezone">Timezone</Label>
                 <Select
                   value={settings?.timezone || 'America/New_York'}
-                  onValueChange={(value) => 
-                    setSettings(prev => prev ? {...prev, timezone: value} : null)
+                  onValueChange={(value) =>
+                    setSettings((prev) => (prev ? { ...prev, timezone: value } : null))
                   }
                 >
                   <SelectTrigger id="timezone">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {timezones.map(tz => (
+                    {timezones.map((tz) => (
                       <SelectItem key={tz} value={tz}>
                         {tz.replace('_', ' ').replace('/', ' - ')}
                       </SelectItem>
@@ -393,8 +401,10 @@ export default function NotificationSettingsPage() {
                     id="quiet-start"
                     type="time"
                     value={settings?.quietHoursStart || '21:00'}
-                    onChange={(e) => 
-                      setSettings(prev => prev ? {...prev, quietHoursStart: e.target.value} : null)
+                    onChange={(e) =>
+                      setSettings((prev) =>
+                        prev ? { ...prev, quietHoursStart: e.target.value } : null
+                      )
                     }
                   />
                 </div>
@@ -404,13 +414,15 @@ export default function NotificationSettingsPage() {
                     id="quiet-end"
                     type="time"
                     value={settings?.quietHoursEnd || '09:00'}
-                    onChange={(e) => 
-                      setSettings(prev => prev ? {...prev, quietHoursEnd: e.target.value} : null)
+                    onChange={(e) =>
+                      setSettings((prev) =>
+                        prev ? { ...prev, quietHoursEnd: e.target.value } : null
+                      )
                     }
                   />
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Non-urgent notifications will be held until quiet hours end
               </p>
             </CardContent>
@@ -420,12 +432,12 @@ export default function NotificationSettingsPage() {
             <Button onClick={saveGeneralSettings} disabled={saving}>
               {saving ? (
                 <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Saving...
                 </>
               ) : (
                 <>
-                  <Save className="h-4 w-4 mr-2" />
+                  <Save className="mr-2 h-4 w-4" />
                   Save Settings
                 </>
               )}
@@ -444,38 +456,41 @@ export default function NotificationSettingsPage() {
             <CardContent>
               <div className="space-y-4">
                 {Object.entries(notificationTypes).map(([type, name]) => (
-                  <div key={type} className="border rounded-lg p-4 space-y-3">
+                  <div key={type} className="space-y-3 rounded-lg border p-4">
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium">{name}</h4>
                       <div className="flex items-center gap-2">
                         <Badge variant="outline">
-                          <Mail className="h-3 w-3 mr-1" />
+                          <Mail className="mr-1 h-3 w-3" />
                           Email
                         </Badge>
                         {settings?.smsEnabled && (
                           <Badge variant="outline">
-                            <MessageSquare className="h-3 w-3 mr-1" />
+                            <MessageSquare className="mr-1 h-3 w-3" />
                             SMS
                           </Badge>
                         )}
                       </div>
                     </div>
-                    
+
                     {editingTemplate === type ? (
                       <div className="space-y-3">
                         <div className="space-y-2">
                           <Label>Email Subject</Label>
-                          <Input 
+                          <Input
                             placeholder="Subject line for email"
-                            defaultValue={templates.find(t => t.type === type && t.channel === 'EMAIL')?.subject || ''}
+                            defaultValue={
+                              templates.find((t) => t.type === type && t.channel === 'EMAIL')
+                                ?.subject || ''
+                            }
                           />
                         </div>
                         <div className="space-y-2">
                           <Label>Message Content</Label>
-                          <Textarea 
+                          <Textarea
                             placeholder="Use {{customerName}}, {{businessName}}, {{serviceName}}, etc."
                             rows={4}
-                            defaultValue={templates.find(t => t.type === type)?.content || ''}
+                            defaultValue={templates.find((t) => t.type === type)?.content || ''}
                           />
                         </div>
                         <div className="flex justify-end gap-2">
@@ -500,9 +515,7 @@ export default function NotificationSettingsPage() {
                       </div>
                     ) : (
                       <div className="space-y-2">
-                        <p className="text-sm text-muted-foreground">
-                          Using default template
-                        </p>
+                        <p className="text-muted-foreground text-sm">Using default template</p>
                         <Button
                           variant="outline"
                           size="sm"
@@ -523,38 +536,51 @@ export default function NotificationSettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle>Notification Triggers</CardTitle>
-              <CardDescription>
-                Choose when to send automated notifications
-              </CardDescription>
+              <CardDescription>Choose when to send automated notifications</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {Object.entries(notificationEvents).map(([event, description]) => (
-                  <div key={event} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div
+                    key={event}
+                    className="flex items-center justify-between rounded-lg border p-4"
+                  >
                     <div className="space-y-1">
                       <p className="font-medium">{description}</p>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <div className="text-muted-foreground flex items-center gap-4 text-sm">
                         <span className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />
-                          {event.includes('BEFORE') ? '24 hours before' : 
-                           event.includes('AFTER') ? '1 hour after' : 
-                           'Immediately'}
+                          {event.includes('BEFORE')
+                            ? '24 hours before'
+                            : event.includes('AFTER')
+                              ? '1 hour after'
+                              : 'Immediately'}
                         </span>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <Switch
-                        checked={triggers.find(t => t.event === event && t.channel === 'EMAIL')?.enabled || false}
-                        onCheckedChange={(checked) => updateTrigger(event, 'EMAIL', { enabled: checked })}
+                        checked={
+                          triggers.find((t) => t.event === event && t.channel === 'EMAIL')
+                            ?.enabled || false
+                        }
+                        onCheckedChange={(checked) =>
+                          updateTrigger(event, 'EMAIL', { enabled: checked })
+                        }
                       />
-                      <Mail className="h-4 w-4 text-muted-foreground" />
+                      <Mail className="text-muted-foreground h-4 w-4" />
                       {settings?.smsEnabled && (
                         <>
                           <Switch
-                            checked={triggers.find(t => t.event === event && t.channel === 'SMS')?.enabled || false}
-                            onCheckedChange={(checked) => updateTrigger(event, 'SMS', { enabled: checked })}
+                            checked={
+                              triggers.find((t) => t.event === event && t.channel === 'SMS')
+                                ?.enabled || false
+                            }
+                            onCheckedChange={(checked) =>
+                              updateTrigger(event, 'SMS', { enabled: checked })
+                            }
                           />
-                          <MessageSquare className="h-4 w-4 text-muted-foreground" />
+                          <MessageSquare className="text-muted-foreground h-4 w-4" />
                         </>
                       )}
                     </div>
@@ -574,8 +600,8 @@ export default function NotificationSettingsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="p-3 bg-blue-50 rounded-lg flex items-start gap-2">
-                <AlertCircle className="h-4 w-4 text-blue-600 mt-0.5" />
+              <div className="flex items-start gap-2 rounded-lg bg-blue-50 p-3">
+                <AlertCircle className="mt-0.5 h-4 w-4 text-blue-600" />
                 <div className="text-sm">
                   <p className="font-medium text-blue-900">Test mode</p>
                   <p className="text-blue-700">
@@ -586,7 +612,10 @@ export default function NotificationSettingsPage() {
 
               <div className="space-y-3">
                 {Object.entries(notificationTypes).map(([type, name]) => (
-                  <div key={type} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div
+                    key={type}
+                    className="flex items-center justify-between rounded-lg border p-3"
+                  >
                     <span className="font-medium">{name}</span>
                     <div className="flex items-center gap-2">
                       {settings?.emailEnabled && (
@@ -596,7 +625,7 @@ export default function NotificationSettingsPage() {
                           onClick={() => sendTestNotification(type, 'EMAIL')}
                           disabled={testingNotification}
                         >
-                          <Mail className="h-4 w-4 mr-2" />
+                          <Mail className="mr-2 h-4 w-4" />
                           Test Email
                         </Button>
                       )}
@@ -607,7 +636,7 @@ export default function NotificationSettingsPage() {
                           onClick={() => sendTestNotification(type, 'SMS')}
                           disabled={testingNotification}
                         >
-                          <MessageSquare className="h-4 w-4 mr-2" />
+                          <MessageSquare className="mr-2 h-4 w-4" />
                           Test SMS
                         </Button>
                       )}

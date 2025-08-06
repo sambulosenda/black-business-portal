@@ -1,15 +1,12 @@
 import { NextResponse } from 'next/server'
-import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
+import { getSession } from '@/lib/session'
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ staffId: string }> }
-) {
+export async function GET(request: Request, { params }: { params: Promise<{ staffId: string }> }) {
   try {
     const { staffId } = await params
     const session = await getSession()
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -69,21 +66,15 @@ export async function GET(
     return NextResponse.json({ staff })
   } catch (error) {
     console.error('Error fetching staff:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch staff member' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch staff member' }, { status: 500 })
   }
 }
 
-export async function PUT(
-  request: Request,
-  { params }: { params: Promise<{ staffId: string }> }
-) {
+export async function PUT(request: Request, { params }: { params: Promise<{ staffId: string }> }) {
   try {
     const { staffId } = await params
     const session = await getSession()
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -187,10 +178,7 @@ export async function PUT(
     return NextResponse.json({ staff })
   } catch (error) {
     console.error('Error updating staff:', error)
-    return NextResponse.json(
-      { error: 'Failed to update staff member' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to update staff member' }, { status: 500 })
   }
 }
 
@@ -201,7 +189,7 @@ export async function PATCH(
   try {
     const { staffId } = await params
     const session = await getSession()
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -241,10 +229,7 @@ export async function PATCH(
     return NextResponse.json({ staff: updatedStaff })
   } catch (error) {
     console.error('Error updating staff status:', error)
-    return NextResponse.json(
-      { error: 'Failed to update staff status' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to update staff status' }, { status: 500 })
   }
 }
 
@@ -255,7 +240,7 @@ export async function DELETE(
   try {
     const { staffId } = await params
     const session = await getSession()
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -312,9 +297,6 @@ export async function DELETE(
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Error deleting staff:', error)
-    return NextResponse.json(
-      { error: 'Failed to delete staff member' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to delete staff member' }, { status: 500 })
   }
 }

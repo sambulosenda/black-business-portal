@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
-import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
+import { getSession } from '@/lib/session'
 
 export async function GET() {
   try {
     const session = await getSession()
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -33,7 +33,7 @@ export async function GET() {
     const startOfMonth = new Date()
     startOfMonth.setDate(1)
     startOfMonth.setHours(0, 0, 0, 0)
-    
+
     const newCustomersThisMonth = await prisma.customerProfile.count({
       where: {
         businessId: business.id,
@@ -73,7 +73,7 @@ export async function GET() {
     // Get at-risk customers (haven't visited in 90+ days but have visited more than twice)
     const ninetyDaysAgo = new Date()
     ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90)
-    
+
     const atRiskCustomers = await prisma.customerProfile.findMany({
       where: {
         businessId: business.id,
@@ -94,12 +94,12 @@ export async function GET() {
       newCustomersThisMonth,
       totalRevenue,
       averageCustomerValue,
-      topSpenders: topSpenders.map(customer => ({
+      topSpenders: topSpenders.map((customer) => ({
         ...customer,
         totalSpent: Number(customer.totalSpent),
         averageSpent: Number(customer.averageSpent),
       })),
-      atRiskCustomers: atRiskCustomers.map(customer => ({
+      atRiskCustomers: atRiskCustomers.map((customer) => ({
         ...customer,
         totalSpent: Number(customer.totalSpent),
         averageSpent: Number(customer.averageSpent),
@@ -107,9 +107,6 @@ export async function GET() {
     })
   } catch (error) {
     console.error('Error fetching customer metrics:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch customer metrics' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch customer metrics' }, { status: 500 })
   }
 }

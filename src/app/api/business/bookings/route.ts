@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server'
-import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
+import { getSession } from '@/lib/session'
 import { Prisma } from '@prisma/client'
 
 export async function GET(request: Request) {
   try {
     const session = await getSession()
-    
+
     if (!session || session.user.role !== 'BUSINESS_OWNER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -53,7 +53,7 @@ export async function GET(request: Request) {
     })
 
     // Convert Decimal fields to numbers for JSON serialization
-    const serializedBookings = bookings.map(booking => ({
+    const serializedBookings = bookings.map((booking) => ({
       ...booking,
       totalPrice: Number(booking.totalPrice),
       stripeFee: booking.stripeFee ? Number(booking.stripeFee) : null,
@@ -61,16 +61,13 @@ export async function GET(request: Request) {
       businessPayout: booking.businessPayout ? Number(booking.businessPayout) : null,
       service: {
         ...booking.service,
-        price: Number(booking.service.price)
-      }
+        price: Number(booking.service.price),
+      },
     }))
 
     return NextResponse.json({ bookings: serializedBookings })
   } catch (error) {
     console.error('Error fetching bookings:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch bookings' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch bookings' }, { status: 500 })
   }
 }

@@ -1,42 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
-import { sendVerificationEmail } from '@/lib/email'
 import crypto from 'crypto'
+import { sendVerificationEmail } from '@/lib/email'
+import { prisma } from '@/lib/prisma'
 
 export async function POST(request: NextRequest) {
   try {
     const { email } = await request.json()
 
     if (!email) {
-      return NextResponse.json(
-        { error: 'Email is required' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Email is required' }, { status: 400 })
     }
 
     // Find user
     const user = await prisma.user.findUnique({
-      where: { email }
+      where: { email },
     })
 
     if (!user) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
     // Check if already verified
     if (user.emailVerified) {
-      return NextResponse.json(
-        { error: 'Email is already verified' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Email is already verified' }, { status: 400 })
     }
 
     // Delete any existing tokens for this email
     await prisma.verificationToken.deleteMany({
-      where: { identifier: email }
+      where: { identifier: email },
     })
 
     // Generate new verification token
@@ -48,21 +39,18 @@ export async function POST(request: NextRequest) {
       data: {
         identifier: email,
         token,
-        expires
-      }
+        expires,
+      },
     })
 
     // Send verification email
     await sendVerificationEmail(email, user.name, token)
 
     return NextResponse.json({
-      message: 'Verification email sent successfully'
+      message: 'Verification email sent successfully',
     })
   } catch (error) {
     console.error('Resend verification error:', error)
-    return NextResponse.json(
-      { error: 'Failed to resend verification email' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to resend verification email' }, { status: 500 })
   }
 }

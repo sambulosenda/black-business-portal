@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
+import { NextResponse } from 'next/server'
+import { addMinutes, parse } from 'date-fns'
+import { z } from 'zod'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { z } from 'zod'
-import { parse, addMinutes } from 'date-fns'
 
 const bookingSchema = z.object({
   businessId: z.string(),
@@ -29,10 +29,7 @@ export async function POST(req: Request) {
     })
 
     if (!service || service.business.id !== validatedData.businessId) {
-      return NextResponse.json(
-        { error: 'Invalid service' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Invalid service' }, { status: 400 })
     }
 
     // Parse date and time
@@ -52,32 +49,20 @@ export async function POST(req: Request) {
         },
         OR: [
           {
-            AND: [
-              { startTime: { lte: startTime } },
-              { endTime: { gt: startTime } },
-            ],
+            AND: [{ startTime: { lte: startTime } }, { endTime: { gt: startTime } }],
           },
           {
-            AND: [
-              { startTime: { lt: endTime } },
-              { endTime: { gte: endTime } },
-            ],
+            AND: [{ startTime: { lt: endTime } }, { endTime: { gte: endTime } }],
           },
           {
-            AND: [
-              { startTime: { gte: startTime } },
-              { endTime: { lte: endTime } },
-            ],
+            AND: [{ startTime: { gte: startTime } }, { endTime: { lte: endTime } }],
           },
         ],
       },
     })
 
     if (conflictingBooking) {
-      return NextResponse.json(
-        { error: 'This time slot is no longer available' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'This time slot is no longer available' }, { status: 400 })
     }
 
     // Create booking
@@ -97,16 +82,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ bookingId: booking.id })
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid input data' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Invalid input data' }, { status: 400 })
     }
 
     console.error('Booking error:', error)
-    return NextResponse.json(
-      { error: 'Failed to create booking' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to create booking' }, { status: 500 })
   }
 }

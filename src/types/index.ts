@@ -1,12 +1,15 @@
 // Type definitions based on Prisma schema
 // These types include relations and are used for client-side components
-
 import { Decimal } from '@prisma/client/runtime/library'
 
 // Convert Decimal to number for client-side usage
-export type DecimalToNumber<T> = T extends Decimal ? number : T extends object ? {
-  [K in keyof T]: DecimalToNumber<T[K]>
-} : T
+export type DecimalToNumber<T> = T extends Decimal
+  ? number
+  : T extends object
+    ? {
+        [K in keyof T]: DecimalToNumber<T[K]>
+      }
+    : T
 
 // Business types
 export interface BusinessWithRelations {
@@ -224,7 +227,9 @@ export interface PromotionWithRelations {
 export interface ColumnDef<T> {
   accessorKey?: keyof T | string
   id?: string
-  header?: string | ((props: { column: { getIsSorted: () => false | 'asc' | 'desc' } }) => React.ReactNode)
+  header?:
+    | string
+    | ((props: { column: { getIsSorted: () => false | 'asc' | 'desc' } }) => React.ReactNode)
   cell?: (props: { row: { original: T; getValue: (key: string) => unknown } }) => React.ReactNode
   enableSorting?: boolean
   enableHiding?: boolean

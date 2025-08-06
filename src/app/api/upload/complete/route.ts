@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
+import { NextRequest, NextResponse } from 'next/server'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { PhotoType } from '@prisma/client'
@@ -57,9 +57,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ photo })
   } catch (error) {
     console.error('Error saving photo:', error)
-    return NextResponse.json(
-      { error: 'Failed to save photo' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to save photo' }, { status: 500 })
   }
 }

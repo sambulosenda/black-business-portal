@@ -1,7 +1,7 @@
-import { requireAuth } from "@/lib/session"
-import { redirect } from "next/navigation"
-import { prisma } from "@/lib/prisma"
-import AvailabilityForm from "./availability-form"
+import { redirect } from 'next/navigation'
+import { prisma } from '@/lib/prisma'
+import { requireAuth } from '@/lib/session'
+import AvailabilityForm from './availability-form'
 
 export default async function AvailabilityPage() {
   const session = await requireAuth()
@@ -14,17 +14,17 @@ export default async function AvailabilityPage() {
     where: { userId: session.user.id },
     include: {
       availabilities: {
-        orderBy: { dayOfWeek: 'asc' }
+        orderBy: { dayOfWeek: 'asc' },
       },
       timeOffs: {
         where: {
           date: {
-            gte: new Date()
-          }
+            gte: new Date(),
+          },
         },
-        orderBy: { date: 'asc' }
-      }
-    }
+        orderBy: { date: 'asc' },
+      },
+    },
   })
 
   if (!business) {
@@ -35,10 +35,10 @@ export default async function AvailabilityPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-gray-900">Availability Settings</h1>
-        <p className="text-gray-600 mt-1">Manage your business hours and time off</p>
+        <p className="mt-1 text-gray-600">Manage your business hours and time off</p>
       </div>
 
-      <AvailabilityForm 
+      <AvailabilityForm
         businessId={business.id}
         availabilities={business.availabilities}
         timeOffs={business.timeOffs}

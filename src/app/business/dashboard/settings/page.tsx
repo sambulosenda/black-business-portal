@@ -1,9 +1,9 @@
-import { requireAuth } from "@/lib/session"
-import { redirect } from "next/navigation"
-import { prisma } from "@/lib/prisma"
-import StripeConnectSection from "./stripe-connect-section"
-import BusinessProfileForm from "./business-profile-form"
-import PhotoManager from "@/components/business/photo-manager"
+import { redirect } from 'next/navigation'
+import PhotoManager from '@/components/business/photo-manager'
+import { prisma } from '@/lib/prisma'
+import { requireAuth } from '@/lib/session'
+import BusinessProfileForm from './business-profile-form'
+import StripeConnectSection from './stripe-connect-section'
 
 export default async function BusinessSettingsPage() {
   const session = await requireAuth()
@@ -44,9 +44,7 @@ export default async function BusinessSettingsPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-gray-900">Business Settings</h1>
-        <p className="text-gray-600 mt-1">
-          Manage your business profile and payment information
-        </p>
+        <p className="mt-1 text-gray-600">Manage your business profile and payment information</p>
       </div>
 
       <div className="space-y-8">
@@ -57,7 +55,7 @@ export default async function BusinessSettingsPage() {
         <PhotoManager businessId={business.id} />
 
         {/* Stripe Connect Section */}
-        <StripeConnectSection 
+        <StripeConnectSection
           businessId={business.id}
           businessName={business.businessName}
           stripeAccountId={stripeAccountId}

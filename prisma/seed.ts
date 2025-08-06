@@ -1,5 +1,5 @@
-import { PrismaClient, BookingStatus } from '@prisma/client'
 import bcrypt from 'bcryptjs'
+import { BookingStatus, PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -62,7 +62,8 @@ async function main() {
       userId: businessOwner1.id,
       businessName: 'Curls & Coils Beauty Bar',
       slug: 'curls-coils-beauty-bar',
-      description: 'Specializing in natural hair care and styling for all curl patterns. We use organic products and provide personalized consultations.',
+      description:
+        'Specializing in natural hair care and styling for all curl patterns. We use organic products and provide personalized consultations.',
       category: 'HAIR_SALON',
       address: '123 Main Street',
       city: 'Atlanta',
@@ -126,7 +127,8 @@ async function main() {
       userId: businessOwner2.id,
       businessName: 'King Cuts Barbershop',
       slug: 'king-cuts-barbershop',
-      description: 'Premium barbershop experience with skilled barbers specializing in fades, designs, and beard grooming.',
+      description:
+        'Premium barbershop experience with skilled barbers specializing in fades, designs, and beard grooming.',
       category: 'BARBER_SHOP',
       address: '456 Peachtree Ave',
       city: 'Atlanta',
@@ -188,7 +190,8 @@ async function main() {
       userId: businessOwner3.id,
       businessName: 'Glow Up Nail Studio',
       slug: 'glow-up-nail-studio',
-      description: 'Luxury nail care with a focus on nail health. We offer gel, acrylic, and natural nail services.',
+      description:
+        'Luxury nail care with a focus on nail health. We offer gel, acrylic, and natural nail services.',
       category: 'NAIL_SALON',
       address: '789 MLK Blvd',
       city: 'Houston',
@@ -250,7 +253,8 @@ async function main() {
       userId: businessOwner4.id,
       businessName: 'Serenity Spa & Wellness',
       slug: 'serenity-spa-wellness',
-      description: 'Full-service spa offering massages, facials, and body treatments in a tranquil environment.',
+      description:
+        'Full-service spa offering massages, facials, and body treatments in a tranquil environment.',
       category: 'SPA',
       address: '321 Wellness Way',
       city: 'Chicago',
@@ -341,12 +345,12 @@ async function main() {
 
   // Create some bookings
   const services = await prisma.service.findMany()
-  
+
   // Get services for Curls & Coils Beauty Bar
-  const curlsServices = services.filter(s => s.businessId === business1.id)
-  const washAndGo = curlsServices.find(s => s.name === 'Wash & Go')!
-  const protectiveStyle = curlsServices.find(s => s.name === 'Protective Style Installation')!
-  const deepCondition = curlsServices.find(s => s.name === 'Deep Conditioning Treatment')!
+  const curlsServices = services.filter((s) => s.businessId === business1.id)
+  const washAndGo = curlsServices.find((s) => s.name === 'Wash & Go')!
+  const protectiveStyle = curlsServices.find((s) => s.name === 'Protective Style Installation')!
+  const deepCondition = curlsServices.find((s) => s.name === 'Deep Conditioning Treatment')!
 
   // Create July 2025 bookings for Curls & Coils Beauty Bar
   const julyBookings = [
@@ -360,7 +364,7 @@ async function main() {
       endTime: new Date('2025-07-01T11:30:00'),
       status: BookingStatus.CONFIRMED,
       totalPrice: 65,
-      notes: 'First time client, needs consultation for curl pattern'
+      notes: 'First time client, needs consultation for curl pattern',
     },
     {
       userId: customer2.id,
@@ -371,7 +375,7 @@ async function main() {
       endTime: new Date('2025-07-02T13:00:00'),
       status: BookingStatus.CONFIRMED,
       totalPrice: 150,
-      notes: 'Box braids - medium length'
+      notes: 'Box braids - medium length',
     },
     {
       userId: customer3.id,
@@ -393,7 +397,7 @@ async function main() {
       endTime: new Date('2025-07-08T15:00:00'),
       status: BookingStatus.CONFIRMED,
       totalPrice: 150,
-      notes: 'Senegalese twists'
+      notes: 'Senegalese twists',
     },
     {
       userId: customer2.id,
@@ -414,7 +418,7 @@ async function main() {
       endTime: new Date('2025-07-10T13:30:00'),
       status: BookingStatus.CONFIRMED,
       totalPrice: 65,
-      notes: 'Regular client - prefers light products'
+      notes: 'Regular client - prefers light products',
     },
     // Week 3
     {
@@ -446,7 +450,7 @@ async function main() {
       endTime: new Date('2025-07-17T13:00:00'),
       status: BookingStatus.CONFIRMED,
       totalPrice: 150,
-      notes: 'Knotless braids - waist length'
+      notes: 'Knotless braids - waist length',
     },
     // Week 4
     {
@@ -468,7 +472,7 @@ async function main() {
       endTime: new Date('2025-07-23T12:00:00'),
       status: BookingStatus.CONFIRMED,
       totalPrice: 45,
-      notes: 'Protein treatment needed'
+      notes: 'Protein treatment needed',
     },
     {
       userId: customer3.id,
@@ -490,7 +494,7 @@ async function main() {
       endTime: new Date('2025-07-29T14:00:00'),
       status: BookingStatus.PENDING,
       totalPrice: 150,
-      notes: 'Faux locs installation'
+      notes: 'Faux locs installation',
     },
     {
       userId: customer2.id,
@@ -511,7 +515,7 @@ async function main() {
       endTime: new Date('2025-07-31T17:00:00'),
       status: BookingStatus.CONFIRMED,
       totalPrice: 45,
-      notes: 'Monthly deep treatment'
+      notes: 'Monthly deep treatment',
     },
   ]
 
@@ -520,14 +524,16 @@ async function main() {
     await prisma.booking.create({ data: bookingData })
   }
 
-  console.log(`✅ Created ${julyBookings.length} bookings for Curls & Coils Beauty Bar in July 2025`)
+  console.log(
+    `✅ Created ${julyBookings.length} bookings for Curls & Coils Beauty Bar in July 2025`
+  )
 
   // Create original booking (January)
   const booking1 = await prisma.booking.create({
     data: {
       userId: customer1.id,
       businessId: business1.id,
-      serviceId: services.find(s => s.businessId === business1.id)!.id,
+      serviceId: services.find((s) => s.businessId === business1.id)!.id,
       date: new Date('2025-01-20'),
       startTime: new Date('2025-01-20T14:00:00'),
       endTime: new Date('2025-01-20T15:30:00'),
@@ -540,7 +546,7 @@ async function main() {
     data: {
       userId: customer2.id,
       businessId: business2.id,
-      serviceId: services.find(s => s.businessId === business2.id)!.id,
+      serviceId: services.find((s) => s.businessId === business2.id)!.id,
       date: new Date('2025-01-22'),
       startTime: new Date('2025-01-22T15:00:00'),
       endTime: new Date('2025-01-22T15:45:00'),
@@ -553,7 +559,7 @@ async function main() {
     data: {
       userId: customer3.id,
       businessId: business4.id,
-      serviceId: services.find(s => s.businessId === business4.id)!.id,
+      serviceId: services.find((s) => s.businessId === business4.id)!.id,
       date: new Date('2025-01-18'),
       startTime: new Date('2025-01-18T11:00:00'),
       endTime: new Date('2025-01-18T12:00:00'),
@@ -569,7 +575,8 @@ async function main() {
       businessId: business1.id,
       bookingId: booking1.id,
       rating: 5,
-      comment: 'Amazing service! Tasha really knows how to work with natural hair. My curls have never looked better!',
+      comment:
+        'Amazing service! Tasha really knows how to work with natural hair. My curls have never looked better!',
     },
   })
 
@@ -579,7 +586,8 @@ async function main() {
       businessId: business4.id,
       bookingId: booking3.id,
       rating: 5,
-      comment: 'So relaxing and professional. The spa is beautiful and the massage was exactly what I needed.',
+      comment:
+        'So relaxing and professional. The spa is beautiful and the massage was exactly what I needed.',
     },
   })
 
@@ -588,7 +596,7 @@ async function main() {
     data: {
       userId: customer2.id,
       businessId: business1.id,
-      serviceId: services.find(s => s.businessId === business1.id)!.id,
+      serviceId: services.find((s) => s.businessId === business1.id)!.id,
       date: new Date('2025-01-15'),
       startTime: new Date('2025-01-15T10:00:00'),
       endTime: new Date('2025-01-15T11:30:00'),
@@ -601,7 +609,7 @@ async function main() {
     data: {
       userId: customer1.id,
       businessId: business2.id,
-      serviceId: services.find(s => s.businessId === business2.id)!.id,
+      serviceId: services.find((s) => s.businessId === business2.id)!.id,
       date: new Date('2025-01-10'),
       startTime: new Date('2025-01-10T16:00:00'),
       endTime: new Date('2025-01-10T16:45:00'),

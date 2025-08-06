@@ -17,33 +17,35 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
       <ol className="flex items-center space-x-2">
         {items.map((item, index) => {
           const isLast = index === items.length - 1
-          
+
           return (
             <li key={index} className="flex items-center">
               {index > 0 && (
-                <svg 
-                  className="h-4 w-4 text-gray-400 mx-2 flex-shrink-0" 
-                  fill="none" 
-                  stroke="currentColor" 
+                <svg
+                  className="mx-2 h-4 w-4 flex-shrink-0 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               )}
-              
+
               {item.href && !isLast ? (
                 <Link
                   href={item.href}
-                  className="text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors duration-200 hover:underline"
+                  className="text-sm font-medium text-gray-500 transition-colors duration-200 hover:text-gray-700 hover:underline"
                 >
                   {item.label}
                 </Link>
               ) : (
                 <span
-                  className={cn(
-                    'text-sm font-medium',
-                    isLast ? 'text-gray-900' : 'text-gray-500'
-                  )}
+                  className={cn('text-sm font-medium', isLast ? 'text-gray-900' : 'text-gray-500')}
                   aria-current={isLast ? 'page' : undefined}
                 >
                   {item.label}
@@ -64,13 +66,13 @@ interface BreadcrumbWrapperProps {
 
 export function BreadcrumbWrapper({ children, className }: BreadcrumbWrapperProps) {
   return (
-    <div className={cn(
-      'bg-white border-b border-gray-200 px-4 py-3 sm:px-6 lg:px-8 animate-fade-in',
-      className
-    )}>
-      <div className="max-w-7xl mx-auto">
-        {children}
-      </div>
+    <div
+      className={cn(
+        'animate-fade-in border-b border-gray-200 bg-white px-4 py-3 sm:px-6 lg:px-8',
+        className
+      )}
+    >
+      <div className="mx-auto max-w-7xl">{children}</div>
     </div>
   )
 }

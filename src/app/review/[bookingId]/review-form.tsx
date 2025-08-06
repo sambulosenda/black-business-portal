@@ -19,7 +19,7 @@ export default function ReviewForm({ bookingId, businessId, businessName }: Revi
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (rating === 0) {
       setError('Please select a rating')
       return
@@ -54,11 +54,11 @@ export default function ReviewForm({ bookingId, businessId, businessName }: Revi
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white shadow rounded-lg p-6">
+    <form onSubmit={handleSubmit} className="rounded-lg bg-white p-6 shadow">
       <div className="space-y-6">
         {/* Rating */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="mb-2 block text-sm font-medium text-gray-700">
             How would you rate your experience?
           </label>
           <div className="flex items-center space-x-2">
@@ -73,9 +73,7 @@ export default function ReviewForm({ bookingId, businessId, businessName }: Revi
               >
                 <svg
                   className={`h-10 w-10 transition-colors ${
-                    star <= (hoveredRating || rating)
-                      ? 'text-yellow-400'
-                      : 'text-gray-300'
+                    star <= (hoveredRating || rating) ? 'text-yellow-400' : 'text-gray-300'
                   }`}
                   fill="currentColor"
                   viewBox="0 0 20 20"
@@ -100,7 +98,7 @@ export default function ReviewForm({ bookingId, businessId, businessName }: Revi
 
         {/* Comment */}
         <div>
-          <label htmlFor="comment" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="comment" className="mb-2 block text-sm font-medium text-gray-700">
             Tell us about your experience (optional)
           </label>
           <textarea
@@ -128,14 +126,14 @@ export default function ReviewForm({ bookingId, businessId, businessName }: Revi
           <button
             type="button"
             onClick={() => router.push('/bookings')}
-            className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={loading || rating === 0}
-            className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? 'Submitting...' : 'Submit Review'}
           </button>

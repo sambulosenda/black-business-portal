@@ -15,25 +15,22 @@ export async function GET(request: NextRequest) {
       where: {
         businessId,
         date: {
-          gte: new Date()
+          gte: new Date(),
         },
         // Only full day time offs
         startTime: null,
-        endTime: null
+        endTime: null,
       },
       select: {
-        date: true
-      }
+        date: true,
+      },
     })
 
-    const dates = timeOffs.map(to => to.date.toISOString().split('T')[0])
+    const dates = timeOffs.map((to) => to.date.toISOString().split('T')[0])
 
     return NextResponse.json({ dates })
   } catch (error) {
     console.error('Error fetching time off dates:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch time off dates' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch time off dates' }, { status: 500 })
   }
 }
