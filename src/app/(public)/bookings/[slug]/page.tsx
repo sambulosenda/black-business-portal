@@ -123,7 +123,7 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
   const fetchBusinessData = async () => {
     try {
       setServicesLoading(true)
-      const response = await fetch(`/api/booking/${slug}`)
+      const response = await fetch(`/api/bookingss/${slug}`)
       if (!response.ok) throw new Error('Failed to fetch business data')
 
       const data = await response.json()
@@ -243,7 +243,7 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
     // Check availability against existing bookings and time off
     try {
       const response = await fetch(
-        `/api/booking/availability?businessId=${business.id}&date=${format(selectedDate, 'yyyy-MM-dd')}&serviceId=${selectedService}`
+        `/api/bookingss/availability?businessId=${business.id}&date=${format(selectedDate, 'yyyy-MM-dd')}&serviceId=${selectedService}`
       )
       if (response.ok) {
         const { bookedSlots, isClosedDay, reason } = await response.json()
@@ -279,7 +279,7 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
     setError('')
 
     try {
-      const response = await fetch('/api/booking/create-payment-intent', {
+      const response = await fetch('/api/bookingss/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -316,7 +316,7 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
 
       // Delay navigation to show success animation
       setTimeout(() => {
-        router.push(`/book/${slug}/payment`)
+        router.push(`/bookings/${slug}/payment`)
       }, 1500)
     } catch (error) {
       setError(

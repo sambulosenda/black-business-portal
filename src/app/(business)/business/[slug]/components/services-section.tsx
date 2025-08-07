@@ -96,7 +96,7 @@ export default function ServicesSection({
             </div>
 
             {session ? (
-              <Link href={`/book/${businessSlug}?service=${service.id}`} className="block">
+              <Link href={`/bookings/${businessSlug}?service=${service.id}`} className="block">
                 <Button className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white transition-all group-hover:shadow-lg hover:from-indigo-700 hover:to-purple-700">
                   Book Now
                 </Button>

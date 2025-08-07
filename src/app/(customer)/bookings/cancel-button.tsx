@@ -24,7 +24,7 @@ export default function CancelButton({ bookingId, bookingDate, bookingStatus }: 
   const handleCancel = async () => {
     setIsCancelling(true)
     try {
-      const response = await fetch('/api/booking/cancel', {
+      const response = await fetch('/api/bookingss/cancel', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

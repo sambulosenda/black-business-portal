@@ -32,7 +32,7 @@ export default function FloatingActions({ business, session }: FloatingActionsPr
     >
       <div className="flex gap-2">
         {business.services && business.services.length > 0 && (
-          <Link href={session ? `/book/${business.slug}` : '/login'} className="flex-1">
+          <Link href={session ? `/bookings/${business.slug}` : '/login'} className="flex-1">
             <Button
               className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg transition-all hover:from-indigo-700 hover:to-purple-700 hover:shadow-xl"
               size="lg"

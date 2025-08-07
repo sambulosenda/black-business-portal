@@ -21,7 +21,7 @@ export default function RefundButton({ bookingId, bookingDate, paymentStatus }: 
   const handleRefund = async () => {
     setIsRefunding(true)
     try {
-      const response = await fetch('/api/booking/refund', {
+      const response = await fetch('/api/bookingss/refund', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
