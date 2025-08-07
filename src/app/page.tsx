@@ -5,8 +5,8 @@ import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import Footer from '@/components/footer'
-import { WebsiteSchema } from '@/components/seo/structured-data'
+import Footer from '@/components/layouts/footer'
+import { WebsiteSchema } from '@/components/shared/seo/structured-data'
 import { Button } from '@/components/ui/button'
 
 export default function Home() {

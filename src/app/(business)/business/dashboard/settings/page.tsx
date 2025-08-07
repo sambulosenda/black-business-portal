@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import PhotoManager from '@/components/business/photo-manager'
+import PhotoManager from '@/components/features/business/photo-manager'
 import { prisma } from '@/lib/prisma'
 import { requireAuth } from '@/lib/session'
 import BusinessProfileForm from './business-profile-form'

@@ -27,8 +27,8 @@ import {
   TrendingUp,
   X,
 } from 'lucide-react'
-import Footer from '@/components/footer'
-import Navigation from '@/components/navigation'
+import Footer from '@/components/layouts/footer'
+import Navigation from '@/components/layouts/navigation'
 import { Button } from '@/components/ui/button'
 import { PriceRangeSlider } from '@/components/ui/price-range-slider'
 // import { Card, CardContent } from '@/components/ui/card' // Commented out - may be used later
@@ -38,7 +38,7 @@ import { cn } from '@/lib/utils'
 
 // Dynamically import the map component to avoid SSR issues
 const BusinessMap = dynamic(
-  () => import('@/components/search/business-map').then((mod) => mod.BusinessMap),
+  () => import('@/components/features/search/business-map').then((mod) => mod.BusinessMap),
   {
     ssr: false,
     loading: () => (

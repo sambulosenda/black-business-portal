@@ -17,15 +17,15 @@ import {
   Star,
   X,
 } from 'lucide-react'
-import Footer from '@/components/footer'
-import Navigation from '@/components/navigation'
+import Footer from '@/components/layouts/footer'
+import Navigation from '@/components/layouts/navigation'
 import { SkeletonGrid } from '@/components/ui/skeleton-card'
 import { useDebounce } from '@/hooks/useDebounce'
 import { cn } from '@/lib/utils'
 
 // Dynamically import the map component to avoid SSR issues
 const BusinessMap = dynamic(
-  () => import('@/components/search/business-map').then((mod) => mod.BusinessMap),
+  () => import('@/components/features/search/business-map').then((mod) => mod.BusinessMap),
   {
     ssr: false,
     loading: () => (
