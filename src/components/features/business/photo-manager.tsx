@@ -26,7 +26,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { PhotoType } from '@prisma/client'
+// import { PhotoType } from '@prisma/client'
+type PhotoType = any
 
 // import { cn } from '@/lib/utils' // Commented out - may be used later
 
