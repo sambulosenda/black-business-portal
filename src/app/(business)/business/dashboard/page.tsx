@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { format } from 'date-fns'
 import { BarChart3, Calendar, ChevronRight, Clock, DollarSign, Package, Star } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { EmptyState } from '@/components/ui/empty-state'
