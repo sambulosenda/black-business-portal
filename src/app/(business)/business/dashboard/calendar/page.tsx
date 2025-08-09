@@ -300,7 +300,7 @@ export default function CalendarPage() {
                     {format(day, 'd')}
                   </span>
                   {dayBookings.length > 0 && (
-                    <Badge variant="secondary" className="bg-gray-100 text-gray-700 px-1.5 py-0 text-xs">
+                    <Badge variant="outline" className="bg-gray-100 text-gray-700 px-1.5 py-0 text-xs">
                       {dayBookings.length}
                     </Badge>
                   )}
