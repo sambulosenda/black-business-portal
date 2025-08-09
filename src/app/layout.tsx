@@ -1,23 +1,17 @@
 import type { Metadata } from 'next'
-import { Inter, Outfit } from 'next/font/google'
 import { Providers } from '@/components/shared/providers'
 import './globals.css'
 
-// Inter - Ultra-clean, highly readable body font used by many modern apps
-const inter = Inter({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
+// Temporarily disable Google Fonts for environments with network restrictions
+// Original fonts: Inter and Outfit from Google Fonts
+// Fallback to system fonts
+const inter = {
   variable: '--font-inter',
-  display: 'swap',
-})
+}
 
-// Outfit - Modern, clean geometric font perfect for headings and beauty brands
-const outfit = Outfit({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
+const outfit = {
   variable: '--font-outfit',
-  display: 'swap',
-})
+}
 
 export const metadata: Metadata = {
   title: {

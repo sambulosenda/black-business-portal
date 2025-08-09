@@ -55,10 +55,10 @@ export async function generateMetadata({ params }: BusinessPageProps): Promise<M
   const totalReviews = business.reviews.length
   const averageRating =
     totalReviews > 0
-      ? business.reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews
+      ? business.reviews.reduce((sum: number, review: any) => sum + review.rating, 0) / totalReviews
       : 0
 
-  const serviceNames = business.services.map((s) => s.name).join(', ')
+  const serviceNames = business.services.map((s: any) => s.name).join(', ')
   const ratingText =
     averageRating && totalReviews > 0
       ? `${averageRating.toFixed(1)}★ (${totalReviews} reviews)`
@@ -72,7 +72,7 @@ export async function generateMetadata({ params }: BusinessPageProps): Promise<M
       business.city,
       'beauty salon',
       'book appointment',
-      ...business.services.map((s) => s.name),
+      ...business.services.map((s: any) => s.name),
     ],
     openGraph: {
       title: `${business.businessName} | Glamfric`,
@@ -139,7 +139,7 @@ export default async function BusinessProfilePage({ params }: BusinessPageProps)
   // Calculate average rating
   const averageRating =
     business.reviews.length > 0
-      ? business.reviews.reduce((acc, review) => acc + review.rating, 0) / business.reviews.length
+      ? business.reviews.reduce((acc: number, review: any) => acc + review.rating, 0) / business.reviews.length
       : 0
 
   // Get total review count

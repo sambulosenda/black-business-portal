@@ -21,7 +21,9 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import type { Availability, TimeOff } from '@prisma/client'
+// import type { Availability, TimeOff } from '@prisma/client'
+type Availability = any
+type TimeOff = any
 
 const DAYS_OF_WEEK = [
   { value: 0, label: 'Sunday' },
