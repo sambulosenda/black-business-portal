@@ -226,7 +226,7 @@ export default function NotificationSettingsPage() {
   if (loading) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
-        <Loader2 className="text-primary h-8 w-8 animate-spin" />
+        <Loader2 className="text-gray-600 h-8 w-8 animate-spin" />
       </div>
     )
   }
@@ -234,8 +234,8 @@ export default function NotificationSettingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Notification Settings</h1>
-        <p className="text-muted-foreground">Configure how you communicate with your customers</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Notification Settings</h1>
+        <p className="text-sm text-gray-500">Configure how you communicate with your customers</p>
       </div>
 
       <Tabs defaultValue="general">
@@ -250,13 +250,13 @@ export default function NotificationSettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle>Email Settings</CardTitle>
-              <CardDescription>Configure your email notification preferences</CardDescription>
+              <CardDescription className="text-sm text-gray-500">Configure your email notification preferences</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label htmlFor="email-enabled">Enable Email Notifications</Label>
-                  <p className="text-muted-foreground text-sm">
+                  <p className="text-sm text-gray-500">
                     Send notifications to customers via email
                   </p>
                 </div>
@@ -284,7 +284,7 @@ export default function NotificationSettingsPage() {
                         )
                       }
                     />
-                    <p className="text-muted-foreground text-sm">
+                    <p className="text-sm text-gray-500">
                       The name that appears in the &quot;From&quot; field
                     </p>
                   </div>
@@ -302,7 +302,7 @@ export default function NotificationSettingsPage() {
                         )
                       }
                     />
-                    <p className="text-muted-foreground text-sm">
+                    <p className="text-sm text-gray-500">
                       Where customer replies will be sent
                     </p>
                   </div>
@@ -314,13 +314,13 @@ export default function NotificationSettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle>SMS Settings</CardTitle>
-              <CardDescription>Configure your SMS notification preferences</CardDescription>
+              <CardDescription className="text-sm text-gray-500">Configure your SMS notification preferences</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label htmlFor="sms-enabled">Enable SMS Notifications</Label>
-                  <p className="text-muted-foreground text-sm">
+                  <p className="text-sm text-gray-500">
                     Send notifications to customers via text message
                   </p>
                 </div>
@@ -346,7 +346,7 @@ export default function NotificationSettingsPage() {
                         setSettings((prev) => (prev ? { ...prev, smsFrom: e.target.value } : null))
                       }
                     />
-                    <p className="text-muted-foreground text-sm">
+                    <p className="text-sm text-gray-500">
                       Your SMS sender ID or phone number
                     </p>
                   </div>
@@ -368,7 +368,7 @@ export default function NotificationSettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle>Quiet Hours</CardTitle>
-              <CardDescription>
+              <CardDescription className="text-sm text-gray-500">
                 Prevent notifications from being sent during specific hours
               </CardDescription>
             </CardHeader>
@@ -422,7 +422,7 @@ export default function NotificationSettingsPage() {
                   />
                 </div>
               </div>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-sm text-gray-500">
                 Non-urgent notifications will be held until quiet hours end
               </p>
             </CardContent>
@@ -449,7 +449,7 @@ export default function NotificationSettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle>Notification Templates</CardTitle>
-              <CardDescription>
+              <CardDescription className="text-sm text-gray-500">
                 Customize the content of your automated notifications
               </CardDescription>
             </CardHeader>
@@ -460,12 +460,12 @@ export default function NotificationSettingsPage() {
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium">{name}</h4>
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline">
+                        <Badge className="bg-gray-100 text-gray-700">
                           <Mail className="mr-1 h-3 w-3" />
                           Email
                         </Badge>
                         {settings?.smsEnabled && (
-                          <Badge variant="outline">
+                          <Badge className="bg-gray-100 text-gray-700">
                             <MessageSquare className="mr-1 h-3 w-3" />
                             SMS
                           </Badge>
@@ -515,7 +515,7 @@ export default function NotificationSettingsPage() {
                       </div>
                     ) : (
                       <div className="space-y-2">
-                        <p className="text-muted-foreground text-sm">Using default template</p>
+                        <p className="text-sm text-gray-500">Using default template</p>
                         <Button
                           variant="outline"
                           size="sm"
@@ -536,7 +536,7 @@ export default function NotificationSettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle>Notification Triggers</CardTitle>
-              <CardDescription>Choose when to send automated notifications</CardDescription>
+              <CardDescription className="text-sm text-gray-500">Choose when to send automated notifications</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -547,7 +547,7 @@ export default function NotificationSettingsPage() {
                   >
                     <div className="space-y-1">
                       <p className="font-medium">{description}</p>
-                      <div className="text-muted-foreground flex items-center gap-4 text-sm">
+                      <div className="text-sm text-gray-500 flex items-center gap-4">
                         <span className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />
                           {event.includes('BEFORE')
@@ -568,7 +568,7 @@ export default function NotificationSettingsPage() {
                           updateTrigger(event, 'EMAIL', { enabled: checked })
                         }
                       />
-                      <Mail className="text-muted-foreground h-4 w-4" />
+                      <Mail className="text-gray-500 h-4 w-4" />
                       {settings?.smsEnabled && (
                         <>
                           <Switch
@@ -580,7 +580,7 @@ export default function NotificationSettingsPage() {
                               updateTrigger(event, 'SMS', { enabled: checked })
                             }
                           />
-                          <MessageSquare className="text-muted-foreground h-4 w-4" />
+                          <MessageSquare className="text-gray-500 h-4 w-4" />
                         </>
                       )}
                     </div>
@@ -595,7 +595,7 @@ export default function NotificationSettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle>Test Notifications</CardTitle>
-              <CardDescription>
+              <CardDescription className="text-sm text-gray-500">
                 Send test notifications to verify your configuration
               </CardDescription>
             </CardHeader>

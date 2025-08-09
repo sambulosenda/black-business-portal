@@ -129,40 +129,12 @@ export default function BusinessBookingsPage() {
   }
 
   const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'CONFIRMED':
-        return (
-          <Badge variant="outline" className="border-green-200 bg-green-50 text-green-700">
-            Confirmed
-          </Badge>
-        )
-      case 'PENDING':
-        return (
-          <Badge variant="outline" className="border-yellow-200 bg-yellow-50 text-yellow-700">
-            Pending
-          </Badge>
-        )
-      case 'COMPLETED':
-        return (
-          <Badge variant="outline" className="border-blue-200 bg-blue-50 text-blue-700">
-            Completed
-          </Badge>
-        )
-      case 'CANCELLED':
-        return (
-          <Badge variant="outline" className="border-red-200 bg-red-50 text-red-700">
-            Cancelled
-          </Badge>
-        )
-      case 'NO_SHOW':
-        return (
-          <Badge variant="outline" className="border-gray-200 bg-gray-50 text-gray-700">
-            No Show
-          </Badge>
-        )
-      default:
-        return <Badge>{status}</Badge>
-    }
+    const statusText = status.charAt(0) + status.slice(1).toLowerCase().replace('_', ' ')
+    return (
+      <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">
+        {statusText}
+      </span>
+    )
   }
 
   if (loading) {
@@ -177,27 +149,25 @@ export default function BusinessBookingsPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Bookings</h1>
-          <p className="mt-1 text-gray-600">Manage your customer appointments</p>
+          <h1 className="text-2xl font-semibold text-gray-900">Bookings</h1>
+          <p className="mt-1 text-sm text-gray-500">Manage customer appointments</p>
         </div>
-        <div className="flex gap-4">
-          <div className="relative">
-            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
-            <Input
-              placeholder="Search bookings..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-64 border-gray-300 pl-10"
-            />
-          </div>
+        <div className="relative">
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
+          <Input
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-64 border-gray-200 pl-10"
+          />
         </div>
       </div>
 
       <Tabs defaultValue="upcoming">
-        <TabsList className="grid w-full grid-cols-4 bg-gray-100">
+        <TabsList className="grid w-full grid-cols-4 bg-gray-50">
           <TabsTrigger
             value="upcoming"
-            className="data-[state=active]:bg-white data-[state=active]:text-indigo-600"
+            className="data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:font-medium"
           >
             Upcoming (
             {
@@ -210,7 +180,7 @@ export default function BusinessBookingsPage() {
           </TabsTrigger>
           <TabsTrigger
             value="today"
-            className="data-[state=active]:bg-white data-[state=active]:text-indigo-600"
+            className="data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:font-medium"
           >
             Today (
             {
@@ -224,7 +194,7 @@ export default function BusinessBookingsPage() {
           </TabsTrigger>
           <TabsTrigger
             value="past"
-            className="data-[state=active]:bg-white data-[state=active]:text-indigo-600"
+            className="data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:font-medium"
           >
             Past (
             {
@@ -235,7 +205,7 @@ export default function BusinessBookingsPage() {
           </TabsTrigger>
           <TabsTrigger
             value="cancelled"
-            className="data-[state=active]:bg-white data-[state=active]:text-indigo-600"
+            className="data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:font-medium"
           >
             Cancelled ({bookings.filter((b) => b.status === 'CANCELLED').length})
           </TabsTrigger>
@@ -243,7 +213,7 @@ export default function BusinessBookingsPage() {
 
         <TabsContent value="upcoming">
           {filterBookings('upcoming').length === 0 ? (
-            <Card className="border-2 border-dashed border-gray-300">
+            <Card className="border-2 border-dashed border-gray-200">
               <CardContent className="py-12">
                 <EmptyState
                   icon="calendar"
@@ -257,14 +227,14 @@ export default function BusinessBookingsPage() {
               {filterBookings('upcoming').map((booking) => (
                 <Card
                   key={booking.id}
-                  className="border border-gray-200 shadow-sm transition-all hover:shadow-md"
+                  className="border border-gray-200"
                 >
-                  <CardContent className="p-6">
+                  <CardContent className="p-5">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <div className="mb-4 flex items-center gap-4">
-                          <h3 className="text-lg font-semibold text-gray-900">
-                            {booking.service?.name || 'Unknown Service'}
+                        <div className="mb-3 flex items-center gap-3">
+                          <h3 className="text-base font-medium text-gray-900">
+                            {booking.service?.name || 'Service'}
                           </h3>
                           {getStatusBadge(booking.status)}
                         </div>
@@ -307,11 +277,9 @@ export default function BusinessBookingsPage() {
                         </div>
 
                         {booking.notes && (
-                          <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
-                            <p className="mb-1 text-xs font-semibold tracking-wider text-gray-500 uppercase">
-                              Notes
-                            </p>
-                            <p className="text-sm text-gray-700">{booking.notes}</p>
+                          <div className="mt-3 rounded-md border border-gray-100 bg-gray-50/50 p-3">
+                            <p className="text-xs text-gray-500 mb-1">Notes</p>
+                            <p className="text-sm text-gray-600">{booking.notes}</p>
                           </div>
                         )}
                       </div>
@@ -321,7 +289,7 @@ export default function BusinessBookingsPage() {
                           <Button
                             size="sm"
                             onClick={() => updateBookingStatus(booking.id, 'CONFIRMED')}
-                            className="bg-green-600 text-white hover:bg-green-700"
+                            className="bg-gray-900 text-white hover:bg-gray-800"
                           >
                             <CheckCircle className="mr-1 h-4 w-4" />
                             Confirm
@@ -330,7 +298,7 @@ export default function BusinessBookingsPage() {
                             size="sm"
                             variant="outline"
                             onClick={() => updateBookingStatus(booking.id, 'CANCELLED')}
-                            className="border-red-300 text-red-600 hover:bg-red-50"
+                            className="border-gray-200 text-gray-600 hover:bg-gray-50"
                           >
                             <XCircle className="mr-1 h-4 w-4" />
                             Cancel
@@ -342,7 +310,7 @@ export default function BusinessBookingsPage() {
                         <Button
                           size="sm"
                           onClick={() => updateBookingStatus(booking.id, 'COMPLETED')}
-                          className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white hover:from-indigo-700 hover:to-indigo-800"
+                          className="bg-gray-900 text-white hover:bg-gray-800"
                         >
                           <CheckCircle className="mr-1 h-4 w-4" />
                           Mark Complete
@@ -358,7 +326,7 @@ export default function BusinessBookingsPage() {
 
         <TabsContent value="today">
           {filterBookings('today').length === 0 ? (
-            <Card className="border-2 border-dashed border-gray-300">
+            <Card className="border-2 border-dashed border-gray-200">
               <CardContent className="py-12">
                 <EmptyState
                   icon="calendar"
@@ -372,14 +340,14 @@ export default function BusinessBookingsPage() {
               {filterBookings('today').map((booking) => (
                 <Card
                   key={booking.id}
-                  className="border border-gray-200 shadow-sm transition-all hover:shadow-md"
+                  className="border border-gray-200"
                 >
-                  <CardContent className="p-6">
+                  <CardContent className="p-5">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <div className="mb-4 flex items-center gap-4">
-                          <h3 className="text-lg font-semibold text-gray-900">
-                            {booking.service?.name || 'Unknown Service'}
+                        <div className="mb-3 flex items-center gap-3">
+                          <h3 className="text-base font-medium text-gray-900">
+                            {booking.service?.name || 'Service'}
                           </h3>
                           {getStatusBadge(booking.status)}
                         </div>
@@ -422,11 +390,9 @@ export default function BusinessBookingsPage() {
                         </div>
 
                         {booking.notes && (
-                          <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
-                            <p className="mb-1 text-xs font-semibold tracking-wider text-gray-500 uppercase">
-                              Notes
-                            </p>
-                            <p className="text-sm text-gray-700">{booking.notes}</p>
+                          <div className="mt-3 rounded-md border border-gray-100 bg-gray-50/50 p-3">
+                            <p className="text-xs text-gray-500 mb-1">Notes</p>
+                            <p className="text-sm text-gray-600">{booking.notes}</p>
                           </div>
                         )}
                       </div>
@@ -436,7 +402,7 @@ export default function BusinessBookingsPage() {
                           <Button
                             size="sm"
                             onClick={() => updateBookingStatus(booking.id, 'CONFIRMED')}
-                            className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white hover:from-indigo-700 hover:to-indigo-800"
+                            className="bg-gray-900 text-white hover:bg-gray-800"
                           >
                             <CheckCircle className="mr-1 h-4 w-4" />
                             Confirm
@@ -445,7 +411,7 @@ export default function BusinessBookingsPage() {
                             size="sm"
                             variant="outline"
                             onClick={() => updateBookingStatus(booking.id, 'CANCELLED')}
-                            className="border-red-300 text-red-600 hover:bg-red-50"
+                            className="border-gray-200 text-gray-600 hover:bg-gray-50"
                           >
                             <XCircle className="mr-1 h-4 w-4" />
                             Cancel
@@ -457,7 +423,7 @@ export default function BusinessBookingsPage() {
                         <Button
                           size="sm"
                           onClick={() => updateBookingStatus(booking.id, 'COMPLETED')}
-                          className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white hover:from-indigo-700 hover:to-indigo-800"
+                          className="bg-gray-900 text-white hover:bg-gray-800"
                         >
                           <CheckCircle className="mr-1 h-4 w-4" />
                           Mark Complete
@@ -473,7 +439,7 @@ export default function BusinessBookingsPage() {
 
         <TabsContent value="past">
           {filterBookings('past').length === 0 ? (
-            <Card className="border-2 border-dashed border-gray-300">
+            <Card className="border-2 border-dashed border-gray-200">
               <CardContent className="py-12">
                 <EmptyState
                   icon="calendar"
@@ -487,14 +453,14 @@ export default function BusinessBookingsPage() {
               {filterBookings('past').map((booking) => (
                 <Card
                   key={booking.id}
-                  className="border border-gray-200 shadow-sm transition-all hover:shadow-md"
+                  className="border border-gray-200"
                 >
-                  <CardContent className="p-6">
+                  <CardContent className="p-5">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <div className="mb-4 flex items-center gap-4">
-                          <h3 className="text-lg font-semibold text-gray-900">
-                            {booking.service?.name || 'Unknown Service'}
+                        <div className="mb-3 flex items-center gap-3">
+                          <h3 className="text-base font-medium text-gray-900">
+                            {booking.service?.name || 'Service'}
                           </h3>
                           {getStatusBadge(booking.status)}
                         </div>
@@ -537,11 +503,9 @@ export default function BusinessBookingsPage() {
                         </div>
 
                         {booking.notes && (
-                          <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
-                            <p className="mb-1 text-xs font-semibold tracking-wider text-gray-500 uppercase">
-                              Notes
-                            </p>
-                            <p className="text-sm text-gray-700">{booking.notes}</p>
+                          <div className="mt-3 rounded-md border border-gray-100 bg-gray-50/50 p-3">
+                            <p className="text-xs text-gray-500 mb-1">Notes</p>
+                            <p className="text-sm text-gray-600">{booking.notes}</p>
                           </div>
                         )}
                       </div>
@@ -555,7 +519,7 @@ export default function BusinessBookingsPage() {
 
         <TabsContent value="cancelled">
           {filterBookings('cancelled').length === 0 ? (
-            <Card className="border-2 border-dashed border-gray-300">
+            <Card className="border-2 border-dashed border-gray-200">
               <CardContent className="py-12">
                 <EmptyState
                   icon="calendar"
@@ -569,14 +533,14 @@ export default function BusinessBookingsPage() {
               {filterBookings('cancelled').map((booking) => (
                 <Card
                   key={booking.id}
-                  className="border border-gray-200 shadow-sm transition-all hover:shadow-md"
+                  className="border border-gray-200"
                 >
-                  <CardContent className="p-6">
+                  <CardContent className="p-5">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <div className="mb-4 flex items-center gap-4">
-                          <h3 className="text-lg font-semibold text-gray-900">
-                            {booking.service?.name || 'Unknown Service'}
+                        <div className="mb-3 flex items-center gap-3">
+                          <h3 className="text-base font-medium text-gray-900">
+                            {booking.service?.name || 'Service'}
                           </h3>
                           {getStatusBadge(booking.status)}
                         </div>
@@ -619,11 +583,9 @@ export default function BusinessBookingsPage() {
                         </div>
 
                         {booking.notes && (
-                          <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
-                            <p className="mb-1 text-xs font-semibold tracking-wider text-gray-500 uppercase">
-                              Notes
-                            </p>
-                            <p className="text-sm text-gray-700">{booking.notes}</p>
+                          <div className="mt-3 rounded-md border border-gray-100 bg-gray-50/50 p-3">
+                            <p className="text-xs text-gray-500 mb-1">Notes</p>
+                            <p className="text-sm text-gray-600">{booking.notes}</p>
                           </div>
                         )}
                       </div>

@@ -92,10 +92,10 @@ export default function StripeConnectSection({
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Platform Fee Information */}
-        <div className="rounded-lg border border-indigo-200 bg-gradient-to-r from-indigo-50 to-purple-50 p-4">
+        <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
           <div className="flex items-start gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm">
-              <CreditCard className="h-5 w-5 text-indigo-600" />
+              <CreditCard className="h-5 w-5 text-gray-700" />
             </div>
             <div className="flex-1">
               <h3 className="mb-2 text-sm font-semibold text-gray-900">Platform Fee Structure</h3>
@@ -133,7 +133,7 @@ export default function StripeConnectSection({
               <Button
                 onClick={handleConnectStripe}
                 disabled={loading}
-                className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800"
+                className="bg-gray-900 text-white hover:bg-gray-800"
               >
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {loading ? 'Connecting...' : 'Connect Stripe Account'}
@@ -150,7 +150,7 @@ export default function StripeConnectSection({
               <Button
                 onClick={handleConnectStripe}
                 disabled={loading}
-                className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800"
+                className="bg-gray-900 text-white hover:bg-gray-800"
               >
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {loading ? 'Loading...' : 'Complete Stripe Setup'}
@@ -158,15 +158,15 @@ export default function StripeConnectSection({
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 p-4">
-                <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-green-600" />
+              <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-100 p-4">
+                <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-gray-700" />
                 <div>
                   <p className="text-sm font-medium text-gray-900">
                     Your Stripe account is connected and ready to accept payments
                   </p>
                   <Badge
                     variant="outline"
-                    className="mt-1 border-green-200 bg-green-50 text-green-700"
+                    className="mt-1 bg-gray-100 text-gray-700"
                   >
                     Active
                   </Badge>
@@ -198,10 +198,10 @@ export default function StripeConnectSection({
 
         {/* Error Message */}
         {error && (
-          <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+          <div className="rounded-lg border border-gray-200 bg-gray-100 p-4">
             <div className="flex items-center gap-2">
-              <AlertCircle className="h-4 w-4 text-red-600" />
-              <p className="text-sm text-red-800">{error}</p>
+              <AlertCircle className="h-4 w-4 text-gray-700" />
+              <p className="text-sm text-gray-700">{error}</p>
             </div>
           </div>
         )}
@@ -211,7 +211,7 @@ export default function StripeConnectSection({
           <h4 className="mb-3 text-sm font-semibold text-gray-900">How it works:</h4>
           <ol className="space-y-2">
             <li className="flex items-start gap-3">
-              <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-semibold text-indigo-600">
+              <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-700">
                 1
               </span>
               <span className="text-sm text-gray-600">
@@ -219,7 +219,7 @@ export default function StripeConnectSection({
               </span>
             </li>
             <li className="flex items-start gap-3">
-              <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-semibold text-indigo-600">
+              <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-700">
                 2
               </span>
               <span className="text-sm text-gray-600">
@@ -227,7 +227,7 @@ export default function StripeConnectSection({
               </span>
             </li>
             <li className="flex items-start gap-3">
-              <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-semibold text-indigo-600">
+              <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-700">
                 3
               </span>
               <span className="text-sm text-gray-600">
@@ -235,7 +235,7 @@ export default function StripeConnectSection({
               </span>
             </li>
             <li className="flex items-start gap-3">
-              <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-semibold text-indigo-600">
+              <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-700">
                 4
               </span>
               <span className="text-sm text-gray-600">

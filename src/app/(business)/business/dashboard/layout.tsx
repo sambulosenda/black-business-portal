@@ -108,24 +108,24 @@ export default async function BusinessDashboardLayout({ children }: { children: 
 
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className="flex min-h-screen w-full bg-gray-50">
-        <Sidebar className="border-r bg-white">
-          <SidebarHeader className="border-b bg-gray-50 px-6 py-4">
-            <Link href="/" className="group flex items-center space-x-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 font-bold text-white shadow-lg transition-transform group-hover:scale-105">
-                B
+      <div className="flex min-h-screen w-full bg-white">
+        <Sidebar className="border-r border-gray-200 bg-white">
+          <SidebarHeader className="flex h-14 items-center border-b px-6">
+            <Link href="/" className="flex items-center space-x-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-gray-900 font-semibold text-white text-sm">
+                G
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-bold text-indigo-600">Glamfric</span>
-                <span className="text-xs text-gray-600">Business Dashboard</span>
+                <span className="text-base font-semibold text-gray-900">Glamfric</span>
+                <span className="text-xs text-gray-500">Business Dashboard</span>
               </div>
             </Link>
           </SidebarHeader>
 
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel className="px-3 text-xs font-semibold tracking-wider text-gray-500 uppercase">
-                Navigation
+              <SidebarGroupLabel className="px-3 text-xs font-medium tracking-wider text-gray-400 uppercase">
+                Menu
               </SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu className="space-y-1">
@@ -133,14 +133,14 @@ export default async function BusinessDashboardLayout({ children }: { children: 
                     <SidebarMenuItem key={item.href}>
                       <SidebarMenuButton
                         asChild
-                        className="transition-all hover:bg-gray-50 data-[active=true]:bg-indigo-50 data-[active=true]:text-indigo-700"
+                        className="transition-all hover:bg-gray-50 data-[active=true]:bg-gray-100 data-[active=true]:text-gray-900"
                       >
                         <Link
                           href={item.href}
-                          className="group flex items-center gap-3 rounded-lg px-3 py-2"
+                          className="group flex items-center gap-3 rounded-md px-3 py-2"
                         >
-                          <item.icon className="h-5 w-5 text-gray-400 transition-colors group-hover:text-gray-600 group-data-[active=true]:text-indigo-600" />
-                          <span className="text-sm font-medium text-gray-700 transition-colors group-hover:text-gray-900 group-data-[active=true]:text-indigo-700">
+                          <item.icon className="h-4 w-4 text-gray-500 transition-colors group-hover:text-gray-700 group-data-[active=true]:text-gray-900" />
+                          <span className="text-sm text-gray-600 transition-colors group-hover:text-gray-900 group-data-[active=true]:text-gray-900 group-data-[active=true]:font-medium">
                             {item.title}
                           </span>
                         </Link>
@@ -152,31 +152,30 @@ export default async function BusinessDashboardLayout({ children }: { children: 
             </SidebarGroup>
           </SidebarContent>
 
-          <SidebarFooter className="border-t bg-gray-50 px-6 py-4">
+          <SidebarFooter className="border-t px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex flex-col">
-                <span className="text-sm font-semibold text-gray-900">{session.user.name}</span>
-                <span className="text-xs text-gray-600">{session.user.email}</span>
+                <span className="text-sm font-medium text-gray-900">{session.user.name}</span>
+                <span className="text-xs text-gray-500">{session.user.email}</span>
               </div>
             </div>
             <Link
               href="/api/auth/signout"
-              className="group mt-4 flex items-center space-x-2 text-sm text-gray-600 transition-colors hover:text-red-600"
+              className="mt-4 flex items-center space-x-2 text-sm text-gray-500 transition-colors hover:text-gray-700"
             >
-              <LogOut className="h-4 w-4 transition-transform group-hover:scale-110" />
+              <LogOut className="h-4 w-4" />
               <span>Sign out</span>
             </Link>
           </SidebarFooter>
         </Sidebar>
 
         <main className="flex-1 overflow-hidden">
-          <div className="sticky top-0 z-10 flex h-16 items-center border-b bg-white px-8 shadow-sm">
-            <SidebarTrigger className="mr-4 rounded-lg transition-colors hover:bg-gray-100" />
-            <h2 className="text-lg font-semibold text-gray-900">Business Portal</h2>
+          <div className="sticky top-0 z-10 flex h-14 items-center border-b border-gray-200 bg-white px-6">
+            <SidebarTrigger className="mr-4 rounded-md p-1.5 transition-colors hover:bg-gray-100" />
           </div>
           <div className="overflow-auto">
-            <div className="min-h-[calc(100vh-4rem)] bg-gray-50">
-              <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">{children}</div>
+            <div className="min-h-[calc(100vh-3.5rem)] bg-gray-50/50">
+              <div className="mx-auto max-w-7xl px-6 py-6">{children}</div>
             </div>
           </div>
         </main>

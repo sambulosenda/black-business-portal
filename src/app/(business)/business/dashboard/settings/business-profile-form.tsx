@@ -105,14 +105,12 @@ export default function BusinessProfileForm({ business }: BusinessProfileFormPro
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <Card className="overflow-hidden border-0 shadow-lg">
-        <div className="h-2 bg-gradient-to-r from-indigo-500 to-purple-600" />
-
-        <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100/50">
+      <Card className="overflow-hidden border border-gray-200">
+        <CardHeader>
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-2xl">Business Profile</CardTitle>
-              <CardDescription className="mt-2">
+              <CardDescription className="mt-2 text-sm text-gray-500">
                 Update your business information and details that customers will see
               </CardDescription>
             </div>
@@ -122,7 +120,7 @@ export default function BusinessProfileForm({ business }: BusinessProfileFormPro
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   exit={{ scale: 0 }}
-                  className="flex items-center gap-2 rounded-lg bg-green-50 px-4 py-2 text-green-600"
+                  className="flex items-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-gray-700"
                 >
                   <CheckCircle className="h-5 w-5" />
                   <span className="font-medium">Saved</span>
@@ -366,7 +364,7 @@ export default function BusinessProfileForm({ business }: BusinessProfileFormPro
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                  className="bg-gray-900 text-white hover:bg-gray-800"
                 >
                   {loading ? (
                     <>
