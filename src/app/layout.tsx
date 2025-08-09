@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter, Outfit } from 'next/font/google'
-import { Providers } from '@/components/providers'
+import { Providers } from '@/components/shared/providers'
 import './globals.css'
 
 // Inter - Ultra-clean, highly readable body font used by many modern apps

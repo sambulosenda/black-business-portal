@@ -25,14 +25,12 @@ export async function sendEmail(options: EmailOptions): Promise<void> {
     !sesClient ||
     (process.env.NODE_ENV === 'development' && process.env.ENABLE_EMAIL_SENDING !== 'true')
   ) {
-    console.log('📧 Email would be sent:', {
-      to: options.to,
-      subject: options.subject,
-      preview: options.text || options.html.substring(0, 100) + '...',
-    })
+    // Email would be sent in production:
+    // To: options.to
+    // Subject: options.subject
 
     if (process.env.NODE_ENV === 'development') {
-      console.log('Full email content:', options.html)
+      // Full email content available in development
     }
     return
   }
@@ -62,8 +60,8 @@ export async function sendEmail(options: EmailOptions): Promise<void> {
       },
     })
 
-    const response = await sesClient.send(command)
-    console.log('✅ Email sent via AWS SES:', response.MessageId)
+    const _response = await sesClient.send(command)
+    // Email sent successfully via AWS SES
   } catch (error) {
     console.error('❌ Failed to send email via AWS SES:', error)
     // In production, you might want to retry or queue the email

@@ -8,7 +8,9 @@
       "Bash(npm run lint:*)",
       "Bash(find:*)",
       "Bash(ls:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)"
     ],
     "deny": []
   }
