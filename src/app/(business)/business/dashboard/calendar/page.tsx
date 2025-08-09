@@ -291,16 +291,16 @@ export default function CalendarPage() {
               <div
                 key={index}
                 onClick={() => setSelectedDate(day)}
-                className={`min-h-[120px] border-r border-b border-gray-200 p-2 last:border-r-0 ${!isCurrentMonth ? 'bg-gray-50/50' : ''} ${isToday ? 'bg-indigo-50/50' : ''} ${isSelected ? 'ring-2 ring-indigo-600 ring-inset' : ''} cursor-pointer transition-colors hover:bg-gray-50`}
+                className={`min-h-[120px] border-r border-b border-gray-200 p-2 last:border-r-0 ${!isCurrentMonth ? 'bg-gray-50/50' : ''} ${isToday ? 'bg-gray-100' : ''} ${isSelected ? 'ring-2 ring-gray-400 ring-inset' : ''} cursor-pointer transition-colors hover:bg-gray-50`}
               >
                 <div className="mb-1 flex items-center justify-between">
                   <span
-                    className={`text-sm font-medium ${!isCurrentMonth ? 'text-muted-foreground' : ''} ${isToday ? 'text-primary font-bold' : ''} `}
+                    className={`text-sm font-medium ${!isCurrentMonth ? 'text-muted-foreground' : ''} ${isToday ? 'text-gray-900 font-bold' : ''} `}
                   >
                     {format(day, 'd')}
                   </span>
                   {dayBookings.length > 0 && (
-                    <Badge variant="default" className="px-1.5 py-0 text-xs">
+                    <Badge variant="secondary" className="bg-gray-100 text-gray-700 px-1.5 py-0 text-xs">
                       {dayBookings.length}
                     </Badge>
                   )}
@@ -358,7 +358,7 @@ export default function CalendarPage() {
               <div
                 key={day.toISOString()}
                 onClick={() => setSelectedDate(day)}
-                className={`cursor-pointer border-r border-gray-200 p-2 text-center text-sm font-medium last:border-r-0 ${isToday ? 'bg-indigo-50 text-indigo-600' : 'text-gray-700'} ${isSelected ? 'ring-2 ring-indigo-600 ring-inset' : ''} hover:bg-gray-50`}
+                className={`cursor-pointer border-r border-gray-200 p-2 text-center text-sm font-medium last:border-r-0 ${isToday ? 'bg-gray-100 text-gray-900' : 'text-gray-700'} ${isSelected ? 'ring-2 ring-gray-400 ring-inset' : ''} hover:bg-gray-50`}
               >
                 <div>{format(day, 'EEE')}</div>
                 <div className={`text-lg ${isToday ? 'font-bold' : ''}`}>{format(day, 'd')}</div>
@@ -480,13 +480,13 @@ export default function CalendarPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Calendar</h1>
-        <p className="mt-1 text-gray-600">View and manage your appointments</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Calendar</h1>
+        <p className="mt-1 text-sm text-gray-500">View and manage your appointments</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Calendar View - Takes up 2 columns */}
-        <Card className="border border-gray-200 shadow-sm transition-all hover:shadow-md lg:col-span-2">
+        <Card className="border border-gray-200 lg:col-span-2">
           <CardHeader className="border-b border-gray-100 px-6 py-4">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <CardTitle className="text-2xl font-semibold text-gray-900">
@@ -504,7 +504,7 @@ export default function CalendarPage() {
                     onClick={() => setViewMode('day')}
                     className={
                       viewMode === 'day'
-                        ? 'border border-gray-200 bg-white px-4 py-1.5 text-indigo-600 shadow-sm'
+                        ? 'border border-gray-200 bg-gray-900 text-white px-4 py-1.5'
                         : 'border-transparent px-4 py-1.5 text-gray-600 hover:bg-gray-100'
                     }
                   >
@@ -516,7 +516,7 @@ export default function CalendarPage() {
                     onClick={() => setViewMode('week')}
                     className={
                       viewMode === 'week'
-                        ? 'mx-1 border border-gray-200 bg-white px-4 py-1.5 text-indigo-600 shadow-sm'
+                        ? 'mx-1 border border-gray-200 bg-gray-900 text-white px-4 py-1.5'
                         : 'mx-1 border-transparent px-4 py-1.5 text-gray-600 hover:bg-gray-100'
                     }
                   >
@@ -528,7 +528,7 @@ export default function CalendarPage() {
                     onClick={() => setViewMode('month')}
                     className={
                       viewMode === 'month'
-                        ? 'border border-gray-200 bg-white px-4 py-1.5 text-indigo-600 shadow-sm'
+                        ? 'border border-gray-200 bg-gray-900 text-white px-4 py-1.5'
                         : 'border-transparent px-4 py-1.5 text-gray-600 hover:bg-gray-100'
                     }
                   >
@@ -543,7 +543,7 @@ export default function CalendarPage() {
                     size="icon"
                     onClick={goToPrevious}
                     title="Previous"
-                    className="h-9 w-9 border-gray-200 transition-colors hover:border-gray-300 hover:bg-gray-50"
+                    className="h-9 w-9 border-gray-200 transition-colors hover:border-gray-200 hover:bg-gray-50"
                   >
                     <ChevronLeft className="h-4 w-4 text-gray-600" />
                   </Button>
@@ -551,7 +551,7 @@ export default function CalendarPage() {
                     variant="outline"
                     size="sm"
                     onClick={goToToday}
-                    className="h-9 border-gray-200 px-4 font-medium text-gray-700 transition-colors hover:border-gray-300 hover:bg-gray-50"
+                    className="h-9 border-gray-200 px-4 font-medium text-gray-700 transition-colors hover:border-gray-200 hover:bg-gray-50"
                   >
                     Today
                   </Button>
@@ -560,7 +560,7 @@ export default function CalendarPage() {
                     size="icon"
                     onClick={goToNext}
                     title="Next"
-                    className="h-9 w-9 border-gray-200 transition-colors hover:border-gray-300 hover:bg-gray-50"
+                    className="h-9 w-9 border-gray-200 transition-colors hover:border-gray-200 hover:bg-gray-50"
                   >
                     <ChevronRight className="h-4 w-4 text-gray-600" />
                   </Button>
@@ -571,7 +571,7 @@ export default function CalendarPage() {
           <CardContent className="p-0">
             {loading ? (
               <div className="flex h-[600px] items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+                <Loader2 className="h-8 w-8 animate-spin text-gray-600" />
               </div>
             ) : (
               <>
@@ -584,7 +584,7 @@ export default function CalendarPage() {
         </Card>
 
         {/* Selected Booking Details - Takes up 1 column */}
-        <Card className="border border-gray-200 shadow-sm">
+        <Card className="border border-gray-200">
           <CardHeader className="border-b border-gray-100">
             <CardTitle className="text-lg">
               {selectedBooking ? 'Booking Details' : format(selectedDate, 'EEEE, MMMM d')}
@@ -782,7 +782,7 @@ export default function CalendarPage() {
       </div>
 
       {/* Calendar Legend */}
-      <Card className="border border-gray-200 shadow-sm">
+      <Card className="border border-gray-200">
         <CardHeader className="border-b border-gray-100">
           <CardTitle className="text-sm font-semibold text-gray-900">Legend</CardTitle>
         </CardHeader>

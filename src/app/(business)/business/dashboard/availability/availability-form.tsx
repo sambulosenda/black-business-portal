@@ -175,14 +175,14 @@ export default function AvailabilityForm({
         <TabsList className="grid w-full grid-cols-2 bg-gray-100">
           <TabsTrigger
             value="hours"
-            className="data-[state=active]:bg-white data-[state=active]:text-indigo-600"
+            className="data-[state=active]:bg-white data-[state=active]:text-gray-900"
           >
             <Clock className="mr-2 h-4 w-4" />
             Business Hours
           </TabsTrigger>
           <TabsTrigger
             value="timeoff"
-            className="data-[state=active]:bg-white data-[state=active]:text-indigo-600"
+            className="data-[state=active]:bg-white data-[state=active]:text-gray-900"
           >
             <Calendar className="mr-2 h-4 w-4" />
             Time Off
@@ -190,10 +190,10 @@ export default function AvailabilityForm({
         </TabsList>
 
         <TabsContent value="hours" className="mt-6 space-y-4">
-          <Card className="border border-gray-200 shadow-sm">
+          <Card className="border border-gray-200">
             <CardHeader>
               <CardTitle className="text-lg font-semibold">Business Hours</CardTitle>
-              <CardDescription className="text-gray-600">
+              <CardDescription className="text-sm text-gray-500">
                 Set your regular business hours. Customers will only be able to book appointments
                 during these times.
               </CardDescription>
@@ -217,7 +217,7 @@ export default function AvailabilityForm({
                                   [day.value]: { ...prev[day.value], isActive: checked },
                                 }))
                               }
-                              className="data-[state=checked]:bg-indigo-600"
+                              className="data-[state=checked]:bg-gray-900"
                             />
                             <Label
                               className={`font-semibold ${businessHours[day.value].isActive ? 'text-gray-900' : 'text-gray-500'}`}
@@ -237,7 +237,7 @@ export default function AvailabilityForm({
                                   }))
                                 }
                               >
-                                <SelectTrigger className="w-32 border-gray-300">
+                                <SelectTrigger className="w-32 border-gray-200">
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -260,7 +260,7 @@ export default function AvailabilityForm({
                                   }))
                                 }
                               >
-                                <SelectTrigger className="w-32 border-gray-300">
+                                <SelectTrigger className="w-32 border-gray-200">
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -273,7 +273,7 @@ export default function AvailabilityForm({
                               </Select>
                             </div>
                           ) : (
-                            <Badge variant="outline" className="border-gray-300 text-gray-500">
+                            <Badge className="bg-gray-100 text-gray-700">
                               Closed
                             </Badge>
                           )}
@@ -290,7 +290,7 @@ export default function AvailabilityForm({
                 <Button
                   onClick={handleSaveHours}
                   disabled={loading}
-                  className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800"
+                  className="bg-gray-900 text-white hover:bg-gray-800"
                 >
                   {loading ? (
                     <>
@@ -309,10 +309,10 @@ export default function AvailabilityForm({
           </Card>
         </TabsContent>
         <TabsContent value="timeoff" className="mt-6 space-y-6">
-          <Card className="border border-gray-200 shadow-sm">
+          <Card className="border border-gray-200">
             <CardHeader>
               <CardTitle className="text-lg font-semibold">Add Time Off</CardTitle>
-              <CardDescription className="text-gray-600">
+              <CardDescription className="text-sm text-gray-500">
                 Block dates when you&apos;re not available for bookings
               </CardDescription>
             </CardHeader>
@@ -328,7 +328,7 @@ export default function AvailabilityForm({
                     value={newTimeOff.date}
                     onChange={(e) => setNewTimeOff((prev) => ({ ...prev, date: e.target.value }))}
                     min={format(new Date(), 'yyyy-MM-dd')}
-                    className="border-gray-300"
+                    className="border-gray-200"
                   />
                 </div>
 
@@ -358,7 +358,7 @@ export default function AvailabilityForm({
                           setNewTimeOff((prev) => ({ ...prev, startTime: value }))
                         }
                       >
-                        <SelectTrigger id="startTime" className="border-gray-300">
+                        <SelectTrigger id="startTime" className="border-gray-200">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -381,7 +381,7 @@ export default function AvailabilityForm({
                           setNewTimeOff((prev) => ({ ...prev, endTime: value }))
                         }
                       >
-                        <SelectTrigger id="endTime" className="border-gray-300">
+                        <SelectTrigger id="endTime" className="border-gray-200">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -406,7 +406,7 @@ export default function AvailabilityForm({
                     value={newTimeOff.reason}
                     onChange={(e) => setNewTimeOff((prev) => ({ ...prev, reason: e.target.value }))}
                     placeholder="e.g., Holiday, Training, Personal"
-                    className="border-gray-300"
+                    className="border-gray-200"
                   />
                 </div>
 
@@ -431,10 +431,10 @@ export default function AvailabilityForm({
             </CardContent>
           </Card>
 
-          <Card className="border border-gray-200 shadow-sm">
+          <Card className="border border-gray-200">
             <CardHeader>
               <CardTitle className="text-lg font-semibold">Scheduled Time Off</CardTitle>
-              <CardDescription className="text-gray-600">
+              <CardDescription className="text-sm text-gray-500">
                 Manage your upcoming time off and holidays
               </CardDescription>
             </CardHeader>
@@ -445,24 +445,24 @@ export default function AvailabilityForm({
                     {timeOffs.map((timeOff) => (
                       <div
                         key={timeOff.id}
-                        className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4 transition-all hover:shadow-sm"
+                        className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-red-50 to-red-100">
-                            <Calendar className="h-5 w-5 text-red-600" />
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100">
+                            <Calendar className="h-5 w-5 text-gray-700" />
                           </div>
                           <div>
                             <p className="font-medium text-gray-900">
                               {format(new Date(timeOff.date), 'EEEE, MMMM d, yyyy')}
                             </p>
                             <div className="mt-1 flex items-center gap-2">
-                              <Badge variant="outline" className="border-gray-300 text-xs">
+                              <Badge className="bg-gray-100 text-gray-700 text-xs">
                                 {timeOff.startTime && timeOff.endTime
                                   ? `${timeOff.startTime} - ${timeOff.endTime}`
                                   : 'All day'}
                               </Badge>
                               {timeOff.reason && (
-                                <span className="text-sm text-gray-600">{timeOff.reason}</span>
+                                <span className="text-sm text-gray-500">{timeOff.reason}</span>
                               )}
                             </div>
                           </div>
@@ -483,7 +483,7 @@ export default function AvailabilityForm({
               ) : (
                 <div className="py-12 text-center">
                   <Calendar className="mx-auto mb-3 h-12 w-12 text-gray-400" />
-                  <p className="text-gray-600">No time off scheduled</p>
+                  <p className="text-sm text-gray-500">No time off scheduled</p>
                   <p className="mt-1 text-sm text-gray-500">
                     Add time off above to block booking availability
                   </p>

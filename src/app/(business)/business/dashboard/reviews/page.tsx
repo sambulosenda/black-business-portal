@@ -46,12 +46,12 @@ export default async function BusinessReviewsPage() {
     <div className="min-h-screen bg-gray-50">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Reviews</h1>
-          <p className="mt-2 text-gray-600">Manage and respond to customer reviews</p>
+          <h1 className="text-2xl font-semibold text-gray-900">Reviews</h1>
+          <p className="mt-2 text-sm text-gray-500">Manage and respond to customer reviews</p>
         </div>
 
         {/* Review Statistics */}
-        <div className="mb-8 rounded-lg bg-white p-6 shadow">
+        <div className="mb-8 rounded-lg bg-white p-6 border border-gray-200">
           <h2 className="mb-6 text-xl font-semibold text-gray-900">Review Statistics</h2>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -63,7 +63,7 @@ export default async function BusinessReviewsPage() {
                   <svg
                     key={i}
                     className={`h-6 w-6 ${
-                      i < Math.round(averageRating) ? 'text-yellow-400' : 'text-gray-300'
+                      i < Math.round(averageRating) ? 'text-gray-400' : 'text-gray-300'
                     }`}
                     fill="currentColor"
                     viewBox="0 0 20 20"
@@ -72,23 +72,23 @@ export default async function BusinessReviewsPage() {
                   </svg>
                 ))}
               </div>
-              <p className="mt-2 text-sm text-gray-600">Average rating</p>
+              <p className="mt-2 text-sm text-gray-500">Average rating</p>
             </div>
 
             {/* Total Reviews */}
             <div className="text-center">
               <div className="text-4xl font-bold text-gray-900">{totalReviews}</div>
-              <p className="mt-2 text-sm text-gray-600">Total reviews</p>
+              <p className="mt-2 text-sm text-gray-500">Total reviews</p>
             </div>
 
             {/* Rating Distribution */}
             <div>
-              <h3 className="mb-2 text-sm font-medium text-gray-700">Rating distribution</h3>
+              <h3 className="mb-2 text-sm font-medium text-gray-500">Rating distribution</h3>
               {ratingDistribution.map(({ rating, count }) => (
                 <div key={rating} className="mb-1 flex items-center">
-                  <span className="w-4 text-sm text-gray-600">{rating}</span>
+                  <span className="w-4 text-sm text-gray-500">{rating}</span>
                   <svg
-                    className="mx-1 h-4 w-4 text-yellow-400"
+                    className="mx-1 h-4 w-4 text-gray-400"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -97,14 +97,14 @@ export default async function BusinessReviewsPage() {
                   <div className="ml-2 flex-1">
                     <div className="h-2 overflow-hidden rounded-full bg-gray-200">
                       <div
-                        className="h-full bg-yellow-400"
+                        className="h-full bg-gray-400"
                         style={{
                           width: totalReviews > 0 ? `${(count / totalReviews) * 100}%` : '0%',
                         }}
                       />
                     </div>
                   </div>
-                  <span className="ml-2 w-8 text-right text-sm text-gray-600">{count}</span>
+                  <span className="ml-2 w-8 text-right text-sm text-gray-500">{count}</span>
                 </div>
               ))}
             </div>
@@ -112,7 +112,7 @@ export default async function BusinessReviewsPage() {
         </div>
 
         {/* Review List */}
-        <div className="rounded-lg bg-white shadow">
+        <div className="rounded-lg bg-white border border-gray-200">
           <div className="border-b border-gray-200 px-6 py-4">
             <h2 className="text-xl font-semibold text-gray-900">Customer Reviews</h2>
           </div>
@@ -141,7 +141,7 @@ export default async function BusinessReviewsPage() {
                           <svg
                             key={i}
                             className={`h-4 w-4 ${
-                              i < review.rating ? 'text-yellow-400' : 'text-gray-300'
+                              i < review.rating ? 'text-gray-400' : 'text-gray-300'
                             }`}
                             fill="currentColor"
                             viewBox="0 0 20 20"
@@ -158,8 +158,8 @@ export default async function BusinessReviewsPage() {
             </div>
           ) : (
             <div className="p-8 text-center">
-              <p className="text-gray-500">No reviews yet</p>
-              <p className="mt-1 text-sm text-gray-400">
+              <p className="text-sm text-gray-500">No reviews yet</p>
+              <p className="mt-1 text-sm text-gray-500">
                 Reviews will appear here as customers rate their experiences
               </p>
             </div>

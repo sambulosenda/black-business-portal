@@ -43,8 +43,8 @@ export default async function BusinessSettingsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Business Settings</h1>
-        <p className="mt-1 text-gray-600">Manage your business profile and payment information</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Business Settings</h1>
+        <p className="mt-1 text-sm text-gray-500">Manage your business profile and payment information</p>
       </div>
 
       <div className="space-y-8">

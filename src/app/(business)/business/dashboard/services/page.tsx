@@ -167,13 +167,13 @@ export default function ServicesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Services</h1>
-          <p className="mt-1 text-gray-600">Manage the services you offer to customers</p>
+          <h1 className="text-2xl font-semibold text-gray-900">Services</h1>
+          <p className="mt-1 text-sm text-gray-500">Manage your service offerings</p>
         </div>
         {!showAddForm && (
           <Button
             onClick={() => setShowAddForm(true)}
-            className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800"
+            className="bg-gray-900 text-white hover:bg-gray-800"
           >
             <Plus className="mr-2 h-4 w-4" />
             Add Service
@@ -183,34 +183,33 @@ export default function ServicesPage() {
 
       {/* Add/Edit Service Form */}
       {showAddForm && (
-        <Card className="border border-gray-200 shadow-sm">
+        <Card className="border border-gray-200">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold">
-              {editingService ? 'Edit Service' : 'Add New Service'}
+            <CardTitle className="text-base font-medium">
+              {editingService ? 'Edit Service' : 'New Service'}
             </CardTitle>
-            <CardDescription>Fill in the details for your service</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid gap-6 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Service Name</Label>
+                  <Label htmlFor="name" className="text-sm text-gray-600">Name</Label>
                   <Input
                     {...register('name')}
                     id="name"
-                    placeholder="e.g., Classic Haircut"
-                    className="border-gray-300"
+                    placeholder="Service name"
+                    className="border-gray-200"
                   />
                   {errors.name && <p className="text-sm text-red-600">{errors.name.message}</p>}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="category">Category</Label>
+                  <Label htmlFor="category" className="text-sm text-gray-600">Category</Label>
                   <Input
                     {...register('category')}
                     id="category"
-                    placeholder="e.g., Hair, Nails, Spa"
-                    className="border-gray-300"
+                    placeholder="Category"
+                    className="border-gray-200"
                   />
                   {errors.category && (
                     <p className="text-sm text-red-600">{errors.category.message}</p>
@@ -218,28 +217,28 @@ export default function ServicesPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="price">Price ($)</Label>
+                  <Label htmlFor="price" className="text-sm text-gray-600">Price</Label>
                   <div className="relative">
-                    <DollarSign className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-500" />
+                    <DollarSign className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
                     <Input
                       {...register('price')}
                       id="price"
-                      placeholder="50.00"
-                      className="border-gray-300 pl-10"
+                      placeholder="0.00"
+                      className="border-gray-200 pl-10"
                     />
                   </div>
                   {errors.price && <p className="text-sm text-red-600">{errors.price.message}</p>}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="duration">Duration (minutes)</Label>
+                  <Label htmlFor="duration" className="text-sm text-gray-600">Duration (minutes)</Label>
                   <div className="relative">
-                    <Clock className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-500" />
+                    <Clock className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
                     <Input
                       {...register('duration')}
                       id="duration"
-                      placeholder="60"
-                      className="border-gray-300 pl-10"
+                      placeholder="30"
+                      className="border-gray-200 pl-10"
                     />
                   </div>
                   {errors.duration && (
@@ -249,13 +248,13 @@ export default function ServicesPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Description (optional)</Label>
+                <Label htmlFor="description" className="text-sm text-gray-600">Description</Label>
                 <Textarea
                   {...register('description')}
                   id="description"
-                  placeholder="Describe what this service includes..."
+                  placeholder="Service description (optional)"
                   rows={3}
-                  className="resize-none border-gray-300"
+                  className="resize-none border-gray-200"
                 />
               </div>
 
@@ -274,10 +273,10 @@ export default function ServicesPage() {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800"
+                  className="bg-gray-900 text-white hover:bg-gray-800"
                 >
                   {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {editingService ? 'Update Service' : 'Add Service'}
+                  {editingService ? 'Update' : 'Add'}
                 </Button>
               </div>
             </form>
@@ -291,52 +290,44 @@ export default function ServicesPage() {
           services.map((service) => (
             <Card
               key={service.id}
-              className="border border-gray-200 shadow-sm transition-all hover:shadow-md"
+              className="border border-gray-200"
             >
-              <CardHeader className="pb-4">
+              <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
-                  <div className="space-y-1">
-                    <CardTitle className="text-lg font-semibold text-gray-900">
+                  <div className="flex-1">
+                    <CardTitle className="text-base font-medium text-gray-900">
                       {service.name}
                     </CardTitle>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="text-xs">
-                        {service.category}
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className={
-                          service.isActive
-                            ? 'border-green-200 bg-green-50 text-green-700'
-                            : 'border-gray-200 bg-gray-50 text-gray-700'
-                        }
-                      >
-                        {service.isActive ? 'Active' : 'Inactive'}
-                      </Badge>
+                    <div className="mt-1 flex items-center gap-2">
+                      <span className="text-xs text-gray-500">{service.category}</span>
+                      {!service.isActive && (
+                        <span className="text-xs text-gray-400">Inactive</span>
+                      )}
                     </div>
                   </div>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                        <MoreHorizontal className="h-4 w-4" />
+                        <MoreHorizontal className="h-4 w-4 text-gray-400" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => startEdit(service)}>
-                        <Edit className="mr-2 h-4 w-4" />
+                      <DropdownMenuItem onClick={() => startEdit(service)} className="text-sm">
+                        <Edit className="mr-2 h-3 w-3" />
                         Edit
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => toggleServiceStatus(service.id, service.isActive)}
+                        className="text-sm"
                       >
-                        <Power className="mr-2 h-4 w-4" />
+                        <Power className="mr-2 h-3 w-3" />
                         {service.isActive ? 'Deactivate' : 'Activate'}
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => deleteService(service.id)}
-                        className="text-red-600"
+                        className="text-sm text-gray-600"
                       >
-                        <Trash2 className="mr-2 h-4 w-4" />
+                        <Trash2 className="mr-2 h-3 w-3" />
                         Delete
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -345,35 +336,33 @@ export default function ServicesPage() {
               </CardHeader>
               <CardContent>
                 {service.description && (
-                  <p className="mb-4 text-sm text-gray-600">{service.description}</p>
+                  <p className="mb-3 text-sm text-gray-600 line-clamp-2">{service.description}</p>
                 )}
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-1 font-medium text-gray-900">
-                    <DollarSign className="h-4 w-4 text-gray-400" />
-                    <span>{service.price}</span>
-                  </div>
-                  <div className="flex items-center gap-1 text-gray-600">
-                    <Clock className="h-4 w-4 text-gray-400" />
-                    <span>{service.duration} min</span>
-                  </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-lg font-medium text-gray-900">
+                    ${service.price}
+                  </span>
+                  <span className="text-sm text-gray-500">
+                    {service.duration} min
+                  </span>
                 </div>
               </CardContent>
             </Card>
           ))
         ) : (
-          <Card className="col-span-full border-2 border-dashed border-gray-300">
+          <Card className="col-span-full border-2 border-dashed border-gray-200">
             <CardContent className="flex flex-col items-center justify-center py-12">
-              <Package className="mb-4 h-12 w-12 text-gray-400" />
-              <h3 className="mb-1 text-lg font-medium text-gray-900">No services added yet</h3>
+              <Package className="mb-3 h-10 w-10 text-gray-300" />
+              <h3 className="mb-1 text-base font-medium text-gray-700">No services yet</h3>
               <p className="mb-4 text-sm text-gray-500">
-                Add your first service to start receiving bookings
+                Add your first service to get started
               </p>
               <Button
                 onClick={() => setShowAddForm(true)}
-                className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800"
+                className="bg-gray-900 text-white hover:bg-gray-800"
               >
                 <Plus className="mr-2 h-4 w-4" />
-                Add Your First Service
+                Add Service
               </Button>
             </CardContent>
           </Card>

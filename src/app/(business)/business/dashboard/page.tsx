@@ -110,158 +110,145 @@ export default async function BusinessDashboardPage() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="space-y-1">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-          Welcome back, {business.businessName}!
+      <div>
+        <h1 className="text-2xl font-semibold text-gray-900">
+          Dashboard
         </h1>
-        <p className="text-gray-600">Here&apos;s an overview of your business performance</p>
+        <p className="mt-1 text-sm text-gray-500">Overview of your business performance</p>
       </div>
 
       {/* Stats Grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md">
+        <Card className="border border-gray-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Total Revenue</CardTitle>
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-indigo-50 to-indigo-100">
-              <DollarSign className="h-6 w-6 text-indigo-600" />
-            </div>
+            <CardTitle className="text-sm font-medium text-gray-500">Revenue</CardTitle>
+            <DollarSign className="h-4 w-4 text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-gray-900">
+            <div className="text-2xl font-semibold text-gray-900">
               ${thisMonthRevenue._sum.totalPrice?.toFixed(2) || '0.00'}
             </div>
             <p className="mt-1 text-xs text-gray-500">
-              <span className="font-medium text-green-600">+12.5%</span> from last month
+              This month
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md">
+        <Card className="border border-gray-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Bookings</CardTitle>
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-purple-50 to-purple-100">
-              <Calendar className="h-6 w-6 text-purple-600" />
-            </div>
+            <CardTitle className="text-sm font-medium text-gray-500">Bookings</CardTitle>
+            <Calendar className="h-4 w-4 text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-gray-900">{thisMonthBookings}</div>
+            <div className="text-2xl font-semibold text-gray-900">{thisMonthBookings}</div>
             <p className="mt-1 text-xs text-gray-500">
-              <span className="font-medium text-purple-600">{upcomingBookings}</span> upcoming
+              {upcomingBookings} upcoming
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md">
+        <Card className="border border-gray-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Average Rating</CardTitle>
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-yellow-50 to-yellow-100">
-              <Star className="h-6 w-6 fill-yellow-600 text-yellow-600" />
-            </div>
+            <CardTitle className="text-sm font-medium text-gray-500">Rating</CardTitle>
+            <Star className="h-4 w-4 text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-gray-900">
-              {averageRating > 0 ? averageRating.toFixed(1) : 'N/A'}
+            <div className="text-2xl font-semibold text-gray-900">
+              {averageRating > 0 ? averageRating.toFixed(1) : '—'}
             </div>
             <p className="mt-1 text-xs text-gray-500">
-              From <span className="font-medium">{totalReviews}</span> reviews
+              {totalReviews} reviews
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md">
+        <Card className="border border-gray-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Active Services</CardTitle>
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-50 to-emerald-100">
-              <Package className="h-6 w-6 text-emerald-600" />
-            </div>
+            <CardTitle className="text-sm font-medium text-gray-500">Services</CardTitle>
+            <Package className="h-4 w-4 text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-gray-900">{business.services.length}</div>
-            <p className="mt-1 text-xs text-gray-500">Available for booking</p>
+            <div className="text-2xl font-semibold text-gray-900">{business.services.length}</div>
+            <p className="mt-1 text-xs text-gray-500">Active services</p>
           </CardContent>
         </Card>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Quick Actions */}
-        <Card className="border border-gray-200 bg-white shadow-sm">
+        <Card className="border border-gray-200 bg-white">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold">Quick Actions</CardTitle>
-            <CardDescription>Manage your business operations</CardDescription>
+            <CardTitle className="text-base font-medium">Quick Actions</CardTitle>
           </CardHeader>
-          <CardContent className="grid gap-3">
+          <CardContent className="grid gap-2">
             <Link href="/business/dashboard/services">
-              <Button className="w-full justify-start bg-gradient-to-r from-indigo-600 to-indigo-700 text-white hover:from-indigo-700 hover:to-indigo-800">
-                <Package className="mr-2 h-4 w-4" />
-                Manage Services
+              <Button variant="ghost" className="w-full justify-start h-auto py-3 px-3 hover:bg-gray-50">
+                <Package className="mr-3 h-4 w-4 text-gray-500" />
+                <span className="text-sm text-gray-700">Manage Services</span>
               </Button>
             </Link>
             <Link href="/business/dashboard/bookings">
-              <Button variant="outline" className="w-full justify-start hover:bg-gray-50">
-                <Calendar className="mr-2 h-4 w-4" />
-                View All Bookings
+              <Button variant="ghost" className="w-full justify-start h-auto py-3 px-3 hover:bg-gray-50">
+                <Calendar className="mr-3 h-4 w-4 text-gray-500" />
+                <span className="text-sm text-gray-700">View Bookings</span>
               </Button>
             </Link>
             <Link href="/business/dashboard/availability">
-              <Button variant="outline" className="w-full justify-start hover:bg-gray-50">
-                <Clock className="mr-2 h-4 w-4" />
-                Set Availability
+              <Button variant="ghost" className="w-full justify-start h-auto py-3 px-3 hover:bg-gray-50">
+                <Clock className="mr-3 h-4 w-4 text-gray-500" />
+                <span className="text-sm text-gray-700">Set Availability</span>
               </Button>
             </Link>
             <Link href="/business/dashboard/analytics">
-              <Button variant="outline" className="w-full justify-start hover:bg-gray-50">
-                <BarChart3 className="mr-2 h-4 w-4" />
-                View Analytics
+              <Button variant="ghost" className="w-full justify-start h-auto py-3 px-3 hover:bg-gray-50">
+                <BarChart3 className="mr-3 h-4 w-4 text-gray-500" />
+                <span className="text-sm text-gray-700">View Analytics</span>
               </Button>
             </Link>
           </CardContent>
         </Card>
 
         {/* Business Info */}
-        <Card className="border border-gray-200 bg-white shadow-sm">
+        <Card className="border border-gray-200 bg-white">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold">Business Information</CardTitle>
-            <CardDescription>Your business details and status</CardDescription>
+            <CardTitle className="text-base font-medium">Business Information</CardTitle>
           </CardHeader>
           <CardContent>
-            <dl className="space-y-4">
+            <dl className="space-y-3">
               <div className="flex items-center justify-between">
-                <dt className="text-sm font-medium text-gray-500">Status</dt>
+                <dt className="text-sm text-gray-500">Status</dt>
                 <dd>
-                  <Badge
-                    variant={business.isVerified ? 'success' : 'warning'}
-                    className={
-                      business.isVerified
-                        ? 'border-green-200 bg-green-50 text-green-700'
-                        : 'border-yellow-200 bg-yellow-50 text-yellow-700'
-                    }
-                  >
-                    {business.isVerified ? 'Verified' : 'Pending Verification'}
-                  </Badge>
+                  <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+                    business.isVerified
+                      ? 'bg-gray-100 text-gray-700'
+                      : 'bg-gray-100 text-gray-600'
+                  }`}>
+                    {business.isVerified ? 'Verified' : 'Pending'}
+                  </span>
                 </dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-sm font-medium text-gray-500">Category</dt>
-                <dd className="text-sm text-gray-900">{business.category.replace(/_/g, ' ')}</dd>
+                <dt className="text-sm text-gray-500">Category</dt>
+                <dd className="text-sm text-gray-700">{business.category.replace(/_/g, ' ')}</dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-sm font-medium text-gray-500">Location</dt>
-                <dd className="text-sm text-gray-900">
+                <dt className="text-sm text-gray-500">Location</dt>
+                <dd className="text-sm text-gray-700">
                   {business.city}, {business.state}
                 </dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-sm font-medium text-gray-500">Phone</dt>
-                <dd className="text-sm text-gray-900">{business.phone}</dd>
+                <dt className="text-sm text-gray-500">Phone</dt>
+                <dd className="text-sm text-gray-700">{business.phone}</dd>
               </div>
             </dl>
-            <div className="mt-6 border-t pt-6">
+            <div className="mt-4 pt-4 border-t border-gray-100">
               <Link
                 href="/business/dashboard/settings"
-                className="inline-flex items-center text-sm font-medium text-indigo-600 transition-colors hover:text-indigo-700"
+                className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900"
               >
-                Edit Business Profile
-                <ChevronRight className="ml-1 h-4 w-4" />
+                Edit Profile
+                <ChevronRight className="ml-1 h-3 w-3" />
               </Link>
             </div>
           </CardContent>
@@ -269,17 +256,14 @@ export default async function BusinessDashboardPage() {
       </div>
 
       {/* Recent Bookings */}
-      <Card className="border border-gray-200 bg-white shadow-sm">
+      <Card className="border border-gray-200 bg-white">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-lg font-semibold">Recent Bookings</CardTitle>
-              <CardDescription>Your latest customer appointments</CardDescription>
-            </div>
+            <CardTitle className="text-base font-medium">Recent Bookings</CardTitle>
             <Link href="/business/dashboard/bookings">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" className="text-xs text-gray-500 hover:text-gray-700">
                 View all
-                <ChevronRight className="ml-1 h-4 w-4" />
+                <ChevronRight className="ml-1 h-3 w-3" />
               </Button>
             </Link>
           </div>
@@ -290,40 +274,31 @@ export default async function BusinessDashboardPage() {
               {business.bookings.map((booking) => (
                 <div
                   key={booking.id}
-                  className="flex items-center justify-between rounded-lg border border-gray-100 p-4 transition-all hover:border-gray-200 hover:shadow-sm"
+                  className="flex items-center justify-between border-b border-gray-100 py-3 last:border-0"
                 >
                   <div className="space-y-1">
                     <p className="text-sm font-medium text-gray-900">{booking.user.name}</p>
-                    <p className="text-sm text-gray-600">{booking.service.name}</p>
-                    <div className="flex items-center gap-4 text-xs text-gray-500">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="h-3 w-3" />
-                        {format(new Date(booking.date), 'MMM d, yyyy')}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {format(new Date(booking.startTime), 'h:mm a')}
-                      </span>
+                    <p className="text-xs text-gray-500">{booking.service.name}</p>
+                    <div className="flex items-center gap-3 text-xs text-gray-400">
+                      <span>{format(new Date(booking.date), 'MMM d')}</span>
+                      <span>{format(new Date(booking.startTime), 'h:mm a')}</span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Badge
-                      variant="outline"
-                      className={
-                        booking.status === 'CONFIRMED'
-                          ? 'border-green-200 bg-green-50 text-green-700'
-                          : booking.status === 'PENDING'
-                            ? 'border-yellow-200 bg-yellow-50 text-yellow-700'
-                            : booking.status === 'CANCELLED'
-                              ? 'border-red-200 bg-red-50 text-red-700'
-                              : 'border-gray-200 bg-gray-50 text-gray-700'
-                      }
-                    >
-                      {booking.status.charAt(0) + booking.status.slice(1).toLowerCase()}
-                    </Badge>
-                    <span className="text-sm font-semibold text-gray-900">
+                  <div className="text-right">
+                    <div className="text-sm font-medium text-gray-900">
                       ${booking.totalPrice.toString()}
-                    </span>
+                    </div>
+                    <div className="mt-1">
+                      <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs ${
+                        booking.status === 'CONFIRMED'
+                          ? 'bg-gray-100 text-gray-700'
+                          : booking.status === 'PENDING'
+                            ? 'bg-gray-100 text-gray-600'
+                            : 'bg-gray-50 text-gray-500'
+                      }`}>
+                        {booking.status.charAt(0) + booking.status.slice(1).toLowerCase()}
+                      </span>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -339,17 +314,14 @@ export default async function BusinessDashboardPage() {
       </Card>
 
       {/* Recent Reviews */}
-      <Card className="border border-gray-200 bg-white shadow-sm">
+      <Card className="border border-gray-200 bg-white">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-lg font-semibold">Recent Reviews</CardTitle>
-              <CardDescription>Customer feedback and ratings</CardDescription>
-            </div>
+            <CardTitle className="text-base font-medium">Recent Reviews</CardTitle>
             <Link href="/business/dashboard/reviews">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" className="text-xs text-gray-500 hover:text-gray-700">
                 View all
-                <ChevronRight className="ml-1 h-4 w-4" />
+                <ChevronRight className="ml-1 h-3 w-3" />
               </Button>
             </Link>
           </div>
@@ -360,32 +332,33 @@ export default async function BusinessDashboardPage() {
               {business.reviews.map((review) => (
                 <div
                   key={review.id}
-                  className="space-y-2 rounded-lg border border-gray-100 p-4 transition-all hover:border-gray-200 hover:shadow-sm"
+                  className="border-b border-gray-100 py-3 last:border-0"
                 >
                   <div className="flex items-start justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">{review.user.name}</p>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-medium text-gray-900">{review.user.name}</p>
+                        <span className="text-xs text-gray-400">
+                          {format(new Date(review.createdAt), 'MMM d')}
+                        </span>
+                      </div>
                       <div className="mt-1 flex items-center gap-1">
                         {[...Array(5)].map((_, i) => (
                           <Star
                             key={i}
-                            className={`h-4 w-4 ${
+                            className={`h-3 w-3 ${
                               i < review.rating
-                                ? 'fill-yellow-400 text-yellow-400'
+                                ? 'fill-gray-900 text-gray-900'
                                 : 'fill-gray-200 text-gray-200'
                             }`}
                           />
                         ))}
-                        <span className="ml-2 text-sm text-gray-600">{review.rating}.0</span>
                       </div>
+                      {review.comment && (
+                        <p className="mt-2 text-sm text-gray-600 line-clamp-2">{review.comment}</p>
+                      )}
                     </div>
-                    <span className="text-xs text-gray-500">
-                      {format(new Date(review.createdAt), 'MMM d, yyyy')}
-                    </span>
                   </div>
-                  {review.comment && (
-                    <p className="text-sm leading-relaxed text-gray-600">{review.comment}</p>
-                  )}
                 </div>
               ))}
             </div>
